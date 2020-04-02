@@ -1,0 +1,9 @@
+#!/bin/csh -f
+
+set CCS = ("gcc" "cc")
+set CFLAGSS = ("-I." "-fPIC")
+set DYNS = ("ld -G" "libtool  -L.. -lc -dynamic -undefined dynamic_lookup")
+set MAKES = ("gmake" "make")
+set OPTS = ("-g")
+
+set TMP = /tmp

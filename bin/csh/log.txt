@@ -1,0 +1,6 @@
+ compiler : gcc
+ optimisation : -g
+ dynamic linker : libtool  -L.. -lc -dynamic -undefined dynamic_lookup
+ CFLAGS : -L. 
+ MAKE : make
+ WG : -L -R --create-dirs -o

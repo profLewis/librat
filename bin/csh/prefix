@@ -1,0 +1,24 @@
+#!/bin/csh 
+
+#####################
+# prelim
+#####################
+
+setenv HERE `pwd`
+setenv ARCH `uname -m`
+set config = ../../.config
+
+setenv MACH "`uname -m`-`uname -s`-`uname -r`"
+echo $MACH >>& /dev/stderr
+mkdir -p ../$MACH
+
+setenv PATH  ".:../${MACH}:${PATH}"
+
+set CCS = ("`cat $config/CC.dat`")
+set TMP = ("`cat $config/TMP.dat`")
+set DYNS = ("`cat $config/DYN.dat`")
+set CFLAGSS = ("`cat $config/CFLAGS.dat`")
+set OPTS = ("`cat $config/OPT.dat`")
+set MAKES = ("`cat $config/MAKE.dat`")
+
+

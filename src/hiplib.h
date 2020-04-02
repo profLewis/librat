@@ -32,18 +32,20 @@ int     allocateImage();
 int                writeImage();
 int     readImage();
 int     imageArrayIndex();
-int     getPixel();
+void     getPixel();
 int     putPixel();
 int                openImage();
 int     getImageFormat();
-struct header *getImageHeader();
+GenericImage *getImageHeader();
 int        copyImageHeader();
 void       setImageFormat();
 void       setImageRows();
 void       setImageCols();
 void 	setImageFrames();
-hips	**allocateImageArray();
-
+GenericImage *allocateImageArray();
+int updateHipsHeader();
+int arrayIndexHips();
+int     isEnvi();
 #ifndef MAX
 #define MAX(a,b) ((a>b)?(a):(b))
 #endif

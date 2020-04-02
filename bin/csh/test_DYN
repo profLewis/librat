@@ -1,0 +1,37 @@
+#!/bin/csh -f
+
+########
+# dynamic linker test
+########
+echo "testing dynamic linker ..." >>& /dev/stderr
+@ i = 1
+set STATUS = 1
+while ( $i <= $#DYNS )
+  set DYN = "$DYNS[$i]"
+  @ j = 1
+  while ( $j <= $#CFLAGSS )
+    set CFLAGS_ = $CFLAGSS[$j]
+    echo "Testing : $DYN : $CFLAGS_" >>& /dev/stderr
+    ${CC} $TMP/test.c -c $CFLAGS_ $OPT -o $TMP/test.o
+    ${DYN} -o $TMP/test.so $TMP/test.o
+    if ( $status == 0 ) then
+      set STATUS = 0
+      set i = $#DYNS
+      break;
+    endif
+    @ j++
+  end
+  @ i++
+end
+
+if ( $STATUS != 0) then
+  echo "dynamic linker test failed for $DYNS : $CFLAGSS" >>& /dev/stderr
+  exit 1;
+endif
+
+setenv DYN "'$DYN'"
+setenv CFLAGS "$CFLAGS_ $OPT"
+echo "** dynamic linker : ${DYN}"  
+echo "** CFLAGS : $CFLAGS " 
+
+

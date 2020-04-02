@@ -5,6 +5,7 @@
 
 #include "hipl_format.h"
 extern int isHips();
+extern int isEnvi();
 
 #define N_FORMATS 2
 
@@ -25,6 +26,7 @@ extern int format_array[];
 
 #include "hipl_format.h"
 extern int isHips();
+extern int isEnvi();
 
 #define N_FORMATS 2
 

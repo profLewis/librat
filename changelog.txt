@@ -1,0 +1,50 @@
+Bug fixes since 1.3.3
+=====================
+
+sorted DEM problems
+
+Bug fixes since 1.3.4
+=====================
+
+made to work with curl is wget not available (looks in /usr/bin/curl first)
+
+Version 1.4.0
+=====================
+Major version ... Image format now envi (and a slightly limited interpretation of that).
+Can't guarantee will work with hips images but need to track down the cases that cause problems.
+
+Old codes available from 
+http://www2.geog.ucl.ac.uk/~plewis/bpms/src/lib/version_1.3.5/ still.
+that could be re-instated if there are big problems.
+
+Version 1.4.1
+=============
+
+Fixed to work with *either* hipl or envi format as input and output. Assumes envi format unless a .hips (or .HiPs etc) tail seen.
+
+Version 1.4.1a
+=============
+
+Edited configure script to only output README if -readme or -version specified (then exit).
+
+
+Version 1.4.1b
+=============
+
+Added new primitive object: spheroid 
+
+use in a .obj file e.g.:
+
+v 0 0 0
+v 0 1 1
+spheroid -1 -2 0.2
+
+where:
+spheroid <base> <tip> radius
+
+This is of course similar to the ell (ellipsoid) object but may be more convenient under some circumstances as it does not *require* cloning and rotating to achieve a spheroid (e.g. a needle on a tree) with arbitrary base and tip location.
+
+The motivation for this is the 3DVegLab project.
+
+
+

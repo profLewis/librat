@@ -1,0 +1,23 @@
+#!/bin/csh -f
+
+set csh = $BPMS/bin/csh
+cd $csh
+source prefix
+#########################
+# tests
+#########################
+
+source test_CC 
+source test_OPT
+source test_DYN
+source test_MAKE
+source test_WG
+
+echo '#\!/bin/csh -f' > runCmd.$ARCH
+echo "cd ${BPMS}/src;${MAKE} "BPMS=${BPMS}" "CC=${CC}" "DYN=\'${DYN}\'" "CFLAGS=\'${CFLAGS}"\' liberr libimage libhipl librand libvect liballoc libmatrix librat" >> runCmd.$ARCH
+chmod +x runCmd.$ARCH
+rm -f ${BPMS}/make
+ln -s ${csh}/runCmd.$ARCH ${BPMS}/make
+
+cd $csh
+source postfix

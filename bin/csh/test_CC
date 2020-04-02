@@ -1,0 +1,27 @@
+#!/bin/csh -f
+
+#############
+# compiler test
+############
+
+echo "Testing for C compiler among $CCS ..." >>& /dev/stderr
+@ i = 1
+set STATUS = 1
+while ( $i <= $#CCS )
+  set CC = "$CCS[$i]"
+  echo "Testing $CC ..." >>& /dev/stderr
+  which $CC >>& /dev/stderr
+  if ( $status == 0 ) then
+    set STATUS = 0
+    break;
+  endif
+  @ i++
+end
+if ($STATUS != 0) then
+  echo "compilers $CCS not found" >>& /dev/stderr
+  exit 1;
+else
+  echo "** compiler : $CC"
+endif
+
+

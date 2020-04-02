@@ -1,1 +1,8 @@
-bin/csh/test
+#!/bin/csh -f
+
+bin/csh/test | grep '*' | sed 's/\*//g' |  awk -F: 'BEGIN {print "#\!/bin/csh -f"} {print "set",$1,"=",$2}' > config.out
+
+echo '**************'
+echo '* config.out *'
+echo '**************'
+cat config.out

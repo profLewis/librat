@@ -15,5 +15,5 @@ setenv PATH  ".:../${ARCH}:${PATH}"
 
 if (! $?BPMS )set BPMS = ${HERE}/../..
 
-source ${BPMS}/configuration.dat
+source ${BPMS}/config.in
 

@@ -1,12 +1,46 @@
 
 /* this first line is required in the main() file */
-#define RAT_MAIN 
+#define RAT_MAIN
 /* you need to include this file */
 #include "rat.h"
 #include "ratFront.h"  
 #include "image_formats.h"
 
 /* main() */ 
+ 
+int main(int argc,char **argv){
+	void *info=NULL; 
+	RATobj *ratObj=NULL;
+	void userSignals(),doStuff(RATobj *,void *);
+ 	int retval=0;
+	
+	/* this function for setting up signal interrupts if you want such things */
+	/* you then need to define a fn userSignals() and also RATuserInterrupt()
+		** examples of which are below
+		** if you dont want these, just define a dummy RATuserInterrupt() function
+		*/
+	userSignals();
+	
+	/* RAT initialisation and memory allocation */
+	ratObj=RATinit(argc,argv);
+	
+	/* check default frat arguments
+		** user parsing is done within this function by calls to RATuserParse()
+		** with help options etc. specified in RATuserPrintOptions()
+		** examples of which are below
+		*/
+	retval=RATparse(ratObj,argc,argv,info);   
+	
+	/* read the data from the object file (if specified) 
+		** into the ratObj structure 
+		*/
+	if(RATisWavefrontFile(ratObj))
+		RATreadObject(ratObj);
+	
+	doStuff(ratObj,info);
+	return(1);
+}
+
 char *interactionType(int i){
 	static char r[] = "reflectance",t[]="transmittance",n[]="nothing";
 	char *out;
@@ -114,7 +148,7 @@ void doStuff(RATobj *ratObj,void *info){
 				fscanf(stdin,"%lf %lf %lf",&from[0],&from[1],&from[2]);
 				fscanf(stdin,"%lf %lf %lf",&direction[0],&direction[1],&direction[2]);
 				ratTree=RATgetRatTree(ratObj);
-                                ratObj->hit_camera=0; /* this might not be nec. */
+                                ratObj->hit_camera=0;
 				RATtraceRay(ratObj,from,direction,NULL);
 				ratTree=RATgetRatTree(ratObj);
 				nBands=RATgetNWavebands(ratObj,NULL);
@@ -178,7 +212,7 @@ void doStuff(RATobj *ratObj,void *info){
 							for(n=0;n<rpp;n++){
 								from[0] = ox + (c+Random())*sx;
 								from[1] = oy + (r+Random())*sy;
-                                                                ratObj->hit_camera=0; /* this might not be nec. */
+                                                                ratObj->hit_camera=0;
                                 				RATtraceRay(ratObj,from,direction,NULL);
                                 				ratTree=RATgetRatTree(ratObj);
                                         			value += ratTree->intersectionPoints[0][2];

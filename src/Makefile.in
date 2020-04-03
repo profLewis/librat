@@ -10,16 +10,16 @@
 #       build executables 
 OBJ = objects.${ARCH}
 
-BPMS = /Users/plewis/librat
+BPMS = __BPMS__
 LIBRARY = ${BPMS}/lib
 
-CFLAGS = -I.
-MAKE = make
-WG = -L -R --create-dirs -o
-WGET = /usr/bin/curl
-CC = gcc
-DYN = libtool -L.. -lc -dynamic -undefined dynamic_lookup
-OPT = -g
+CFLAGS = __CFLAGS__
+MAKE = __MAKE__
+WG = __WG__
+WGET = __WGET__
+CC = __CC__
+DYN = __DYN__
+OPT = __OPT__
 
 CFLAGS += -I. -DMMAP  -DVERBOSE -DDOUBLEDEF -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64
 LIBS = liberr libimage librand libvect liballoc libmatrix libimage librat

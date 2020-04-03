@@ -661,9 +661,8 @@ setImageBlockSize(ImagePtr, size)
 }
 
 int
-getImageBlockSize(ImagePtr, size)
+getImageBlockSize(ImagePtr)
 	GenericImage   *ImagePtr;
-	int             size;
 {
 	return (ImagePtr->blockSize);
 }
@@ -1030,14 +1029,13 @@ readImage(ImagePtr, env)
 			}
 		} else {
 #ifdef VERBOSE 
-			if (getImageVerbose(ImagePtr))
-				fprintf(stderr, "readImage:\t memory-mapping image ");
-			if (getImageVerbose(ImagePtr))
-				if (ImagePtr->imageName)
-					fprintf(stderr, "%s\n", ImagePtr->imageName);
-				else if (getImageVerbose(ImagePtr))
-					fprintf(stderr, "\n");
-
+	if (getImageVerbose(ImagePtr))
+ 	  fprintf(stderr, "readImage:\t memory-mapping image ");
+	if (getImageVerbose(ImagePtr)){
+	 if (ImagePtr->imageName)
+  	  fprintf(stderr, "%s\n", ImagePtr->imageName);
+	}else if (getImageVerbose(ImagePtr))
+	 fprintf(stderr, "\n");
 #endif
 			allocateImage(ImagePtr);
 			rewind(getStream(ImagePtr));
@@ -1358,13 +1356,17 @@ openImage(ImagePtr, inputFlag, env)
 	  allocateImage(ImagePtr);
 	} else {
 #ifdef VERBOSE
-	  if (getImageVerbose(ImagePtr))
+	  if (getImageVerbose(ImagePtr)){
 	    fprintf(stderr, "\b\b\b\b\b\b\b\b\b\b\b\b\b\b\bopenImage:\t memory-mapping image ");
-	  if (getImageVerbose(ImagePtr))
-	    if (ImagePtr->imageName)
+          }
+	  if (getImageVerbose(ImagePtr)){
+	    if (ImagePtr->imageName){
 	      fprintf(stderr, "%s\n", ImagePtr->imageName);
-	    else if (getImageVerbose(ImagePtr))
-	      fprintf(stderr, "\n");
+	    }else{
+               if (getImageVerbose(ImagePtr))
+	        fprintf(stderr, "\n");
+            }
+          }
 #endif
 	  if (getImageBlockSize(ImagePtr) == 0) {
 	    if (!(data = (char *) calloc(ImagePtr->noElements * ImagePtr->dataSize, sizeof(char)))) {
@@ -1392,7 +1394,7 @@ openImage(ImagePtr, inputFlag, env)
 		exit(-1);
 	      }
 	      if (getImageVerbose(ImagePtr))
-		fprintf(stderr, "\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b(%ld)  ", blockAccumulator);
+		fprintf(stderr, "\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b(%d)  ", blockAccumulator);
 	      blockAccumulator -= block;
 	      
 	    }

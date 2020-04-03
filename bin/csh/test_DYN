@@ -29,9 +29,13 @@ if ( $STATUS != 0) then
   exit 1;
 endif
 
-setenv DYN "'$DYN'"
-setenv CFLAGS "$CFLAGS_ $OPT"
-echo "** dynamic linker : ${DYN}"  
-echo "** CFLAGS : $CFLAGS " 
+sed < ${BPMS}/src/makefile 's/__CFLAGS__/'$CFLAGS_'/' > $TMP/tmp.$$
+mv $TMP/tmp.$$ ${BPMS}/src/makefile
+echo "**CFLAGS=$CFLAGS_"
+
+set DYN_ = `echo $DYN| sed 's/ /Qq/g'`
+sed < ${BPMS}/src/makefile 's/__DYN__/'$DYN_'/' | sed 's/Qq/ /g' > $TMP/tmp.$$
+mv $TMP/tmp.$$ ${BPMS}/src/makefile
+echo "**DYN=$DYN"
 
 

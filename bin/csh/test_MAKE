@@ -22,7 +22,10 @@ while ( $i <= $#MAKES)
   @ i++
 end
 
-echo "** MAKE : $MAKE"
+
+sed < ${BPMS}/src/makefile 's/__MAKE__/'$MAKE'/' > $TMP/tmp.$$
+mv $TMP/tmp.$$ ${BPMS}/src/makefile
+echo "**MAKE=$MAKE"
 
 if ( $STATUS != 0) then
   echo "make test failed for $MAKES"

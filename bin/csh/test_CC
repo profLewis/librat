@@ -20,8 +20,10 @@ end
 if ($STATUS != 0) then
   echo "compilers $CCS not found" >>& /dev/stderr
   exit 1;
-else
-  echo "** compiler : $CC"
 endif
+
+sed < ${BPMS}/src/makefile 's/__CC__/'$CC'/' > $TMP/tmp.$$
+mv $TMP/tmp.$$ ${BPMS}/src/makefile
+echo "**CC=$CC"
 
 

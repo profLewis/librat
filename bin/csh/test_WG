@@ -21,5 +21,15 @@ if ( $#WGET > 1 ) then
   set WG = "-L -R --create-dirs -o"
 endif
 
-echo "** WGET : $WGET $WG"
+# deal with / in sed
+set WGET_ = `echo $WGET | sed 's/\//Qq/g'`
+set WG_ = `echo $WG| sed 's/ /Qq/g'`
+set q = '\/'
+
+sed < ${BPMS}/src/makefile 's/__WG__/'$WG_'/' | sed 's/Qq/ /g' > $TMP/tmp.$$
+mv $TMP/tmp.$$ ${BPMS}/src/makefile
+
+sed < ${BPMS}/src/makefile 's/__WGET__/'$WGET_'/' | sed 's/Qq/'$q'/g' > $TMP/tmp.$$
+mv $TMP/tmp.$$ ${BPMS}/src/makefile
+echo "**WGET=$WGET $WG"
 

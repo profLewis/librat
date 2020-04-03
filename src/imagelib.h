@@ -127,7 +127,7 @@ typedef struct{
 void	setImageStyle();	/* HIPS etc. */
 int	getImageStyle();
 int     setImageDefaults();
-int     getImageBlockSize();
+int     getImageBlockSize(GenericImage   *ImagePtr);
 void    setImageBlockSize();
 int     getDataSize();
 int     allocateImage();

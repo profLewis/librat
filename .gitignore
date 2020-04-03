@@ -1,6 +1,9 @@
 # Prerequisites
 *.d
 
+# my stuff
+config.out
+
 # Object files
 *.o
 *.ko

@@ -5,6 +5,10 @@ all:
 clean:
 	@cd src;make clean
 
-test:
-	make clean all
+test:   test_start.test.op
+
+test_start.test.op:
+	make all
+	@bin/csh/test_start
+
 

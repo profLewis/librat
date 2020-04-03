@@ -70,16 +70,16 @@ libmatrix:	${OBJ}/matrix.o
 librat:		makefile ${OBJ}/fratP.o $(USRHIPL) $(PRATOBJ) $(USEFUL) $(WAVEFRONT) ${FORTRANSTUFF} ${OBJ}/matherr.o
 
 
-libratlib:	makefile
+libratlib_${ARCH}.so:	objects.${ARCH}/*.o
+		
+
+libratlib:	makefile libratlib_${ARCH}.so
 		@echo "archiving libratlib library"
 		$(DYN) -o ${BPMS}/lib/libratlib_${ARCH}.so objects.${ARCH}/*.o
 
 
-
-
-
-start:		makefile start.o
-		$(CC) $(CFLAGS) -L${BPMS}/lib -L. -L${LIBRARY} -o $@ start.o -lratlib_${ARCH} -lm -lc
+start:		makefile ${OBJ}/start.o
+		$(CC) $(CFLAGS) -L${BPMS}/lib -L. -L${LIBRARY} -o $@ ${OBJ}/start.o -lratlib_${ARCH} -lm -lc
 		@mv start ${BPMS}/bin/${ARCH}
 
 

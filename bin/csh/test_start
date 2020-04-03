@@ -23,7 +23,7 @@ start < $TEST/starttest.ip -sensor_wavebands wavebands.dat -m 100 -sun_position 
 
 #echo "diff of file:"
 #echo "============="
-diff $TEST/testMe.op $TEST/$name.op >/dev/null
+diff $TEST/$name.test.op $TEST/$name.op >/dev/null
 set comp_value = $?
 
 if ( $comp_value == 1 ) then

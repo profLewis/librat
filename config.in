@@ -1,9 +1,18 @@
 #!/bin/csh -f
-
+#
+# Set options for what you might want for 
+# compilers, flags etc.
+# 
+# The following is pretty generic and will work on most linux
+# and OS X machines. It may well work on windows, but not tested
+# The install scripts rely on some basic shell commands
+#
+#
 set CCS = ("gcc" "cc")
 set CFLAGSS = ("-I." "-fPIC")
 set DYNS = ("ld -G" "libtool  -L.. -lc -dynamic -undefined dynamic_lookup")
 set MAKES = ("gmake" "make")
 set OPTS = ("-g")
 
+# specify a temporary directory
 set TMP = /tmp

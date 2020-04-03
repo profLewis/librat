@@ -1063,7 +1063,7 @@ int	clone_read(bounds,clone,verbose,line,group_Ptr,bbox_Ptr,transformed_bbox_Ptr
 			found_group=1;
 			clone->bbox=group_Ptr->group_bboxes[i];
 			if(clone->bbox->hit[0]==NULL)
-				error1("drat:\terror in plant definition - attempting to clone plant with inconsistent bounding box contents");
+				error1("librat:\terror in plant definition - attempting to clone plant with inconsistent bounding box contents");
 			i=group_Ptr->no_of_groups;
 		}
 	}

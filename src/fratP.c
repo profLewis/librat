@@ -2209,10 +2209,10 @@ void	initialise_group_storage(group_Ptr,no_of_groups,max_len)
 {
   int	i;
   
-  if((group_Ptr->group_bboxes = (BBox **)CALLOC(no_of_groups,sizeof(BBox *)))==0)error1("drat:\terror in BBox allocation");
-  if((group_Ptr->group_names = (char **)CALLOC(no_of_groups,sizeof(char *)))==0)error1("drat:\terror in char * allocation");
+  if((group_Ptr->group_bboxes = (BBox **)CALLOC(no_of_groups,sizeof(BBox *)))==0)error1("librat:\terror in BBox allocation");
+  if((group_Ptr->group_names = (char **)CALLOC(no_of_groups,sizeof(char *)))==0)error1("librat:\terror in char * allocation");
   for(i=0;i<no_of_groups;i++)
-    if(((group_Ptr->group_names)[i] = (char *)CALLOC(max_len,sizeof(char)))==0)error1("drat:\terror in char allocation");
+    if(((group_Ptr->group_names)[i] = (char *)CALLOC(max_len,sizeof(char)))==0)error1("librat:\terror in char allocation");
   
   group_Ptr->no_of_groups=0;
   return;
@@ -2228,13 +2228,13 @@ int	initialise_contents_storage(contents,no_of_bboxes,no_of_triangles,no_of_bezi
      int	no_of_bboxes,no_of_triangles,no_of_beziers,no_of_spheres,no_of_cylinders,no_of_clones,no_of_dems;
 {
   if(no_of_bboxes!=0)if((contents->bbox 	= (BBox *)CALLOC(no_of_bboxes,sizeof(BBox)))==0)
-    error1("drat: error in contents box memory storage 1");
-  if(no_of_triangles!=0)if((contents->ttriangle	= (fFacet *)CALLOC(no_of_triangles,sizeof(fFacet)))==0)error1("drat: error in contents box memory storage 2");
-  if(no_of_beziers!=0)if((contents->bezier	= (Bezier4 *)CALLOC(no_of_beziers,sizeof(Bezier4)))==0)error1("drat: error in contents box memory storage 3");
-  if(no_of_spheres!=0)if((contents->sphere	= (Sphere *)CALLOC(no_of_spheres,sizeof(Sphere)))==0)error1("drat: error in contents box memory storage 4");
-  if(no_of_cylinders!=0)if((contents->cylinder	= (Cylinder *)CALLOC(no_of_cylinders,sizeof(Cylinder)))==0)error1("drat: error in contents box memory storage 5");
-  if(no_of_clones!=0)if((contents->clone	= (Clones *)CALLOC(no_of_clones,sizeof(Clones)))==0)error1("drat: error in contents box memory storage 5");
-  if(no_of_dems!=0)if((contents->dem	= (Dem *)CALLOC(no_of_dems,sizeof(Dem)))==0)error1("drat: error in contents box memory storage 6");
+    error1("librat: error in contents box memory storage 1");
+  if(no_of_triangles!=0)if((contents->ttriangle	= (fFacet *)CALLOC(no_of_triangles,sizeof(fFacet)))==0)error1("librat: error in contents box memory storage 2");
+  if(no_of_beziers!=0)if((contents->bezier	= (Bezier4 *)CALLOC(no_of_beziers,sizeof(Bezier4)))==0)error1("librat: error in contents box memory storage 3");
+  if(no_of_spheres!=0)if((contents->sphere	= (Sphere *)CALLOC(no_of_spheres,sizeof(Sphere)))==0)error1("librat: error in contents box memory storage 4");
+  if(no_of_cylinders!=0)if((contents->cylinder	= (Cylinder *)CALLOC(no_of_cylinders,sizeof(Cylinder)))==0)error1("librat: error in contents box memory storage 5");
+  if(no_of_clones!=0)if((contents->clone	= (Clones *)CALLOC(no_of_clones,sizeof(Clones)))==0)error1("librat: error in contents box memory storage 5");
+  if(no_of_dems!=0)if((contents->dem	= (Dem *)CALLOC(no_of_dems,sizeof(Dem)))==0)error1("librat: error in contents box memory storage 6");
   contents->no_of_bboxes=0;
   contents->no_of_triangles=0;
   contents->no_of_beziers=0;
@@ -2309,7 +2309,7 @@ int sortIllumination(int *no_of_sun_wavelength_samples,FlagBag *flagbag,Illumina
     }else{
       if(strcpy(illumination->direct_file,filename)==0)error1("parser:\terror in specifying -direct option");
       flagbag->direct_flag=1;
-      if(!expand_filename(&(illumination->direct_file),"DIRECT_ILLUMINATION",FALSE))error2("drat:\terror opening direct irradaince file",illumination->direct_file);
+      if(!expand_filename(&(illumination->direct_file),"DIRECT_ILLUMINATION",FALSE))error2("librat:\terror opening direct irradaince file",illumination->direct_file);
       if((fp=fopen(illumination->direct_file,"r+"))==NULL)error2("parser:\terror in specifying -direct option - cannot open file",illumination->direct_file);
       *no_of_sun_wavelength_samples=0;
       while( (fgets(buffer,1024-1,fp))!=NULL){
@@ -2584,7 +2584,7 @@ int RATparser(RATobj *bb,int argc,char **argv,void *info,int *ii,int jj){
 	}
 	wavebandbag->sensor_filenames[wavebandbag->sensor_wavebands->no_of_wavebands]=c_allocate(2000);
 	strcpy(wavebandbag->sensor_filenames[(wavebandbag->sensor_wavebands->no_of_wavebands)],argv[++i]);
-	if(!expand_filename(&(wavebandbag->sensor_filenames[(wavebandbag->sensor_wavebands->no_of_wavebands)]),"RSRLIB",FALSE))error2("drat:\terror opening sensor relative spectral response file",wavebandbag->sensor_filenames[(wavebandbag->sensor_wavebands->no_of_wavebands)]);
+	if(!expand_filename(&(wavebandbag->sensor_filenames[(wavebandbag->sensor_wavebands->no_of_wavebands)]),"RSRLIB",FALSE))error2("librat:\terror opening sensor relative spectral response file",wavebandbag->sensor_filenames[(wavebandbag->sensor_wavebands->no_of_wavebands)]);
 	(wavebandbag->sensor_wavebands->no_of_wavebands)++;
       }
       wavebandbag->rsr_flag=1;
@@ -2611,7 +2611,7 @@ int RATparser(RATobj *bb,int argc,char **argv,void *info,int *ii,int jj){
 	error1("error in specifying -skymap option");
       }
       illumination->sky_flag=1;
-      if(!expand_filename(Ptr,"SKY_ILLUMINATION",FALSE))error2("drat:\terror opening skymap file",sky_imagemap);
+      if(!expand_filename(Ptr,"SKY_ILLUMINATION",FALSE))error2("librat:\terror opening skymap file",sky_imagemap);
       mmap_read_hips_image(sky_imagemap,&(illumination->sky_data_Ptr->hd),&(illumination->sky_data_Ptr->data));
       get_skymap_wavelengths(0,&(illumination->sky_data_Ptr->hd),(wavebandbag->lambda_min_Ptr),(wavebandbag->lambda_width_Ptr));
       if(flagbag->direct_flag) /*  error check */
@@ -2781,7 +2781,7 @@ int	RATparse(RATobj *bb,int argc,char **argv,void *info){
   } 
   /* material useage */
   flagbag->matUseage=setMaterialUseage(bb,flagbag,materialbag,wavebandbag->op_image_file);
-  if(RATisWavefrontFile(bb) && !expand_filename(&(wavebandbag->wavefront_file),"ARARAT_OBJECT",TRUE))error2("drat:\terror opening drat wavefront format object file",wavebandbag->wavefront_file);
+  if(RATisWavefrontFile(bb) && !expand_filename(&(wavebandbag->wavefront_file),"ARARAT_OBJECT",TRUE))error2("librat:\terror opening librat wavefront format object file",wavebandbag->wavefront_file);
   if(flagbag->vertexStore){
     flagbag->blocksize=flagbag->vertexStore+1;
   }

@@ -84,19 +84,19 @@ int            *local_height;
 				else if (strcmp(flag, "planar") == 0)
 					camera_ip->camera_type = PLANAR;
 				else
-					error1("drat:\tcamera parser format error after flag CAMERA_TYPE");
+					error1("librat:\tcamera parser format error after flag CAMERA_TYPE");
 			}
 			buff = strchr(buffer, flag[0]) + strlen(flag);
 		} else if (strcmp(flag, "PIXELS") == 0) {
 			if (!(buff = read_data_from_line(buff, "PIXELS", 4, data, idata)) && !(buff = read_data_from_line(buff, "LS", 4, data, idata)))
-				error2("drat:\tcamera parser format error after flag", "PIXELS");
+				error2("librat:\tcamera parser format error after flag", "PIXELS");
 			restartPtr->from = idata[0];
 			restartPtr->to = idata[1];
 			restartPtr->from_sample = idata[2];
 			restartPtr->to_sample = idata[3];
 		} else if (strcmp(flag, "LS") == 0) {
 			if (!(buff = read_data_from_line(buff, "LS", 4, data, idata)) && !(buff = read_data_from_line(buff, "LS", 4, data, idata)))
-				error2("drat:\tcamera parser format error after flag", "LS");
+				error2("librat:\tcamera parser format error after flag", "LS");
 			restartPtr->from = idata[0];
 			restartPtr->to = idata[1];
 			restartPtr->from_sample = idata[2];
@@ -106,7 +106,7 @@ int            *local_height;
 			 * *    try to read x,y coords
 			 */
 			if (!(buff = read_data_from_line(buff, "CAMERA_POSITION", 2, data, idata)))
-				error2("drat:\tcamera parser format error after flag", "CAMERA_POSITION");
+				error2("librat:\tcamera parser format error after flag", "CAMERA_POSITION");
 			/*
 			 * *    try to read z coords
 			 */
@@ -124,32 +124,32 @@ int            *local_height;
 			camera_ip->camera_position.z = data[2];
 		} else if (strcmp(flag, "ZOOM") == 0) {
 			if (!(buff = read_data_from_line(buff, "ZOOM", 1, data, idata)))
-				error2("drat:\tcamera parser format error after flag", "ZOOM");
+				error2("librat:\tcamera parser format error after flag", "ZOOM");
 			camera_ip->zoom = data[0];
 		} else if (strcmp(flag, "FOCUSSED_AT") == 0) {
 			if (!(buff = read_data_from_line(buff, "FOCUSSED_AT", 3, data, idata)))
-				error2("drat:\tcamera parser format error after flag", "FOCUSSED_AT");
+				error2("librat:\tcamera parser format error after flag", "FOCUSSED_AT");
 			camera_ip->look_at.x = data[0];
 			camera_ip->look_at.y = data[1];
 			camera_ip->look_at.z = data[2];
 		} else if (strcmp(flag, "ROLL_ANGLE") == 0) {
 			if (!(buff = read_data_from_line(buff, "ROLL_ANGLE", 1, data, idata)))
-				error2("drat:\tcamera parser format error after flag", "ROLL_ANGLE");
+				error2("librat:\tcamera parser format error after flag", "ROLL_ANGLE");
 			camera_ip->roll_angle = data[0];
 		} else if (strcmp(flag, "FRAME_NUMBER") == 0) {
 			if (!(buff = read_data_from_line(buff, "FRAME_NUMBER", 1, data, idata)))
-				error2("drat:\tcamera parser format error after flag", "FRAME_NUMBER");
+				error2("librat:\tcamera parser format error after flag", "FRAME_NUMBER");
 			camera_ip->frame = idata[0];
 		} else if (strcmp(flag, "FOCAL_LENGTH") == 0) {
 			if (!(buff = read_data_from_line(buff, "FOCAL_LENGTH", 1, data, idata)))
-				error2("drat:\tcamera parser format error after flag", "FOCAL_LENGTH");
+				error2("librat:\tcamera parser format error after flag", "FOCAL_LENGTH");
 			camera_ip->focal_length = data[0];
 		} else if (strcmp(flag, "F_STOP") == 0) {
 			if (!(buff = read_data_from_line(buff, "F_STOP", 1, data, idata)))
-				error2("drat:\tcamera parser format error after flag", "F_STOP");
+				error2("librat:\tcamera parser format error after flag", "F_STOP");
 			camera_ip->aperture = data[0];
 		} else
-			error2("drat:\tunrecognised flag in camera parser format", flag);
+			error2("librat:\tunrecognised flag in camera parser format", flag);
 	}
 	return;
 }
@@ -200,7 +200,7 @@ char  globalCameraInfo[5000];
 				camera_ip->aperture = 0;
 				camera_ip->camera_type = PLANAR;
 			} else
-				fprintf(stderr, "drat:\twarning invalid line of camera description\n");
+				fprintf(stderr, "librat:\twarning invalid line of camera description\n");
 			
 			return (1);
 		}
@@ -245,9 +245,9 @@ FlagBag        *flagbag;
 		circle_of_confusion = MIN(camera_op->format.x / image_characteristics->hd.cols, camera_op->format.y / image_characteristics->hd.rows);
 		if (U <= focal_length){
 			if (flagbag->joint_probability){
-				fprintf(stderr, "WARNING: drat:\tcannot really focus that close (focal length <= %f)\n", (float)U);
+				fprintf(stderr, "WARNING: librat:\tcannot really focus that close (focal length <= %f)\n", (float)U);
 			}else{
-				error1("drat:\tcannot focus that close (focal length <= %lf)", U);
+				error1("librat:\tcannot focus that close (focal length <= %lf)", U);
 			}
 		}
 		V = U * focal_length / (U - focal_length);

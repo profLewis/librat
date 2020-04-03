@@ -2349,6 +2349,8 @@ int getMaxMaterials(char *objName,int verbose){
   char    buf[SHORT_STRING_LENGTH],dum[SHORT_STRING_LENGTH];
   char objName2[SHORT_STRING_LENGTH];
 
+
+
   if(verbose)fprintf(stderr,"testing object file for material library %s\n",objName);
   fp=openFileForRead(&objName,"ARARAT_OBJECT",FATAL);
   while(fgets(line,SHORT_STRING_LENGTH,fp)){
@@ -2413,6 +2415,7 @@ RATobj *RATinit(int argc,char **argv){
      WavebandBag    *wavebandbag;
      MaterialBag    *materialbag;
   */
+
   if(!(bb->illumination=(IlluminationBag *)CALLOC(_MAX_SUNS,sizeof(IlluminationBag)))){
     fprintf(stderr,"error in core allocation\n");
     exit(1);
@@ -2460,12 +2463,17 @@ RATobj *RATinit(int argc,char **argv){
       if(i<argc-1)RATsetVerboseLevel((RATobj *)bb,atoi(argv[++i]));else RATsetVerboseLevel((RATobj *)bb,1);
       break;
     }
-  ((RATobj *)bb)->PRAT_MAX_MATERIALS = getMaxMaterials(argv[argc-1],RATgetVerboseLevel((RATobj *)bb)) + getNdefaultMaterials();
+  int ndefaultMaterials = getNdefaultMaterials(); 
+
+  ((RATobj *)bb)->PRAT_MAX_MATERIALS = getMaxMaterials(argv[argc-1],RATgetVerboseLevel((RATobj *)bb)) + ndefaultMaterials;
   /* end */
+
   if(!(bb->material_name=(char **)CALLOC(bb->PRAT_MAX_MATERIALS,sizeof(char *))) || !(bb->material_table=(Material_table *)CALLOC(bb->PRAT_MAX_MATERIALS,sizeof(Material_table)))){
     fprintf(stderr,"error in core allocation\n");
     exit(1);
   }
+
+
   bb->hit_camera = 0;
   return((RATobj *)bb);
 }

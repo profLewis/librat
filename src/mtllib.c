@@ -184,8 +184,10 @@ void	read_material_map_file(material_table,filename,no_of_materials_Ptr,material
   
   /* only byte format supported at present */
   
+  /* edited 3 April 2020 --- not sure this is needed
   if(material_table[*no_of_materials_Ptr].imagemap->hd.pixel_format != PFBYTE)error1("mtllib:\terror reading non-byte format of material_map material");
-  
+  */
+
   /* only single frame input format supported */
   
   switch(material_table[*no_of_materials_Ptr].imagemap->hd.num_frame){

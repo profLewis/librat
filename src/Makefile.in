@@ -8,6 +8,8 @@
 #
 #
 #       build executables 
+
+ARCH = __ARCH__
 OBJ = objects.${ARCH}
 
 BPMS = __BPMS__

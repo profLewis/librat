@@ -1,0 +1,37 @@
+#!/bin/csh -f
+set HERE = $0:h
+if ( $HERE == 'test_start' )set HERE = '.'
+cd $HERE
+set HERE = `pwd`
+source test_prefix
+
+
+set TEST = $BPMS/test/test_start
+set path = ($BPMS/bin/$arch $BPMS/bin/csh $path)
+setenv MATLIB $TEST
+setenv MATERIAL $TEST
+setenv RSRLIB $TEST
+setenv SKY_ILLUMINATION $TEST
+setenv ARARAT_OBJECT $TEST
+setenv DIRECT_ILLUMINATION $TEST
+
+start < $TEST/starttest.ip -sensor_wavebands wavebands.dat -m 100 -sun_position 0 0 10 test.obj >& $TEST/testMe.this.op
+
+#echo "this result"
+#echo "==========="
+#cat $TEST/testMe.this.op
+
+#echo "diff of file:"
+#echo "============="
+diff $TEST/testMe.op $TEST/testMe.this.op >/dev/null
+set comp_value = $?
+set name = $0:t
+
+if ( $comp_value == 1 ) then
+  echo "$name failed" >& /dev/stderr
+  exit 1
+else
+  echo "$name passed" >& /dev/stderr
+  exit 0
+endif
+

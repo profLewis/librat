@@ -1,0 +1,7 @@
+srm soil mtl/soil.dat
+srm material1 mtl/trunk.dat
+srm material2 mtl/trunk.dat
+srm material3 mtl/leaf.dat
+srm leaf mtl/leaf.dat
+srm branch mtl/trunk.dat
+srm white mtl/white.dat

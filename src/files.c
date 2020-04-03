@@ -54,19 +54,19 @@ int	fatal;
 	return(out);
 }
 
-FILE *openFileForRead(filename,env,fatal)
+FILE *NewopenFileForRead(filename,env,fatal)
 char    **filename,*env;
 int     fatal;
 {
         FILE    *out;
   if((out=fopen(*filename,"r"))==NULL){
-     /*if(fatal==1)error2("openFileForRead: error opening file",*filename);*/
+     if(fatal==1)error2("openFileForRead: error opening file",*filename);
      return(NULL);
   }
   return(out);
 }
 
-FILE	*OLDopenFileForRead(filename,env,fatal)
+FILE	*openFileForRead(filename,env,fatal)
 char	**filename,*env;
 int	fatal;
 {
@@ -89,7 +89,7 @@ int	fatal;
 		strcat(environment,*filename);
 		if((out=fopen(environment,"r"))!=NULL){
 			found=TRUE;
-			free(*filename);*filename=NULL;
+			/*free(*filename);*filename=NULL;*/
 			if(!(*filename=(char *)calloc(strlen(environment)+1,sizeof(char))))
 				error2("open_file:\terror in core allocation for string",*filename);
 			strcpy(*filename,environment);

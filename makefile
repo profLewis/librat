@@ -5,3 +5,6 @@ all:
 clean:
 	@cd src;make clean
 
+test:
+	make clean all
+

@@ -13,10 +13,11 @@ set BPMS = `pwd`
 cd $HERE
 set csh = $BPMS/bin/csh
 
+setenv ARCH `uname -m`
 # fix for sed 
 set q = '\/'
 set BPMS_ = `echo $BPMS | sed 's/\//Qq/g'`
-sed < $BPMS/src/Makefile.in 's/__BPMS__/'$BPMS_'/' | sed 's/Qq/'$q'/g' > $BPMS/src/makefile
+sed < $BPMS/src/Makefile.in 's/__BPMS__/'$BPMS_'/' | sed 's/Qq/'$q'/g' | sed 's/__ARCH__/'$ARCH'/' > $BPMS/src/makefile
 
 cd $csh
 source prefix

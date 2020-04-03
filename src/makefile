@@ -8,6 +8,8 @@
 #
 #
 #       build executables 
+
+ARCH = x86_64
 OBJ = objects.${ARCH}
 
 BPMS = /Users/plewis/librat

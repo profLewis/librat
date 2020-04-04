@@ -4,7 +4,7 @@ librat 🐀
 Simulation Studies](http://www2.geog.ucl.ac.uk/~plewis/phd). The main advantage of this code is that it is part of a community reference effort for radiative transfer. That has been a major motivating factor in releasing the code in this (easy to use) form. It has also been used in a [wide range of studies](docs/ratindex.md).
 
 
-<p>&nbsp;![Millet movie](http://www2.geog.ucl.ac.uk/~plewis/images/millet/millet.gif)</p>
+![Millet movie](http://www2.geog.ucl.ac.uk/~plewis/images/millet/millet.gif)
 
 To set the library up on your computer, you need to configure and compile the code. As explained in more detail below, this involves typing:
 

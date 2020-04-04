@@ -1,4 +1,4 @@
-source bin/csh/pullYou
-alias >! /tmp/cb31651.a
-setenv >! /tmp/cb31651.e
-set >! /tmp/cb31651.v
+source bin/csh/pushMe
+alias >! /tmp/cb31700.a
+setenv >! /tmp/cb31700.e
+set >! /tmp/cb31700.v

@@ -1,7 +1,7 @@
 Monte Carlo ray tracing library librat  
   
 [Prof. P. Lewis, UCL Geography](http://www.geog.ucl.ac.uk/~plewis)  
-To download and install, download and run [this configure script.](configure) It should work on any unix-like operating system (tested on Solaris, various linux, Mac OS X, etc.).  
+To download and install, go to [github](configure) It should work on any unix-like operating system (tested on Solaris, various linux, Mac OS X, etc.).  
 
 **Example 3D animations**  
 [This page](http://www.geog.ucl.ac.uk/~mdisney/3Dmovies) contains a series of animations of both reflectance and lidar simulations, as animated gifs (large) and QT movies (smaller).

@@ -6,7 +6,7 @@ To set the library up on your computer, you need to configure and compile the co
 
     ./configure; make clean all test
     
-at the shell prompt. Press the `<return>` key to execute the commands. The semicolon `;` allows us to put multiple commands on the same line. We couldotherwise type them on seperate lines. 
+at the shell prompt. Press the `<return>` key to execute the commands. The semicolon `;` allows us to put multiple commands on the same line. We could otherwise type them on seperate lines. 
 
 📲Configuration
 ============

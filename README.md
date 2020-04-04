@@ -1,7 +1,7 @@
 # librat
 librat
 
-Installation
+🙈 Installation
 ============
 
 To set this up, in a unix shell type:
@@ -54,6 +54,5 @@ To sum up, after compilation, you will have generated files in
 * [`bin/${ARCH}`](bin/x86_64) : executable -- `start`
 * [`lib/${ARCH}`](lib/x86_64) : shared object library -- `libratlib.so`
 
-
-
+😊 Notice that these links (`bin/x86_64`, `lib/x86_64`)  don't exist on the github repository: they are user-generated!
 

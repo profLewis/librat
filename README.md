@@ -1,5 +1,5 @@
 librat 🐀
-------------
+=========
 `librat` (actually called `ratlib` in the code. 🐁 ) is a ray tracing library built for radiative trabnsfer simulations for remote sensing studies.
 
 To set the library up on your computer, you need to configure and compile the code. As explained in more detail below, this involves typing:
@@ -9,7 +9,7 @@ To set the library up on your computer, you need to configure and compile the co
 at the shell prompt. Press the `<return>` key to execute the commands. The semicolon `;` allows us to put multiple commands on the same line. We could otherwise type them on seperate lines. 
 
 📲Configuration
-============
+---------------
 
 To configure this library up on your computer, in a unix shell type:
 
@@ -47,7 +47,7 @@ The configuation the sets e.g. (settings on `OS X x86_64`):
 in the file [`src/makefile`](src/makefile). Note that [`src/makefile`](src/makefile) is generate from the template [`src/Makefile.in`](src/Makefile.in).
 
 ⏳ Compilation
-===========
+----------------
 
 To compile and test the library (after running [`./configure`)](configure), type:
 

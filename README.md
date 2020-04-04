@@ -7,7 +7,7 @@ Simulation Studies](http://www2.geog.ucl.ac.uk/~plewis/phd). The main advantage 
 
 <div>
 <video controls preload width=500>
-<source src="docs/disk.mov" type="video/quicktime">
+<source src="docs/birch.mov" type="video/quicktime">
 </video>
 </div>
 

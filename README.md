@@ -15,7 +15,7 @@ To configure this library up on your computer, in a unix shell type:
 
     ./configure
 
-The configure script sets up the environment for your computer. The reason we type `./` in front of it, it to tell the unix interpreter that the script `configure` is in the **current working directory** which is indicated by `.`. It does this by testing that various options work on your particular setup. The range of options we have should work with most `*nix` setups. Specifically, [`configure`](configure)  sets variables from [`config.in`](config.in):
+Press the `<return>` key to execute the command. The configure script sets up the environment for your computer. The reason we type `./` in front of it, it to tell the unix interpreter that the script `configure` is in the **current working directory** which is indicated by `.`. It does this by testing that various options work on your particular setup. The range of options we have should work with most `*nix` setups. Specifically, [`configure`](configure)  sets variables from [`config.in`](config.in):
 
     set CCS = ("gcc" "cc")
     set CFLAGSS = ("-I." "-fPIC")
@@ -53,7 +53,7 @@ To compile and test the library (after running [`./configure`)](configure), type
 
     make clean all test
     
-as above. In fact, if you forget to run [`./configure`)](configure), this will run it for you, via the file [`makefile`](makefile). The command `make clean` clears out any previously compiled code. Then `make all` compiles the library `${BPMS}/lib/${ARCH}/libratlib.so` (so, you refer to this as `-L ${BPMS}/lib/${ARCH} -lratlib`. It also compiles a `C` language interface to the library, `${BPMS}/bin/${ARCH}/start`. `make test` runs a test on the `start` code, comparing a simple ray tracing outout to a reference one.
+Press the `<return>` key to execute the command. In fact, if you forget to run [`./configure`)](configure), this will run it for you, via the file [`makefile`](makefile). The command `make clean` clears out any previously compiled code. Then `make all` compiles the library `${BPMS}/lib/${ARCH}/libratlib.so` (so, you refer to this as `-L ${BPMS}/lib/${ARCH} -lratlib`. It also compiles a `C` language interface to the library, `${BPMS}/bin/${ARCH}/start`. `make test` runs a test on the `start` code, comparing a simple ray tracing outout to a reference one.
 
 To sum up, after compilation, you will have generated files in
 

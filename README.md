@@ -5,6 +5,9 @@ Simulation Studies](http://www2.geog.ucl.ac.uk/~plewis/phd). The main advantage 
 
 ![NDVI and material movie](http://www2.geog.ucl.ac.uk/~mdisney/3Dmovies/rami_lidar/plot.lidar.anim.cameraImage.HET16.single_tree.obj.vz.0.va.0.sz.0.sa.0.hips.gif)
 
+![Alt Text](https://media.giphy.com/media/vFKqnCdLPNOKc/giphy.gif)
+
+
 
 To set the library up on your computer, you need to configure and compile the code. As explained in more detail below, this involves typing:
 

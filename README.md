@@ -1,6 +1,6 @@
 🐁 librat🐀
 ------------
-librat (actually called ratlib in the code) is a ray tracing library built for radiative trabnsfer simulations for remote sensing studies.
+`librat` (actually called `ratlib` in the code) is a ray tracing library built for radiative trabnsfer simulations for remote sensing studies.
 
 🐁 Installation
 ============

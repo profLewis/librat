@@ -1,8 +1,6 @@
-librat
+librat 🐀
 ------------
-`librat` (actually called `ratlib` in the code) is a ray tracing library built for radiative trabnsfer simulations for remote sensing studies.
-
-    lib🐁 rat🐀lib
+`librat` (🐁 actually called `ratlib` in the code) is a ray tracing library built for radiative trabnsfer simulations for remote sensing studies.
 
 📲Installation
 ============
@@ -57,5 +55,5 @@ To sum up, after compilation, you will have generated files in
 * [`bin/${ARCH}`](bin/x86_64) : executable -- `start`
 * [`lib/${ARCH}`](lib/x86_64) : shared object library -- `libratlib.so`
 
-⛓ Notice that these links (`bin/x86_64`, `lib/x86_64`)  don't exist on the github repository: they are user-generated!
+Notice that these links ⛓ (`bin/x86_64`, `lib/x86_64`)  don't exist on the github repository: they are user-generated!
 

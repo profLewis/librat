@@ -34,3 +34,4 @@ source test_WG
 
 cd $csh
 source postfix
+exit 0

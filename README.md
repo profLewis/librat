@@ -2,10 +2,16 @@ librat 🐀
 ------------
 `librat` (actually called `ratlib` in the code. 🐁 ) is a ray tracing library built for radiative trabnsfer simulations for remote sensing studies.
 
+To set the library up on your computer, you need to configure and compile the code. As explained in more detail below, this involves typing:
+
+    ./configure; make clean all test
+    
+at the shell prompt. Press the `<return>` key to execute the commands. The semicolon `;` allows us to put multiple commands on the same line. We couldotherwise type them on seperate lines. 
+
 📲Configuration
 ============
 
-To set this library up on your computer, in a unix shell type:
+To configure this library up on your computer, in a unix shell type:
 
     ./configure
 

@@ -1,7 +1,7 @@
 # librat
-librat
+librat 
 
-🙈 Installation
+🐁 Installation
 ============
 
 To set this up, in a unix shell type:
@@ -40,7 +40,7 @@ The configuation the sets e.g. (settings on `OS X x86_64`):
 
 in the file [`src/makefile`](src/makefile). Note that [`src/makefile`](src/makefile) is generate from the template [`src/Makefile.in`](src/Makefile.in).
 
-🙈 Compilation
+🐀 Compilation
 ===========
 
 To compile and test the library (after running [`./configure`)](configure), type:
@@ -54,5 +54,5 @@ To sum up, after compilation, you will have generated files in
 * [`bin/${ARCH}`](bin/x86_64) : executable -- `start`
 * [`lib/${ARCH}`](lib/x86_64) : shared object library -- `libratlib.so`
 
-😊 Notice that these links (`bin/x86_64`, `lib/x86_64`)  don't exist on the github repository: they are user-generated!
+⛓ Notice that these links (`bin/x86_64`, `lib/x86_64`)  don't exist on the github repository: they are user-generated!
 

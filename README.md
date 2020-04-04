@@ -1,16 +1,15 @@
 librat 🐀
 ------------
-`librat` (🐁 actually called `ratlib` in the code) is a ray tracing library built for radiative trabnsfer simulations for remote sensing studies.
+`librat` (actually called `ratlib` in the code. 🐁 ) is a ray tracing library built for radiative trabnsfer simulations for remote sensing studies.
 
-📲Installation
+📲Configuration
 ============
 
-To set this up, in a unix shell type:
+To set this library up on your computer, in a unix shell type:
 
     ./configure
-    make clean all test
 
-The configure script sets variables from [`config.in`](config.in):
+The configure script sets up the environment for your computer. The reason we type `./` in front of it, it to tell the unix interpreter that the script `configure` is in the **current working directory** which is indicated by `.`. It does this by testing that various options work on your particular setup. The range of options we have should work with most `*nix` setups. Specifically, [`configure`](configure)  sets variables from [`config.in`](config.in):
 
     set CCS = ("gcc" "cc")
     set CFLAGSS = ("-I." "-fPIC")

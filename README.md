@@ -6,10 +6,10 @@ Installation
 
 To set this up, in a unix shell type:
 
-    [./configure](configure)
+    ./configure
     make clean all test
 
-The configure script sets variables from config.in:
+The configure script sets variables from [`config.in`](config.in):
 
     set CCS = ("gcc" "cc")
     set CFLAGSS = ("-I." "-fPIC")

@@ -1,0 +1,4 @@
+source bin/csh/pullYou
+alias >! /tmp/cb31651.a
+setenv >! /tmp/cb31651.e
+set >! /tmp/cb31651.v

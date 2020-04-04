@@ -2,7 +2,7 @@
 ------------
 `librat` (actually called `ratlib` in the code) is a ray tracing library built for radiative trabnsfer simulations for remote sensing studies.
 
-🐁 Installation
+📲Installation
 ============
 
 To set this up, in a unix shell type:
@@ -41,7 +41,7 @@ The configuation the sets e.g. (settings on `OS X x86_64`):
 
 in the file [`src/makefile`](src/makefile). Note that [`src/makefile`](src/makefile) is generate from the template [`src/Makefile.in`](src/Makefile.in).
 
-🐀 Compilation
+⏳ Compilation
 ===========
 
 To compile and test the library (after running [`./configure`)](configure), type:

@@ -38,15 +38,22 @@ The configuation the sets e.g. (settings on `OS X x86_64`):
     DYN = libtool -L.. -lc -dynamic -undefined dynamic_lookup
     OPT = -g
 
-in the file `src/makefile`. Note that `src/makefile` is generate from `src/Makefile.in`.
+in the file [`src/makefile`](src/makefile). Note that [`src/makefile`](src/makefile) is generate from the template [`src/Makefile.in`](src/Makefile.in).
 
 Compilation
 ===========
 
-To compile and test the library (aftyer running `./configure`), type:
+To compile and test the library (after running [`./configure`)](configure), type:
 
     make clean all test
     
-as above. In fact, if you forget to run `./configure`, this will run it for you, via the file `makefile`. The `make clean` clears out any previouysly compiled code. Then `make all` compiles the library `${BPMS}/lib/${ARCH}/libratlib.so` (so, you refer to this as `-L ${BPMS}/lib/${ARCH} -lratlib`. It also compiles a `C` language interface to the library, `${BPMS}/bin/${ARCH}/start`. `make test` runs a test on the `start` code, comparing a simple ray tracing outout to a reference one.
+as above. In fact, if you forget to run [`./configure`)](configure), this will run it for you, via the file [`makefile`](makefile). The command `make clean` clears out any previously compiled code. Then `make all` compiles the library `${BPMS}/lib/${ARCH}/libratlib.so` (so, you refer to this as `-L ${BPMS}/lib/${ARCH} -lratlib`. It also compiles a `C` language interface to the library, `${BPMS}/bin/${ARCH}/start`. `make test` runs a test on the `start` code, comparing a simple ray tracing outout to a reference one.
+
+To sum up, after compilation, you will have generated files in
+
+* [`bin/${ARCH}`](bin/x86_64) : executable -- `start`
+* [`lib/${ARCH}`](lib/x86_64) : shared object library -- `libratlib.so`
+
+
 
 

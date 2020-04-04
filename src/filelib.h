@@ -1,6 +1,7 @@
 #ifndef FILELIB_H
 #define FILELIB_H
 #include <strings.h>
+#include <string.h>
 
 char *getFilenameExtension(),*prependEnv(),*prependDIR();
 int	get_mmap_flag();

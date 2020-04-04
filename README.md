@@ -6,7 +6,7 @@ Installation
 
 To set this up, in a unix shell type:
 
-    ./configure
+    [./configure](configure)
     make clean all test
 
 The configure script sets variables from config.in:

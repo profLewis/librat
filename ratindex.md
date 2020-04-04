@@ -8,7 +8,12 @@ Example 3D animations
 ----------------------
 [This page](http://www.geog.ucl.ac.uk/~mdisney/3Dmovies) contains a series of animations of both reflectance and lidar simulations, as animated gifs (large) and QT movies (smaller).
 
-  
+<div>
+<video controls preload width=500>
+<source src="docs/birch.mov" type="video/quicktime">
+</video>
+</div>
+
 References 
 ------------
 Recent PhD and Msc theses

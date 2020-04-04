@@ -3,6 +3,8 @@
 
 #include "filelib.h"
 
+
+
 #define TRUE 1
 #define FALSE 0
 #define BLANK_EDGES 1
@@ -191,6 +193,11 @@ int setImageNameH(GenericImage *ImagePtr,char* file);
 #endif
 #ifndef MIN
 #define MIN(a,b) ((a<b)?(a):(b))
+#endif
+
+
+#ifndef HUGE
+#define HUGE 1e10
 #endif
 
 #endif

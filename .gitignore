@@ -3,6 +3,7 @@
 
 # my stuff
 config.out
+start
 
 # Object files
 *.o

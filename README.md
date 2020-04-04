@@ -5,9 +5,23 @@
 </p>
 <h3 align="center">librat 🐀</h3>
 
-
-`librat` (actually called `ratlib` in the code ) is a ray tracing library built for radiative transfer simulations for remote sensing studies. It was originally written in the later 1980s/early 1990s by [P. Lewis](http://www2.geog.ucl.ac.uk/~plewis/), as part of his [PhD, A Botanical Plant Modelling System for Remote Sensing
+<p align="center">
+  `librat` (actually called `ratlib` in the code ) is a ray tracing library built for radiative transfer simulations for remote sensing studies. It was originally written in the later 1980s/early 1990s by [P. Lewis](http://www2.geog.ucl.ac.uk/~plewis/), as part of his [PhD, A Botanical Plant Modelling System for Remote Sensing
 Simulation Studies, UCL, 1996](http://www2.geog.ucl.ac.uk/~plewis/phd). The main advantage of this code is that it is part of a community reference effort for radiative transfer. That has been a major motivating factor in releasing the code in this (easy to use) form. It has also been used in a [wide range of studies](docs/ratindex.md).
+  
+  <br>
+  <a href="https://github.com/profLewis/librat/docs"><strong>Explore librat docs »</strong></a>
+  <br>
+  <br>
+  <a href="https://github.com/profLewis/librat/issues/new?template=bug.md">Report bug</a>
+  ·
+  <a href="https://github.com/profLewis/librat/issues/new?template=feature.md&labels=feature">Request feature</a>
+  ·
+  <a href="https://blog.librat.com/">Blog</a>
+</p>
+
+
+
 
 
 To set the library up on your computer, you need to configure and compile the code. As explained in more detail below, this involves typing:

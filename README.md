@@ -5,6 +5,11 @@ Simulation Studies](http://www2.geog.ucl.ac.uk/~plewis/phd). The main advantage 
 
 ![NDVI and material movie](docs/HET16.gif)
 
+<div>
+<video controls preload width=500>
+<source src="docs/disk.mov" type="video/quicktime">
+</video>
+</div>
 
 To set the library up on your computer, you need to configure and compile the code. As explained in more detail below, this involves typing:
 

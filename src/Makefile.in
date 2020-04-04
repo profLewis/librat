@@ -16,7 +16,8 @@ ARCH = __ARCH__
 OBJ = objects.${ARCH}
 
 BPMS = __BPMS__
-LIBRARY = ${BPMS}/lib
+LIB = ${BPMS}/lib
+BIN = ${BPMS}/bin
 
 CFLAGS = __CFLAGS__
 MAKE = __MAKE__
@@ -35,31 +36,30 @@ ANCOBJS = ${OBJ}/error.o ${OBJ}/filelib.o ${OBJ}/hiplib.o ${OBJ}/envilib.o ${OBJ
 
 STARTOBJS = ${OBJ}/${START}.o
 
+all:		${LIB}/${ARCH}/${LIBRAT}.so ${START}
 
-all:		${LIBRAT}_${ARCH}.so ${START}
 
 sick:		
 		@echo "stick your fingers down your throat"
 
-lib:		all
+
+${LIB}/${ARCH}/${LIBRAT}.so:	${PRATOBJ} ${ANCOBJS} 
+		mkdir -p ${LIB}/${ARCH} 
+		$(DYN) -o ${LIB}/${ARCH}/${LIBRAT}.so ${PRATOBJ} ${ANCOBJS}
 
 
-${LIBRAT}_${ARCH}.so:	${PRATOBJ} ${ANCOBJS} 
-		$(DYN) -o ${BPMS}/lib/${LIBRAT}_${ARCH}.so ${PRATOBJ} ${ANCOBJS}
-
-
-${START}:	${STARTOBJS} ${LIBRAT}_${ARCH}.so
-		@mkdir -p ${BPMS}/bin/${ARCH}
-		$(CC) $(CFLAGS) -L${BPMS}/lib -L. -L${LIBRARY} -o ${BPMS}/bin/${ARCH}/$@  ${STARTOBJS} -lratlib_${ARCH} -lm -lc
+${START}:	${STARTOBJS} ${LIB}/${ARCH}/${LIBRAT}.so
+		@mkdir -p ${BIN}/${ARCH}
+		$(CC) $(CFLAGS) ${OPT} -L${LIB}/${ARCH} -o ${BIN}/${ARCH}/$@  ${STARTOBJS} -lratlib -lm -lc
 
 # object building
 
 ${OBJ}/%.o:	%.c
 		@mkdir -p ${OBJ}
-		$(CC) -I. -DDOUBLEDEF -I/usr/5include -D${ARCH} ${CFLAGS} -I${LIBRARY} -o $@ -c $<
+		$(CC) ${OPT} -I. -DDOUBLEDEF -I/usr/5include -D${ARCH} ${CFLAGS} -o $@ -c $<
 
 clean:
-		rm -f *% *.o ${PRATOBJ} ${ANCOBJS} ${STARTOBJS} ${BPMS}/lib/*_${ARCH}.so ${BPMS}/lib/*_${ARCH}.a
+		rm -f *% *.o ${PRATOBJ} ${ANCOBJS} ${STARTOBJS} ${LIB}/${ARCH}/${LIBRAT}.so
 
 
 

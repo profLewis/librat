@@ -4,19 +4,18 @@ all:	src/makefile
 
 src/makefile:
 	./configure
-	@cd src;make
 
-clean:
+clean:	src/makefile
 	@cd src;make clean
 
-test:   test_start.test.op
+test:   src/makefile test_start.test.op
 
-test_start.test.op:
+test_start.test.op:	src/makefile
 	make all
 	@bin/csh/test_start
 
-start:
+start:	src/makefile
 	@cd src;make start
 
-sick:
+sick:	src/makefile
 	@echo "stick your fingers down your throat"

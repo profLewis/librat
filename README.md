@@ -5,9 +5,7 @@ Simulation Studies](http://www2.geog.ucl.ac.uk/~plewis/phd). The main advantage 
 
 |   |  
 |:-:|
-|  aha |  
-
--> ![Millet movie](http://www2.geog.ucl.ac.uk/~plewis/images/millet/millet.gif) <-
+|  ![Millet movie](http://www2.geog.ucl.ac.uk/~plewis/images/millet/millet.gif) |  
 
 
 To set the library up on your computer, you need to configure and compile the code. As explained in more detail below, this involves typing:

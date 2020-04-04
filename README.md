@@ -1,10 +1,9 @@
 <p align="center">
-  <a href="http://www2.geog.ucl.ac.uk/~plewis">
+  <a href="https://github.com/profLewis/librat">
     <img src="http://www2.geog.ucl.ac.uk/~plewis/images/millet/millet.gif" alt="Millet the movie" width="72" height="72">
   </a>
 </p>
-
-<h1 align="center">librat 🐀</h1>
+<h3 align="center">librat 🐀</h3>
 
 
 `librat` (actually called `ratlib` in the code ) is a ray tracing library built for radiative transfer simulations for remote sensing studies. It was originally written in the later 1980s/early 1990s by [P. Lewis](http://www2.geog.ucl.ac.uk/~plewis/), as part of his [PhD, A Botanical Plant Modelling System for Remote Sensing
@@ -17,8 +16,10 @@ To set the library up on your computer, you need to configure and compile the co
     
 at the shell prompt. Press the `<return>` key to execute the commands. The semicolon `;` allows us to put multiple commands on the same line. We could otherwise type them on seperate lines. 
 
-📲Configuration
----------------
+
+<h4 align="center">📲Configuration</h4>
+
+
 
 To configure this library on your computer, in a unix shell type:
 
@@ -55,8 +56,9 @@ The configuation the sets e.g. (settings on `OS X x86_64`):
 
 in the file [`src/makefile`](src/makefile). Note that [`src/makefile`](src/makefile) is generate from the template [`src/Makefile.in`](src/Makefile.in).
 
-⏳ Compilation
-----------------
+
+<h4 align="center">⏳ Compilation</h4>
+
 
 To compile and test the library (after running [`./configure`)](configure), type:
 

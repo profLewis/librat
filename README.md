@@ -1,10 +1,13 @@
 librat 🐀
 =========
 `librat` (actually called `ratlib` in the code ) is a ray tracing library built for radiative transfer simulations for remote sensing studies. It was originally written in the later 1980s/early 1990s by [P. Lewis](http://www2.geog.ucl.ac.uk/~plewis/), as part of his [PhD, A Botanical Plant Modelling System for Remote Sensing
-Simulation Studies](http://www2.geog.ucl.ac.uk/~plewis/phd). The main advantage of this code is that it is part of a community reference effort for radiative transfer. That has been a major motivating factor in releasing the code in this (easy to use) form. It has also been used in a [wide range of studies](docs/ratindex.md).
+Simulation Studies, UCL, 1996](http://www2.geog.ucl.ac.uk/~plewis/phd). The main advantage of this code is that it is part of a community reference effort for radiative transfer. That has been a major motivating factor in releasing the code in this (easy to use) form. It has also been used in a [wide range of studies](docs/ratindex.md).
 
-
-   ![Millet movie](http://www2.geog.ucl.ac.uk/~plewis/images/millet/millet.gif)
+<p align="center">
+  <a href="http://www2.geog.ucl.ac.uk/~plewis">
+    <img src="http://www2.geog.ucl.ac.uk/~plewis/images/millet/millet.gif" alt="Millet the movie" width="72" height="72">
+  </a>
+</p>
 
 To set the library up on your computer, you need to configure and compile the code. As explained in more detail below, this involves typing:
 

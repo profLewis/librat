@@ -17,3 +17,6 @@ test_start.test.op:
 
 start:
 	@cd src;make start
+
+sick:
+	@echo "stick your fingers down your throat"

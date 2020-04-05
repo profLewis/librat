@@ -1,4 +1,50 @@
 #!/bin/bash
+echo "================================="
+# sort out where I am
+HERE="$(basename $0)"
+if [ $HERE = "configure" ]
+then      
+  HERE='.' 
+fi        
+cd $HERE 
+HERE=`pwd`
 
-bin/csh/test 
-exit 0
+#            
+# function make_test
+#  output test code to stdout
+#   
+function make_test ( ) {
+
+  declare out="$1"
+
+  echo '#include <stdio.h>'
+  echo 'int no_main(int argc,char ** argv){printf("hello world\n");return(1);}'
+  echo  ''
+}
+
+function doit (){
+  # run test_cmd one way aroiund or the
+  # other, whichever works
+  declare -p "$1" 2> /dev/null | \
+    grep -q '^declare \-a' && \
+      test_cmd "$@" $cmd || \
+      test_cmd $cmd "$@"     
+  
+  return $?
+}
+
+function test_cmd ( ){
+  # first argument is cmd
+  declare cmd="$1"
+  # others (now $@) list of arguments
+  shift 1
+  doit $cmd "$@"
+  return $?
+}
+
+CCS=(clang gcc cc)
+OPTS=(-O3 -O -g)
+TMP="/tmp"
+
+test_cmd ls '-l -t'
+

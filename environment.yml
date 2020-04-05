@@ -1,0 +1,16 @@
+name: geog0111
+channels: 
+    - conda-forge
+dependencies:
+    - beautifulsoup4
+    - lxml
+    - cryptography
+    - python>=3.6
+    - numpy 
+    - scipy
+    - matplotlib 
+    - gdal>2.2
+    - pandas  
+    - requests
+    - ipython
+    - jupyter

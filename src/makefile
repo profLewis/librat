@@ -15,7 +15,7 @@ LIBRAT = libratlib
 ARCH = x86_64
 OBJ = objects.${ARCH}
 
-BPMS = /Users/plewis/librat
+BPMS = ..
 LIB = ${BPMS}/lib
 BIN = ${BPMS}/bin
 

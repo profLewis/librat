@@ -4,6 +4,8 @@
 # my stuff
 config.out
 start
+.deps 
+.libs
 
 # Object files
 *.o

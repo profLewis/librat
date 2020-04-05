@@ -235,13 +235,13 @@ distuninstallcheck_listfiles = find . -type f -print
 am__distuninstallcheck_listfiles = $(distuninstallcheck_listfiles) \
   | sed 's|^\./|$(prefix)/|' | grep -v '$(infodir)/dir$$'
 distcleancheck_listfiles = find . -type f -print
-ACLOCAL = ${SHELL} /Users/plewis/librat/missing aclocal-1.16
+ACLOCAL = ${SHELL} /Users/plewis/librat/missing aclocal-1.15
 AMTAR = $${TAR-tar}
 AM_DEFAULT_VERBOSITY = 1
 AR = ar
 AUTOCONF = ${SHELL} /Users/plewis/librat/missing autoconf
 AUTOHEADER = ${SHELL} /Users/plewis/librat/missing autoheader
-AUTOMAKE = ${SHELL} /Users/plewis/librat/missing automake-1.16
+AUTOMAKE = ${SHELL} /Users/plewis/librat/missing automake-1.15
 AWK = awk
 CC = gcc
 CCDEPMODE = depmode=gcc3

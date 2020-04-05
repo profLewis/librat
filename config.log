@@ -30,8 +30,8 @@ Kernel configured for up to 8 processors.
 Processor type: x86_64h (Intel x86-64h Haswell)
 Processors active: 0 1 2 3 4 5 6 7
 Primary memory available: 16.00 gigabytes
-Default processor set: 633 tasks, 2728 threads, 8 processors
-Load average: 1.27, Mach factor: 6.72
+Default processor set: 634 tasks, 2784 threads, 8 processors
+Load average: 1.66, Mach factor: 6.32
 /bin/machine           = unknown
 /usr/bin/oslevel       = unknown
 /bin/universe          = unknown
@@ -405,8 +405,10 @@ on philips-MacBook-Pro.local
 config.status:1081: creating Makefile
 config.status:1081: creating src/Makefile
 config.status:1081: creating config.h
+config.status:1262: config.h is unchanged
 config.status:1310: executing depfiles commands
 config.status:1387: cd src       && sed -e '/# am--include-marker/d' Makefile         | make -f - am--depfiles
+make: Nothing to be done for `am--depfiles'.
 config.status:1392: $? = 0
 config.status:1310: executing libtool commands
 

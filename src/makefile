@@ -19,20 +19,14 @@ BPMS = ..
 LIB = ${BPMS}/lib
 BIN = ${BPMS}/bin
 
-CFLAGS = -I.
+CFLAGS = -I. -g
 MAKE = make
-WG = -L -R --create-dirs -o
-WGET = /usr/bin/curl
 CC = gcc
 DYN = libtool -L.. -lc -dynamic -undefined dynamic_lookup
-OPT = -g
 
-CFLAGS += -I. -DMMAP  -DVERBOSE -DDOUBLEDEF -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64
-CFLAGS += -DMATCHK -D${ARCH} -D_NO_NAG
+CFLAGS += -I. -DMMAP  -DVERBOSE -DDOUBLEDEF -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -DMATCHK -D${ARCH} -D_NO_NAG
 
-PRATOBJ = ${OBJ}/rpv.o ${OBJ}/cylinderTess.o ${OBJ}/sphereTess.o ${OBJ}/ratFront.o ${OBJ}/disk.o ${OBJ}/dummy.o ${OBJ}/dem.o ${OBJ}/bbox.o ${OBJ}/facet.o ${OBJ}/camera.o ${OBJ}/intersect_objects.o ${OBJ}/random.o ${OBJ}/plane.o ${OBJ}/reflectance.o ${OBJ}/volumeRayTrace.o ${OBJ}/sphere.o ${OBJ}/cylinder.o ${OBJ}/ellipse.o ${OBJ}/spheroid.o ${OBJ}/sky.o ${OBJ}/sensor_rsr.o ${OBJ}/files.o ${OBJ}/mtllib.o ${OBJ}/bilinear.o ${OBJ}/dumper.o ${OBJ}/useful.o ${OBJ}/prat_wavefront_read.o ${OBJ}/images.o
-
-ANCOBJS = ${OBJ}/error.o ${OBJ}/filelib.o ${OBJ}/hiplib.o ${OBJ}/envilib.o ${OBJ}/imagelib.o ${OBJ}/libhipl.o ${OBJ}/r250.o ${OBJ}/randlcg.o ${OBJ}/4D_vectors.o ${OBJ}/vectors2.o ${OBJ}/2D_vectors.o ${OBJ}/2D_vectors_double.o ${OBJ}/3D_vectors_double.o  ${OBJ}/allocate.o ${OBJ}/matrix.o ${OBJ}/fratP.o ${OBJ}/matherr.o
+PRATOBJ = ${OBJ}/rpv.o ${OBJ}/cylinderTess.o ${OBJ}/sphereTess.o ${OBJ}/ratFront.o ${OBJ}/disk.o ${OBJ}/dummy.o ${OBJ}/dem.o ${OBJ}/bbox.o ${OBJ}/facet.o ${OBJ}/camera.o ${OBJ}/intersect_objects.o ${OBJ}/random.o ${OBJ}/plane.o ${OBJ}/reflectance.o ${OBJ}/volumeRayTrace.o ${OBJ}/sphere.o ${OBJ}/cylinder.o ${OBJ}/ellipse.o ${OBJ}/spheroid.o ${OBJ}/sky.o ${OBJ}/sensor_rsr.o ${OBJ}/files.o ${OBJ}/mtllib.o ${OBJ}/bilinear.o ${OBJ}/dumper.o ${OBJ}/useful.o ${OBJ}/prat_wavefront_read.o ${OBJ}/images.o ${OBJ}/error.o ${OBJ}/filelib.o ${OBJ}/hiplib.o ${OBJ}/envilib.o ${OBJ}/imagelib.o ${OBJ}/libhipl.o ${OBJ}/r250.o ${OBJ}/randlcg.o ${OBJ}/4D_vectors.o ${OBJ}/vectors2.o ${OBJ}/2D_vectors.o ${OBJ}/2D_vectors_double.o ${OBJ}/3D_vectors_double.o  ${OBJ}/allocate.o ${OBJ}/matrix.o ${OBJ}/fratP.o ${OBJ}/matherr.o
 
 STARTOBJS = ${OBJ}/${START}.o
 
@@ -43,23 +37,23 @@ sick:
 		@echo "stick your fingers down your throat"
 
 
-${LIB}/${ARCH}/${LIBRAT}.so:	${PRATOBJ} ${ANCOBJS} 
+${LIB}/${ARCH}/${LIBRAT}.so:	${PRATOBJ} 
 		mkdir -p ${LIB}/${ARCH} 
-		$(DYN) -o ${LIB}/${ARCH}/${LIBRAT}.so ${PRATOBJ} ${ANCOBJS}
+		$(DYN) -o ${LIB}/${ARCH}/${LIBRAT}.so ${PRATOBJ} 
 
 
 ${START}:	${STARTOBJS} ${LIB}/${ARCH}/${LIBRAT}.so
 		@mkdir -p ${BIN}/${ARCH}
-		$(CC) $(CFLAGS) ${OPT} -L${LIB}/${ARCH} -o ${BIN}/${ARCH}/$@  ${STARTOBJS} -lratlib -lm -lc
+		$(CC) $(CFLAGS) -L${LIB}/${ARCH} -o ${BIN}/${ARCH}/$@  ${STARTOBJS} -lratlib -lm -lc
 
 # object building
 
 ${OBJ}/%.o:	%.c
 		@mkdir -p ${OBJ}
-		$(CC) ${OPT} -I. -DDOUBLEDEF -I/usr/5include -D${ARCH} ${CFLAGS} -o $@ -c $<
+		$(CC) -I. -DDOUBLEDEF -I/usr/5include -D${ARCH} ${CFLAGS} -o $@ -c $<
 
 clean:
-		rm -f *% *.o ${PRATOBJ} ${ANCOBJS} ${STARTOBJS} ${LIB}/${ARCH}/${LIBRAT}.so
+		rm -f *% *.o ${PRATOBJ} ${STARTOBJS} ${LIB}/${ARCH}/${LIBRAT}.so
 
 
 

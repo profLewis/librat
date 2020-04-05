@@ -2,7 +2,9 @@
 #define IMAGELIB_H
 
 #include "filelib.h"
+#ifndef HUGE
 #define HUGE 1000000
+#endif
 
 #define TRUE 1
 #define FALSE 0

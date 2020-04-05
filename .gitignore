@@ -6,6 +6,7 @@ config.out
 start
 .deps 
 .libs
+*.cache
 
 # Object files
 *.o

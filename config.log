@@ -30,8 +30,8 @@ Kernel configured for up to 8 processors.
 Processor type: x86_64h (Intel x86-64h Haswell)
 Processors active: 0 1 2 3 4 5 6 7
 Primary memory available: 16.00 gigabytes
-Default processor set: 637 tasks, 2722 threads, 8 processors
-Load average: 3.34, Mach factor: 4.65
+Default processor set: 635 tasks, 2742 threads, 8 processors
+Load average: 2.75, Mach factor: 5.24
 /bin/machine           = unknown
 /usr/bin/oslevel       = unknown
 /bin/universe          = unknown
@@ -351,41 +351,41 @@ configure:7699: $? = 0
 configure:7699: result: yes
 configure:7955: checking for objdir
 configure:7970: result: .libs
-configure:8234: checking if gcc supports -fno-rtti -fno-exceptions
-configure:8252: gcc -c -g -O2  -fno-rtti -fno-exceptions conftest.c >&5
-configure:8256: $? = 0
-configure:8269: result: yes
-configure:8627: checking for gcc option to produce PIC
-configure:8634: result: -fno-common -DPIC
-configure:8642: checking if gcc PIC flag -fno-common -DPIC works
-configure:8660: gcc -c -g -O2  -fno-common -DPIC -DPIC conftest.c >&5
-configure:8664: $? = 0
-configure:8677: result: yes
-configure:8706: checking if gcc static flag -static works
-configure:8734: result: no
-configure:8749: checking if gcc supports -c -o file.o
-configure:8770: gcc -c -g -O2  -o out/conftest2.o conftest.c >&5
-configure:8774: $? = 0
-configure:8796: result: yes
-configure:8804: checking if gcc supports -c -o file.o
-configure:8851: result: yes
-configure:8884: checking whether the gcc linker (/Library/Developer/CommandLineTools/usr/bin/ld) supports shared libraries
-configure:10143: result: yes
-configure:10383: checking dynamic linker characteristics
-configure:11201: result: darwin19.3.0 dyld
-configure:11323: checking how to hardcode library paths into programs
-configure:11348: result: immediate
-configure:11896: checking whether stripping libraries is possible
-configure:11910: result: yes
-configure:11936: checking if libtool supports shared libraries
-configure:11938: result: yes
-configure:11941: checking whether to build shared libraries
-configure:11966: result: yes
-configure:11969: checking whether to build static libraries
-configure:11973: result: yes
-configure:12121: checking that generated files are newer than configure
-configure:12127: result: done
-configure:12150: creating ./config.status
+configure:8230: checking if gcc supports -fno-rtti -fno-exceptions
+configure:8248: gcc -c -g -O2  -fno-rtti -fno-exceptions conftest.c >&5
+configure:8252: $? = 0
+configure:8265: result: yes
+configure:8623: checking for gcc option to produce PIC
+configure:8630: result: -fno-common -DPIC
+configure:8638: checking if gcc PIC flag -fno-common -DPIC works
+configure:8656: gcc -c -g -O2  -fno-common -DPIC -DPIC conftest.c >&5
+configure:8660: $? = 0
+configure:8673: result: yes
+configure:8702: checking if gcc static flag -static works
+configure:8730: result: no
+configure:8745: checking if gcc supports -c -o file.o
+configure:8766: gcc -c -g -O2  -o out/conftest2.o conftest.c >&5
+configure:8770: $? = 0
+configure:8792: result: yes
+configure:8800: checking if gcc supports -c -o file.o
+configure:8847: result: yes
+configure:8880: checking whether the gcc linker (/Library/Developer/CommandLineTools/usr/bin/ld) supports shared libraries
+configure:10139: result: yes
+configure:10379: checking dynamic linker characteristics
+configure:11197: result: darwin19.3.0 dyld
+configure:11319: checking how to hardcode library paths into programs
+configure:11344: result: immediate
+configure:11892: checking whether stripping libraries is possible
+configure:11906: result: yes
+configure:11932: checking if libtool supports shared libraries
+configure:11934: result: yes
+configure:11937: checking whether to build shared libraries
+configure:11962: result: yes
+configure:11965: checking whether to build static libraries
+configure:11969: result: yes
+configure:12117: checking that generated files are newer than configure
+configure:12123: result: done
+configure:12146: creating ./config.status
 
 ## ---------------- ##
 ## Cache variables. ##

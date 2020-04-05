@@ -156,7 +156,7 @@ give_advice ()
     aclocal*)
       pwd
       ls
-      which aclocal
+      aclocal --version
       echo "You should only need it if you modified 'acinclude.m4' or"
       echo "$configure_deps."
       program_details 'aclocal'

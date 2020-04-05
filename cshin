@@ -1,4 +1,0 @@
-source bin/csh/pushMe
-alias >! /tmp/cb31700.a
-setenv >! /tmp/cb31700.e
-set >! /tmp/cb31700.v

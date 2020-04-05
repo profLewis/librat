@@ -154,8 +154,6 @@ give_advice ()
       program_details 'automake'
       ;;
     aclocal*)
-      pwd
-      ls
       aclocal --version
       echo "You should only need it if you modified 'acinclude.m4' or"
       echo "$configure_deps."

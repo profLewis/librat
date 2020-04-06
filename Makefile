@@ -1,4 +1,4 @@
-all:  src/makefile	
+all:	src/makefile	
 	@cd src;make 
 
 src/makefile:

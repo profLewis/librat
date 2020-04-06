@@ -71,7 +71,8 @@ MAKE=$(test_cmd which $MAKES)
 sed < ${BPMS}/src/makefile 's/@MAKE@/'$MAKE'/' > $TMP/tmp.$$; mv $TMP/tmp.$$ ${BPMS}/src/makefile
 export MAKE=$MAKE
 
-exit 0
+echo $CC
+
 # tidy up
 rm -f $TMP/test.c
-
+exit 0

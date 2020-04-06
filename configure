@@ -6,8 +6,7 @@
 # eg
 # LS=$(test_cmd which "lss ls")
 test_cmd () {
-  c="$1"
-  shift 1 
+  declare c="$1"; shift 1 
   declare -a rest=("${@}")
   echo "hello" "$rest" > '/dev/stderr'
   for arg in ${rest[@]}
@@ -59,7 +58,7 @@ echo '' >> $TMP/test.c
 ##################
 # $CC
 ##################
-CC=$(test_cmd "which -s" "${CCS}")
+CC=$(test_cmd "which -s" "${CCS[*]}")
 sed < ${BPMS}/src/makefile 's/@CC@/'$CC'/' > $TMP/tmp.$$; mv $TMP/tmp.$$ ${BPMS}/src/makefile
 echo $CC
 

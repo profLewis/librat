@@ -10,6 +10,8 @@ test_cmd () {
   declare -a rest=("${@}")
   echo "hello" "${rest[@]}" > '/dev/stderr'
   echo "7of9" "${#rest[@]}" > '/dev/stderr'
+  
+  
   for arg in ${rest[@]}
   do
     echo "trying" > '/dev/stderr'

@@ -8,6 +8,7 @@
 test_cmd () {
   declare c=$1
   shift 1 
+  echo "hello" "$@"
   for arg in "$@"
   do
     echo "trying"

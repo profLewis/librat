@@ -6,7 +6,7 @@
 # eg
 # LS=$(test_cmd which "lss ls")
 test_cmd () {
-  declare c=$1
+  declare c="$1"
   shift 1 
   declare rest = "${@}"
   echo "hello" "$rest" > '/dev/stderr'

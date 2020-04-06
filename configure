@@ -11,10 +11,12 @@ export SHELL
 test_cmd () {
   cmd=$1
   args=$2
+  echo "cmd is $cmd"
+  echo "options are $args"
   for arg in $args
   do
-    $cmd $arg > /dev/null 2>&1
-    if [ $? -eq 0 ]; then
+    if $cmd $arg > /dev/null 2>&1
+    then 
       retval=$arg
       return 0
     fi
@@ -44,10 +46,20 @@ sed < $BPMS/src/Makefile.in 's/@BPMS@/'$BPMS_'/' | sed 's/Qq/'$q'/g' | sed 's/@A
 mkdir -p bin/${ARCH}
 PATH=".:bin:bin/${ARCH}:${PATH}"
 
+# create test C code file
+echo "#include <stdio.h>" > $TMP/test.c
+echo 'int no_main(int argc,char ** argv){printf("hello world\n");return(1);}' >> $TMP/test.c
+echo "" >> $TMP/test.c
+
 ##################
 # $CC
 ##################
 if test_cmd which $CCS; then CC=$retval; else echo "error setting CC";exit 1; fi
 
-
+##################
+# $OPT
+##################
+if test_cmd "${CC} $TMP/test.c -o $TMP/test.o -c" $OPTS; then OPT=$retval; else echo "error setting OPT";exit 1; fi
+# tidy up
+rm -f $TMP/test.c
 

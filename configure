@@ -25,7 +25,6 @@ export -f test_cmd
 
 
 CCS=("gcc" "cc")
-CFLAGSS=("-I." "-fPIC")
 DYNS=("ld -G" "libtool  -L.. -lc -dynamic -undefined dynamic_lookup")
 MAKES=("gmake" "make")
 OPTS=("-fPIC" "-g")

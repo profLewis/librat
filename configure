@@ -1,27 +1,18 @@
 #! /bin/sh
 # Run this file to recreate the current configuration.
 
+# see
+# https://askubuntu.com/questions/674333/how-to-pass-an-array-as-function-argument
+# for help on syntax here -- bash is *horrible* syntax
 # run a test over a loop
 # and return the first that works
 # eg
 # LS=$(test_cmd which "lss ls")
-test_cmd () {
+function test_cmd () {
   declare c="$1"; shift 1 
-  declare -a rest=("${@}")
-  echo "hello" ${rest[@]} > '/dev/stderr'
-  echo "7of9" ${#rest[@]} > '/dev/stderr'
-  i=1
-  for arg in ${rest[@]}
+  rest=("$@")
+  for arg in "${rest[@]}";
   do
-    i=$(( $i + 1 ))
-    echo $i > '/dev/stderr'
-  done
-  
-  for arg in ${rest[@]}
-  do
-    echo "trying" > '/dev/stderr'
-    echo $c $arg > '/dev/stderr'
-    echo $arg $c > '/dev/stderr'
     if eval $c $arg > /dev/null 2>&1
     then 
       echo $arg
@@ -37,7 +28,7 @@ test_cmd () {
   return $?
 }
 
-CFLAGSS=("-O" "-O3" "-g")
+CFLAGSS=("-you can put nonesense in" "-O" "-O3" "-g")
 CCS=("clang" "gcc" "cc")
 DYNS=("libtool  -L.. -lc -dynamic -undefined dynamic_lookup" "ld -G")
 OPTS=("-fPIC" "-I.")
@@ -67,31 +58,31 @@ echo '' >> $TMP/test.c
 ##################
 # $CC
 ##################
-CC=$(test_cmd "which -s" "${CCS[*]}")
+CC=$(test_cmd "which -s" "${CCS[@]}")
 sed < ${BPMS}/src/makefile 's/@CC@/'$CC'/' > $TMP/tmp.$$; mv $TMP/tmp.$$ ${BPMS}/src/makefile
 echo $CC
 
 ##################
 # $CFLAGS
 ##################
-CFLAGS=$(test_cmd "${CC} $TMP/test.c -o $TMP/test.o -c" "${CFLAGSS[*]}")
+CFLAGS=$(test_cmd "${CC} $TMP/test.c -o $TMP/test.o -c" "${CFLAGSS[@]}")
 sed < ${BPMS}/src/makefile 's/@CFLAGS@/'$CFLAGS'/' > $TMP/tmp.$$; mv $TMP/tmp.$$ ${BPMS}/src/makefile
 echo $CFLAGS
 
 ################## 
 # $OPT
 ##################
-OPT=$(test_cmd "${CC} ${CFLAGS} $TMP/test.c -o $TMP/test.o -c" "${OPTS[*]}")
+OPT=$(test_cmd "${CC} ${CFLAGS} $TMP/test.c -o $TMP/test.o -c" "${OPTS[@]}")
 sed < ${BPMS}/src/makefile 's/@OPT@/'$OPT'/' > $TMP/tmp.$$; mv $TMP/tmp.$$ ${BPMS}/src/makefile
 echo $OPT
 
 ##################
 # $DYN
 ##################
-DYN=$(test_cmd "-o $TMP/test.so $TMP/test.o" "${DYNS[*]}")
+DYN=$(test_cmd "-o $TMP/test.so $TMP/test.o" "${DYNS[@]}")
 sed < ${BPMS}/src/makefile 's/@DYN@/'$DYN'/' > $TMP/tmp.$$; mv $TMP/tmp.$$ ${BPMS}/src/makefile
 echo $DYN
 
 # tidy up
-#rm -f $TMP/test.c
+rm -f $TMP/test.c
 exit 0 

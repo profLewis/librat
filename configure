@@ -20,6 +20,7 @@ test_cmd () {
       echo "found $arg" > '/dev/stderr'
       return $?
     elif eval $arg $c > /dev/null 2>&1
+    then
       echo $arg
       echo "found $arg" > '/dev/stderr' 
       return $?

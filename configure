@@ -8,7 +8,7 @@
 test_cmd () {
   c="$1"
   shift 1 
-  rest=("${@}")
+  declare -a rest=("${@}")
   echo "hello" "$rest" > '/dev/stderr'
   for arg in ${rest[@]}
   do

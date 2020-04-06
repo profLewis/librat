@@ -23,7 +23,7 @@ function test_cmd () {
     then
       echo "found 2" > /dev/stderr
       echo $arg
-      return $?
+      return $? 
     fi
   done
   return $?

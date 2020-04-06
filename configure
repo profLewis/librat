@@ -59,7 +59,7 @@ echo '' >> $TMP/test.c
 ##################
 # $CC
 ##################
-CC=$(test_cmd "which -s" ${CCS})
+CC=$(test_cmd "which -s" "${CCS}")
 sed < ${BPMS}/src/makefile 's/@CC@/'$CC'/' > $TMP/tmp.$$; mv $TMP/tmp.$$ ${BPMS}/src/makefile
 echo $CC
 

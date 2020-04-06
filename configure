@@ -21,7 +21,7 @@ test_cmd () {
       return $?
     elif eval $arg $c > /dev/null 2>&1
       echo $arg
-      echo "found $arg" > '/dev/stderr'
+      echo "found $arg" > '/dev/stderr' 
       return $?
     fi
   done

@@ -21,9 +21,8 @@ test_cmd () {
   done
   return $?
 }
-export -f test_cmd
 
-
+CFLAGSS=("-O" "-O3" "-g")
 CCS=("clang" "gcc" "cc")
 DYNS=("ld -G" "libtool  -L.. -lc -dynamic -undefined dynamic_lookup")
 MAKES=("gmake" "make")
@@ -53,18 +52,25 @@ echo '' >> $TMP/test.c
 ##################
 # $CC
 ##################
-export CC=$(test_cmd "which -s" $CCS)
+CC=$(test_cmd "which -s" $CCS)
 sed < ${BPMS}/src/makefile 's/@CC@/'$CC'/' > $TMP/tmp.$$; mv $TMP/tmp.$$ ${BPMS}/src/makefile
+
+##################
+# $CFLAGS
+##################
+CFLAGS=$(test_cmd "${CC} $TMP/test.c -o $TMP/test.o -c" $CFLAGSS)
+sed < ${BPMS}/src/makefile 's/@CFLAGS@/'$CFLAGS'/' > $TMP/tmp.$$; mv $TMP/tmp.$$ ${BPMS}/src/makefile
+
 ################## 
 # $OPT
 ##################
-export OPT=$(test_cmd "${CC} $TMP/test.c -o $TMP/test.o -c" $OPTS)
+OPT=$(test_cmd "${CC} $TMP/test.c -o $TMP/test.o -c" $OPTS)
 sed < ${BPMS}/src/makefile 's/@OPT@/'$OPT'/' > $TMP/tmp.$$; mv $TMP/tmp.$$ ${BPMS}/src/makefile
 
 ##################
 # $MAKE
 ##################
-export MAKE=$(test_cmd "which -s" $MAKES)
+MAKE=$(test_cmd "which -s" $MAKES)
 sed < ${BPMS}/src/makefile 's/@MAKE@/'$MAKE'/' > $TMP/tmp.$$; mv $TMP/tmp.$$ ${BPMS}/src/makefile
 
 # tidy up

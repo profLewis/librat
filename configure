@@ -17,15 +17,10 @@ function test_cmd () {
     then 
       echo $arg
       return $?
-    else
-      echo "try $arg $c" > /dev/stderr
-      eval $arg $c > /dev/stderr
-      if eval $arg $c > /dev/null 2>&1
-      then
-        echo "found 2" > /dev/stderr
-        echo $arg
-        return $? 
-      fi
+    elif eval $arg $c > /dev/null 2>&1
+    then
+      echo $arg
+      return $? 
     fi
   done
   return $?

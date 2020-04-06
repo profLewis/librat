@@ -57,19 +57,19 @@ echo '' >> $TMP/test_$$.c
 # $CC
 ##################
 CC=$(test_cmd "which -s" "${CCS[@]}")
-sed < ${BPMS}/src/makefile 's/@CC@/''$CC''/' > $TMP/tmp.$$; mv $TMP/tmp.$$ ${BPMS}/src/makefile
+sed < ${BPMS}/src/makefile 's/@CC@/'"$CC"'/' > $TMP/tmp.$$; mv $TMP/tmp.$$ ${BPMS}/src/makefile
 
 ##################
 # $CFLAGS
 ##################
 CFLAGS=$(test_cmd "${CC} $TMP/test_$$.c -o $TMP/test_$$.o -c" "${CFLAGSS[@]}")
-sed < ${BPMS}/src/makefile 's/@CFLAGS@/''$CFLAGS''/' > $TMP/tmp.$$; mv $TMP/tmp.$$ ${BPMS}/src/makefile
+sed < ${BPMS}/src/makefile 's/@CFLAGS@/'"$CFLAGS"'/' > $TMP/tmp.$$; mv $TMP/tmp.$$ ${BPMS}/src/makefile
 
 ################## 
 # $OPT
 ##################
 OPT=$(test_cmd "${CC} ${CFLAGS} $TMP/test_$$.c -o $TMP/test_$$.o -c" "${OPTS[@]}")
-sed < ${BPMS}/src/makefile 's/@OPT@/''$OPT''/' > $TMP/tmp.$$; mv $TMP/tmp.$$ ${BPMS}/src/makefile
+sed < ${BPMS}/src/makefile 's/@OPT@/'"$OPT"'/' > $TMP/tmp.$$; mv $TMP/tmp.$$ ${BPMS}/src/makefile
 
 ##################
 # $DYN

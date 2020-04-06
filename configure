@@ -62,7 +62,7 @@ echo $CFLAGS
 ################## 
 # $OPT
 ##################
-OPT=$(test_cmd "${CC} $TMP/test.c -o $TMP/test.o -c" $OPTS)
+OPT=$(test_cmd "${CC} ${CFLAGS} $TMP/test.c -o $TMP/test.o -c" $OPTS)
 sed < ${BPMS}/src/makefile 's/@OPT@/'$OPT'/' > $TMP/tmp.$$; mv $TMP/tmp.$$ ${BPMS}/src/makefile
 echo $OPT
 

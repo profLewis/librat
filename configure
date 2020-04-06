@@ -8,9 +8,9 @@ export SHELL
 # and return the first that works
 # eg
 # if test_cmd which "lss ls"; then LS=$retval; else echo "error setting LS"; fi
-test_cmd () {
-  cmd=$1
-  args=$2
+test_cmd_arg () {
+  local cmd=$1
+  local args=$2
   echo "cmd is $cmd"
   echo "options are $args"
   for arg in $args
@@ -18,6 +18,20 @@ test_cmd () {
     if $cmd $arg > /dev/null 2>&1
     then 
       retval=$arg
+      return 0
+    fi
+  done
+  return 1
+}
+
+test_cmd () {
+  local cmds=$1
+  echo "cmds are $cmds"
+  for cmd in $cmds
+  do
+    if $cmd > /dev/null 2>&1
+    then 
+      retval=$cmd
       return 0
     fi
   done
@@ -54,13 +68,13 @@ echo '' >> $TMP/test.c
 ##################
 # $CC
 ##################
-if test_cmd which $CCS; then CC=$retval; else echo "error setting CC";exit 1; fi
+if test_cmd_arg which $CCS; then CC=$retval; else echo "error setting CC";exit 1; fi
 sed < ${BPMS}/src/makefile 's/@CC@/'$CC'/' > $TMP/tmp.$$; mv $TMP/tmp.$$ ${BPMS}/src/makefile
 
 ##################
 # $OPT
 ##################
-if test_cmd "${CC} $TMP/test.c -o $TMP/test.o -c" $OPTS; then OPT=$retval; else echo "error setting OPT";exit 1; fi
+if test_cmd_arg "${CC} $TMP/test.c -o $TMP/test.o -c" $OPTS; then OPT=$retval; else echo "error setting OPT";exit 1; fi
 sed < ${BPMS}/src/makefile 's/@OPT@/'$OPT'/' > $TMP/tmp.$$; mv $TMP/tmp.$$ ${BPMS}/src/makefile
 
 ##################

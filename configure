@@ -4,6 +4,24 @@
 SHELL=${CONFIG_SHELL-/bin/sh}
 export SHELL
 
+# run a test over a loop
+# and return the first that works
+# eg
+# if test_cmd which "lss ls"; then LS=$retval; else echo "error setting LS"; fi
+test_cmd () {
+  cmd=$1
+  args=$2
+  for arg in $args
+  do
+    $cmd $arg > /dev/null 2>&1
+    if [ $? -eq 0 ]; then
+      retval=$arg
+      return 0
+    fi
+  done
+  return 1
+}
+
 CCS=("gcc" "cc")
 CFLAGSS=("-I." "-fPIC")
 DYNS=("ld -G" "libtool  -L.. -lc -dynamic -undefined dynamic_lookup")
@@ -29,18 +47,7 @@ PATH=".:bin:bin/${ARCH}:${PATH}"
 ##################
 # $CC
 ##################
+if test_cmd which $CCS; then CC=$retval; else echo "error setting CC";exit 1; fi
 
-cmd=which
-args=$CCS
 
-test_cmd () {
-  for arg in $args
-  do
-    which $arg > /dev/null 2>&1
-    if [ $? -eq 0 ]; then
-      return $arg
-    fi
-  done
-  return 
-}
 

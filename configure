@@ -22,7 +22,7 @@ test_cmd () {
 CFLAGSS=("-O" "-O3" "-g")
 CCS=("clang" "gcc" "cc")
 DYNS=("ld -G" "libtool  -L.. -lc -dynamic -undefined dynamic_lookup")
-OPTS=("-PIC" "-fPIC" "-I.")
+OPTS=("-fPIC" "-I.")
 
 # specify a temporary directory
 TMP=/tmp

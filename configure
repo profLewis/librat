@@ -22,7 +22,7 @@ test_cmd () {
 CFLAGSS=("-O" "-O3" "-g")
 CCS=("clang" "gcc" "cc")
 DYNS=("ld -G" "libtool  -L.. -lc -dynamic -undefined dynamic_lookup")
-OPTS=("-fPIC" "-I.")
+OPTS=("-PIC" "-fPIC" "-I.")
 
 # specify a temporary directory
 TMP=/tmp
@@ -66,7 +66,7 @@ sed < ${BPMS}/src/makefile 's/@OPT@/'$OPT'/' > $TMP/tmp.$$; mv $TMP/tmp.$$ ${BPM
 ##################
 # $DYN
 ##################
-DYN=$(test_cmd "-o $TMP/test.so $TMP/test.o" $DYNS)
+DYN=$(test_cmd "${OPT} -o $TMP/test.so $TMP/test.o" $DYNS)
 sed < ${BPMS}/src/makefile 's/@DYN@/'$DYN'/' > $TMP/tmp.$$; mv $TMP/tmp.$$ ${BPMS}/src/makefile
 
 # tidy up

@@ -26,12 +26,21 @@ sed < $BPMS/src/Makefile.in 's/@BPMS@/'$BPMS_'/' | sed 's/Qq/'$q'/g' | sed 's/@A
 mkdir -p bin/${ARCH}
 PATH=".:bin:bin/${ARCH}:${PATH}"
 
-for CC_ in $CCS
-do
-  which $CC_ > /dev/null 2>&1
-  if $? = 0; then
-    CC=${CC_}
-    break
-  fi
-done
-echo $CC
+##################
+# $CC
+##################
+
+cmd=which
+args=$CCS
+
+test_cmd () {
+  for arg in $args
+  do
+    which $arg > /dev/null 2>&1
+    if [ $? -eq 0 ]; then
+      return $arg
+    fi
+  done
+  return 
+}
+

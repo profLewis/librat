@@ -58,28 +58,28 @@ echo '' >> $TMP/test.c
 ##################
 # $CC
 ##################
-CC=$(test_cmd "which -s" $CCS)
+CC=$(test_cmd "which -s" "$CCS")
 sed < ${BPMS}/src/makefile 's/@CC@/'$CC'/' > $TMP/tmp.$$; mv $TMP/tmp.$$ ${BPMS}/src/makefile
 echo $CC
 
 ##################
 # $CFLAGS
 ##################
-CFLAGS=$(test_cmd "${CC} $TMP/test.c -o $TMP/test.o -c" $CFLAGSS)
+CFLAGS=$(test_cmd "${CC} $TMP/test.c -o $TMP/test.o -c" "$CFLAGSS")
 sed < ${BPMS}/src/makefile 's/@CFLAGS@/'$CFLAGS'/' > $TMP/tmp.$$; mv $TMP/tmp.$$ ${BPMS}/src/makefile
 echo $CFLAGS
 
 ################## 
 # $OPT
 ##################
-OPT=$(test_cmd "${CC} ${CFLAGS} $TMP/test.c -o $TMP/test.o -c" $OPTS)
+OPT=$(test_cmd "${CC} ${CFLAGS} $TMP/test.c -o $TMP/test.o -c" "$OPTS")
 sed < ${BPMS}/src/makefile 's/@OPT@/'$OPT'/' > $TMP/tmp.$$; mv $TMP/tmp.$$ ${BPMS}/src/makefile
 echo $OPT
 
 ##################
 # $DYN
 ##################
-DYN=$(test_cmd "-o $TMP/test.so $TMP/test.o" $DYNS)
+DYN=$(test_cmd "-o $TMP/test.so $TMP/test.o" "$DYNS")
 sed < ${BPMS}/src/makefile 's/@DYN@/'$DYN'/' > $TMP/tmp.$$; mv $TMP/tmp.$$ ${BPMS}/src/makefile
 echo $DYN
 

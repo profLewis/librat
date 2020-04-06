@@ -11,9 +11,9 @@ test_cmd () {
   echo "hello" "$@" > '/dev/stderr'
   for arg in "$@"
   do
-    echo "trying"
-    echo $c $arg
-    echo $arg $c
+    echo "trying" > '/dev/stderr'
+    echo $c $arg > '/dev/stderr'
+    echo $arg $c > '/dev/stderr'
     if eval $c $arg > /dev/null 2>&1 || eval $arg $c > /dev/null 2>&1
     then 
       echo $arg

@@ -7,7 +7,7 @@
 # LS=$(test_cmd which "lss ls")
 test_cmd () {
   declare c="$1"; shift 1 
-  declare -a rest=("${@}")
+  declare -a rest=(${@})
   echo "hello" ${rest[@]} > '/dev/stderr'
   echo "7of9" ${#rest[@]} > '/dev/stderr'
   

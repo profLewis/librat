@@ -69,7 +69,7 @@ echo $OPT
 ##################
 # $DYN
 ##################
-DYN=$(test_cmd "${OPT} -o $TMP/test.so $TMP/test.o" $DYNS)
+DYN=$(test_cmd "-o $TMP/test.so $TMP/test.o" $DYNS)
 sed < ${BPMS}/src/makefile 's/@DYN@/'$DYN'/' > $TMP/tmp.$$; mv $TMP/tmp.$$ ${BPMS}/src/makefile
 echo $DYN
 

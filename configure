@@ -49,38 +49,34 @@ mkdir -p bin/${ARCH}
 PATH=".:bin:bin/${ARCH}:${PATH}"
 
 # create test C code file
-echo '#include <stdio.h>' > $TMP/test.c
-echo 'int no_main(int argc,char ** argv){printf("hello world\\n");return(1);}' >> $TMP/test.c
-echo '' >> $TMP/test.c
+echo '#include <stdio.h>' > $TMP/test_$$.c
+echo 'int no_main(int argc,char ** argv){printf("hello world\\n");return(1);}' >> $TMP/test_$$.c
+echo '' >> $TMP/test_$$.c
 
 ##################
 # $CC
 ##################
 CC=$(test_cmd "which -s" "${CCS[@]}")
 sed < ${BPMS}/src/makefile 's/@CC@/''$CC''/' > $TMP/tmp.$$; mv $TMP/tmp.$$ ${BPMS}/src/makefile
-echo $CC
 
 ##################
 # $CFLAGS
 ##################
-CFLAGS=$(test_cmd "${CC} $TMP/test.c -o $TMP/test.o -c" "${CFLAGSS[@]}")
+CFLAGS=$(test_cmd "${CC} $TMP/test_$$.c -o $TMP/test_$$.o -c" "${CFLAGSS[@]}")
 sed < ${BPMS}/src/makefile 's/@CFLAGS@/''$CFLAGS''/' > $TMP/tmp.$$; mv $TMP/tmp.$$ ${BPMS}/src/makefile
-echo $CFLAGS
 
 ################## 
 # $OPT
 ##################
-OPT=$(test_cmd "${CC} ${CFLAGS} $TMP/test.c -o $TMP/test.o -c" "${OPTS[@]}")
+OPT=$(test_cmd "${CC} ${CFLAGS} $TMP/test_$$.c -o $TMP/test_$$.o -c" "${OPTS[@]}")
 sed < ${BPMS}/src/makefile 's/@OPT@/''$OPT''/' > $TMP/tmp.$$; mv $TMP/tmp.$$ ${BPMS}/src/makefile
-echo $OPT
 
 ##################
 # $DYN
 ##################
-DYN=$(test_cmd "-o $TMP/test.so $TMP/test.o" "${DYNS[@]}")
+DYN=$(test_cmd "-o $TMP/test_$$.so $TMP/test_$$.o" "${DYNS[@]}")
 sed < ${BPMS}/src/makefile 's/@DYN@/'"$DYN"'/' > $TMP/tmp.$$; mv $TMP/tmp.$$ ${BPMS}/src/makefile
-echo $DYN
 
 # tidy up
-rm -f $TMP/test.c
+rm -f $TMP/test_$$.c
 exit 0 

@@ -6,9 +6,9 @@
 # eg
 # LS=$(test_cmd which "lss ls")
 test_cmd () {
-  local c="$1"
+  c="$1"
   shift 1 
-  declare rest = "${@}"
+  rest="${@}"
   echo "hello" "$rest" > '/dev/stderr'
   for arg in ${rest[@]}
   do

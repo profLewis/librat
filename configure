@@ -28,7 +28,7 @@ CCS=("gcc" "cc")
 CFLAGSS=("-I." "-fPIC")
 DYNS=("ld -G" "libtool  -L.. -lc -dynamic -undefined dynamic_lookup")
 MAKES=("gmake" "make")
-OPTS=("-g")
+OPTS=("-fPIC" "-g")
 
 # specify a temporary directory
 TMP=/tmp

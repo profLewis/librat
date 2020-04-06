@@ -7,35 +7,19 @@ export SHELL
 # run a test over a loop
 # and return the first that works
 # eg
-# if test_cmd which "lss ls"; then LS=$retval; else echo "error setting LS"; fi
-test_cmd_arg () {
-  local cmd=$1
-  local args=$2
-  echo "cmd is $cmd"
-  echo "options are $args"
-  for arg in $args
-  do
-    if $cmd $arg > /dev/null 2>&1
-    then 
-      retval=$arg
-      return 0
-    fi
-  done
-  return 1
-}
-
+# LS=$(test_cmd which "lss ls")
 test_cmd () {
-  local cmds=$1
-  echo "cmds are $cmds"
-  for cmd in $cmds
+  declare c=$1
+  shift 1 
+  for arg in "$@"
   do
-    if $cmd > /dev/null 2>&1
+    if eval $c $arg > /dev/null 2>&1
     then 
-      retval=$cmd
-      return 0
+      echo $arg
+      return $?
     fi
   done
-  return 1
+  return $?
 }
 
 CCS=("gcc" "cc")

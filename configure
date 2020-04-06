@@ -31,7 +31,7 @@ MAKES=("gmake" "make")
 OPTS=("-g")
 
 # specify a temporary directory
-set TMP = /tmp
+TMP=/tmp
 
 ARCH=$(uname -m)
 HERE=$(pwd)
@@ -47,9 +47,9 @@ mkdir -p bin/${ARCH}
 PATH=".:bin:bin/${ARCH}:${PATH}"
 
 # create test C code file
-echo "#include <stdio.h>" > $TMP/test.c
-echo 'int no_main(int argc,char ** argv){printf("hello world\n");return(1);}' >> $TMP/test.c
-echo "" >> $TMP/test.c
+echo '#include <stdio.h>' > $TMP/test.c
+echo 'int no_main(int argc,char ** argv){printf("hello world\\n");return(1);}' >> $TMP/test.c
+echo '' >> $TMP/test.c
 
 ##################
 # $CC
@@ -60,6 +60,8 @@ if test_cmd which $CCS; then CC=$retval; else echo "error setting CC";exit 1; fi
 # $OPT
 ##################
 if test_cmd "${CC} $TMP/test.c -o $TMP/test.o -c" $OPTS; then OPT=$retval; else echo "error setting OPT";exit 1; fi
+
+exit 0
 # tidy up
 rm -f $TMP/test.c
 

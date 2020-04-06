@@ -8,7 +8,8 @@
 test_cmd () {
   declare c="$1"; shift 1 
   declare -a rest=("${@}")
-  echo "hello" "$rest" > '/dev/stderr'
+  echo "hello" "${rest[@]}" > '/dev/stderr'
+  echo ${#rest[@]} > '/dev/stderr'
   for arg in ${rest[@]}
   do
     echo "trying" > '/dev/stderr'

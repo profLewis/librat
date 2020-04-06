@@ -21,6 +21,8 @@ test_cmd () {
   done
   return $?
 }
+export -f test_cmd
+
 
 CCS=("gcc" "cc")
 CFLAGSS=("-I." "-fPIC")
@@ -54,18 +56,20 @@ echo '' >> $TMP/test.c
 ##################
 CC=$(test_cmd which $CCS)
 sed < ${BPMS}/src/makefile 's/@CC@/'$CC'/' > $TMP/tmp.$$; mv $TMP/tmp.$$ ${BPMS}/src/makefile
-
+export CC=$CC
 ##################
 # $OPT
 ##################
 OPT=$(test_cmd "${CC} $TMP/test.c -o $TMP/test.o -c" $OPTS)
 sed < ${BPMS}/src/makefile 's/@OPT@/'$OPT'/' > $TMP/tmp.$$; mv $TMP/tmp.$$ ${BPMS}/src/makefile
+export OPT=$OPT
 
 ##################
 # $MAKE
 ##################
 MAKE=$(test_cmd which $MAKES)
 sed < ${BPMS}/src/makefile 's/@MAKE@/'$MAKE'/' > $TMP/tmp.$$; mv $TMP/tmp.$$ ${BPMS}/src/makefile
+export MAKE=$MAKE
 
 exit 0
 # tidy up

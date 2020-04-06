@@ -9,7 +9,7 @@ test_cmd () {
   declare c=$1
   shift 1 
   echo "hello" "$@" > '/dev/stderr'
-  for arg in "$@"
+  for arg in $@
   do
     echo "trying" > '/dev/stderr'
     echo $c $arg > '/dev/stderr'

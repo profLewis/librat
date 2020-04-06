@@ -19,7 +19,6 @@ BPMS = @BPMS@
 LIB = ${BPMS}/lib
 BIN = ${BPMS}/bin
 
-CFLAGS = @CFLAGS@
 MAKE = @MAKE@
 CC = @CC@
 DYN = @DYN@

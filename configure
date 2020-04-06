@@ -1,9 +1,6 @@
 #! /bin/sh
 # Run this file to recreate the current configuration.
 
-SHELL=${CONFIG_SHELL-/bin/sh}
-export SHELL
-
 # run a test over a loop
 # and return the first that works
 # eg
@@ -13,7 +10,7 @@ test_cmd () {
   shift 1 
   for arg in "$@"
   do
-    if eval $c $arg > /dev/null 2>&1
+    if eval $c $arg > /dev/null 2>&1 || eval $arg $c > /dev/null 2>&1
     then 
       echo $arg
       return $?
@@ -25,8 +22,7 @@ test_cmd () {
 CFLAGSS=("-O" "-O3" "-g")
 CCS=("clang" "gcc" "cc")
 DYNS=("ld -G" "libtool  -L.. -lc -dynamic -undefined dynamic_lookup")
-MAKES=("gmake" "make")
-OPTS=("-fPIC" "-g")
+OPTS=("-fPIC" "-I.")
 
 # specify a temporary directory
 TMP=/tmp
@@ -68,10 +64,10 @@ OPT=$(test_cmd "${CC} $TMP/test.c -o $TMP/test.o -c" $OPTS)
 sed < ${BPMS}/src/makefile 's/@OPT@/'$OPT'/' > $TMP/tmp.$$; mv $TMP/tmp.$$ ${BPMS}/src/makefile
 
 ##################
-# $MAKE
+# $DYN
 ##################
-MAKE=$(test_cmd "which -s" $MAKES)
-sed < ${BPMS}/src/makefile 's/@MAKE@/'$MAKE'/' > $TMP/tmp.$$; mv $TMP/tmp.$$ ${BPMS}/src/makefile
+DYN=$(test_cmd "-o $TMP/test.so $TMP/test.o" $DYNS)
+sed < ${BPMS}/src/makefile 's/@DYN@/'$DYN'/' > $TMP/tmp.$$; mv $TMP/tmp.$$ ${BPMS}/src/makefile
 
 # tidy up
 rm -f $TMP/test.c

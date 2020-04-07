@@ -1,6 +1,16 @@
 #! /bin/bash
 # Run this file to recreate the current configuration.
 
+CFLAGSS=("-O" "-O3" "-g")
+CCS=("clang" "gcc" "cc")
+DYNS=("libtool  -L.. -lc -dynamic -undefined dynamic_lookup" "ld")
+OPTS=("-I." "-fPIC" )
+
+
+# specify a temporary directory
+TMP=/tmp
+
+
 # see
 # https://askubuntu.com/questions/674333/how-to-pass-an-array-as-function-argument
 # for help on syntax here -- sh is *horrible* syntax
@@ -31,14 +41,7 @@ function test_cmd () {
   return $?
 }
 
-CFLAGSS=("-O" "-O3" "-g")
-CCS=("clang" "gcc" "cc")
-DYNS=("libtool  -L.. -lc -dynamic -undefined dynamic_lookup" "ld -L.. -lc -dynamic -undefined dynamic_lookup")
-OPTS=("-I." "-fPIC" )
 
-
-# specify a temporary directory
-TMP=/tmp
 
 ARCH=$(uname -m)
 HERE=$(pwd)

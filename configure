@@ -33,7 +33,7 @@ function test_cmd () {
 
 CFLAGSS=("-O" "-O3" "-g")
 CCS=("clang" "gcc" "cc")
-DYNS=("libtool  -L.. -lc -dynamic -undefined dynamic_lookup" "ld -G")
+DYNS=("libtool  -L.. -lc -dynamic -undefined dynamic_lookup" "ld -L.. -lc -dynamic -undefined dynamic_lookup")
 OPTS=("-I." "-fPIC" )
 
 

@@ -7,6 +7,7 @@ src/makefile:
 clean:	src/makefile
 	@cd src;make clean
 
+check:
 test:	src/makefile test_start.test.op
 
 test_start.test.op:	src/makefile
@@ -18,3 +19,6 @@ start:	src/makefile
 
 sick:	src/makefile
 	@echo "stick your fingers down your throat"
+
+distcheck:
+	@echo "done"

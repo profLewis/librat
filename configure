@@ -1,4 +1,4 @@
-#!/bin/bassh
+#!/bin/bash
 # Run this file to recreate the current configuration.
 
 # see

@@ -31,7 +31,9 @@ function test_cmd () {
   return $?
 }
 
-CFLAGSS=("-you can put nonesense in" "-O" "-O3" "-g")
+
+which cc
+CFLAGSS=(""-O" "-O3" "-g")
 CCS=("clang" "gcc" "cc")
 DYNS=("libtool  -L.. -lc -dynamic -undefined dynamic_lookup" "ld -G")
 OPTS=("-fPIC" "-I.")

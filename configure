@@ -31,8 +31,6 @@ function test_cmd () {
   return $?
 }
 
-
-which cc
 CFLAGSS=("-O" "-O3" "-g")
 CCS=("clang" "gcc" "cc")
 DYNS=("libtool  -L.. -lc -dynamic -undefined dynamic_lookup" "ld -G")
@@ -63,7 +61,7 @@ echo '' >> $TMP/test_$$.c
 ##################
 # $CC
 ##################
-CC=$(test_cmd "which -s" "${CCS[@]}")
+CC=$(test_cmd "which" "${CCS[@]}")
 sed < ${BPMS}/src/makefile 's/@CC@/'"$CC"'/' > $TMP/tmp.$$; mv $TMP/tmp.$$ ${BPMS}/src/makefile
 
 ##################

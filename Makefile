@@ -19,3 +19,6 @@ start:	src/makefile
 
 sick:	src/makefile
 	@echo "stick your fingers down your throat"
+
+distcheck:
+	@echo "done"

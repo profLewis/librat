@@ -1,4 +1,4 @@
-#! /bin/sh
+#! /bin/bash
 # Run this file to recreate the current configuration.
 
 # see
@@ -8,7 +8,7 @@
 # and return the first that works
 # eg
 # LS=$(test_cmd which "lss ls")
-test_cmd () {
+function test_cmd () {
   declare c="$1"; shift 1 
   rest=("$@")
   for arg in "${rest[@]}";
@@ -16,15 +16,15 @@ test_cmd () {
     if eval $c $arg > /dev/null 2>&1
     then 
       echo $arg
-      echo "Type1" $arg > /dev/stderr
+      echo "Type1" $c $arg > /dev/stderr
       return $?
     elif eval $arg $c > /dev/null 2>&1
     then
       echo $arg
-      echo "Type1" $arg > /dev/stderr
+      echo "Type1" $arg $c  > /dev/stderr
       return $? 
     else
-      echo "Not" $arg > /dev/stderr
+      echo "Not" $c  $arg > /dev/stderr
     fi
     
   done
@@ -33,7 +33,7 @@ test_cmd () {
 
 
 which cc
-CFLAGSS=(""-O" "-O3" "-g")
+CFLAGSS=("-O" "-O3" "-g")
 CCS=("clang" "gcc" "cc")
 DYNS=("libtool  -L.. -lc -dynamic -undefined dynamic_lookup" "ld -G")
 OPTS=("-fPIC" "-I.")

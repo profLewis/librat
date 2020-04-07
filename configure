@@ -35,6 +35,7 @@ function test_cmd () {
       return $? 
     else
       echo "Not" $c  $arg > /dev/stderr
+      echo "Not" $arg $c > /dev/stderr
     fi
     
   done

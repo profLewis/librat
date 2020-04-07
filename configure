@@ -3,12 +3,12 @@
 
 # see
 # https://askubuntu.com/questions/674333/how-to-pass-an-array-as-function-argument
-# for help on syntax here -- bash is *horrible* syntax
+# for help on syntax here -- sh is *horrible* syntax
 # run a test over a loop
 # and return the first that works
 # eg
 # LS=$(test_cmd which "lss ls")
-function test_cmd () {
+test_cmd () {
   declare c="$1"; shift 1 
   rest=("$@")
   for arg in "${rest[@]}";

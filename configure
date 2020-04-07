@@ -1,4 +1,4 @@
-#!/bin/bash
+#! /bin/sh
 # Run this file to recreate the current configuration.
 
 # see
@@ -87,3 +87,4 @@ sed < ${BPMS}/src/makefile 's/@DYN@/'"$DYN"'/' > $TMP/tmp.$$; mv $TMP/tmp.$$ ${B
 # tidy up
 rm -f $TMP/test_$$.c
 exit 0 
+

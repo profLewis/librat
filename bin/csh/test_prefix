@@ -12,9 +12,9 @@ set arch = `uname -m`
 
 
 if ( ! $?LD_LIBRARY_PATH ) then
-  setenv LD_LIBRARY_PATH "$BPMS/lib"
+  setenv LD_LIBRARY_PATH "$BPMS/lib/${arch}"
 else
-   setenv LD_LIBRARY_PATH "$BPMS/lib:$LD_LIBRARY_PATH"
+   setenv LD_LIBRARY_PATH "$BPMS/lib/${arch}:$LD_LIBRARY_PATH"
 endif
 if ( ! $?DYLD_LIBRARY_PATH ) then
   setenv DYLD_LIBRARY_PATH "$BPMS/lib"

@@ -85,7 +85,7 @@ sed < ${BPMS}/src/makefile 's/@OPT@/'"$OPT"'/' > $TMP/tmp.$$; mv $TMP/tmp.$$ ${B
 ##################
 
 ${CC} $TMP/test_$$.c -c $CFLAGS $OPT -o $TMP/test_$$.o
-DYN=libtool
+DYN=ld
 #$(test_cmd "-o $TMP/test_$$.so $TMP/test_$$.o" "${DYNS[@]}")
 #DYN=${DYN-ld}
 sed < ${BPMS}/src/makefile 's/@DYN@/'"$DYN"'/' > $TMP/tmp.$$; mv $TMP/tmp.$$ ${BPMS}/src/makefile

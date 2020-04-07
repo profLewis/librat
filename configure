@@ -16,12 +16,17 @@ function test_cmd () {
     if eval $c $arg > /dev/null 2>&1
     then 
       echo $arg
+      echo "Type1" $arg > /dev/stderr
       return $?
     elif eval $arg $c > /dev/null 2>&1
     then
       echo $arg
+      echo "Type1" $arg > /dev/stderr
       return $? 
+    else
+      echo "Not" $arg > /dev/stderr
     fi
+    
   done
   return $?
 }

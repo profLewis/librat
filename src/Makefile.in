@@ -24,7 +24,7 @@ CC = @CC@
 DYN = @DYN@
 OPT = @OPT@
 
-CFLAGS += -I. -DMMAP  -DVERBOSE -DDOUBLEDEF -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64
+CFLAGS += -I. -DVERBOSE -DDOUBLEDEF -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64
 CFLAGS += -DMATCHK -D${ARCH} -D_NO_NAG
 
 PRATOBJ = ${OBJ}/rpv.o ${OBJ}/cylinderTess.o ${OBJ}/sphereTess.o ${OBJ}/ratFront.o ${OBJ}/disk.o ${OBJ}/dummy.o ${OBJ}/dem.o ${OBJ}/bbox.o ${OBJ}/facet.o ${OBJ}/camera.o ${OBJ}/intersect_objects.o ${OBJ}/random.o ${OBJ}/plane.o ${OBJ}/reflectance.o ${OBJ}/volumeRayTrace.o ${OBJ}/sphere.o ${OBJ}/cylinder.o ${OBJ}/ellipse.o ${OBJ}/spheroid.o ${OBJ}/sky.o ${OBJ}/sensor_rsr.o ${OBJ}/files.o ${OBJ}/mtllib.o ${OBJ}/bilinear.o ${OBJ}/dumper.o ${OBJ}/useful.o ${OBJ}/prat_wavefront_read.o ${OBJ}/images.o ${OBJ}/start.o

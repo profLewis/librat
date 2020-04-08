@@ -2,8 +2,7 @@
 # Run this file to recreate the current configuration.
 
 CFLAGSS=("-O" "-O3" "-g")
-CCS=("clang" "gcc" "cc")
-DYNS=("ld -dy -lc -lm  -undefined dynamic_lookup" "libtool -lc -lm -dynamic -undefined dynamic_lookup" "ld -G")
+CCS=("gcc" "clang"  "cc")
 OPTS=("-I." "-fPIC" )
 
 
@@ -83,6 +82,8 @@ sed < ${BPMS}/src/makefile 's/@OPT@/'"$OPT"'/' > $TMP/tmp.$$; mv $TMP/tmp.$$ ${B
 ##################
 # $DYN
 ##################
+# try using CC to link, as this will be sensible most of the time
+DYNS=("${CC} -dy -lc -lm  -undefined dynamic_lookup" "ld -dy -lc -lm  -undefined dynamic_lookup" "libtool -lc -lm -dynamic -undefined dynamic_lookup" "ld -G")
 
 DYN=$(test_cmd "-o $TMP/test_$$.so $TMP/test_$$.o" "${DYNS[@]}")
 sed < ${BPMS}/src/makefile 's/@DYN@/'"$DYN"'/' > $TMP/tmp.$$; mv $TMP/tmp.$$ ${BPMS}/src/makefile

@@ -23,7 +23,6 @@ void	Matrix_Matrix_multiplication_to_Matrix();
 int loadObject();
 
 char *RATgetProgramName(RATobj *ratObj);
-int RATgetMemory();
 RATobj *RATinit();
 void RATprintOptions(RATobj *);
 int RATuserParse(RATobj *bb,int thisarg,int argc,char **argv,void *info);
@@ -45,7 +44,6 @@ RATobject *RATgetObjects(RATobj *ratObj,int whichOne,double *min,double *max,int
 RATvol *RATgetVolumetric(RATobj *ratObj,int *grid,double *extent);
 char *RATtranslateMaterial(RATobj *ratObj,int thisMat,int *index);
 RATmaterials *RATgetMaterials(RATobj *ratObj,int *nMat);
-int RATgetPID();
 int RATgetnMaterials(RATobj *ratObj);
 double *RATgetSun(RATobj *ratObj);
 void RATsetSun(RATobj *,double *a);

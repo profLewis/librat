@@ -1,7 +1,7 @@
 #
 #
 #
-#       Makefile HIPS programs
+#       Makefile librat
 #
 #       Lewis, RSU, UCL Geography, 1993
 #
@@ -33,7 +33,7 @@ ANCOBJS = ${OBJ}/error.o ${OBJ}/filelib.o ${OBJ}/hiplib.o ${OBJ}/envilib.o ${OBJ
 
 STARTOBJS = ${OBJ}/${START}.o
 
-all:		${LIB}/${ARCH}/${LIBRAT}.so ${START}
+all:		${LIB}/${ARCH}/${LIBRAT}.so 
 
 
 sick:

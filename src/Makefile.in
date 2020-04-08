@@ -33,13 +33,24 @@ ANCOBJS = ${OBJ}/error.o ${OBJ}/filelib.o ${OBJ}/hiplib.o ${OBJ}/envilib.o ${OBJ
 
 STARTOBJS = ${OBJ}/${START}.o
 
-all:		${LIB}/${ARCH}/${LIBRAT}.so 
+all:		${LIB}/${ARCH}/${LIBRAT}.dll 
 
 
 sick:
 		@echo "stick your fingers down your throat"
 
+## windows shared object
+## g++ -shared -o example_dll.dll example_dll.o -Wl,--out-implib,libexample_dll.a
+##
+${LIB}/${ARCH}/${LIBRAT}.dll:	${PRATOBJ} ${ANCOBJS} 
+		mkdir -p ${LIB}/${ARCH}
+		touch ${LIB}/${ARCH}/x
+		ls -l ${LIB}/${ARCH}
+		$(DYN) -o ${LIB}/${ARCH}/${LIBRAT}.dll -Wl,--out-implib,${LIB}/${ARCH}/${LIBRAT}.a ${PRATOBJ} ${ANCOBJS}
 
+##
+## sensible (unix-like) shared objects
+##
 ${LIB}/${ARCH}/${LIBRAT}.so:	${PRATOBJ} ${ANCOBJS} 
 		mkdir -p ${LIB}/${ARCH}
 		touch ${LIB}/${ARCH}/x

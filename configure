@@ -30,11 +30,11 @@ function test_cmd () {
     elif eval $arg $c > /dev/null 2>&1
     then
       echo $arg
-      echo "Type1" $arg $c  > /dev/stderr
+      echo "Type1" $arg $c 2>&1
       return $? 
     else
-      echo "Not" $c  $arg > /dev/stderr
-      echo "Not" $arg $c > /dev/stderr
+      echo "Not" $c  $arg 2>&1
+      echo "Not" $arg $c 2>&1
     fi
     
   done

@@ -1073,23 +1073,6 @@ void freeObject(RATobj *ratObj,int *f){
   return;
 }
 
-int RATgetPID(){
-  return(getpid());
-}
-
-/* return memory use in Kb */
-int RATgetMemory(){
-  static char cmd[1024];
-  FILE *fp;
-  int out;
-  sprintf(cmd,"/bin/ps -p %d -o rss",getpid());
-  fp=popen(cmd,"r");
-  fgets(cmd,1024,fp);
-  fscanf(fp,"%d",&out);
-  pclose(fp);
-  return(out);
-}
-
 void RATsetWavefrontFilename(RATobj *ratObj,char *filename){
   /* 
 

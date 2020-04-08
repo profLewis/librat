@@ -3,7 +3,7 @@
 
 CFLAGSS=("-O" "-O3" "-g")
 CCS=("gcc" "clang" "cc")
-OPTS=("-I." "-fPIC" )
+OPTS=("-fPIC" "-I." )
 
 
 # specify a temporary directory

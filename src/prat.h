@@ -84,7 +84,6 @@ int	apply_material_map();
 void      *calculate_current_reflectance();
 int	mmap_write_hips_image_no_free();
 extern	void	*calloc();
-extern pid_t getpid();
 
 #define	IP	1
 #define	OP	2

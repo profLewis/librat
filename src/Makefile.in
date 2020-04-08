@@ -41,7 +41,9 @@ sick:
 
 
 ${LIB}/${ARCH}/${LIBRAT}.so:	${PRATOBJ} ${ANCOBJS} 
-		mkdir -p ${LIB}/${ARCH} 
+		mkdir -p ${LIB}/${ARCH}
+		touch ${LIB}/${ARCH}/x
+		ls -l ${LIB}/${ARCH}
 		$(DYN) -o ${LIB}/${ARCH}/${LIBRAT}.so ${PRATOBJ} ${ANCOBJS}
 
 

@@ -390,14 +390,6 @@ void doStuff(RATobj *ratObj,void *info){
  
                                         }
  					break;
-					case -1:
-						/* print out memore usage (Kb) */
-						fprintf(stderr,"memory use (Kb): %d\n",RATgetMemory());
-						break;
-					case -2:
-						/* print PID */
-						fprintf(stderr,"%s: PID %d\n",RATgetProgramName(ratObj),RATgetPID());
-						break;
 					default:
 						fprintf(stderr,"options:\n");
 						fprintf(stderr,"\t-2                   : print PID\n");

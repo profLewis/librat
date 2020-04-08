@@ -22,12 +22,12 @@ function test_cmd () {
   rest=("$@")
   for arg in "${rest[@]}";
   do
-    if eval $c $arg > /dev/null 2>&1
+    if eval $c $arg
     then 
       echo $arg
-      echo "Type1" $c $arg > /dev/stderr
+      echo "Type1" $c $arg 
       return $?
-    elif eval $arg $c > /dev/null 2>&1
+    elif eval $arg $c 
     then
       echo $arg
       echo "Type1" $arg $c 2>&1

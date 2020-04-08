@@ -51,10 +51,6 @@ ${START}:	${STARTOBJS} ${LIB}/${ARCH}/${LIBRAT}.so
 
 # object building
 
-${OBJ}/start.o:	%.c
-		@mkdir -p ${OBJ}
-		$(CC) ${OPT}  -I. -DDOUBLEDEF -I/usr/5include -D${ARCH} ${CFLAGS} -o $@ -c $<
-
 
 ${OBJ}/%.o:	%.c
 		@mkdir -p ${OBJ}

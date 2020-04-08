@@ -465,38 +465,3 @@ int RATuserParse(RATobj *ratObj,int thisarg,int argc,char **argv,void *info){
 	return(numberOfArguments);
 }
 
-
-/*
-########################
- *
- * example of a signal interrupt
- *
- */
-
-void userSignals(){
-	/* always call RATsignalInterrupt */
-	signal(SIGUSR1,RATsignalInterrupt);
-	signal(SIGUSR2,RATsignalInterrupt);
-	signal(SIGSTOP,RATsignalInterrupt);
-        signal(SIGSEGV,RATsignalInterrupt);
-}
-
-void RATuserInterrupt(RATobj *ratObj,int sig){
-	switch(sig){
-		case SIGUSR1:
-			fprintf(stderr,"rat:\tsignal interrupt %d for process %d\n",sig,RATgetPID());
-			break;
-		case SIGUSR2:
-			fprintf(stderr,"rat:\tsignal interrupt %d for process %d\n",sig,RATgetPID());
-			break;
-		case SIGSTOP:
-			fprintf(stderr,"rat:\tsignal interrupt %d for process %d\n",sig,RATgetPID());
-			exit(1);
-			break;
-		case SIGSEGV:
-			fprintf(stderr,"rat:\tsignal interrupt %d for process %d\n(try switching it off and on again ;-) )\n",sig,RATgetPID());
-			exit(1);
-			break;
-	}
-	return;
-}

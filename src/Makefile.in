@@ -27,13 +27,13 @@ OPT = @OPT@
 CFLAGS += -I. -DVERBOSE -DDOUBLEDEF -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64
 CFLAGS += -DMATCHK -D${ARCH} -D_NO_NAG
 
-PRATOBJ = ${OBJ}/rpv.o ${OBJ}/cylinderTess.o ${OBJ}/sphereTess.o ${OBJ}/ratFront.o ${OBJ}/disk.o ${OBJ}/dummy.o ${OBJ}/dem.o ${OBJ}/bbox.o ${OBJ}/facet.o ${OBJ}/camera.o ${OBJ}/intersect_objects.o ${OBJ}/random.o ${OBJ}/plane.o ${OBJ}/reflectance.o ${OBJ}/volumeRayTrace.o ${OBJ}/sphere.o ${OBJ}/cylinder.o ${OBJ}/ellipse.o ${OBJ}/spheroid.o ${OBJ}/sky.o ${OBJ}/sensor_rsr.o ${OBJ}/files.o ${OBJ}/mtllib.o ${OBJ}/bilinear.o ${OBJ}/dumper.o ${OBJ}/useful.o ${OBJ}/prat_wavefront_read.o ${OBJ}/images.o ${OBJ}/start.o
+PRATOBJ = rpv.o cylinderTess.o sphereTess.o ratFront.o disk.o dummy.o dem.o bbox.o facet.o camera.o intersect_objects.o random.o plane.o reflectance.o volumeRayTrace.o sphere.o cylinder.o ellipse.o spheroid.o sky.o sensor_rsr.o files.o mtllib.o bilinear.o dumper.o useful.o prat_wavefront_read.o images.o start.o
 
-ANCOBJS = ${OBJ}/error.o ${OBJ}/filelib.o ${OBJ}/hiplib.o ${OBJ}/envilib.o ${OBJ}/imagelib.o ${OBJ}/libhipl.o ${OBJ}/r250.o ${OBJ}/randlcg.o ${OBJ}/4D_vectors.o ${OBJ}/vectors2.o ${OBJ}/2D_vectors.o ${OBJ}/2D_vectors_double.o ${OBJ}/3D_vectors_double.o  ${OBJ}/allocate.o ${OBJ}/matrix.o ${OBJ}/fratP.o ${OBJ}/matherr.o
+ANCOBJS = error.o filelib.o hiplib.o envilib.o imagelib.o libhipl.o r250.o randlcg.o 4D_vectors.o vectors2.o 2D_vectors.o 2D_vectors_double.o 3D_vectors_double.o  allocate.o matrix.o fratP.o matherr.o
 
-STARTOBJS = ${OBJ}/${START}.o
+STARTOBJS = ${START}.o
 
-all:		${LIB}/${ARCH}/${LIBRAT}.dll 
+all:		${LIBRAT}.dll 
 
 
 sick:
@@ -42,35 +42,28 @@ sick:
 ## windows shared object
 ## g++ -shared -o example_dll.dll example_dll.o -Wl,--out-implib,libexample_dll.a
 ##
-${LIB}/${ARCH}/${LIBRAT}.dll:	${PRATOBJ} ${ANCOBJS} 
-		mkdir -p ${LIB}/${ARCH}
-		touch ${LIB}/${ARCH}/x
-		ls -l ${LIB}/${ARCH}
-		$(DYN) -o ${LIB}/${ARCH}/${LIBRAT}.dll -Wl,--out-implib,${LIB}/${ARCH}/${LIBRAT}.a ${PRATOBJ} ${ANCOBJS}
+${LIBRAT}.dll:	${PRATOBJ} ${ANCOBJS} 
+		$(DYN) -o ${LIBRAT}.dll -Wl,--out-implib,${LIBRAT}.a ${PRATOBJ} ${ANCOBJS}
 
 ##
 ## sensible (unix-like) shared objects
 ##
-${LIB}/${ARCH}/${LIBRAT}.so:	${PRATOBJ} ${ANCOBJS} 
-		mkdir -p ${LIB}/${ARCH}
-		touch ${LIB}/${ARCH}/x
-		ls -l ${LIB}/${ARCH}
-		$(DYN) -o ${LIB}/${ARCH}/${LIBRAT}.so ${PRATOBJ} ${ANCOBJS}
+${LIBRAT}.so:	${PRATOBJ} ${ANCOBJS} 
+		$(DYN) -o ${LIBRAT}.so ${PRATOBJ} ${ANCOBJS}
 
 
-${START}:	${STARTOBJS} ${LIB}/${ARCH}/${LIBRAT}.so
+${START}:	${STARTOBJS} ${LIBRAT}.so
 		@mkdir -p ${BIN}/${ARCH}
-		$(CC) $(CFLAGS) ${OPT} -L${LIB}/${ARCH} -o ${BIN}/${ARCH}/$@  ${STARTOBJS} -lratlib -lm -lc
+		$(CC) $(CFLAGS) ${OPT} -L. -o ${BIN}/${ARCH}/$@  ${STARTOBJS} -lratlib -lm -lc
 
 # object building
 
 
-${OBJ}/%.o:	%.c
-		@mkdir -p ${OBJ}
+%.o:		%.c
 		$(CC) ${OPT} -I. -DDOUBLEDEF  -D${ARCH} ${CFLAGS} -o $@ -c $<
 
 clean:
-		rm -f *% *.o ${PRATOBJ} ${ANCOBJS} ${STARTOBJS} ${LIB}/${ARCH}/${LIBRAT}.so
+		rm -f *% *.o ${PRATOBJ} ${ANCOBJS} ${STARTOBJS} ${LIBRAT}.so
 
 
 

@@ -23,7 +23,7 @@
 #define SEEK_CUR        1       /* Set file pointer to current plus "offset" */
 #define SEEK_END        2       /* Set file pointer to EOF plus "offset" */
 #endif
-#include <sys/socket.h>
+
 #include <sys/time.h>
 #include <sys/mman.h>
 #include <sys/file.h>

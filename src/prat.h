@@ -26,7 +26,6 @@
 
 #include <sys/time.h>
 #include <sys/file.h>
-#include <sys/uio.h>
 #include <sys/stat.h>
 #include <netdb.h>
 #include <signal.h>

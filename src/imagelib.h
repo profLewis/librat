@@ -9,6 +9,10 @@
 #define WRAPAROUND 2
 #define FATAL_ACCESS 3
 
+#ifndef HUGE
+#DEFINE HUGE 1000000
+#endif
+
 #define CALC_STATS_STDIN 3
 #define CALC_STATS 5
 

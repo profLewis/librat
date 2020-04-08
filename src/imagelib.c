@@ -661,8 +661,9 @@ setImageBlockSize(ImagePtr, size)
 }
 
 int
-getImageBlockSize(ImagePtr)
+getImageBlockSize(ImagePtr, size)
 	GenericImage   *ImagePtr;
+	int             size;
 {
 	return (ImagePtr->blockSize);
 }
@@ -882,8 +883,9 @@ allocateImage(ImagePtr)
 	}
 	/*
 	 * *      allocate memory for a single pixel of size dataSize
+         ** some strange allocation bug if allocate only small (1)
 	 */
-	if (!(ImagePtr->pixel = (void *) calloc(1, ImagePtr->dataSize))) {
+	if (!(ImagePtr->pixel = (void *) calloc(1+100, ImagePtr->dataSize))) {
 		perror("GenericImage_basis: error in core allocation");
 		exit(0);
 	}
@@ -968,6 +970,38 @@ writeImage(ImagePtr, argc, argv, closeFlag, deallocateFlag, env)
 	/* return 1 if ok */
 	return (1);
 }
+
+int copyFromHdr(GenericImage *im,struct  header  *hdr){
+  im->orig_name = hdr->orig_name;
+  im->seq_name = hdr->seq_name;
+  im->orig_date = hdr->orig_date;
+  im->seq_history = hdr->seq_history;
+  im->seq_desc = hdr->seq_desc;
+  im->rows = hdr->rows;
+  im->cols = hdr->cols;
+  im->frames = hdr->num_frame;
+  im->bits_per_pixel = hdr->bits_per_pixel;
+  im->bit_packing = hdr->bit_packing;
+  im->format = hdr->pixel_format;
+  return(1);
+}
+
+
+int copyToHdr(struct  header  *hdr,GenericImage *im){
+  hdr->orig_name = im->orig_name;
+  hdr->seq_name = im->seq_name;
+  hdr->orig_date = im->orig_date;
+  hdr->seq_history = im->seq_history;
+  hdr->seq_desc = im->seq_desc;
+  hdr->rows = im->rows;
+  hdr->cols = im->cols;
+  hdr->num_frame = im->frames;
+  hdr->bits_per_pixel = im->bits_per_pixel;
+  hdr->bit_packing = im->bit_packing;
+  hdr->pixel_format = im->format;
+  return(1);
+}
+
 int
 readImage(ImagePtr, env)
 	GenericImage   *ImagePtr;
@@ -988,6 +1022,8 @@ readImage(ImagePtr, env)
 		if(openImage(ImagePtr, TRUE, env)==0)return(0);
 	if (!ImagePtr->mmap) {
 #endif
+        if(!ImagePtr->openFlag)if(openImage(ImagePtr, TRUE, env)==0)return(0);
+
 		ImagePtr->read_header(ImagePtr);
 		/*
 		 * *      allocate relevent data *      area and set up image
@@ -1029,13 +1065,14 @@ readImage(ImagePtr, env)
 			}
 		} else {
 #ifdef VERBOSE 
-	if (getImageVerbose(ImagePtr))
- 	  fprintf(stderr, "readImage:\t memory-mapping image ");
-	if (getImageVerbose(ImagePtr)){
-	 if (ImagePtr->imageName)
-  	  fprintf(stderr, "%s\n", ImagePtr->imageName);
-	}else if (getImageVerbose(ImagePtr))
-	 fprintf(stderr, "\n");
+			if (getImageVerbose(ImagePtr))
+				fprintf(stderr, "readImage:\t memory-mapping image ");
+			if (getImageVerbose(ImagePtr))
+				if (ImagePtr->imageName)
+					fprintf(stderr, "%s\n", ImagePtr->imageName);
+				else if (getImageVerbose(ImagePtr))
+					fprintf(stderr, "\n");
+
 #endif
 			allocateImage(ImagePtr);
 			rewind(getStream(ImagePtr));
@@ -1356,17 +1393,13 @@ openImage(ImagePtr, inputFlag, env)
 	  allocateImage(ImagePtr);
 	} else {
 #ifdef VERBOSE
-	  if (getImageVerbose(ImagePtr)){
+	  if (getImageVerbose(ImagePtr))
 	    fprintf(stderr, "\b\b\b\b\b\b\b\b\b\b\b\b\b\b\bopenImage:\t memory-mapping image ");
-          }
-	  if (getImageVerbose(ImagePtr)){
-	    if (ImagePtr->imageName){
+	  if (getImageVerbose(ImagePtr))
+	    if (ImagePtr->imageName)
 	      fprintf(stderr, "%s\n", ImagePtr->imageName);
-	    }else{
-               if (getImageVerbose(ImagePtr))
-	        fprintf(stderr, "\n");
-            }
-          }
+	    else if (getImageVerbose(ImagePtr))
+	      fprintf(stderr, "\n");
 #endif
 	  if (getImageBlockSize(ImagePtr) == 0) {
 	    if (!(data = (char *) calloc(ImagePtr->noElements * ImagePtr->dataSize, sizeof(char)))) {
@@ -1394,7 +1427,7 @@ openImage(ImagePtr, inputFlag, env)
 		exit(-1);
 	      }
 	      if (getImageVerbose(ImagePtr))
-		fprintf(stderr, "\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b(%d)  ", blockAccumulator);
+		fprintf(stderr, "\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b(%ld)  ", blockAccumulator);
 	      blockAccumulator -= block;
 	      
 	    }
@@ -1650,39 +1683,39 @@ getImageName(ImagePtr)
 
 int
 setImageName(GenericImage *ImagePtr, char *name){
-  int len;
+  int len,isHips=FALSE;char *tail;
   len=strlen(name);
-  len+=1024;
+  /*len+=1024;*/
 
   ImagePtr->imageName=name;
-  /*
-  if (ImagePtr->imageName)
-    free(ImagePtr->imageName);
-  if (!(ImagePtr->imageName = (char *) calloc(len, sizeof(char)))) {
-    fprintf(stderr, "error allocating name array from image %s\n", (name));
-    exit(0);
-  }
-  strcpy(ImagePtr->imageName, name);
+  /* NB only at this point can we start to make some guesses
+  ** about the image format
+  ** One (the first) big clue to this should be the image name
   */
+  if (len > 5){
+    /* this could be .hips */
+    tail = &(name[len-5]);
+    if (!(strcasecmp(tail,".hips")))isHips=TRUE;
+  }
+  /* set the type to hips */
+  if(isHips){
+    queryImageStyle(ImagePtr,-HIPSFORMAT,NULL);
+  }else{
+    queryImageStyle(ImagePtr,-ENVIFORMAT,NULL);
+  }
+  if(ImagePtr->stream)rewind(ImagePtr->stream);
+  if(ImagePtr->streamH)rewind(ImagePtr->streamH);
+
   return (1);
 }
 
 int
 setImageNameH(GenericImage *ImagePtr, char *name){
-  int len;
-  len=strlen(name);
-  len+=1024;
+  int len;char *enviTidyImagename();
 
-  ImagePtr->imageNameH=name;
-  /*
-  if (ImagePtr->imageNameH)
-    free(ImagePtr->imageNameH);
-  if (!(ImagePtr->imageNameH = (char *) calloc(len, sizeof(char)))) {
-    fprintf(stderr, "error allocating name array from image %s\n", (name));
-    exit(0);
-  }
-  strcpy(ImagePtr->imageNameH, name);
-  */
+  if ( ImagePtr->format == -(ENVIFORMAT-1)){
+    ImagePtr->imageNameH=enviTidyImagename(name);
+  }else ImagePtr->imageNameH=name;
   return (1);
 }
 

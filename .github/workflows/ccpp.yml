@@ -7,7 +7,7 @@ on:
     branches: [ master ]
 
 jobs:
-  build:
+  build-ubuntu:
 
     runs-on: ubuntu-latest
 
@@ -18,7 +18,7 @@ jobs:
     - name: make
       run: make
 
-  build:
+  build-macos:
 
     runs-on: macos-latest
 

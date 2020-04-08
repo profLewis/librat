@@ -160,7 +160,7 @@ Data	*buf;
 #ifndef __SUNPRO_C
 #endif
 	if(!restart_flag){
-        	if((fd=open(imagename,O_CREAT|O_RDWR)) == -1){fprintf(stderr,"cannot open %s\n", imagename);exit(-1);}
+        	if((fd=open(imagename,O_RDWR)) == -1){fprintf(stderr,"cannot open %s\n", imagename);exit(-1);}
 #ifdef __SUNPRO_C
 		chmod(imagename,S_IREAD|S_IWRITE|S_IRGRP|S_IROTH);
 #else
@@ -233,7 +233,7 @@ Data	*buf;
 	mmap_flag=1;
 
 	if(!restart_flag){
-        	if((fd=open(imagename,O_CREAT|O_RDWR)) == -1)
+        	if((fd=open(imagename,O_RDWR)) == -1)
 			error2("cannot open ",imagename);
 		chmod(imagename,S_IRUSR|S_IWUSR|S_IRGRP|S_IROTH);
         	fwrite_header(fd,head);	/* write header (no update) */

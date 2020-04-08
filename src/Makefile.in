@@ -42,7 +42,7 @@ sick:
 
 ${LIB}/${ARCH}/${LIBRAT}.so:	${PRATOBJ} ${ANCOBJS} 
 		mkdir -p ${LIB}/${ARCH} 
-		$(DYN) -o ${LIB}/${ARCH}/${LIBRAT}.so ${PRATOBJ} ${ANCOBJS}
+		$(CC) -o ${LIB}/${ARCH}/${LIBRAT}.so ${PRATOBJ} ${ANCOBJS}
 
 
 ${START}:	${STARTOBJS} ${LIB}/${ARCH}/${LIBRAT}.so

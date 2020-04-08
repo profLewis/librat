@@ -3,7 +3,7 @@
 
 CFLAGSS=("-O" "-O3" "-g")
 CCS=("clang" "gcc" "cc")
-DYNS=("ld -dy -lc -lm" "libtool -lc -lm -dynamic -undefined dynamic_lookup" "ld -G")
+DYNS=("ld -dy -lc -lm  -undefined dynamic_lookup" "libtool -lc -lm -dynamic -undefined dynamic_lookup" "ld -G")
 OPTS=("-I." "-fPIC" )
 
 

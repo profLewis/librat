@@ -54,7 +54,7 @@ ${START}:	${STARTOBJS} ${LIB}/${ARCH}/${LIBRAT}.so
 
 ${OBJ}/%.o:	%.c
 		@mkdir -p ${OBJ}
-		$(CC) ${OPT} -DFRAT_MAIN -I. -DDOUBLEDEF -I/usr/5include -D${ARCH} ${CFLAGS} -o $@ -c $<
+		$(CC) ${OPT} -I. -DDOUBLEDEF -I/usr/5include -D${ARCH} ${CFLAGS} -o $@ -c $<
 
 clean:
 		rm -f *% *.o ${PRATOBJ} ${ANCOBJS} ${STARTOBJS} ${LIB}/${ARCH}/${LIBRAT}.so

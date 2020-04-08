@@ -18,28 +18,29 @@ TMP=/tmp
 # eg
 # LS=$(test_cmd which "lss ls")
 function test_cmd () {
-  declare c="$1"; shift 1 
+  declare c="$1"; shift 1
   rest=("$@")
   for arg in "${rest[@]}";
   do
-    if eval $c $arg
-    then 
-      echo $arg
-      echo "Type1" $c $arg 
-      return $?
-    elif eval $arg $c 
+    if eval $c $arg > /dev/null 2>&1
     then
       echo $arg
-      echo "Type1" $arg $c 2>&1
-      return $? 
+      echo "Type1" $c $arg > /dev/stderr
+      return $?
+    elif eval $arg $c > /dev/null 2>&1
+    then
+      echo $arg
+      echo "Type1" $arg $c  > /dev/stderr
+      return $?
     else
-      echo "Not" $c  $arg 2>&1
-      echo "Not" $arg $c 2>&1
+      echo "Not" $c  $arg > /dev/stderr
     fi
-    
+
   done
   return $?
 }
+
+
 
 
 

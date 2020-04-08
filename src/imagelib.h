@@ -2,9 +2,6 @@
 #define IMAGELIB_H
 
 #include "filelib.h"
-#ifndef HUGE
-#define HUGE 1000000
-#endif
 
 #define TRUE 1
 #define FALSE 0
@@ -130,7 +127,7 @@ typedef struct{
 void	setImageStyle();	/* HIPS etc. */
 int	getImageStyle();
 int     setImageDefaults();
-int     getImageBlockSize(GenericImage   *ImagePtr);
+int     getImageBlockSize();
 void    setImageBlockSize();
 int     getDataSize();
 int     allocateImage();
@@ -194,11 +191,6 @@ int setImageNameH(GenericImage *ImagePtr,char* file);
 #endif
 #ifndef MIN
 #define MIN(a,b) ((a<b)?(a):(b))
-#endif
-
-
-#ifndef HUGE
-#define HUGE 1e10
 #endif
 
 #endif

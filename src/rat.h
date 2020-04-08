@@ -63,7 +63,6 @@ int RATgetVerboseLevel(RATobj *ratObj);
 void RATsetVerboseLevel(RATobj *ratObj,int level);
 
 /* system */
-int RATgetPID();
 #ifndef RAT_MAIN
 extern void RATuserInterrupt(RATobj *ratObj,int sig);
 #else

@@ -1589,16 +1589,6 @@ char *RATgetProgramName(RATobj *ratObj){
   return(ratObj->globalArgv[0]);
 }
 
-void 	RATsignalInterrupt(int sig)
-{
-/*
-*	allow kill -10 to clean kill
-*	writing out data in buffer before exiting
-*/
-  RATuserInterrupt((RATobj *)globalRATObj,sig);
-  return;
-}
-
 int RATgetNWavebands(RATobj *ratObj,double *wavebands){
   int i;
   if(!wavebands){

@@ -51,7 +51,7 @@ ifeq ($(OS),'Windows_NT')
 	$(DYN) -o ${LIBRAT}.so -Wl,--out-implib,${LIBRAT}.a ${PRATOBJ} ${ANCOBJS}
 else
 	@echo "making on OS $(OS)"
-        $(DYN) -o ${LIBRAT}.so ${PRATOBJ} ${ANCOBJS}
+	$(DYN) -o ${LIBRAT}.so ${PRATOBJ} ${ANCOBJS}
 endif
 
 ${START}:	${STARTOBJS} ${LIBRAT}.so

@@ -9,7 +9,7 @@
 #
 #       build executables 
 
-START = start
+START = start 
 LIBRAT = libratlib
 
 ARCH = @ARCH@

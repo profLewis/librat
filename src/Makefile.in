@@ -42,15 +42,14 @@ sick:
 ## windows shared object
 ## g++ -shared -o example_dll.dll example_dll.o -Wl,--out-implib,libexample_dll.a
 ##
-${LIBRAT}.dll:	${PRATOBJ} ${ANCOBJS} 
-		$(DYN) -o ${LIBRAT}.dll -Wl,--out-implib,${LIBRAT}.a ${PRATOBJ} ${ANCOBJS}
-
-##
 ## sensible (unix-like) shared objects
-##
+## $(DYN) -o ${LIBRAT}.so ${PRATOBJ} ${ANCOBJS}
 ${LIBRAT}.so:	${PRATOBJ} ${ANCOBJS} 
-		$(DYN) -o ${LIBRAT}.so ${PRATOBJ} ${ANCOBJS}
-
+ifeq ($(CC),gcc)
+	$(DYN) -o ${LIBRAT}.so -Wl,--out-implib,${LIBRAT}.a ${PRATOBJ} ${ANCOBJS}
+else
+        $(DYN) -o ${LIBRAT}.so ${PRATOBJ} ${ANCOBJS}
+endif
 
 ${START}:	${STARTOBJS} ${LIBRAT}.so
 		@mkdir -p ${BIN}/${ARCH}

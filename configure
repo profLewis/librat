@@ -9,7 +9,6 @@ OPTS=("-fPIC" "-I." )
 # specify a temporary directory
 TMP=/tmp
 
-env
 
 # see
 # https://askubuntu.com/questions/674333/how-to-pass-an-array-as-function-argument
@@ -51,11 +50,17 @@ ARCH=$(uname -m)
 HERE=$(pwd)
 BPMS=${BPMS-$HERE}
 
+# set OS unless its already se# set OS unless its already sett
+OSS=$(uname -s)
+OS=${OS-$OSS}
+
+
+echo "$ARCH : $HERE : $BPMS : $OS : $OSS"
 # fixers
 q='\/'
 BPMS_=$(echo $BPMS | sed 's/\//Qq/g')
 # initialise makefile
-sed < $BPMS/src/Makefile.in 's/@BPMS@/'$BPMS_'/' | sed 's/Qq/'$q'/g' | sed 's/@ARCH@/'$ARCH'/' > $BPMS/src/makefile
+sed < $BPMS/src/Makefile.in 's/@BPMS@/'$BPMS_'/' | sed 's/Qq/'$q'/g' | sed 's/@OS@/'$OS'/' | sed 's/@ARCH@/'$ARCH'/' > $BPMS/src/makefile
 
 mkdir -p bin/${ARCH}
 PATH=".:bin:bin/${ARCH}:${PATH}"

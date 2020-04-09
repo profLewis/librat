@@ -36,6 +36,8 @@ ANCOBJS = error.o filelib.o hiplib.o envilib.o imagelib.o libhipl.o r250.o randl
 STARTOBJS = ${START}.o
 
 all:		${LIBRAT}.so 
+		@echo "I think I\'m on $OS"
+		@car makefile
 
 
 sick:

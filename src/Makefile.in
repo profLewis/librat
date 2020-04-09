@@ -36,8 +36,7 @@ ANCOBJS = error.o filelib.o hiplib.o envilib.o imagelib.o libhipl.o r250.o randl
 STARTOBJS = ${START}.o
 
 all:		${LIBRAT}.so 
-		@echo "I think Im on $(OS)"
-		@cat makefile
+		
 
 
 sick:
@@ -64,6 +63,11 @@ ${START}:	${STARTOBJS} ${LIBRAT}.so
 
 # object building
 
+dem.c:		%.c
+		@echo "I think Im on $(OS)"
+		@cat makefile
+		$(CC) ${OPT} -I. -DDOUBLEDEF  -D${ARCH} ${CFLAGS} -o $@ -c $<
+		
 
 %.o:		%.c
 		$(CC) ${OPT} -I. -DDOUBLEDEF  -D${ARCH} ${CFLAGS} -o $@ -c $<

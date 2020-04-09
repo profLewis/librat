@@ -33,7 +33,7 @@ ANCOBJS = error.o filelib.o hiplib.o envilib.o imagelib.o libhipl.o r250.o randl
 
 STARTOBJS = ${START}.o
 
-all:		${LIBRAT}.dll 
+all:		${LIBRAT}.so 
 
 
 sick:
@@ -42,15 +42,17 @@ sick:
 ## windows shared object
 ## g++ -shared -o example_dll.dll example_dll.o -Wl,--out-implib,libexample_dll.a
 ##
-${LIBRAT}.dll:	${PRATOBJ} ${ANCOBJS} 
-		$(DYN) -o ${LIBRAT}.dll -Wl,--out-implib,${LIBRAT}.a ${PRATOBJ} ${ANCOBJS}
-
-##
 ## sensible (unix-like) shared objects
-##
+## $(DYN) -o ${LIBRAT}.so ${PRATOBJ} ${ANCOBJS}
 ${LIBRAT}.so:	${PRATOBJ} ${ANCOBJS} 
-		$(DYN) -o ${LIBRAT}.so ${PRATOBJ} ${ANCOBJS}
 
+ifeq ($(OS),'Windows_NT')
+	@echo "$(OS) indicates windows ... uh oh"
+	$(DYN) -o ${LIBRAT}.so -Wl,--out-implib,${LIBRAT}.a ${PRATOBJ} ${ANCOBJS}
+else
+	@echo "making on OS $(OS)"
+        $(DYN) -o ${LIBRAT}.so ${PRATOBJ} ${ANCOBJS}
+endif
 
 ${START}:	${STARTOBJS} ${LIBRAT}.so
 		@mkdir -p ${BIN}/${ARCH}

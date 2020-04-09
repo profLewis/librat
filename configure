@@ -9,6 +9,7 @@ OPTS=("-fPIC" "-I." )
 # specify a temporary directory
 TMP=/tmp
 
+env
 
 # see
 # https://askubuntu.com/questions/674333/how-to-pass-an-array-as-function-argument

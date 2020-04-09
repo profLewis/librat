@@ -50,10 +50,10 @@ ${LIBRAT}.so:	${PRATOBJ} ${ANCOBJS}
 
 ifeq ($(OS),'Windows_NT')
 	@echo "$(OS) indicates windows ... uh oh"
-	$(DYN) -o ${LIBRAT}.so -Wl,--out-implib,${LIBRAT}.a ${PRATOBJ} ${ANCOBJS}
+	$(DYN) -o ${LIBRAT}.so -lc -lm --shared -Wl,--out-implib,${LIBRAT}.a ${PRATOBJ} ${ANCOBJS}
 else
 	@echo "making on OS $(OS)"
-	$(DYN)  -undefined dynamic_lookup -o ${LIBRAT}.so ${PRATOBJ} ${ANCOBJS}
+	$(DYN) -lc -lm  -undefined dynamic_lookup -o ${LIBRAT}.so ${PRATOBJ} ${ANCOBJS}
 endif
 
 ${START}:	${STARTOBJS} ${LIBRAT}.so

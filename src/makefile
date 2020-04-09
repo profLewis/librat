@@ -21,8 +21,10 @@ BIN = ${BPMS}/bin
 
 CFLAGS = -O
 CC = gcc
-DYN = gcc -dy -lc -lm -undefined dynamic_lookup
+DYN = libtool -dynamic
 OPT = -fPIC
+OS = Darwin
+
 
 CFLAGS += -I. -DVERBOSE -DDOUBLEDEF -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64
 CFLAGS += -DMATCHK -D${ARCH} -D_NO_NAG
@@ -33,7 +35,7 @@ ANCOBJS = error.o filelib.o hiplib.o envilib.o imagelib.o libhipl.o r250.o randl
 
 STARTOBJS = ${START}.o
 
-all:		${LIBRAT}.dll 
+all:		${LIBRAT}.so 
 
 
 sick:
@@ -42,15 +44,17 @@ sick:
 ## windows shared object
 ## g++ -shared -o example_dll.dll example_dll.o -Wl,--out-implib,libexample_dll.a
 ##
-${LIBRAT}.dll:	${PRATOBJ} ${ANCOBJS} 
-		$(DYN) -o ${LIBRAT}.dll -Wl,--out-implib,${LIBRAT}.a ${PRATOBJ} ${ANCOBJS}
-
-##
 ## sensible (unix-like) shared objects
-##
+## $(DYN) -o ${LIBRAT}.so ${PRATOBJ} ${ANCOBJS}
 ${LIBRAT}.so:	${PRATOBJ} ${ANCOBJS} 
-		$(DYN) -o ${LIBRAT}.so ${PRATOBJ} ${ANCOBJS}
 
+ifeq ($(OS),'Windows_NT')
+	@echo "$(OS) indicates windows ... uh oh"
+	$(DYN) -o ${LIBRAT}.so -lc -lm --shared -Wl,--out-implib,${LIBRAT}.a ${PRATOBJ} ${ANCOBJS}
+else
+	@echo "making on OS $(OS)"
+	$(DYN) -lc -lm  -undefined dynamic_lookup -o ${LIBRAT}.so ${PRATOBJ} ${ANCOBJS}
+endif
 
 ${START}:	${STARTOBJS} ${LIBRAT}.so
 		@mkdir -p ${BIN}/${ARCH}

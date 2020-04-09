@@ -63,7 +63,7 @@ ${START}:	${STARTOBJS} ${LIBRAT}.so
 
 # object building
 
-dem.c:		%.c
+rpv.o:		%.c
 		@echo "I think Im on $(OS)"
 		@cat makefile
 		$(CC) ${OPT} -I. -DDOUBLEDEF  -D${ARCH} ${CFLAGS} -o $@ -c $<

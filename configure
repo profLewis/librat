@@ -54,6 +54,8 @@ BPMS=${BPMS-$HERE}
 MSYSTEM=${MSYSTEM-$ARCH}
 OS=$MSYSTEM
 
+echo "$OS  : $HERE : $BPMS"
+
 if $OS -eq MINGW64
 then
   LIBEXT='dll'
@@ -61,8 +63,8 @@ else
   LIBEXT='so'
 fi
 
+echo "+++ $LIBEXT"
 
-echo "$OS  : $HERE : $BPMS"
 # fixers
 q='\/'
 BPMS_=$(echo $BPMS | sed 's/\//Qq/g')

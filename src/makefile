@@ -34,18 +34,16 @@ ANCOBJS = error.o filelib.o hiplib.o envilib.o imagelib.o libhipl.o r250.o randl
 STARTOBJS = ${START}.o
 
 
-ifeq ($(MSYSTEM),'MINGW64')
-  LIBEXT='dll'
-  LIBC='-lmsvcrt -lm'
+ifeq ($(MSYSTEM),MINGW64)
+  LIBEXT=dll
 else
-  LIBEXT='so'
-  LIBC='-lc -lm'
+  LIBEXT=so
 endif
 
-ifeq ($(ImageOS),'win19')
-  LIBEXT='dll'
+ifeq ($(ImageOS),win19)
+  LIBEXT=dll
 else
-  LIBEXT='so'
+  LIBEXT=so
 endif
 
 

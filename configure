@@ -92,7 +92,7 @@ sed < ${BPMS}/src/makefile 's/@OPT@/'"$OPT"'/' > $TMP/tmp.$$; mv $TMP/tmp.$$ ${B
 # $DYN
 ##################
 # try using CC to link, as this will be sensible most of the time
-DYNS=( "${CC} -dy" "ld -dy" "libtool -dynamic")
+DYNS=( "${CC} -dy" "ld -dy" "libtool -dynamic" "libtool -dy")
 
 DYN=$(test_cmd "-lc -o $TMP/test_$$.so $TMP/test_$$.o" "${DYNS[@]}")
 sed < ${BPMS}/src/makefile 's/@DYN@/'"$DYN"'/' > $TMP/tmp.$$; mv $TMP/tmp.$$ ${BPMS}/src/makefile

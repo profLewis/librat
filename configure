@@ -50,14 +50,12 @@ ARCH=$(uname -m)
 HERE=$(pwd)
 BPMS=${BPMS-$HERE}
 
-# set OS unless its already se# set OS unless its already sett
-OSS1=$(ImageOS)
-OSS2=$(uname -s)
-OSS=$(OSS2-$OSS1)
-OS=${OS-$OSS}
+# set OS to arch unless MSYSTEM already set
+MSYSTEM=${MSYSTEM-$ARCH}
+OS=$MSYSTEM
 
 
-echo "$ARCH : $HERE : $BPMS : $OS : $OSS"
+echo "$OS  : $HERE : $BPMS"
 # fixers
 q='\/'
 BPMS_=$(echo $BPMS | sed 's/\//Qq/g')

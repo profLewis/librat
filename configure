@@ -56,7 +56,7 @@ OS=$MSYSTEM
 WINDOWS=MINGW64
 echo ">>>> $OS  : $HERE : $BPMS"
 
-if [ "$MSYSTEM" = "MINGW64" ] | [ "$OS" = "win19" ]
+if [ "$MSYSTEM" = "MINGW64" ] || [ "$OS" = "win19" ]
 then
   echo "..." "$MSYSTEM"=="MINGW64"  "$OS"=="win19" ": $OS : $MSYSTEM" 
   LIBEXT='dll'

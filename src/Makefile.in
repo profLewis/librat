@@ -49,14 +49,13 @@ sick:
 ## $(DYN) -o ${LIBRAT}.so ${PRATOBJ} ${ANCOBJS}
 ${LIBRAT}.so:	${PRATOBJ} ${ANCOBJS} 
 
+
+#ImageOS=macos1015, ubuntu18
+
 ifeq ($(OS),'Windows_NT')
-	@env
-	@cat makefile
 	@echo "$(OS) indicates windows ... uh oh"
 	$(DYN) -o ${LIBRAT}.dll -lc -lm --shared -Wl,--out-implib,${LIBRAT}.a ${PRATOBJ} ${ANCOBJS}
 else
-	@env
-	@cat makefile
 	@echo "making on OS $(OS)"
 	$(DYN) -lc -lm  -undefined dynamic_lookup -o ${LIBRAT}.so ${PRATOBJ} ${ANCOBJS}
 endif
@@ -66,12 +65,6 @@ ${START}:	${STARTOBJS} ${LIBRAT}.so
 		$(CC) $(CFLAGS) ${OPT} -L. -o ${BIN}/${ARCH}/$@  ${STARTOBJS} -lratlib -lm -lc
 
 # object building
-
-rpv.o:		
-		@echo "I think Im on $(OS)"
-		@cat makefile
-		$(CC) ${OPT} -I. -DDOUBLEDEF  -D${ARCH} ${CFLAGS} -o rpv.o -c rpv.c
-		
 
 %.o:		%.c
 		$(CC) ${OPT} -I. -DDOUBLEDEF  -D${ARCH} ${CFLAGS} -o $@ -c $<

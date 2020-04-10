@@ -51,7 +51,9 @@ HERE=$(pwd)
 BPMS=${BPMS-$HERE}
 
 # set OS unless its already se# set OS unless its already sett
-OSS=$(uname -s)
+OSS1=$(ImageOS)
+OSS2=$(uname -s)
+OSS=$(OSS2-$OSS1)
 OS=${OS-$OSS}
 
 

@@ -13,8 +13,6 @@ START = start
 LIBRAT = libratlib
 
 ARCH = @ARCH@
-OBJ = objects.${ARCH}
-
 BPMS = @BPMS@
 LIB = ${BPMS}/lib
 BIN = ${BPMS}/bin
@@ -26,11 +24,8 @@ OPT = @OPT@
 OS = @OS@
 
 # replace by $ImageOS if its is set
-ifneq ($(ImageOS),'')
-  OS=$ImageOS
-endif
 
-ifndef OS
+ifeq ($(OS),'MINGW64')
   LIBEXT='dll'
 else
   LIBEXT='so'

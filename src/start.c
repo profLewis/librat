@@ -1,12 +1,10 @@
 
-/* this first line is required in the main() file */
 #define RAT_MAIN 
 /* you need to include this file */
 #include "rat.h"
 #include "ratFront.h"  
 #include "image_formats.h"
 
-/* main() */ 
 char *interactionType(int i){
 	static char r[] = "reflectance",t[]="transmittance",n[]="nothing";
 	char *out;

@@ -54,13 +54,15 @@ BPMS=${BPMS-$HERE}
 MSYSTEM=${MSYSTEM-$ARCH}
 OS=$MSYSTEM
 WINDOWS=MINGW64
-echo "$OS  : $HERE : $BPMS"
+echo ">>>> $OS  : $HERE : $BPMS"
 
-if [ "$MSYSTEM"="MINGW64" ]
+if [ "$MSYSTEM" = "MINGW64" ] | [ "$OS" = "win19" ]
 then
+  echo "..." "$MSYSTEM"=="MINGW64"  "$OS"=="win19" ": $OS : $MSYSTEM" 
   LIBEXT='dll'
   LIBC='-lmsvcrt -lm'
 else
+  echo ".. $MSYSTEM : $OS"
   LIBEXT='so'
   LIBC='-lc -lm'
 fi

@@ -58,7 +58,7 @@ else
 	$(DYN) -undefined dynamic_lookup -o ${LIBRAT}.${LIBEXT} ${PRATOBJ} ${ANCOBJS} -lc -lm
 endif
 
-${START}:	${STARTOBJS} ${LIBRAT}.so
+${START}:	${STARTOBJS} ${LIBRAT}.${LIBEXT}
 		@mkdir -p ${BIN}/${ARCH}
 		$(CC) $(CFLAGS) ${OPT} -L. -o ${BIN}/${ARCH}/$@  ${STARTOBJS} -lratlib -lm -lc
 

@@ -19,7 +19,7 @@ BIN = ${BPMS}/bin
 
 CFLAGS = -O
 CC = gcc
-DYN = libtool -dynamic -lc -lm
+DYN = libtool -dynamic
 OPT = -fPIC
 OS = x86_64
 LIBEXT = so
@@ -52,13 +52,13 @@ ${LIBRAT}.${LIBEXT}:	${PRATOBJ} ${ANCOBJS}
 
 ifeq ($(LIBEXT),'dll')
 	@echo "$(LIBEXT) indicates windows ... uh oh : ${OS} : $(ImageOS)"
-	$(DYN) -o ${LIBRAT}.${LIBEXT} --shared -Wl,--out-implib,${LIBRAT}.a ${PRATOBJ} ${ANCOBJS}
+	$(DYN) -o ${LIBRAT}.${LIBEXT} --shared -Wl,--out-implib,${LIBRAT}.a ${PRATOBJ} ${ANCOBJS} -lmsvcrt -lm
 else
 	@echo "making on OS $(OS) $(ImageOS)"
-	$(DYN) -lc -lm  -undefined dynamic_lookup -o ${LIBRAT}.${LIBEXT} ${PRATOBJ} ${ANCOBJS}
+	$(DYN) -undefined dynamic_lookup -o ${LIBRAT}.${LIBEXT} ${PRATOBJ} ${ANCOBJS} -lc -lm
 endif
 
-${START}:	${STARTOBJS} ${LIBRAT}.so
+${START}:	${STARTOBJS} ${LIBRAT}.${LIBEXT}
 		@mkdir -p ${BIN}/${ARCH}
 		$(CC) $(CFLAGS) ${OPT} -L. -o ${BIN}/${ARCH}/$@  ${STARTOBJS} -lratlib -lm -lc
 

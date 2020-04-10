@@ -56,7 +56,7 @@ OS=$MSYSTEM
 WINDOWS=MINGW64
 echo "$OS  : $HERE : $BPMS"
 
-if "$OS" == "$WINDOWS"
+if "$MSYSTEM" -eq "MINGW64"
 then
   LIBEXT='dll'
 else

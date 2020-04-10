@@ -9,7 +9,7 @@
 #
 #       build executables 
 
-START = start
+START = start 
 LIBRAT = libratlib
 
 ARCH = x86_64
@@ -23,7 +23,7 @@ CFLAGS = -O
 CC = gcc
 DYN = libtool -dynamic
 OPT = -fPIC
-OS = Darwin
+OS = 
 
 
 CFLAGS += -I. -DVERBOSE -DDOUBLEDEF -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64
@@ -36,6 +36,7 @@ ANCOBJS = error.o filelib.o hiplib.o envilib.o imagelib.o libhipl.o r250.o randl
 STARTOBJS = ${START}.o
 
 all:		${LIBRAT}.so 
+		
 
 
 sick:
@@ -48,9 +49,12 @@ sick:
 ## $(DYN) -o ${LIBRAT}.so ${PRATOBJ} ${ANCOBJS}
 ${LIBRAT}.so:	${PRATOBJ} ${ANCOBJS} 
 
+
+#ImageOS=macos1015, ubuntu18
+
 ifeq ($(OS),'Windows_NT')
 	@echo "$(OS) indicates windows ... uh oh"
-	$(DYN) -o ${LIBRAT}.so -lc -lm --shared -Wl,--out-implib,${LIBRAT}.a ${PRATOBJ} ${ANCOBJS}
+	$(DYN) -o ${LIBRAT}.dll -lc -lm --shared -Wl,--out-implib,${LIBRAT}.a ${PRATOBJ} ${ANCOBJS}
 else
 	@echo "making on OS $(OS)"
 	$(DYN) -lc -lm  -undefined dynamic_lookup -o ${LIBRAT}.so ${PRATOBJ} ${ANCOBJS}
@@ -61,7 +65,6 @@ ${START}:	${STARTOBJS} ${LIBRAT}.so
 		$(CC) $(CFLAGS) ${OPT} -L. -o ${BIN}/${ARCH}/$@  ${STARTOBJS} -lratlib -lm -lc
 
 # object building
-
 
 %.o:		%.c
 		$(CC) ${OPT} -I. -DDOUBLEDEF  -D${ARCH} ${CFLAGS} -o $@ -c $<

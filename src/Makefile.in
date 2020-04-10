@@ -60,7 +60,7 @@ ${LIBRAT}.${LIBEXT}:	${PRATOBJ} ${ANCOBJS}
 
 ifeq ($(LIBEXT),'dll')
 	@echo "$(LIBEXT) indicates windows ... uh oh : ${OS} : $(ImageOS)"
-	$(DYN) -o ${LIBRAT}.${LIBEXT} -lc -lm --shared -Wl,--out-implib,${LIBRAT}.a ${PRATOBJ} ${ANCOBJS}
+	$(DYN) -o ${LIBRAT}.${LIBEXT} --shared -Wl,--out-implib,${LIBRAT}.a ${PRATOBJ} ${ANCOBJS}
 else
 	@echo "making on OS $(OS) $(ImageOS)"
 	$(DYN) -lc -lm  -undefined dynamic_lookup -o ${LIBRAT}.${LIBEXT} ${PRATOBJ} ${ANCOBJS}

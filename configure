@@ -59,7 +59,7 @@ echo "$OS  : $HERE : $BPMS"
 if [ "$MSYSTEM"="MINGW64" ]
 then
   LIBEXT='dll'
-  LIBC='-lmsvcrt'
+  LIBC='msvcrt'
 else
   LIBEXT='so'
   LIBC='c'

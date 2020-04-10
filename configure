@@ -59,8 +59,10 @@ echo "$OS  : $HERE : $BPMS"
 if [ "$MSYSTEM"="MINGW64" ]
 then
   LIBEXT='dll'
+  LIBC='-lmsvcrt'
 else
   LIBEXT='so'
+  LIBC='c'
 fi
 
 echo "+++ $LIBEXT"
@@ -101,12 +103,12 @@ sed < ${BPMS}/src/makefile 's/@OPT@/'"$OPT"'/' > $TMP/tmp.$$; mv $TMP/tmp.$$ ${B
 # $DYN
 ##################
 # try using CC to link, as this will be sensible most of the time
-DYNS=( "${CC} -dy -lc -lm" "ld -dy -lc -lm" "ld -lc -lm" "libtool -dynamic -lc -lm" "libtool -lc -lm")
+DYNS=( "${CC} -dy -l${LIBC} -lm" "ld -dy -l${LIBC} -lm" "ld -l${LIBC} -lm" "libtool -dynamic -l${LIBC} -lm" "libtool -l${LIBC} -lm")
 
 DYN=$(test_cmd " -o $TMP/test_$$.${LIBEXT} $TMP/test_$$.o" "${DYNS[@]}")
 sed < ${BPMS}/src/makefile 's/@DYN@/'"$DYN"'/' > $TMP/tmp.$$; mv $TMP/tmp.$$ ${BPMS}/src/makefile
 
 # tidy up
-rm -f $TMP/test_$$.c
+#rm -f $TMP/test_$$.c
 exit 0 
 

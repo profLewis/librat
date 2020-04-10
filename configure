@@ -49,12 +49,13 @@ function test_cmd () {
 ARCH=$(uname -m)
 HERE=$(pwd)
 BPMS=${BPMS-$HERE}
+ASYSTEM=$(uname -s)
 
 # set OS to arch unless MSYSTEM already set
 MSYSTEM=${MSYSTEM-$ARCH}
 OS=$MSYSTEM
 WINDOWS=MINGW64
-echo ">>>> $OS  : $HERE : $BPMS"
+echo ">>>> $OS  : $MSYSTEM : $ASYSTEM : $HERE : $BPMS"
 
 if [ "$MSYSTEM" = "MINGW64" ] || [ "$ImageOS" = "win19" ]
 then
@@ -73,7 +74,7 @@ echo "+++ $LIBEXT"
 q='\/'
 BPMS_=$(echo $BPMS | sed 's/\//Qq/g')
 # initialise makefile
-sed < $BPMS/src/Makefile.in 's/@BPMS@/'$BPMS_'/' | sed 's/Qq/'$q'/g' | sed 's/@LIBEXT@/'$LIBEXT'/' |sed 's/@OS@/'$OS'/' | sed 's/@ARCH@/'$ARCH'/' > $BPMS/src/makefile
+sed < $BPMS/src/Makefile.in 's/@BPMS@/'$BPMS_'/' | sed 's/Qq/'$q'/g' | sed 's/@ASYSTEM@/'$ASYSTEM'/' |sed 's/@LIBEXT@/'$LIBEXT'/' |sed 's/@OS@/'$OS'/' | sed 's/@ARCH@/'$ARCH'/' > $BPMS/src/makefile
 
 mkdir -p bin/${OS}
 PATH=".:c/MinGW/bin:bin:bin/${OS}:${PATH}"

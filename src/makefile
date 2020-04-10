@@ -22,6 +22,7 @@ CC = gcc
 DYN = libtool -dynamic
 OPT = -fPIC
 OS = x86_64
+ASYSTEM=Darwin
 ####LIBEXT = so
 
 CFLAGS += -I. -DVERBOSE -DDOUBLEDEF -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64
@@ -46,6 +47,11 @@ else
   LIBEXT=so
 endif
 
+ifeq ($(ASYSTEM),Darwin)
+  UND=-undefined dynamic_lookup
+else
+  UND=
+endif
 
 all:		${LIBRAT}.${LIBEXT}
 		
@@ -63,11 +69,12 @@ sick:
 
 
 #ImageOS=macos1015, ubuntu18, win19
-
+# -Wl,--out-implib,${LIBRAT}.a
+# -undefined dynamic_lookup
 ifeq ($(LIBEXT),dll)
-  CMD=ld -o ${LIBRAT}.${LIBEXT} --shared -Wl,--out-implib,${LIBRAT}.a ${PRATOBJ} ${ANCOBJS} -lmsvcrt -lm
+  CMD=ld -o ${LIBRAT}.${LIBEXT} ${PRATOBJ} ${ANCOBJS} -lmsvcrt -lm
 else
-  CMD=$(CC) -undefined dynamic_lookup -o ${LIBRAT}.${LIBEXT} ${PRATOBJ} ${ANCOBJS} -lc -lm
+  CMD=$(CC) ${UND} -o ${LIBRAT}.${LIBEXT} ${PRATOBJ} ${ANCOBJS} -lc -lm
 endif
 
 

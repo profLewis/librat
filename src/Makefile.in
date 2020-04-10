@@ -22,15 +22,7 @@ CC = @CC@
 DYN = @DYN@
 OPT = @OPT@
 OS = @OS@
-
-# replace by $ImageOS if its is set
-
-ifeq ($(OS),'MINGW64')
-  LIBEXT='dll'
-else
-  LIBEXT='so'
-endif
-
+LIBEXT = @LIBEXT@
 
 CFLAGS += -I. -DVERBOSE -DDOUBLEDEF -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64
 CFLAGS += -DMATCHK -D${ARCH} -D_NO_NAG

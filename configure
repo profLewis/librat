@@ -54,13 +54,19 @@ BPMS=${BPMS-$HERE}
 MSYSTEM=${MSYSTEM-$ARCH}
 OS=$MSYSTEM
 
+ifeq ($(OS),'MINGW64')
+  LIBEXT='dll'
+else
+  LIBEXT='so'
+endif
+
 
 echo "$OS  : $HERE : $BPMS"
 # fixers
 q='\/'
 BPMS_=$(echo $BPMS | sed 's/\//Qq/g')
 # initialise makefile
-sed < $BPMS/src/Makefile.in 's/@BPMS@/'$BPMS_'/' | sed 's/Qq/'$q'/g' | sed 's/@OS@/'$OS'/' | sed 's/@ARCH@/'$ARCH'/' > $BPMS/src/makefile
+sed < $BPMS/src/Makefile.in 's/@BPMS@/'$BPMS_'/' | sed 's/Qq/'$q'/g' | sed 's/@LIBEXT@/'$LIBEXT'/' |sed 's/@OS@/'$OS'/' | sed 's/@ARCH@/'$ARCH'/' > $BPMS/src/makefile
 
 mkdir -p bin/${OS}
 PATH=".:c/MinGW/bin:bin:bin/${OS}:${PATH}"
@@ -92,12 +98,12 @@ sed < ${BPMS}/src/makefile 's/@OPT@/'"$OPT"'/' > $TMP/tmp.$$; mv $TMP/tmp.$$ ${B
 # $DYN
 ##################
 # try using CC to link, as this will be sensible most of the time
-DYNS=( "${CC} -dy -lc -lm" "ld -dyi -lc -lm" "libtool -dynamic -lc -lm" "libtool")
+DYNS=( "${CC} -dy -lc -lm" "ld -dy -lc -lm" "libtool -dynamic -lc -lm" "libtool -lc -lm")
 
-DYN=$(test_cmd " -o $TMP/test_$$.so $TMP/test_$$.o" "${DYNS[@]}")
+DYN=$(test_cmd " -o $TMP/test_$$.${LIBEXT} $TMP/test_$$.o" "${DYNS[@]}")
 sed < ${BPMS}/src/makefile 's/@DYN@/'"$DYN"'/' > $TMP/tmp.$$; mv $TMP/tmp.$$ ${BPMS}/src/makefile
 
 # tidy up
-#rm -f $TMP/test_$$.c
+rm -f $TMP/test_$$.c
 exit 0 
 

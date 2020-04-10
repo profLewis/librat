@@ -54,11 +54,12 @@ BPMS=${BPMS-$HERE}
 MSYSTEM=${MSYSTEM-$ARCH}
 OS=$MSYSTEM
 
-ifeq ($(OS),'MINGW64')
+if $(OS) = 'MINGW64'
+then
   LIBEXT='dll'
 else
   LIBEXT='so'
-endif
+fi
 
 
 echo "$OS  : $HERE : $BPMS"

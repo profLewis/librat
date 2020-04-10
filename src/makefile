@@ -13,29 +13,16 @@ START = start
 LIBRAT = libratlib
 
 ARCH = x86_64
-OBJ = objects.${ARCH}
-
 BPMS = /Users/plewis/librat
 LIB = ${BPMS}/lib
 BIN = ${BPMS}/bin
 
 CFLAGS = -O
 CC = gcc
-DYN = libtool -dynamic
+DYN = libtool -dynamic -lc -lm
 OPT = -fPIC
 OS = x86_64
-
-# replace by $ImageOS if its is set
-ifneq ($(ImageOS),'')
-  OS=$ImageOS
-endif
-
-ifndef OS
-  LIBEXT='dll'
-else
-  LIBEXT='so'
-endif
-
+LIBEXT = so
 
 CFLAGS += -I. -DVERBOSE -DDOUBLEDEF -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64
 CFLAGS += -DMATCHK -D${ARCH} -D_NO_NAG
@@ -65,7 +52,7 @@ ${LIBRAT}.${LIBEXT}:	${PRATOBJ} ${ANCOBJS}
 
 ifeq ($(LIBEXT),'dll')
 	@echo "$(LIBEXT) indicates windows ... uh oh : ${OS} : $(ImageOS)"
-	$(DYN) -o ${LIBRAT}.${LIBEXT} -lc -lm --shared -Wl,--out-implib,${LIBRAT}.a ${PRATOBJ} ${ANCOBJS}
+	$(DYN) -o ${LIBRAT}.${LIBEXT} --shared -Wl,--out-implib,${LIBRAT}.a ${PRATOBJ} ${ANCOBJS}
 else
 	@echo "making on OS $(OS) $(ImageOS)"
 	$(DYN) -lc -lm  -undefined dynamic_lookup -o ${LIBRAT}.${LIBEXT} ${PRATOBJ} ${ANCOBJS}

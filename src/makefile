@@ -23,7 +23,18 @@ CFLAGS = -O
 CC = gcc
 DYN = libtool -dynamic
 OPT = -fPIC
-OS = 
+OS = x86_64
+
+# replace by $ImageOS if its is set
+ifneq ($(ImageOS),'')
+  OS=$ImageOS
+endif
+
+ifndef OS
+  LIBEXT='dll'
+else
+  LIBEXT='so'
+endif
 
 
 CFLAGS += -I. -DVERBOSE -DDOUBLEDEF -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64
@@ -35,7 +46,7 @@ ANCOBJS = error.o filelib.o hiplib.o envilib.o imagelib.o libhipl.o r250.o randl
 
 STARTOBJS = ${START}.o
 
-all:		${LIBRAT}.so 
+all:		${LIBRAT}.${LIBEXT}
 		
 
 
@@ -47,17 +58,17 @@ sick:
 ##
 ## sensible (unix-like) shared objects
 ## $(DYN) -o ${LIBRAT}.so ${PRATOBJ} ${ANCOBJS}
-${LIBRAT}.so:	${PRATOBJ} ${ANCOBJS} 
+${LIBRAT}.${LIBEXT}:	${PRATOBJ} ${ANCOBJS} 
 
 
 #ImageOS=macos1015, ubuntu18
 
-ifeq ($(OS),'Windows_NT')
-	@echo "$(OS) indicates windows ... uh oh"
-	$(DYN) -o ${LIBRAT}.dll -lc -lm --shared -Wl,--out-implib,${LIBRAT}.a ${PRATOBJ} ${ANCOBJS}
+ifeq ($(LIBEXT),'dll')
+	@echo "$(LIBEXT) indicates windows ... uh oh : ${OS} : $(ImageOS)"
+	$(DYN) -o ${LIBRAT}.${LIBEXT} -lc -lm --shared -Wl,--out-implib,${LIBRAT}.a ${PRATOBJ} ${ANCOBJS}
 else
-	@echo "making on OS $(OS)"
-	$(DYN) -lc -lm  -undefined dynamic_lookup -o ${LIBRAT}.so ${PRATOBJ} ${ANCOBJS}
+	@echo "making on OS $(OS) $(ImageOS)"
+	$(DYN) -lc -lm  -undefined dynamic_lookup -o ${LIBRAT}.${LIBEXT} ${PRATOBJ} ${ANCOBJS}
 endif
 
 ${START}:	${STARTOBJS} ${LIBRAT}.so

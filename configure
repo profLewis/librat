@@ -62,8 +62,8 @@ BPMS_=$(echo $BPMS | sed 's/\//Qq/g')
 # initialise makefile
 sed < $BPMS/src/Makefile.in 's/@BPMS@/'$BPMS_'/' | sed 's/Qq/'$q'/g' | sed 's/@OS@/'$OS'/' | sed 's/@ARCH@/'$ARCH'/' > $BPMS/src/makefile
 
-mkdir -p bin/${ARCH}
-PATH=".:bin:bin/${ARCH}:${PATH}"
+mkdir -p bin/${OS}
+PATH=".:c/MinGW/bin:bin:bin/${OS}:${PATH}"
 
 # create test C code file
 echo '#include <stdio.h>' > $TMP/test_$$.c

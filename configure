@@ -54,7 +54,7 @@ BPMS=${BPMS-$HERE}
 MSYSTEM=${MSYSTEM-$ARCH}
 OS=$MSYSTEM
 
-if $(OS) = 'MINGW64'
+if $OS -eq 'MINGW64'
 then
   LIBEXT='dll'
 else

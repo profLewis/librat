@@ -50,9 +50,13 @@ sick:
 ${LIBRAT}.so:	${PRATOBJ} ${ANCOBJS} 
 
 ifeq ($(OS),'Windows_NT')
+	@env
+	@cat makefile
 	@echo "$(OS) indicates windows ... uh oh"
-	$(DYN) -o ${LIBRAT}.so -lc -lm --shared -Wl,--out-implib,${LIBRAT}.a ${PRATOBJ} ${ANCOBJS}
+	$(DYN) -o ${LIBRAT}.dll -lc -lm --shared -Wl,--out-implib,${LIBRAT}.a ${PRATOBJ} ${ANCOBJS}
 else
+	@env
+	@cat makefile
 	@echo "making on OS $(OS)"
 	$(DYN) -lc -lm  -undefined dynamic_lookup -o ${LIBRAT}.so ${PRATOBJ} ${ANCOBJS}
 endif

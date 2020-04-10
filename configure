@@ -53,11 +53,11 @@ BPMS=${BPMS-$HERE}
 # set OS to arch unless MSYSTEM already set
 MSYSTEM=${MSYSTEM-$ARCH}
 OS=$MSYSTEM
-
+WINDOWS=MINGW64
 echo "$OS  : $HERE : $BPMS"
-echo "$OS MINGW64"
 
-if "$OS" == "MINGW64"
+if "$OS" == "$WINDOWS
+"
 then
   LIBEXT='dll'
 else

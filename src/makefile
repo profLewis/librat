@@ -59,19 +59,20 @@ sick:
 ##
 ## sensible (unix-like) shared objects
 ## $(DYN) -o ${LIBRAT}.so ${PRATOBJ} ${ANCOBJS}
-${LIBRAT}.${LIBEXT}:	${PRATOBJ} ${ANCOBJS} 
 
 
 
 #ImageOS=macos1015, ubuntu18, win19
 
-ifeq ($(LIBEXT),'dll')
-	@echo "$(LIBEXT) indicates windows ... uh oh : ${OS} : $(ImageOS)"
-	$(DYN) -o ${LIBRAT}.${LIBEXT} --shared -Wl,--out-implib,${LIBRAT}.a ${PRATOBJ} ${ANCOBJS} -lmsvcrt -lm
+ifeq ($(LIBEXT),dll)
+  CMD=ld -o ${LIBRAT}.${LIBEXT} --shared -Wl,--out-implib,${LIBRAT}.a ${PRATOBJ} ${ANCOBJS} -lmsvcrt -lm
 else
-	@echo "making on OS $(OS) $(ImageOS)"
-	$(DYN) -undefined dynamic_lookup -o ${LIBRAT}.${LIBEXT} ${PRATOBJ} ${ANCOBJS} -lc -lm
+  CMD=$(CC) -undefined dynamic_lookup -o ${LIBRAT}.${LIBEXT} ${PRATOBJ} ${ANCOBJS} -lc -lm
 endif
+
+
+${LIBRAT}.${LIBEXT}:	${PRATOBJ} ${ANCOBJS}
+		$(CMD)
 
 ${START}:	${STARTOBJS} ${LIBRAT}.${LIBEXT}
 		@mkdir -p ${BIN}/${ARCH}
@@ -83,7 +84,7 @@ ${START}:	${STARTOBJS} ${LIBRAT}.${LIBEXT}
 		$(CC) ${OPT} -I. -DDOUBLEDEF  -D${ARCH} ${CFLAGS} -o $@ -c $<
 
 clean:
-		rm -f *% *.o ${PRATOBJ} ${ANCOBJS} ${STARTOBJS} ${LIBRAT}.so
+		rm -f *% *.o ${PRATOBJ} ${ANCOBJS} ${STARTOBJS} ${LIBRAT}.$(LIBEXT)
 
 
 

@@ -18,7 +18,7 @@ LIB = ${BPMS}/lib
 BIN = ${BPMS}/bin
 
 CFLAGS = -O
-CC = gcc
+CC = clang
 DYN = libtool -dynamic
 OPT = -fPIC
 OS = x86_64

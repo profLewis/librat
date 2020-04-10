@@ -65,7 +65,7 @@ ${LIBRAT}.${LIBEXT}:	${PRATOBJ} ${ANCOBJS}
 
 #ImageOS=macos1015, ubuntu18, win19
 
-ifeq ($(LIBEXT),'dll')
+ifeq ($(LIBEXT),dll)
 	@echo "$(LIBEXT) indicates windows ... uh oh : ${OS} : $(ImageOS)"
 	$(DYN) -o ${LIBRAT}.${LIBEXT} --shared -Wl,--out-implib,${LIBRAT}.a ${PRATOBJ} ${ANCOBJS} -lmsvcrt -lm
 else
@@ -83,7 +83,7 @@ ${START}:	${STARTOBJS} ${LIBRAT}.${LIBEXT}
 		$(CC) ${OPT} -I. -DDOUBLEDEF  -D${ARCH} ${CFLAGS} -o $@ -c $<
 
 clean:
-		rm -f *% *.o ${PRATOBJ} ${ANCOBJS} ${STARTOBJS} ${LIBRAT}.so
+		rm -f *% *.o ${PRATOBJ} ${ANCOBJS} ${STARTOBJS} ${LIBRAT}.$(LIBEXT)
 
 
 

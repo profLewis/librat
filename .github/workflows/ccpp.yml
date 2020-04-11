@@ -38,4 +38,4 @@ jobs:
     - name: configure
       run: ./configure
     - name: make
-      run: make
+      run: make MAKE=mingw32-make

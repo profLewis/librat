@@ -235,7 +235,7 @@ Data	*buf;
 	if(!restart_flag){
         	if((fd=open(imagename,O_RDWR)) == -1)
 			error2("cannot open ",imagename);
-		chmod(imagename,S_IRUSR|S_IWUSR|S_IRGRP|S_IROTH);
+		chmod(imagename,S_IRUSR|S_IWUSR);
         	fwrite_header(fd,head);	/* write header (no update) */
       		rows = head->rows;
        		cols = head->cols;

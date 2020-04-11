@@ -75,7 +75,7 @@ clean:
 # -Wl,--out-implib,${LIBRAT}.a
 # -undefined dynamic_lookup
 ifeq ($(LIBEXT),dll)
-  CMD=$(CC) -o ${LIBRAT}.${LIBEXT} ${PRATOBJ} ${ANCOBJS} -lmsvcrt -lm
+  CMD=$(CC) --shared -o ${LIBRAT}.${LIBEXT} ${PRATOBJ} ${ANCOBJS} -lmsvcrt -lm
 else
   CMD=$(CC) ${UND} -o ${LIBRAT}.${LIBEXT} ${PRATOBJ} ${ANCOBJS} -lc -lm
 endif

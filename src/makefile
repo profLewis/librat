@@ -48,9 +48,9 @@ else
 endif
 
 ifeq ($(ASYSTEM),Darwin)
-  UND=-undefined dynamic_lookup
+  UND=-undefined dynamic_lookup --shared
 else
-  UND=
+  UND=--shared
 endif
 
 all:		${LIBRAT}.${LIBEXT}

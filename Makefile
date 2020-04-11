@@ -1,21 +1,21 @@
 all:	src/makefile	
-	@cd src;make 
+	@cd src;$(MAKE) 
 
 src/makefile:
 	./configure
 
 clean:	src/makefile
-	@cd src;make clean
+	@cd src;$(MAKE) clean
 
 check:
 test:	src/makefile test_start.test.op
 
 test_start.test.op:	src/makefile
-	make all
+	$(MAKE) all
 	@bin/csh/test_start
 
 start_:	src/makefile
-	@cd src;make start
+	@cd src;$(MAKE) start
 
 sick:	src/makefile
 	@echo "stick your fingers down your throat"

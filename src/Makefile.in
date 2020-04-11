@@ -59,7 +59,7 @@ all:		${LIBRAT}.${LIBEXT}
 		$(CC) ${OPT} -I. -DDOUBLEDEF  -D${ARCH} ${CFLAGS} -o $@ -c $<
 
 clean:
-		rm -f *% *.o ${PRATOBJ} ${ANCOBJS} ${STARTOBJS} ${LIBRAT}.$(LIBEXT)
+		rm -f *% *.o ${PRATOBJ} ${ANCOBJS} ${LIBRAT}.$(LIBEXT)
 
 
 

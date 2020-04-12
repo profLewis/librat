@@ -1475,6 +1475,7 @@ openImageCopy(ImagePtr, InImagePtr, outFormat, env,skip)
 	GenericImage   *ImagePtr, *InImagePtr;
 	char           *env;
 	int 		skip;
+	int            outFormat;
 {
 	int	openImageMaskedCopy();
 
@@ -1492,6 +1493,7 @@ openImageMaskedCopy(ImagePtr, InImagePtr, MaskImage, maskValue, outFormat, env,s
 	char           *env;
 	int 		skip;
 	int		maskValue;
+        int.            outFormat;
 {
 #ifdef MMAP
 	int             b0,b1,row0,col0,row1,col1,offset, i, j, blockAccumulator = 0, block;

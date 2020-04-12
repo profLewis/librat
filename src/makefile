@@ -12,17 +12,17 @@
 LIBRAT = libratlib
 
 ARCH = x86_64
-BPMS = /c/Users/plewis/librat
+BPMS = /Users/plewis/librat
 LIB = ${BPMS}/lib
 BIN = ${BPMS}/bin
 
 CFLAGS = -O
-CC = gcc
-DYN = ld --shared
+CC = clang
+DYN = libtool -dynamic
 OPT = -fPIC
-OS = MINGW64
-ASYSTEM=MINGW64_NT-10.0-18363
-####LIBEXT = dll
+OS = x86_64
+ASYSTEM=Darwin
+####LIBEXT = so
 
 CFLAGS += -I. -DVERBOSE -DDOUBLEDEF -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64
 CFLAGS += -DMATCHK -D${ARCH} -D_NO_NAG
@@ -77,7 +77,11 @@ clean:
 # -Wl,--out-implib,${LIBRAT}.a
 # -undefined dynamic_lookup
 ifeq ($(LIBEXT),dll)
+<<<<<<< HEAD
   CMD=$(CC) -o ${LIBRAT}.${LIBEXT} ${PRATOBJ} ${ANCOBJS} -lmsvcrt -lm
+=======
+  CMD=$(CC) --shared -o ${LIBRAT}.${LIBEXT} ${PRATOBJ} ${ANCOBJS} -lmsvcrt -lm
+>>>>>>> eae19cbfa28b2bad0482df5e8d4829ff49cad577
 else
   CMD=$(CC) ${UND} -o ${LIBRAT}.${LIBEXT} ${PRATOBJ} ${ANCOBJS} -lc -lm
 endif
@@ -86,5 +90,5 @@ endif
 ${LIBRAT}.${LIBEXT}:	${PRATOBJ} ${ANCOBJS}
 		$(CMD)
 
-
+ 
 

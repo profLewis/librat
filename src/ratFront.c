@@ -17,9 +17,10 @@ size_t strlen();
 /*
 **  rubbish on suns ... use strtok() instead of strsep()
 */
+#include <string.h>
 #include <strings.h>
  
-#define strsep(a,b) Strsep(a,b)
+#define strsep(a,b) strtok(a,b)
 #define index(a,b) strchr((a),(b))
 
 

@@ -6,6 +6,7 @@
 #
 */
 #include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
 #include "useful4.h"
 #include "2D_vectors_double.h"

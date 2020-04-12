@@ -17,17 +17,11 @@ size_t strlen();
 /*
 **  rubbish on suns ... use strtok() instead of strsep()
 */
-#ifdef sun4u
-#define strsep(a,b) Strsep(a,b)
-#endif
+#include <strings.h>
 
-#ifdef i86pc
 #define strsep(a,b) Strsep(a,b)
-#endif
+#define index(a,b) strchr((a),(b))
 
-#ifdef x86_64
-#define strsep(a,b) Strsep(a,b)
-#endif
 
 
 /* private functions */

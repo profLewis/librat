@@ -40,8 +40,10 @@ endif
 
 ifeq ($(ImageOS),win19)
   LIBEXT=dll
-else
-  LIBEXT=so
+endif
+
+ifeq ($(OS),MINGW64)
+  LIBEXT=dll
 endif
 
 ifeq ($(ASYSTEM),Darwin)
@@ -75,7 +77,11 @@ clean:
 # -Wl,--out-implib,${LIBRAT}.a
 # -undefined dynamic_lookup
 ifeq ($(LIBEXT),dll)
+<<<<<<< HEAD
+  CMD=$(CC) -o ${LIBRAT}.${LIBEXT} ${PRATOBJ} ${ANCOBJS} -lmsvcrt -lm
+=======
   CMD=$(CC) --shared -o ${LIBRAT}.${LIBEXT} ${PRATOBJ} ${ANCOBJS} -lmsvcrt -lm
+>>>>>>> eae19cbfa28b2bad0482df5e8d4829ff49cad577
 else
   CMD=$(CC) ${UND} -o ${LIBRAT}.${LIBEXT} ${PRATOBJ} ${ANCOBJS} -lc -lm
 endif

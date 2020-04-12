@@ -40,8 +40,10 @@ endif
 
 ifeq ($(ImageOS),win19)
   LIBEXT=dll
-else
-  LIBEXT=so
+endif
+
+ifeq ($(OS),MINGW64)
+  LIBEXT=dll
 endif
 
 ifeq ($(ASYSTEM),Darwin)

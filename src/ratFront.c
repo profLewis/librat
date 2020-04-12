@@ -25,6 +25,9 @@ size_t strlen();
 #define strsep(a,b) Strsep(a,b)
 #endif
 
+#ifdef x86_64
+#define strsep(a,b) Strsep(a,b)
+#endif
 
 
 /* private functions */

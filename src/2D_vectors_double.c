@@ -62,7 +62,6 @@ Pair	*Bbox(vectors,num_vectors)
 Pair	*vectors;INT	num_vectors;
 {
 	INT	i;Pair	max,min,*out;
-	void    *calloc();
 	out=(Pair *)calloc(2,sizeof(Pair));
 	max=vectors[0];min=vectors[0];
 	for(i=1;i<num_vectors;i++){

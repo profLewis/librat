@@ -1013,9 +1013,10 @@ int getFields(char *str,char *oToken,char fields[MAXFIELDS][128]){
 	  break;
       }
     }
+    char **tmpStr=&Str;
     if(isBlank == 1)
       return(0);
-    for (j=0,ap = strings; (*ap = strsep(&Str,"=")) != NULL;j++){
+    for (j=0,ap = strings; (*ap = strsep(tmpStr,"=")) != NULL;j++){
       if(strlen(*ap)>0){
         if(j==0){
           Str2=*ap;

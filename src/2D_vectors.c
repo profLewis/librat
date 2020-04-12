@@ -9,7 +9,7 @@
 #include <math.h>
 #include	"useful4.h"
 #include	"2D_vectors.h"
-void *calloc();
+#include <stdlib.h>
 
 INT	FsIgN();
 

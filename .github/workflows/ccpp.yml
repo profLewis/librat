@@ -1,4 +1,4 @@
-name: C/C++ CI
+name: C/C++ CI [ubuntu,macos,windows] [gcc,clang]
 
 on:
   push:
@@ -61,14 +61,3 @@ jobs:
       run: ./configure
     - name: make 
       run: make CC=clang
-
-  build-windows-clang:
-
-    runs-on: windows-latest
-
-    steps:
-    - uses: actions/checkout@v2
-    - name: configure
-      run: ./configure
-    - name: make
-      run: make MAKE=mingw32-make CC=clang

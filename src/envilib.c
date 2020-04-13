@@ -8,6 +8,85 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+/* This will only have effect on Windows with MSVC */
+#ifdef _MSC_VER
+    #define _CRT_SECURE_NO_WARNINGS 1
+    #define restrict __restrict
+#endif
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdint.h>
+#include <errno.h>
+
+/*
+https://solarianprogrammer.com/2019/04/03/c-programming-read-file-lines-fgets-getline-implement-portable-getline/
+
+POSIX getline replacement for non-POSIX systems (like Windows)
+Differences:
+    - the function returns int64_t instead of ssize_t
+    - does not accept NUL characters in the input file
+Warnings:
+    - the function sets EINVAL, ENOMEM, EOVERFLOW in case of errors. The above are not defined by ISO C17,
+    but are supported by other C compilers like MSVC
+*/
+int my_getline(char **restrict line, size_t *restrict len, FILE *restrict fp) {
+    // Check if either line, len or fp are NULL pointers
+    if(line == NULL || len == NULL || fp == NULL) {
+        errno = EINVAL;
+        return -1;
+    }
+    
+    // Use a chunk array of 128 bytes as parameter for fgets
+    char chunk[128];
+
+    // Allocate a block of memory for *line if it is NULL or smaller than the chunk array
+    if(*line == NULL || *len < sizeof(chunk)) {
+        *len = sizeof(chunk);
+        if((*line = malloc(*len)) == NULL) {
+            errno = ENOMEM;
+            return -1;
+        }
+    }
+
+    // "Empty" the string
+    (*line)[0] = '\0';
+
+    while(fgets(chunk, sizeof(chunk), fp) != NULL) {
+        // Resize the line buffer if necessary
+        size_t len_used = strlen(*line);
+        size_t chunk_used = strlen(chunk);
+
+        if(*len - len_used < chunk_used) {
+            // Check for overflow
+            if(*len > SIZE_MAX / 2) {
+                errno = EOVERFLOW;
+                return -1;
+            } else {
+                *len *= 2;
+            }
+            
+            if((*line = realloc(*line, *len)) == NULL) {
+                errno = ENOMEM;
+                return -1;
+            }
+        }
+
+        // Copy the chunk to the end of the line buffer
+        memcpy(*line + len_used, chunk, chunk_used);
+        len_used += chunk_used;
+        (*line)[len_used] = '\0';
+
+        // Check if *line contains '\n', if yes, return the *line length
+        if((*line)[len_used - 1] == '\n') {
+            return len_used;
+        }
+    }
+
+    return -1;
+}
+
 char *strcat2(char *s1,char *s2){
   /* NB for strcat:
   ** The string s1 must have sufficient space to hold the result.
@@ -54,7 +133,7 @@ char *getData(FILE *f,char *field){
   my_string = (char *) calloc (nbytes + 1,sizeof(char));
   buffer = (char *) calloc (nbytes + 1,sizeof(char));
   while(bytes_read>0){
-    bytes_read = getline(&my_string, &nbytes,f);
+    bytes_read = my_getline(&my_string, &nbytes,f);
     tmp = strchr(my_string,'\r');if(tmp != NULL)*tmp = '\0';
     tmp = strchr(my_string,'\n');if(tmp != NULL)*tmp = '\0';
 
@@ -76,7 +155,7 @@ char *getData(FILE *f,char *field){
               keepGoing = 0;
             }else{
               my_string1 = (char *) calloc (nbytes + 1,sizeof(char));
-              bytes_read = getline(&my_string1, &nbytes,f);
+              bytes_read = my_getline(&my_string1, &nbytes,f);
               tmp = strchr(my_string1,'\r');if(tmp != NULL)*tmp = '\0';
               tmp = strchr(my_string1,'\n');if(tmp != NULL)*tmp = '\0';
               if(bytes_read == 0){

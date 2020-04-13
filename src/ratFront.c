@@ -1957,7 +1957,7 @@ void RAToutputIntegral(RATobj *ratObj,RATdevice *camera){
    wavebands=v_allocate(nBands,sizeof(double));
    RATgetNWavebands(ratObj,wavebands);
   }else{
-   wavebands=(double *)(-(long)ratObj);
+   wavebands=(double *)(-ratObj);
   }
   /* header */
   /*if(camera->resultIntegralFp)fclose(camera->resultIntegralFp);*/

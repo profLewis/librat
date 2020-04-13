@@ -9,7 +9,6 @@
 #include "image_formats.h"
 #include <errno.h>
 
-extern int errno;
 int dontReWrite = 0;
 /*
  * if -DMMAP not stated on command-line, this is ignored * mmap() is not
@@ -905,7 +904,7 @@ upDateImage(ImagePtr, argc, argv)
 	char          **argv;
 	GenericImage   *ImagePtr;
 {
-	if (!(long int) ImagePtr || !(int) argc || !(long int) argv)
+	if (!(int) ImagePtr || !(int) argc || !(int) argv)
 		return (0);
 	if (ImagePtr->update_header)
 		ImagePtr->update_header(ImagePtr, argc, argv);

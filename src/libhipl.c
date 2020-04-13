@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <time.h>
 #define MAX(a,b) (a > b ? a : b)
+#include <stdint.h>
 
 /* 
 **	libhipl : Hipl compatible library routines
@@ -598,7 +599,7 @@ char	*argv[];
 {
 	char	*seq, *prog, *new;
 	int	i, slen = 0, nlen = 0;
-	long	t;
+	intptr_t t;
 
 	/* strip off any leading pathname components */
 	if((prog = (char *)strrchr(argv[0],'/')) != 0)

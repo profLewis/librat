@@ -10,10 +10,6 @@ clean:	src/makefile
 check:
 test:	src/makefile test_start.test.op
 
-test_start.test.op:	src/makefile
-	$(MAKE) all
-	@bin/csh/test_start
-
 start_:	src/makefile
 	@cd src;$(MAKE) start
 

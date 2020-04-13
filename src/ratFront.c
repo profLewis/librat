@@ -723,7 +723,7 @@ double **RATreadSpectra(char *filename){
     exit(0);
   }
   /* read one line */
-  fgets(buffer,MAX_STRING_LENGTH-1,fp);
+  char *tmp_=fgets(buffer,MAX_STRING_LENGTH-1,fp);
   /* how many columns? */
   Str=&buffer[0];
   for (nspectra=0,ap = strings; (*ap = Strsep(&Str," \t\n")) != NULL;nspectra++){
@@ -1957,7 +1957,7 @@ void RAToutputIntegral(RATobj *ratObj,RATdevice *camera){
    wavebands=v_allocate(nBands,sizeof(double));
    RATgetNWavebands(ratObj,wavebands);
   }else{
-   wavebands=(double *)(-ratObj);
+   wavebands=(double *)(-(int)ratObj);
   }
   /* header */
   /*if(camera->resultIntegralFp)fclose(camera->resultIntegralFp);*/

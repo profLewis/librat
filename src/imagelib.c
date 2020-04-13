@@ -8,6 +8,7 @@
 #define IMAGEFORMATS_H_BETTER
 #include "image_formats.h"
 #include <errno.h>
+#include <stdint.h>
 
 int dontReWrite = 0;
 /*
@@ -904,7 +905,7 @@ upDateImage(ImagePtr, argc, argv)
 	char          **argv;
 	GenericImage   *ImagePtr;
 {
-	if (!(int) ImagePtr || !(int) argc || !(int) argv)
+	if (!(intptr_t) ImagePtr || !(int) argc || !(int) argv)
 		return (0);
 	if (ImagePtr->update_header)
 		ImagePtr->update_header(ImagePtr, argc, argv);

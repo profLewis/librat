@@ -1,3 +1,6 @@
+https://github.com/profLewis/librat/workflows/ccpp.yml/badge.svg
+
+
 <p align="center">
   <a href="https://github.com/profLewis/librat">
     <img src="http://www2.geog.ucl.ac.uk/~plewis/images/millet/millet.gif" alt="Millet the movie" width="72" height="72">

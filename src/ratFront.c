@@ -2001,7 +2001,7 @@ void RAToutputIntegral(RATobj *ratObj,RATdevice *camera){
 	    f=(camera->resultIntegralMode==RESULT_INTEGRAL_MODE_WAVEBAND ? k : (camera->resultIntegralMode==RESULT_INTEGRAL_MODE_DISTANCE? i : j));
 	    putValue(out,r,c,f,NULL,0,data[count][j][i][k]/camera->radianceNorm[0]);
 	  }
-      writeImage(out,((long)ratObj>0 ? ratObj->globalArgc : 0),((long)ratObj>0 ? ratObj->globalArgv : NULL),TRUE,TRUE,NULL);
+      writeImage(out,((int)ratObj>0 ? ratObj->globalArgc : 0),((long)ratObj>0 ? ratObj->globalArgv : NULL),TRUE,TRUE,NULL);
     }else{
       switch(camera->resultIntegralMode){
       case RESULT_INTEGRAL_MODE_WAVEBAND:

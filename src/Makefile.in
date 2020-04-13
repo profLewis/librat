@@ -27,7 +27,7 @@ ASYSTEM=@ASYSTEM@
 CFLAGS += -I. -DVERBOSE -DDOUBLEDEF -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64
 CFLAGS += -DMATCHK -D${ARCH} -D_NO_NAG
 
-PRATOBJ = rpv.o cylinderTess.o sphereTess.o ratFront.o disk.o dummy.o dem.o bbox.o facet.o camera.o intersect_objects.o random.o plane.o reflectance.o volumeRayTrace.o sphere.o cylinder.o ellipse.o spheroid.o sky.o sensor_rsr.o files.o mtllib.o bilinear.o dumper.o useful.o prat_wavefront_read.o images.o start.o
+PRATOBJ = rpv.o cylinderTess.o sphereTess.o ratFront.o disk.o dummy.o dem.o bbox.o facet.o camera.o intersect_objects.o random.o plane.o reflectance.o volumeRayTrace.o sphere.o cylinder.o ellipse.o spheroid.o sky.o sensor_rsr.o files.o mtllib.o bilinear.o dumper.o useful.o prat_wavefront_read.o images.o start_code.o
 
 ANCOBJS = error.o filelib.o hiplib.o envilib.o imagelib.o libhipl.o r250.o randlcg.o 4D_vectors.o vectors2.o 2D_vectors.o 2D_vectors_double.o 3D_vectors_double.o  allocate.o matrix.o fratP.o matherr.o
 
@@ -52,8 +52,9 @@ else
   UND=--shared
 endif
 
-all:		${LIBRAT}.${LIBEXT}
+all:		${LIBRAT}.${LIBEXT} 
 		
+
 
 # object building
 
@@ -61,7 +62,7 @@ all:		${LIBRAT}.${LIBEXT}
 		$(CC) ${OPT} -I. -DDOUBLEDEF  -D${ARCH} ${CFLAGS} -o $@ -c $<
 
 clean:
-		rm -f *% *.o ${PRATOBJ} ${ANCOBJS} ${LIBRAT}.$(LIBEXT)
+		rm -f *% *.o start start.o ${PRATOBJ} ${ANCOBJS} ${LIBRAT}.$(LIBEXT)
 
 
 
@@ -78,13 +79,22 @@ clean:
 # -undefined dynamic_lookup
 ifeq ($(LIBEXT),dll)
   CMD=$(CC) --shared -o ${LIBRAT}.${LIBEXT} ${PRATOBJ} ${ANCOBJS} -lmsvcrt -lm
+  EXE=$(CC) -o start start.o -L. -lratlib -lmsvcrt -lm
 else
   CMD=$(CC) ${UND} -o ${LIBRAT}.${LIBEXT} ${PRATOBJ} ${ANCOBJS} -lc -lm
+  EXE=$(CC) -o start start.o -L. -lratlib -lc -lm
 endif
 
 
 ${LIBRAT}.${LIBEXT}:	${PRATOBJ} ${ANCOBJS}
 		$(CMD)
 
- 
+start:		start.o
+		${EXE}
+
+
+
+
+
+
 

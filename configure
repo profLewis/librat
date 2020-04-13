@@ -1,0 +1,118 @@
+#! /bin/bash
+# Run this file to recreate the current configuration.
+
+CFLAGSS=("-O" "-O3" "-g")
+CCS=("gcc" "cc")
+OPTS=("-fPIC" "-I." )
+
+
+# specify a temporary directory
+TMP=/tmp
+
+
+# see
+# https://askubuntu.com/questions/674333/how-to-pass-an-array-as-function-argument
+# for help on syntax here -- sh is *horrible* syntax
+# run a test over a loop
+# and return the first that works
+# eg
+# LS=$(test_cmd which "lss ls")
+function test_cmd () {
+  declare c="$1"; shift 1
+  rest=("$@")
+  for arg in "${rest[@]}";
+  do
+    if eval $c $arg > /dev/null 2>&1
+    then
+      echo $arg
+      echo "Type1" $c $arg 1>&2 
+      return $?
+    elif eval $arg $c > /dev/null 2>&1
+    then
+      echo $arg
+      echo "Type1" $arg $c  1>&2 
+      return $?
+    else
+      echo "Not" $c  $arg 1>&2 
+      echo "Nor"  $arg $c 1>&2 
+      eval $arg $c
+    fi
+
+  done
+  return $?
+}
+
+
+
+
+
+ARCH=$(uname -m)
+HERE=$(pwd)
+BPMS=${BPMS-$HERE}
+ASYSTEM=$(uname -s)
+
+# set OS to arch unless MSYSTEM already set
+MSYSTEM=${MSYSTEM-$ARCH}
+OS=$MSYSTEM
+WINDOWS=MINGW64
+echo ">>>> $OS  : $MSYSTEM : $ASYSTEM : $HERE : $BPMS"
+
+if [ "$MSYSTEM" = "MINGW64" ] || [ "$ImageOS" = "win19" ]
+then
+  echo "..." "$MSYSTEM"=="MINGW64"  "$OS"=="win19" ": $OS : $MSYSTEM" 
+  LIBEXT='dll'
+  LIBC='-lmsvcrt -lm'
+else
+  echo ".. $MSYSTEM : $OS"
+  LIBEXT='so'
+  LIBC='-lc -lm'
+fi
+
+echo "+++ $LIBEXT"
+
+# fixers
+q='\/'
+BPMS_=$(echo $BPMS | sed 's/\//Qq/g')
+# initialise makefile
+sed < $BPMS/src/Makefile.in 's/@BPMS@/'$BPMS_'/' | sed 's/Qq/'$q'/g' | sed 's/@ASYSTEM@/'$ASYSTEM'/' |sed 's/@LIBEXT@/'$LIBEXT'/' |sed 's/@OS@/'$OS'/' | sed 's/@ARCH@/'$ARCH'/' > $BPMS/src/makefile
+
+mkdir -p bin/${OS}
+PATH=".:c/MinGW/bin:bin:bin/${OS}:${PATH}"
+
+# create test C code file
+echo '#include <stdio.h>' > $TMP/test_$$.c
+echo 'int no_main(int argc,char ** argv){printf("hello world\\n");return(1);}' >> $TMP/test_$$.c
+echo '' >> $TMP/test_$$.c
+
+##################
+# $CC
+##################
+CC=$(test_cmd "which" "${CCS[@]}")
+sed < ${BPMS}/src/makefile 's/@CC@/'"$CC"'/' > $TMP/tmp.$$; mv $TMP/tmp.$$ ${BPMS}/src/makefile
+
+##################
+# $CFLAGS
+##################
+CFLAGS=$(test_cmd "${CC} $TMP/test_$$.c -o $TMP/test_$$.o -c" "${CFLAGSS[@]}")
+sed < ${BPMS}/src/makefile 's/@CFLAGS@/'"$CFLAGS"'/' > $TMP/tmp.$$; mv $TMP/tmp.$$ ${BPMS}/src/makefile
+
+################## 
+# $OPT
+##################
+OPT=$(test_cmd "${CC} ${CFLAGS} $TMP/test_$$.c -o $TMP/test_$$.o -c" "${OPTS[@]}")
+sed < ${BPMS}/src/makefile 's/@OPT@/'"$OPT"'/' > $TMP/tmp.$$; mv $TMP/tmp.$$ ${BPMS}/src/makefile
+
+##################
+# $DYN
+##################
+# try using CC to link, as this will be sensible most of the time
+#DYNS=( "ld --shared -l${LIBC} -lm" "${CC} -dy -l${LIBC} -lm" "ld -dy -l${LIBC} -lm" "ld -l${LIBC} -lm" "libtool -dynamic -l${LIBC} -lm" "libtool -l${LIBC} -lm")
+#DYNS=("${CC} -dy" "ld --shared" "clang -dynamic" "libtool -dynamic")
+
+#DYN=$(test_cmd " -o $TMP/test_$$.${LIBEXT} $TMP/test_$$.o $LIBC" "${DYNS[@]}")
+#sed < ${BPMS}/src/makefile 's/@DYN@/'"$DYN"'/' > $TMP/tmp.$$; mv $TMP/tmp.$$ ${BPMS}/src/makefile
+
+# tidy up
+#rm -f $TMP/test_$$.c
+exit 0 
+

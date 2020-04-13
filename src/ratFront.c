@@ -1897,7 +1897,7 @@ void RATOutputIntegralFromOrder(char *outputfile,RATorder *orders,int nLidarBins
   double *wavelengths,radianceNorm=1.0;
 
   wavelengths = orders->ratMat->wavelengths;
-  dummy = (RATobj *)(-(long)wavelengths);
+  dummy = (RATobj *)(-(intptr_t)wavelengths);
   filename = (char *)v_allocate(strlen(outputfile)+MAX(MAX(strlen(".material"),strlen(".direct")),strlen(".diffuse"))+1,sizeof(char));
   sprintf(filename,"%s.direct",outputfile);
   camera = RATloadDummyCamera(orders->ratMat->nWavelengths,nLidarBins,orders->n,radiance[0],radianceNorm,mode,bininfo[1],bininfo[0],filename); 
@@ -1954,7 +1954,7 @@ void RAToutputIntegral(RATobj *ratObj,RATdevice *camera){
     fprintf(stderr,"inconsistency in defined number of wavebands in RAToutputIntegral()\n");
     exit(1);
   }
-  if(ratObj>0){
+  if((intptr_t)ratObj>0){
    wavebands=v_allocate(nBands,sizeof(double));
    RATgetNWavebands(ratObj,wavebands);
   }else{
@@ -2002,7 +2002,7 @@ void RAToutputIntegral(RATobj *ratObj,RATdevice *camera){
 	    f=(camera->resultIntegralMode==RESULT_INTEGRAL_MODE_WAVEBAND ? k : (camera->resultIntegralMode==RESULT_INTEGRAL_MODE_DISTANCE? i : j));
 	    putValue(out,r,c,f,NULL,0,data[count][j][i][k]/camera->radianceNorm[0]);
 	  }
-      writeImage(out,((int)ratObj>0 ? ratObj->globalArgc : 0),((long)ratObj>0 ? ratObj->globalArgv : NULL),TRUE,TRUE,NULL);
+      writeImage(out,((intptr_t)ratObj>0 ? ratObj->globalArgc : 0),((intptr_t)ratObj>0 ? ratObj->globalArgv : NULL),TRUE,TRUE,NULL);
     }else{
       switch(camera->resultIntegralMode){
       case RESULT_INTEGRAL_MODE_WAVEBAND:

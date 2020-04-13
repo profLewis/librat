@@ -51,7 +51,7 @@ jobs:
     - name: make
       run: make CC=clang
 
-  build-macos-gcc:
+  build-macos-clang:
 
     runs-on: macos-latest-clang
 

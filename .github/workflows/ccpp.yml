@@ -9,7 +9,7 @@ on:
 jobs:
   build-ubuntu-gcc:
 
-    runs-on: ubuntu-latest-gcc
+    runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v2
@@ -20,7 +20,7 @@ jobs:
 
   build-macos-gcc:
 
-    runs-on: macos-latest-gcc
+    runs-on: macos-latest
 
     steps:
     - uses: actions/checkout@v2
@@ -31,7 +31,7 @@ jobs:
 
   build-windows-gcc:
 
-    runs-on: windows-latest-gcc
+    runs-on: windows-latest
 
     steps:
     - uses: actions/checkout@v2
@@ -42,7 +42,7 @@ jobs:
 
   build-ubuntu-clang:
 
-    runs-on: ubuntu-latest-clang
+    runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v2
@@ -53,7 +53,7 @@ jobs:
 
   build-macos-clang:
 
-    runs-on: macos-latest-clang
+    runs-on: macos-latest
 
     steps:
     - uses: actions/checkout@v2
@@ -64,7 +64,7 @@ jobs:
 
   build-windows-clang:
 
-    runs-on: windows-latest-clang
+    runs-on: windows-latest
 
     steps:
     - uses: actions/checkout@v2

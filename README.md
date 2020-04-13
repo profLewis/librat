@@ -1,4 +1,4 @@
-![](https://github.com/profLewis/librat/workflows/.github/workflows/ccpp.yml/badge.svg)
+![](https://github.com/profLewis/librat/workflows/C/C++%20CI%20[ubuntu,macos,windows]%20[gcc,clang]/badge.svg)
 
 
 <p align="center">

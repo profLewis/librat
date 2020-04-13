@@ -12,17 +12,17 @@
 LIBRAT = libratlib
 
 ARCH = x86_64
-BPMS = /c/Users/plewis/librat
+BPMS = /Users/plewis/librat
 LIB = ${BPMS}/lib
 BIN = ${BPMS}/bin
 
 CFLAGS = -O
-CC = gcc
-DYN = ld --shared
+CC = clang
+DYN = libtool -dynamic
 OPT = -fPIC
-OS = MINGW64
-ASYSTEM=MINGW64_NT-10.0-18363
-####LIBEXT = dll
+OS = x86_64
+ASYSTEM=Darwin
+####LIBEXT = so
 
 CFLAGS += -I. -DVERBOSE -DDOUBLEDEF -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64
 CFLAGS += -DMATCHK -D${ARCH} -D_NO_NAG

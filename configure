@@ -107,10 +107,10 @@ sed < ${BPMS}/src/makefile 's/@OPT@/'"$OPT"'/' > $TMP/tmp.$$; mv $TMP/tmp.$$ ${B
 ##################
 # try using CC to link, as this will be sensible most of the time
 #DYNS=( "ld --shared -l${LIBC} -lm" "${CC} -dy -l${LIBC} -lm" "ld -dy -l${LIBC} -lm" "ld -l${LIBC} -lm" "libtool -dynamic -l${LIBC} -lm" "libtool -l${LIBC} -lm")
-DYNS=("${CC} -dy" "ld --shared" "clang -dynamic" "libtool -dynamic")
+#DYNS=("${CC} -dy" "ld --shared" "clang -dynamic" "libtool -dynamic")
 
-DYN=$(test_cmd " -o $TMP/test_$$.${LIBEXT} $TMP/test_$$.o $LIBC" "${DYNS[@]}")
-sed < ${BPMS}/src/makefile 's/@DYN@/'"$DYN"'/' > $TMP/tmp.$$; mv $TMP/tmp.$$ ${BPMS}/src/makefile
+#DYN=$(test_cmd " -o $TMP/test_$$.${LIBEXT} $TMP/test_$$.o $LIBC" "${DYNS[@]}")
+#sed < ${BPMS}/src/makefile 's/@DYN@/'"$DYN"'/' > $TMP/tmp.$$; mv $TMP/tmp.$$ ${BPMS}/src/makefile
 
 # tidy up
 #rm -f $TMP/test_$$.c

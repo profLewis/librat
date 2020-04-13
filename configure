@@ -2,7 +2,7 @@
 # Run this file to recreate the current configuration.
 
 CFLAGSS=("-O" "-O3" "-g")
-CCS=("clang" "gcc" "cc")
+CCS=("gcc" "clang" "cc")
 OPTS=("-fPIC" "-I." )
 
 

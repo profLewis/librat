@@ -905,7 +905,7 @@ upDateImage(ImagePtr, argc, argv)
 	char          **argv;
 	GenericImage   *ImagePtr;
 {
-	if (!(intptr_t) ImagePtr || !(int) argc || !(int) argv)
+	if (!(intptr_t) ImagePtr || !(int) argc || !(intptr_t) argv)
 		return (0);
 	if (ImagePtr->update_header)
 		ImagePtr->update_header(ImagePtr, argc, argv);

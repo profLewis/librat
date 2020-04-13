@@ -19,6 +19,7 @@ size_t strlen();
 */
 #include <string.h>
 #include <strings.h>
+#include <stdint.h>
  
 #define strsep(a,b) Strsep(a,b)
 #define index(a,b) strchr((a),(b))
@@ -1949,7 +1950,7 @@ void RAToutputIntegral(RATobj *ratObj,RATdevice *camera){
   nBands=camera->nBands;
   nBins=(camera->nBins == 0 ? 1 : camera->nBins + 2);
   rtd=camera->nOrders;
-  if(ratObj>0 && RATgetNWavebands(ratObj,wavebands) != nBands){
+  if((intptr_t)ratObj>0 && RATgetNWavebands(ratObj,wavebands) != nBands){
     fprintf(stderr,"inconsistency in defined number of wavebands in RAToutputIntegral()\n");
     exit(1);
   }
@@ -1957,7 +1958,7 @@ void RAToutputIntegral(RATobj *ratObj,RATdevice *camera){
    wavebands=v_allocate(nBands,sizeof(double));
    RATgetNWavebands(ratObj,wavebands);
   }else{
-   wavebands=(double *)(-(int)ratObj);
+   wavebands=(double *)(-(intptr_t)ratObj);
   }
   /* header */
   /*if(camera->resultIntegralFp)fclose(camera->resultIntegralFp);*/

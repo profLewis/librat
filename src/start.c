@@ -27,9 +27,15 @@ int main(int argc,char **argv){
 	/* read the data from the object file (if specified) 
 		** into the ratObj structure 
 		*/
+
 	if(RATisWavefrontFile(ratObj))
+#ifdef DEBUG
+  fprintf(stderr,"reading object file ...\n");
+#endif
 		RATreadObject(ratObj);
-	
+#ifdef DEBUG
+  fprintf(stderr,"doing stuff ...\n");
+#endif	
 	doStuff(ratObj,info);
 	return(0);
 }

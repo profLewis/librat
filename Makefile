@@ -1,5 +1,5 @@
 all:	src/makefile 
-	@cd src;$(MAKE) all start
+	@cd src;$(MAKE) clean all start
 
 src/makefile:
 	./configure
@@ -7,19 +7,3 @@ src/makefile:
 clean:	src/makefile
 	@cd src;$(MAKE) clean
 
-check:
-test:	src/makefile test_start.test.op
-
-start:	src/makefile
-	@cd src;$(MAKE) start
-
-sick:	src/makefile
-	@echo "stick your fingers down your throat"
-
-test_start.test.op:
-	@echo "test_start ..."
-	test/test_start -v
-	
-
-distcheck:
-	@echo "done"

@@ -1,0 +1,58 @@
+#! /bin/bash
+
+# we are in $BPMS/test
+export HERE=`dirname "$0"`
+cd $HERE/..
+
+export BPMS=`pwd`
+name=`basename "$0"`
+
+
+# for testing
+libb=$BPMS/src
+bin=$BPMS/src
+
+for i in "$@"
+do
+case $i in
+    -i|--install_test)
+    libb=$BPMS/lib
+    bin=$BPMS/bin
+    shift # past argument with no value
+    ;;
+    -t|--test)
+    libb=$BPMS/src
+    bin=$BPMS/src
+    shift # past argument with no value
+    ;;
+    *)
+    echo "Unknown option $i in $name (from $HERE) args $*" 2>&1
+    exit 1
+          # unknown option
+    ;;
+esac
+done
+
+export LD_LIBRARY_PATH="${libb}:$LD_LIBRARY_PATH"
+export DYLD_LIBRARY_PATH="${libb}:$DYLD_LIBRARY_PATH"
+
+export TEST=$BPMS/test/${name}_files
+export MATLIB=$TEST
+export MATERIAL=$TEST
+export RSRLIB=$TEST
+export SKY_ILLUMINATION=$TEST
+export ARARAT_OBJECT=$TEST
+export DIRECT_ILLUMINATION=$TEST
+
+"${bin}"/start < $TEST/starttest.ip -sensor_wavebands wavebands.dat -m 100 -sun_position 0 0 10 test.obj >& $TEST/$name.op
+
+#echo "this result"
+#echo "==========="
+#cat $TEST/testMe.this.op
+
+#echo "diff of file:"
+#echo "============="
+
+diff $TEST/$name.test.op $TEST/$name.op >/dev/null
+
+exit $?

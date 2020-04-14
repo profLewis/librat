@@ -73,19 +73,22 @@ char	bip;
 }
 
 /* mmap input image into buffer */
+#define CLOSE -1
 
-void	mmap_read_hips_image(imagename, head, buffer)
+int	mmap_read_hips_image(imagename, head, buffer,env)
 char            *imagename;
 struct  header  *head;
 Data	*buffer;
+char *env;
 {
+        FILE *fp,*openFile();
 	long offset;
         int     rows, cols;
         int     mmap_flag, fd;
 #ifdef __SUNPRO_C___
 		int lseek();
 #endif
-	void	exit(),fread_header();
+	void	exit(),fp_fread_header();
 	Data	D_allocate();
 
 #ifdef MMAP
@@ -93,44 +96,47 @@ Data	*buffer;
 #else
 	mmap_flag=0;
 #endif
-        if((fd=open(imagename, 0)) == -1){fprintf(stderr,"%s does not exist\n", imagename);exit(-1);}
-        fread_header(fd, head);
+        if(!(fp=openFile(imagename,TRUE,env))){
+          error2("Error opening image for read",imagename);
+          exit(1);
+        } 
+        fp_fread_header(fp, head);
         rows = head->rows;
         cols = head->cols;
-#ifdef MMAP
-        if(mmap_flag){
-	        offset=lseek(fd, 0L, SEEK_CUR);
-		lseek(fd,0L,L_SET);
-		switch(head->pixel_format){
-			case PFBYTE:
-		        if ( ( buffer->bdata = (unsigned char *)mmap(0, sizeof(char)*rows*cols*head->num_frame+offset, PROT_READ,  MAP_SHARED, fd, 0) ) == NULL )error1("mmap_read_hips_image:\tmmap failed");
-			buffer->bdata +=offset;break;
-			case PFFLOAT:
-		       	if ( ( buffer->fdata = (float *)mmap(0, sizeof(float)*rows*cols*head->num_frame+offset, PROT_READ,  MAP_SHARED, fd, 0) ) == NULL )error1("mmap_read_hips_image:\tmmap failed");
-			buffer->fdata +=(offset/4);break;
-			default:
-			error1("mmap_read_hips_image:\timage pixel format must be bytes or float");
+        if(buffer->bdata)free(buffer->bdata);
+        if(buffer->fdata)free(buffer->fdata);
+	*buffer = D_allocate(head->pixel_format,rows*cols*head->num_frame);
+	switch(head->pixel_format){
+	    case PFBYTE:
+		if(fread(buffer->bdata,sizeof(char),rows*cols*head->num_frame,fp)!=rows*cols*head->num_frame){
+                	error2("mmap_read_hips_image:\terror reading PFBYTE image data",imagename);
+                        exit(1);
+                }
+		break;		
+	    case PFFLOAT:
+		if(fread(buffer->fdata,sizeof(float),rows*cols*head->num_frame,fp)!=rows*cols*head->num_frame){
+                         error2("mmap_read_hips_image:\terror reading PFFLOAT image data",imagename);
+                         exit(1);
 		}
-       		close(fd);
-	}else{
-#endif
-                if(buffer->bdata)free(buffer->bdata);
-                if(buffer->fdata)free(buffer->fdata);
-		*buffer = D_allocate(head->pixel_format,rows*cols*head->num_frame);
-		switch(head->pixel_format){
-			case PFBYTE:
-			if(read(fd,buffer->bdata,rows*cols*head->num_frame*sizeof(char))!=rows*cols*head->num_frame*sizeof(char))error1("mmap_read_hips_image:\terror reading image data in non_mmap mode");
-			break;		
-			case PFFLOAT:
-			if(read(fd,buffer->fdata,rows*cols*head->num_frame*sizeof(float))!=rows*cols*head->num_frame*sizeof(float))error1("mmap_read_hips_image:\terror reading image data in non_mmap mode");
-			break;		
-			default:
-			error1("mmap_read_hips_image:\timage pixel format must be bytes or float");
-		}
-       		close(fd);
-#ifdef MMAP
+                break;		
+            case PFINT:
+                if(fread(buffer->idata,sizeof(float),rows*cols*head->num_frame,fp)!=rows*cols*head->num_frame){
+                         error2("mmap_read_hips_image:\terror reading PFINT image data",imagename);
+                         exit(1);
+                }
+                break;
+            case PFSHORT:
+                if(fread(buffer->sdata,sizeof(float),rows*cols*head->num_frame,fp)!=rows*cols*head->num_frame){
+                         error2("mmap_read_hips_image:\terror reading PFSHORT image data",imagename);
+                         exit(1);
+                }
+                break;
+  	    default:
+		error2("mmap_read_hips_image:\timage pixel format must be bytes or int or short or float",imagename);
+                exit(1);
 	}
-#endif
+        fp=openFile(imagename,CLOSE,fp);
+        return(0);
 }
 
 /* write out updated hips header */

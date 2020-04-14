@@ -1,5 +1,8 @@
 #include "rat.h"
 #include <stdlib.h>
+#include "files.h"
+FILE *openFile();
+#define CLOSE -1
 
 /* #define CALLOC(a,b) calloc((size_t)MAX(100,a),(size_t)b) */
 #define CALLOC(a,b) calloc((size_t)a,(size_t)b)
@@ -48,11 +51,9 @@ void printHistogram(RATdistribution *d,char *name,char *histogramType,int type,c
     sprintf(d->name,"%s.%s.type%d.%s.dat",name,histogramType,type,material);
   }
 
-  if(!d->fp){ 
-    if((d->fp=(FILE *)fopen(d->name,"w"))==NULL){
+  if(!d->fp && !(d->fp = openFile(d->name,FALSE,"BPMS_FILES"))){
       fprintf(stderr,"error opening histogram file %s\n",d->name);
       exit(1);
-    }
   }
   for(i=0;i<d->nSamples;i++){
     sum += d->data[i];
@@ -70,8 +71,7 @@ void printHistogram(RATdistribution *d,char *name,char *histogramType,int type,c
   for(i=0;i<d->nSamples;i++){
     fprintf(d->fp,"%lf %lf\n",d->min+(i+0.5)*d->step,d->data[i]/(double)sum);
   }
-  fclose(d->fp);
-  d->fp=NULL;
+  d->fp=openFile(d->name,CLOSE,d->fp);
   return;
 }
 
@@ -140,16 +140,14 @@ void RATprintObjects(RATobj *ratObj){
 	hd=v_allocate(1,sizeof(struct header));
 	init_header(hd, "Number Density image", "rat library output", obj->nsamps[2], "today", obj->nsamps[1], obj->nsamps[0], sizeof(float), 0, PFFLOAT, "");
 	update_header(hd, ratObj->globalArgc,ratObj->globalArgv);
-	/*fwrite_header(fd,hd);
-	lseek(fd,0,SEEK_SET);
-	offset=lseek(fd,0,SEEK_END);
-	close(fd);*/
-	obj->datafp=(FILE *)fopen(obj->datafilename,"w");
+        if(!(obj->datafp=openFile(obj->datafilename,FALSE,"ARARAT_OBJECT"))){
+          error2("Error opening Number Density image",obj->datafilename);
+          exit(1);
+        }
 	fp_fwrite_header(obj->datafp,hd);
 	/* get offset */
 	fwrite(obj->nd,sizeof(float),obj->nsamps[0]*obj->nsamps[1]*obj->nsamps[2],obj->datafp);
-	fclose(obj->datafp);
-	obj->datafp=NULL;
+        obj->datafp=openFile(obj->datafilename,CLOSE,obj->datafp);
 	/* and an envi header just for good luck */
        }
      }      
@@ -1544,6 +1542,7 @@ RATobject *RATgetObjects(RATobj *ratObj,int whichOne,double *min,double *max,int
 
 int RATreadWavefrontFile(RATobj *ratObj){
   static int *f=NULL;
+  FILE *fp;
 
   if(!f && !(f=(int *)CALLOC(N_CLEAR_FLAGS,sizeof(int)))){
     fprintf(stderr,"error in core allocation\n");
@@ -1552,14 +1551,22 @@ int RATreadWavefrontFile(RATobj *ratObj){
   f[0]=1;
   if(RATisWavefrontFile(ratObj))
     freeObject(ratObj,f);
-  if(!expand_filename(&(ratObj->wavebandbag->wavefront_file),"ARARAT_OBJECT",TRUE)){
-    fprintf(stderr,"%s: error opening wavefront object file %s\n",ratObj->globalArgv[0],ratObj->wavebandbag->wavefront_file);
+  
+  if(!(fp=openFile(ratObj->wavebandbag->wavefront_file,TRUE,"ARARAT_OBJECT"))){
+    error2("Error opening wavefront object file",ratObj->wavebandbag->wavefront_file);
     strcpy(ratObj->wavebandbag->wavefront_file,"");
     return(0);
   }
+#ifdef DEBUG
+  fprintf(stderr,"opening wavefront file");
+#endif
+  fp=openFile(ratObj->wavebandbag->wavefront_file,CLOSE,fp);
   if(ratObj->flagbag->verbose){
     fprintf(stderr,"%s: input file %s specified\n",ratObj->globalArgv[0],ratObj->wavebandbag->wavefront_file);
   }
+#ifdef DEBUG
+  fprintf(stderr,"reading wavefront file");
+#endif
   RATreadObject(ratObj); 
   return(1);
 }
@@ -2238,9 +2245,9 @@ int setMaterialUseage(BigBag *bb,FlagBag *flagbag,MaterialBag *materialbag,char 
 
 int sortIllumination(int *no_of_sun_wavelength_samples,FlagBag *flagbag,IlluminationBag *illuminations,char *Filename){
   char buffer[1024];
-  FILE *fp=NULL,*open_file_for_read();
+  FILE *fp=NULL;
   double fdum,fdum2,sunValue;
-  int i,expand_filename(),ii;
+  int i,ii;
   triplet normalise(triplet);
   IlluminationBag *illumination;
   char *filename;
@@ -2281,8 +2288,10 @@ int sortIllumination(int *no_of_sun_wavelength_samples,FlagBag *flagbag,Illumina
     }else{
       if(strcpy(illumination->direct_file,filename)==0)error1("parser:\terror in specifying -direct option");
       flagbag->direct_flag=1;
-      if(!expand_filename(&(illumination->direct_file),"DIRECT_ILLUMINATION",FALSE))error2("librat:\terror opening direct irradaince file",illumination->direct_file);
-      if((fp=open_file_for_read(illumination->direct_file))==NULL)error2("parser:\terror in specifying -direct option - cannot open file",illumination->direct_file);
+      if(!(fp = openFile((illumination->direct_file),TRUE,"DIRECT_ILLUMINATION"))){
+        error2("Error trying to open direct_illumination file",illumination->direct_file);
+        exit(1);
+      }
       *no_of_sun_wavelength_samples=0;
       while( (fgets(buffer,1024-1,fp))!=NULL){
         if((sscanf(buffer,"%lf %lf",&fdum,&fdum2))==2){
@@ -2296,6 +2305,7 @@ int sortIllumination(int *no_of_sun_wavelength_samples,FlagBag *flagbag,Illumina
       }
       if(illumination->sky_flag) /*  error check */
         if(*no_of_sun_wavelength_samples != illumination->sky_data_Ptr->hd.num_frame)error1("parser:\tinconsistent no of wavelength samples between -skymap data and -direct data\n\t\t(the number of wavelength samples in the direct illumination file must equal the number of frames in the skymap data)");
+      fp=openFile((illumination->direct_file),CLOSE,fp);
     }
   }
   return(1);
@@ -2324,7 +2334,10 @@ int getMaxMaterials(char *objName,int verbose){
 
 
   if(verbose)fprintf(stderr,"testing object file for material library %s\n",objName);
-  fp=openFileForRead(&objName,"ARARAT_OBJECT",FATAL);
+  if(!(fp=openFile(objName,TRUE,"ARARAT_OBJECT"))){
+    error2("Error opening object file for material library",objName);
+    exit(1);
+  }
   while(fgets(line,SHORT_STRING_LENGTH,fp)){
     liner=line;
     if(sscanf(liner,"%s",option)==1){
@@ -2341,17 +2354,20 @@ int getMaxMaterials(char *objName,int verbose){
           if(sscanf(liner,"%s",objName2)==1){
             liner = objName2;
             if(verbose)fprintf(stderr,"testing material library %s\n",liner);
-            fp2=openFileForRead(&liner,"MATLIB",TRUE);
+            if(!(fp2=openFile(liner,TRUE,"MATLIB"))){
+              error2("Error opening MATLIB file",liner);
+              exit(1);
+            }
             /* get a line, check there is a string to read & check it doesnt start with hash */
             while(fgets(buf,SHORT_STRING_LENGTH,fp2) != NULL )if(sscanf(buf,"%s",dum) && dum[0]!=35)
               count++;
-            fclose(fp2);
+            fp2=openFile(liner,CLOSE,fp2);
           }
         break;
       }
     }
   }
-  fclose(fp);
+  fp=openFile(objName,CLOSE,fp);
   if(verbose)fprintf(stderr,"Found up to %d materials in %s and preceding files\n",count+getNdefaultMaterials(),objName);
   return count;
 }
@@ -2505,16 +2521,18 @@ int RATparser(RATobj *bb,int argc,char **argv,void *info,int *ii,int jj){
   FlagBag	*flagbag;
   WavebandBag *wavebandbag;
   MaterialBag *materialbag;
-  
+  FILE *fp;
   int	i,j,quit=0,no_of_sun_wavelength_samples=0;
   char	sky_imagemap[1000],**Ptr,*p,*argvi;
-  int	expand_filename();
   int found=0,istart;
 
   flagbag=bb->flagbag;
   illumination=bb->illumination;
   wavebandbag=bb->wavebandbag;
   materialbag=bb->materialbag;
+#ifdef DEBUG
+  flagbag->verbose = TRUE;
+#endif
   
   p=&sky_imagemap[0];
   Ptr=&p;
@@ -2522,6 +2540,10 @@ int RATparser(RATobj *bb,int argc,char **argv,void *info,int *ii,int jj){
   i = *ii;
 
   argvi = argv[i]+jj;
+
+#ifdef DEBUG
+  fprintf(stderr,"parsing option %s \n",argvi);
+#endif
 
   switch(*(argvi)){
   case 'U':	/* user arguments */
@@ -2564,8 +2586,11 @@ int RATparser(RATobj *bb,int argc,char **argv,void *info,int *ii,int jj){
 	}
 	wavebandbag->sensor_filenames[wavebandbag->sensor_wavebands->no_of_wavebands]=c_allocate(2000);
 	strcpy(wavebandbag->sensor_filenames[(wavebandbag->sensor_wavebands->no_of_wavebands)],argv[++i]);
-	if(!expand_filename(&(wavebandbag->sensor_filenames[(wavebandbag->sensor_wavebands->no_of_wavebands)]),"RSRLIB",FALSE))error2("librat:\terror opening sensor relative spectral response file",wavebandbag->sensor_filenames[(wavebandbag->sensor_wavebands->no_of_wavebands)]);
-	(wavebandbag->sensor_wavebands->no_of_wavebands)++;
+        /* just try it out for size */
+        if((fp=openFile(wavebandbag->sensor_filenames[(wavebandbag->sensor_wavebands->no_of_wavebands)],TRUE,"RSRLIB"))){
+          fp=openFile((wavebandbag->sensor_filenames[(wavebandbag->sensor_wavebands->no_of_wavebands)]),CLOSE,fp);
+	  (wavebandbag->sensor_wavebands->no_of_wavebands)++;
+        }
       }
       wavebandbag->rsr_flag=1;
       found=1;
@@ -2591,8 +2616,7 @@ int RATparser(RATobj *bb,int argc,char **argv,void *info,int *ii,int jj){
 	error1("error in specifying -skymap option");
       }
       illumination->sky_flag=1;
-      if(!expand_filename(Ptr,"SKY_ILLUMINATION",FALSE))error2("librat:\terror opening skymap file",sky_imagemap);
-      mmap_read_hips_image(sky_imagemap,&(illumination->sky_data_Ptr->hd),&(illumination->sky_data_Ptr->data));
+      mmap_read_hips_image(sky_imagemap,&(illumination->sky_data_Ptr->hd),&(illumination->sky_data_Ptr->data),"SKY_ILLUMINATION");
       get_skymap_wavelengths(0,&(illumination->sky_data_Ptr->hd),(wavebandbag->lambda_min_Ptr),(wavebandbag->lambda_width_Ptr));
       if(flagbag->direct_flag) /*  error check */
 	if(no_of_sun_wavelength_samples != illumination->sky_data_Ptr->hd.num_frame)error1("parser:\tinconsistent no of wavelength samples between -skymap data and -direct data\n\t\t(the number of wavelength samples in the direct illumination file must equal the number of frames in the skymap data)");				
@@ -2638,10 +2662,11 @@ int	RATparse(RATobj *bb,int argc,char **argv,void *info){
   FlagBag	*flagbag;
   WavebandBag *wavebandbag;
   MaterialBag *materialbag;
-  
+  FILE *fp=NULL;
+ 
   int	i,no_of_sun_wavelength_samples=0;
   char	err[100],sky_imagemap[1000],**Ptr,*p;
-  int	expand_filename(),found=0,istart;
+  int	found=0,istart;
   void dummy_read_spectral_file();
  
   RATstart(bb); 
@@ -2717,6 +2742,10 @@ int	RATparse(RATobj *bb,int argc,char **argv,void *info){
   flagbag->sizeTol=0.;
   flagbag->float_flag=1;
   flagbag->rtRatio=1.0;
+
+#ifdef DEBUG
+  fprintf(stderr,"parsing command line ...\n\n");
+#endif
  
 
   /* parser */ 
@@ -2759,30 +2788,74 @@ int	RATparse(RATobj *bb,int argc,char **argv,void *info){
       error1(err);
     }
   } 
+
+#ifdef DEBUG
+  fprintf(stderr,"done parsing ... \n\n");
+#endif
+
   /* material useage */
+#ifdef DEBUG
+  fprintf(stderr,"setting material use %s\n",wavebandbag->op_image_file);
+#endif
   flagbag->matUseage=setMaterialUseage(bb,flagbag,materialbag,wavebandbag->op_image_file);
-  if(RATisWavefrontFile(bb) && !expand_filename(&(wavebandbag->wavefront_file),"ARARAT_OBJECT",TRUE))error2("librat:\terror opening librat wavefront format object file",wavebandbag->wavefront_file);
+
+#ifdef DEBUG
+  fprintf(stderr,"checking if %s wavefront format file ...\n",wavebandbag->wavefront_file);
+#endif  
+  if(RATisWavefrontFile(bb) && !(fp=openFile(wavebandbag->wavefront_file,TRUE,"ARARAT_OBJECT"))){
+    error2("librat:\terror opening librat wavefront format object file",wavebandbag->wavefront_file);
+    exit(1);
+  }
+  fp=openFile(wavebandbag->wavefront_file,CLOSE,fp);
+
+#ifdef DEBUG
+  fprintf(stderr,"setting vertex store ...\n");
+#endif
   if(flagbag->vertexStore){
     flagbag->blocksize=flagbag->vertexStore+1;
   }
+
+
+#ifdef DEBUG
+  fprintf(stderr,"checking verbose ...\n");
+#endif
   if(flagbag->verbose){
     fprintf(stderr,"%s:\n",argv[0]);
     fprintf(stderr,"\tVERBOSE flag on (-v option)\n");
   }
+
+#ifdef DEBUG
+  fprintf(stderr,"direct illumination ...\n");
+#endif
   if(!illumination->direct_file || !strlen(illumination->direct_file))
     sortIllumination(&no_of_sun_wavelength_samples,flagbag,illumination,illumination->direct_file);
+
+#ifdef DEBUG
+  fprintf(stderr,"sensor RSR ...\n");
+#endif
   /*
    *    read sensor rsr data
    */
   if(!wavebandbag->rsr_flag)dummy_read_spectral_file(wavebandbag->sensor_wavebands);
   else
-    read_spectral_file(flagbag->verbose,wavebandbag->sensor_filenames,wavebandbag->rsr_flag,&flagbag->fixed_wavelength,wavebandbag->sensor_wavebands);
+    read_spectral_file(flagbag->verbose,wavebandbag->sensor_filenames,wavebandbag->rsr_flag,&flagbag->fixed_wavelength,wavebandbag->sensor_wavebands,"RSRLIB");
+
+
+#ifdef DEBUG
+  fprintf(stderr,"preset reflectance ...\n");
+#endif
   calculate_reflectance_data(bb->wavebandbag, bb->materialbag, bb->illumination, *bb->wavebandbag->lambda_min_Ptr, *bb->wavebandbag->lambda_width_Ptr, 0);  
   bb->globalnBands=bb->wavebandbag->sensor_wavebands->no_of_wavebands;
    /*
    *    initialise storage area(s)
    */
+#ifdef DEBUG
+  fprintf(stderr,"init storage ...\n");
+#endif  
   initialise_wavefront_storage(flagbag->blocksize,&bb->vertices);
+#ifdef DEBUG
+  fprintf(stderr,"done here ...\n");
+#endif
   return(1);
 }
 
@@ -2984,8 +3057,15 @@ void RATreadObject(RATobj *bb){
   /*
    *	open object file
    */
-  fp=openFileForRead(&(wavebandbag->wavefront_file),"ARARAT_OBJECT",FATAL);
-  
+
+#ifdef DEBUG
+  fprintf(stderr,"opening object file %s\n",wavebandbag->wavefront_file);
+#endif
+
+  if(!(fp=openFile(wavebandbag->wavefront_file,TRUE,"ARARAT_OBJECT"))){
+    error2("Error opening wavefront_file",wavebandbag->wavefront_file);
+    exit(1);
+  }
   /*
    *	print verbose header for object format
    */
@@ -3003,14 +3083,13 @@ void RATreadObject(RATobj *bb){
    *	read object file
    */
   parse_prat_wavefront_data((BigBag *)bb,flagbag->data_verbose,bb->bbox,bb->bbox,fp,&bb->level,&bb->group,&bb->current_mtl,&bb->vertices,&bb->normals,&bb->locals,flagbag->normal,flagbag->local,&bb->m_inv_reverse,&bb->m_inverse_fwd,
-bb->material_name,materialbag->material_list,materialbag->materials,flagbag->vertexStore,flagbag->angleTol,flagbag->distanceTol,flagbag->sizeTol);
-  
+bb->material_name,materialbag->material_list,materialbag->materials,flagbag->vertexStore,flagbag->angleTol,flagbag->distanceTol,flagbag->sizeTol); 
   /*
    *	initialise reflectance data storage
    */
   initialise_reflectance_storage(materialbag->samples,wavebandbag->sensor_wavebands->no_of_wavebands);
   
   if(materialbag->samples->binStep)bb->lidar=TRUE;else bb->lidar=FALSE;
-  fclose(fp);
+  fp=openFile(wavebandbag->wavefront_file,CLOSE,fp);
   return;
 }

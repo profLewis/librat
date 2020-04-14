@@ -10,11 +10,15 @@ void dummy_read_spectral_file(Sensor_Wavebands        *sensor_wavebands){
   return;
 }
 
-void read_spectral_file(verbose,filename,rsr_flag,fixed_wavelength_flag,sensor_wavebands)
+#define CLOSE -1
+FILE *openFile();
+
+void read_spectral_file(verbose,filename,rsr_flag,fixed_wavelength_flag,sensor_wavebands,env)
 Sensor_Wavebands	*sensor_wavebands;
 int	verbose,*fixed_wavelength_flag;
 char	**filename;
 int	rsr_flag;
+char *env;
 {
 	int	no_of_wavebands,sample_counter,counter=0,I=0,i=0,j,quit_flag=0;
 	FILE	*fp;
@@ -35,7 +39,7 @@ int	rsr_flag;
 /*
 **	open file
 */
-	fp=open_file_for_read(filename[0]);
+	fp=openFile(filename[0],TRUE,env);
 	i=0;
 	while(fgets(buffer,2000,fp)){
 		if(sscanf(buffer,"%d %lf",&j,&f1)==2){
@@ -67,7 +71,7 @@ int	rsr_flag;
 	  pfatTexture.lambda[i]=sensor_wavebands->sensor_rsr[MAX(i,no_of_wavebands-1)].rsr[0][0];
 	}
 #endif	       
-        fclose(fp);
+        fp=openFile(filename[0],CLOSE,fp);
 	return;
 }
 

@@ -1139,7 +1139,8 @@ RATdevice  *RATreadACameraFile(char *file,RATobj *rat,RATdevice *ratCamera){
   char **scatteredImages=NULL;
   int *scatterStart=NULL,orthographic=1;	
   int *scatterEnd=NULL;
-  FILE *open_file_for_read();
+  FILE *openFile();
+  #define CLOSE -1
 
   nBands = RATgetNWavebands(rat,NULL);
   if(!file || strcmp(filename,file)==0){
@@ -1237,7 +1238,12 @@ RATdevice  *RATreadACameraFile(char *file,RATobj *rat,RATdevice *ratCamera){
 	  ratCamera->wavebandFiles[i] = (char *)v_allocate(strlen(fields[i])+1,sizeof(char));
 	  strcpy(ratCamera->wavebandFiles[i],fields[i]);
 	  wavebandbag->sensor_filenames[i]=ratCamera->wavebandFiles[i];
-	  if(!expand_filename(&(wavebandbag->sensor_filenames[i]),"RSRLIB",FALSE))error2("ratlib:\terror opening sensor relative spectral response file",wavebandbag->sensor_filenames[i]);
+          /* try for size */
+          if(!(fp=openFile(wavebandbag->sensor_filenames[i],TRUE,"RSRLIB"))){
+	    error2("ratlib:\terror opening sensor relative spectral response file",wavebandbag->sensor_filenames[i]);
+            exit(1);
+          }
+          fp=openFile(wavebandbag->sensor_filenames[i],CLOSE,fp);
 	}
 	wavebandbag->sensor_wavebands->no_of_wavebands=MAX(1,nf);
 	wavebandbag->rsr_flag=1;

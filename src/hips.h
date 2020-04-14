@@ -6,6 +6,8 @@
 typedef struct {
 	float	*fdata;
 	unsigned char	*bdata;
+        short *sdata;
+        int *idata;
 }Data;
 
 typedef struct {

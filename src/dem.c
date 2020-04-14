@@ -9,7 +9,6 @@ struct  header  *hd_Ptr;
 Data	*data;
 int	verbose,type;
 {
-	void	mmap_read_hips_image();
         GenericImage *dem;
         dem=allocateImageArray(1,NULL);
         setImageDefaults(dem,FALSE);

@@ -5,6 +5,7 @@
 #include <fcntl.h>
 #include <errno.h>
 #include "filelib.h"
+#include "error.h"
 
 #define MAXOPEN 253
 #define MAXFPOPEN 253
@@ -70,7 +71,18 @@ int	freed;
 	return(out);
 }
 
-
+char *typer(int inputFlag){
+  switch(inputFlag){
+    case TRUE:
+    return("input");
+    break;
+    case FALSE:
+    return("output");
+    break;
+  }
+  return("unknown");
+}
+#define CLOSE -1
 
 FILE *openFile(fileName,inputFlag,env)
 char	*fileName;
@@ -81,7 +93,20 @@ char	*env;
 	FILE    *stream;
 	static int nOpen=0;
 
+        if(strlen(fileName)==0){
+          error2("Error: no file name specified","NONE");
+          exit(1);
+        }
+
         switch(inputFlag){
+                case CLOSE:
+                stream=(FILE *)env;
+                fclose(stream);
+                nOpen--;
+#ifdef DEBUG
+                fprintf(stderr,"Close: %d files open (%s)\n",nOpen,fileName);
+#endif
+                return(NULL);
                 case TRUE:
                 strcpy(flag,"r");
                 if(strcmp(fileName,"-")==0){
@@ -99,21 +124,34 @@ char	*env;
                 break;
         }
 	/* attempt to open filename raw, then look in ENV directory */
+#ifdef DEBUG
+        fprintf(stderr,"I'm trying to open %s for %s ... \n",fileName,typer(inputFlag));
+#endif
         if((stream=fopen(fileName,flag))==NULL){
-		if((stream=fopen((newfileName=prependEnv(fileName,env)),flag))==NULL ){
-	
-			if(strcmp(newfileName,fileName)!=0)fileName=newfileName;
-                	fprintf(stderr,"openFile: error opening file %s for mode %s\n",fileName,flag);
-                	exit(1);
-		}else{
-			nOpen++;
-			strcpy(fileName,newfileName);
-		}
+#ifdef DEBUG
+            fprintf(stderr,"I tried to open %s for %s but failed ... \n",fileName,typer(inputFlag));
+#endif
+#ifdef DEBUG
+            char *getenv();
+            fprintf(stderr,"Try env: %s %s ... \n",env,getenv(env));
+#endif
+	    if((stream=fopen((newfileName=prependEnv(fileName,env)),flag))==NULL ){
+
+#ifdef DEBUG
+                fprintf(stderr,"I'm trying to open %s for %s ... \n",newfileName,typer(inputFlag));
+#endif	
+		if(strcmp(newfileName,fileName)!=0)fileName=newfileName;
+                fprintf(stderr,"openFile: error opening file %s for %s\n",fileName,typer(inputFlag));
+                return(NULL);
+	    }else{
+		nOpen++;
+		strcpy(fileName,newfileName);
+	    }
        	}else{
 		nOpen++;
 	}
 #ifdef DEBUG
-	fprintf(stderr,"%d files open (%s)\n",nOpen,fileName);
+	fprintf(stderr,"Open: %d files open (%s)\n",nOpen,fileName);
 #endif
 	rewind(stream);
 	return(stream);

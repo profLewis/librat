@@ -8,9 +8,10 @@ extern MaterialBag *Materialbag;
 extern	FILE 	*open_file_for_read();
 extern	void	mmap_read_hips_image();
 extern	void	*calloc();
-extern	int 	expand_filename();
 triplet readFileEqual();
 double	Random();
+FILE *openFile();
+#define CLOSE -1
 
 int getArrayNo(double lambda,Standard_Material_List *material){
   int i;
@@ -180,7 +181,7 @@ void	read_material_map_file(material_table,filename,no_of_materials_Ptr,material
   if(fscanf(fp,"%s",buf)!=1)error1("matllib:\terror in material_map file format");
   if(strcmp(buf,"material_map")==0 || strcmp(buf,"materialmap")==0 || strcmp(buf,"matmap")==0||strcmp(buf,"material_map:")==0 || strcmp(buf,"materialmap:")==0 || strcmp(buf,"matmap:")==0 );else error1("matllib:\terror in material_map file format:\n\t\tflag material_map expected");
   if(fscanf(fp,"%s",buf)!=1)error1("matllib:\terror in material_map file format");
-  mmap_read_hips_image(buf,&(material_table[*no_of_materials_Ptr].imagemap->hd),&(material_table[*no_of_materials_Ptr].imagemap->data));	
+  mmap_read_hips_image(buf,&(material_table[*no_of_materials_Ptr].imagemap->hd),&(material_table[*no_of_materials_Ptr].imagemap->data),"MTLLIB");	
   
   /* only byte format supported at present */
   
@@ -395,7 +396,7 @@ int	read_material_definition_file(bb,verbose,filename,material_list_Ptr,material
      Material_table	*material_table;
 {
   static int timer=0;
-  FILE	*fp, *openFileForRead();
+  FILE	*fp, *openFile();
   char	buf[1024],*line,k_filename[1024],bigtheta_filename[1024],rhoc_filename[1024],proportion_str[1024],material_name[1024],dum[1024],material_filename[1024],material[1024];
   int	i,j,ok_flag,found_material,*i_allocate(),read_brdf_material_file(),white=0;
   double	proportion,transWeightingThreshold;
@@ -406,7 +407,10 @@ int	read_material_definition_file(bb,verbose,filename,material_list_Ptr,material
 #endif
   timer++;
   if(verbose)fprintf(stderr,"reading material library %s\n",*filename);
-  fp=openFileForRead(filename,"MATLIB",TRUE);
+  if(!(fp=openFile(filename,TRUE,"MATLIB"))){
+    error2("Error opening MATLIB",filename);
+    exit(1);
+  }
   while(fgets(buf,1024,fp) != NULL )	/* get line */
     if(sscanf(buf,"%s",dum)==1)
       if(dum[0]!=35){	/* hash -> comment */
@@ -662,7 +666,7 @@ int	read_material_definition_file(bb,verbose,filename,material_list_Ptr,material
 	  (material_table[*no_of_materials_Ptr].v)=0;
 	  *(material_table[*no_of_materials_Ptr].material_proportions)=1.0;
 	  *(material_table[*no_of_materials_Ptr].material)= *no_of_materials_Ptr;
-	  mmap_read_hips_image(material_name,&(material_table[*no_of_materials_Ptr].imagemap->hd),&(material_table[*no_of_materials_Ptr].imagemap->data));
+	  mmap_read_hips_image(material_name,&(material_table[*no_of_materials_Ptr].imagemap->hd),&(material_table[*no_of_materials_Ptr].imagemap->data),"MTLLIB");
 	  switch(material_table[*no_of_materials_Ptr].imagemap->hd.num_frame){
 	  case 1:
 	    break;
@@ -694,6 +698,7 @@ int	read_material_definition_file(bb,verbose,filename,material_list_Ptr,material
 	(material_list_Ptr->no_of_materials)++;
 	/*(*no_of_materials_Ptr)++;*/
       }
+  fp=openFile(filename,CLOSE,fp);
   return(1);
 }
 
@@ -916,8 +921,8 @@ int	read_material_file(bb,verbose,filename,material_list_Ptr,no_of_materials_Ptr
   
   if(*no_of_materials_Ptr>bb->PRAT_MAX_MATERIALS)error1("read_material_file:\tonly %d materials can be defined (set with environment variable PRAT_MAX_MATERIALS)",bb->PRAT_MAX_MATERIALS);
   material_Ptr->diffuse_transmittance_flag=material_Ptr->diffuse_reflectance_flag=0;
- 
-  if(!expand_filename(&filename,"MATERIAL",FALSE) && !expand_filename(&filename,"MATLIB",FALSE)){
+
+  if(!(fp=openFile(filename,TRUE,"MATLIB"))){
     /*fprintf(stderr,"\tmaterial value %s:",filename);*/
     sscanf(filename,"%lf",&this);
     /*fprintf(stderr," %lf\n",this);*/
@@ -937,12 +942,16 @@ int	read_material_file(bb,verbose,filename,material_list_Ptr,no_of_materials_Ptr
     material_list_Ptr->material[ *no_of_materials_Ptr].srm.diffuse_transmittance=NULL;
     material_list_Ptr->material[ *no_of_materials_Ptr].srm.diffuse_reflectance[0]=this;
     material_list_Ptr->material[ *no_of_materials_Ptr].srm.diffuse_reflectance[1]=this;
+    fp=openFile(filename,CLOSE,fp);
     return(1);
   }else{
     rc=get_no_of_columns_in_file(verbose,filename,&rows);
     no_of_columns=rc;
     if(no_of_columns>5)error1("read_material_file:\tmaximum of 5 columns of data expected");
-    fp=open_file_for_read(filename);
+    if(!(fp=openFile(filename,TRUE,"ARARAT_OBJECT"))){
+      error2("Error opening material file",filename);
+      exit(1);
+    }
     if(material_list_Ptr->material[*no_of_materials_Ptr].wavelength)
       free(material_list_Ptr->material[*no_of_materials_Ptr].wavelength);  
     if(material_list_Ptr->material[ *no_of_materials_Ptr].srm.diffuse_reflectance)
@@ -978,7 +987,7 @@ int	read_material_file(bb,verbose,filename,material_list_Ptr,no_of_materials_Ptr
      }
   }
   material_list_Ptr->material[ *no_of_materials_Ptr].no_of_samples=timer;
-  fclose(fp);
+  fp=openFile(filename,CLOSE,fp);
   return(1);
 }
 

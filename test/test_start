@@ -58,10 +58,7 @@ export BPMS_FILES=$TEST
 
 if [ $verbose == 1 ]
 then
-  echo "==========="
-  env
-  echo "==========="
-  "${bin}"/start < $TEST/starttest.ip -sensor_wavebands wavebands.dat -m 100 -sun_position 0 0 10 test.obj 1> $TEST/$name.op
+  "${bin}"/start -v < $TEST/starttest.ip -sensor_wavebands wavebands.dat -m 100 -sun_position 0 0 10 test.obj 1> $TEST/$name.op
 
   s=$?
   echo "start exit code: $s"

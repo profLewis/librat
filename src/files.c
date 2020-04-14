@@ -24,7 +24,7 @@ char	*filename,*env,*f;
 int	fatal;
 {
 	FILE	*out;
-	char	*getenv();
+	char	*getenv(),environment[2000];
 	void	error2();
 	int	found=FALSE;
 

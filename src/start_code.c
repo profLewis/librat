@@ -117,31 +117,31 @@ void doStuff(RATobj *ratObj,void *info){
 				ratTree=RATgetRatTree(ratObj);
 				nBands=RATgetNWavebands(ratObj,NULL);
 				nSuns=RATgetNsuns(ratObj);
-				fprintf(stderr,"RTD %d\n",ratTree->thisRTD);
+				fprintf(stdout,"RTD %d\n",ratTree->thisRTD);
 				for(i=0;i<=ratTree->thisRTD;i++){
-					fprintf(stderr,"order: %d\tintersection point:\t%f %f %f\n\t\tray length:\t\t%f\n\t\tintersection material:\t%d\n",i,ratTree->intersectionPoints[i][0],ratTree->intersectionPoints[i][1],ratTree->intersectionPoints[i][2],ratTree->rayLengths[i], ratTree->ratmat[i]);
+					fprintf(stdout,"order: %d\tintersection point:\t%f %f %f\n\t\tray length:\t\t%f\n\t\tintersection material:\t%d\n",i,ratTree->intersectionPoints[i][0],ratTree->intersectionPoints[i][1],ratTree->intersectionPoints[i][2],ratTree->rayLengths[i], ratTree->ratmat[i]);
 					for(k=0;k<nSuns;k++){
 						if(ratTree[k].hitSun[i]){
-							fprintf(stderr,"\t\tsun %d:\t\t\t%d %s\n", k,ratTree[k].hitSun[i], interactionType(ratTree[k].directPathIntersectType[i]));        
-							if(ratTree->lengthToSun)fprintf(stderr,"lengthToSun: %f angleToSun %f\n",ratTree[k].lengthToSun[i],ratTree[k].angleToSun[i]);
-							fprintf(stderr,"\t\tdirect:\t\t\t");
+							fprintf(stdout,"\t\tsun %d:\t\t\t%d %s\n", k,ratTree[k].hitSun[i], interactionType(ratTree[k].directPathIntersectType[i]));        
+							if(ratTree->lengthToSun)fprintf(stdout,"lengthToSun: %f angleToSun %f\n",ratTree[k].lengthToSun[i],ratTree[k].angleToSun[i]);
+							fprintf(stdout,"\t\tdirect:\t\t\t");
 							for(j=0;j<nBands;j++){
-								fprintf(stderr,"%e ",ratTree[k].directRadiance[i*nBands+j]);
+								fprintf(stdout,"%e ",ratTree[k].directRadiance[i*nBands+j]);
 							}
-							fprintf(stderr,"\n"); 
+							fprintf(stdout,"\n"); 
 						}else{
-							fprintf(stderr,"\t\tsun %d:\t\t\tno hit\n",k);
+							fprintf(stdout,"\t\tsun %d:\t\t\tno hit\n",k);
 						}
 					}
 				}
 					i=ratTree->thisRTD;
 				if(i>0 || ratTree->thisRTD==0){
-					fprintf(stderr,"\t\tsky  :\t\t\t%s\n",interactionType(ratTree->diffusePathIntersectType[i]));
-					fprintf(stderr,"\t\tdiffuse:\t\t");
+					fprintf(stdout,"\t\tsky  :\t\t\t%s\n",interactionType(ratTree->diffusePathIntersectType[i]));
+					fprintf(stdout,"\t\tdiffuse:\t\t");
 					for(j=0;j<nBands;j++){
-						fprintf(stderr,"%e ",ratTree->diffuseRadiance[i*nBands+j]);
+						fprintf(stdout,"%e ",ratTree->diffuseRadiance[i*nBands+j]);
 					}
-					fprintf(stderr,"\n");
+					fprintf(stdout,"\n");
 				}
 					break;
 			case 16:

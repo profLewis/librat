@@ -2220,7 +2220,6 @@ int	initialise_contents_storage(contents,no_of_bboxes,no_of_triangles,no_of_bezi
 
 int setMaterialUseage(BigBag *bb,FlagBag *flagbag,MaterialBag *materialbag,char *name)
 {
-  FILE	*openFileForWrite();
   if(!(materialbag->material_list->useage=(MaterialUseage *)CALLOC(1,sizeof(MaterialUseage)))){
     fprintf(stderr,"error in core allocation\n");
     exit(0);

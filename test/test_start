@@ -53,6 +53,7 @@ export RSRLIB=$TEST
 export SKY_ILLUMINATION=$TEST
 export ARARAT_OBJECT=$TEST
 export DIRECT_ILLUMINATION=$TEST
+export BPMS_FILES=$TEST
 
 
 if [ $verbose == 1 ]
@@ -60,8 +61,9 @@ then
   echo "==========="
   env
   echo "==========="
-  "${bin}"/start < $TEST/starttest.ip -sensor_wavebands wavebands.dat -m 100 -sun_position 0 0 10 test.obj >& $TEST/$name.op
+  "${bin}"/start < $TEST/starttest.ip -sensor_wavebands wavebands.dat -m 100 -sun_position 0 0 10 test.obj 1> $TEST/$name.op
 
+  s=$?
   echo "template:"
   echo "==========="
   cat $TEST/$name.test.op
@@ -69,11 +71,18 @@ then
   echo "this:"
   echo "============="
   cat $TEST/$name.op
-
+  echo "sucess $s"
 else
-  "${bin}"/start < $TEST/starttest.ip -sensor_wavebands wavebands.dat -m 100 -sun_position 0 0 10 test.obj >& $TEST/$name.op
+  "${bin}"/start < $TEST/starttest.ip -sensor_wavebands wavebands.dat -m 100 -sun_position 0 0 10 test.obj 1> $TEST/$name.op
+  s=$?
+fi
+
+if [ $s == 1 ]
+then
+  echo "error running " "${bin}/start < $TEST/starttest.ip -sensor_wavebands wavebands.dat -m 100 -sun_position 0 0 10 test.obj 1> $TEST/$name.op"
 fi
 
 diff $TEST/$name.test.op $TEST/$name.op >/dev/null
+s=$?
 
-exit $?
+exit $s

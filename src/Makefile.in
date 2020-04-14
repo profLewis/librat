@@ -25,7 +25,7 @@ ASYSTEM=@ASYSTEM@
 ####LIBEXT = @LIBEXT@
 
 CFLAGS += -I. -DVERBOSE -DDOUBLEDEF -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64
-CFLAGS += -DMATCHK -D${ARCH} -D_NO_NAG
+CFLAGS += -DTEST -DMATCHK -D${ARCH} -D_NO_NAG
 
 PRATOBJ = rpv.o cylinderTess.o sphereTess.o ratFront.o disk.o dummy.o dem.o bbox.o facet.o camera.o intersect_objects.o random.o plane.o reflectance.o volumeRayTrace.o sphere.o cylinder.o ellipse.o spheroid.o sky.o sensor_rsr.o files.o mtllib.o bilinear.o dumper.o useful.o prat_wavefront_read.o images.o start_code.o
 
@@ -59,7 +59,7 @@ all:		${LIBRAT}.${LIBEXT}
 # object building
 
 %.o:		%.c
-		$(CC) ${OPT} -I. -DDOUBLEDEF  -D${ARCH} ${CFLAGS} -o $@ -c $<
+		$(CC) ${OPT} -I. -DDEBUG -DDOUBLEDEF  -D${ARCH} ${CFLAGS} -o $@ -c $<
 
 clean:
 		rm -f *% *.o start start.o ${PRATOBJ} ${ANCOBJS} ${LIBRAT}.$(LIBEXT)

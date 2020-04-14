@@ -16,7 +16,7 @@ jobs:
     - name: configure
       run: ./configure
     - name: make
-      run: make CC=clang clean test
+      run: make CC=clang clean all
 
   build-macos-clang:
 
@@ -27,4 +27,4 @@ jobs:
     - name: configure
       run: ./configure
     - name: make 
-      run: make CC=clang clean test
+      run: make CC=clang clean all

@@ -16,7 +16,7 @@ jobs:
     - name: configure
       run: ./configure
     - name: make
-      run: make CC=gcc clean test
+      run: make CC=gcc clean all
 
   build-macos-gcc:
 
@@ -27,7 +27,7 @@ jobs:
     - name: configure
       run: ./configure
     - name: make 
-      run: make CC=gcc clean test
+      run: make CC=gcc clean all
 
   build-windows-gcc:
 
@@ -38,5 +38,5 @@ jobs:
     - name: configure
       run: ./configure
     - name: make
-      run: make MAKE=mingw32-make CC=gcc clean test
+      run: make MAKE=mingw32-make CC=gcc clean all
 

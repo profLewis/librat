@@ -22,11 +22,11 @@ GenericImage    *ImagePtr;
 /*
 **      update header information with current command-line
 */
-	if(!ImagePtr->orig_name)if(!(ImagePtr->orig_name=(char *)calloc(MAX_SIZE,(int)sizeof(char)))){fprintf(stderr,"error in core allocation:\tattempting to allocate %d elements of size %d",MAX_SIZE,(int)sizeof(char));exit(0);}
-	if(!ImagePtr->seq_name)if(!(ImagePtr->seq_name=(char *)calloc(MAX_SIZE,(int)sizeof(char)))){fprintf(stderr,"error in core allocation:\tattempting to allocate %d elements of size %d",MAX_SIZE,(int)sizeof(char));exit(0);}
-	if(!ImagePtr->orig_date)if(!(ImagePtr->orig_date=(char *)calloc(MAX_SIZE,(int)sizeof(char)))){fprintf(stderr,"error in core allocation:\tattempting to allocate %d elements of size %d",MAX_SIZE,(int)sizeof(char));exit(0);}
-	if(!ImagePtr->seq_history)if(!(ImagePtr->seq_history=(char *)calloc(MAX_SIZE,(int)sizeof(char)))){fprintf(stderr,"error in core allocation:\tattempting to allocate %d elements of size %d",MAX_SIZE,(int)sizeof(char));exit(0);}
-	if(!ImagePtr->seq_desc)if(!(ImagePtr->seq_desc=(char *)calloc(MAX_SIZE,(int)sizeof(char)))){fprintf(stderr,"error in core allocation:\tattempting to allocate %d elements of size %d",MAX_SIZE,(int)sizeof(char));exit(0);}
+	if(!ImagePtr->orig_name)if(!(ImagePtr->orig_name=(char *)calloc(MAX_SIZE,(int)sizeof(char)))){fprintf(stderr,"error in core allocation:\tattempting to allocate %d elements of size %d",MAX_SIZE,(int)sizeof(char));exit(1);}
+	if(!ImagePtr->seq_name)if(!(ImagePtr->seq_name=(char *)calloc(MAX_SIZE,(int)sizeof(char)))){fprintf(stderr,"error in core allocation:\tattempting to allocate %d elements of size %d",MAX_SIZE,(int)sizeof(char));exit(1);}
+	if(!ImagePtr->orig_date)if(!(ImagePtr->orig_date=(char *)calloc(MAX_SIZE,(int)sizeof(char)))){fprintf(stderr,"error in core allocation:\tattempting to allocate %d elements of size %d",MAX_SIZE,(int)sizeof(char));exit(1);}
+	if(!ImagePtr->seq_history)if(!(ImagePtr->seq_history=(char *)calloc(MAX_SIZE,(int)sizeof(char)))){fprintf(stderr,"error in core allocation:\tattempting to allocate %d elements of size %d",MAX_SIZE,(int)sizeof(char));exit(1);}
+	if(!ImagePtr->seq_desc)if(!(ImagePtr->seq_desc=(char *)calloc(MAX_SIZE,(int)sizeof(char)))){fprintf(stderr,"error in core allocation:\tattempting to allocate %d elements of size %d",MAX_SIZE,(int)sizeof(char));exit(1);}
 
 	hd.orig_name=ImagePtr->orig_name;
 	hd.seq_name=ImagePtr->seq_name;

@@ -94,7 +94,7 @@ char *strcat2(char *s1,char *s2){
   char *S1;
   if(!(S1 = (char *)calloc((size_t)(strlen(s1)+strlen(s2)+1),sizeof(char)))){
     fprintf(stderr,"error in core allocation\n");
-    exit(0);
+    exit(1);
   }
   strcpy(S1,s1);
   free(s1);
@@ -201,7 +201,7 @@ char *enviTidyImagename(char *imageName){
   l = strlen(imageName);
   if( !(out=(char *)calloc(l+1+4,sizeof(char)))){
     fprintf(stderr,"error in core allocation\n");
-    exit(0);
+    exit(1);
   }
   strcpy(out,imageName);
   /* check to see if of is .img at the end */
@@ -228,7 +228,7 @@ int writeEnviHeader(GenericImage *ImagePtr,char *filename){
   /* open header file */
   if(!(ImagePtr->imageName)){
     fprintf(stderr,"error with unspecified image file\n");
-    exit(0);
+    exit(1);
   }
   if (!filename || strlen(filename) == 0) filename = ImagePtr->imageName;
 
@@ -241,7 +241,7 @@ int writeEnviHeader(GenericImage *ImagePtr,char *filename){
   }
   if(!(ImagePtr->streamH = fopen(ImagePtr->imageNameH,"w"))){
     fprintf(stderr,"error opening image header file %s for writing\n",ImagePtr->imageNameH);
-    exit(0);
+    exit(1);
   }
   fprintf(ImagePtr->streamH,"ENVI\n");
   fprintf(ImagePtr->streamH,"description = {\n%s}\n",ImagePtr->seq_desc);
@@ -260,27 +260,27 @@ int writeEnviHeader(GenericImage *ImagePtr,char *filename){
 
 int readEnviHeader(GenericImage *ImagePtr){
   char *reste,*headerName=NULL,*dummy,*fn;
-  FILE *f;
+  FILE *f,*open_file_for_read();
   int l;
   char *filename;
   filename = getImageName(ImagePtr);
 
   if( !(dummy=(char *)calloc(2,sizeof(char)))){
     fprintf(stderr,"error in core allocation\n");
-    exit(0);
+    exit(1);
   }
   dummy[0] = '\0';
   l = strlen(filename);
 
-  if (! (f = fopen(filename,"r"))){
+  if (! (f = open_file_for_read(filename))){
     char *filename2;
 
     filename2 = calloc((size_t)(l+1+4),sizeof(char));
     strcpy(filename2,filename);
     filename2=strcat2(filename2,".img");
-    if (! (f = fopen(filename2,"r"))){
+    if (! (f = open_file_for_read(filename2))){
       fprintf(stderr,"error opening image file %s or %s for reading\n",filename,filename2);
-      exit(0);
+      exit(1);
     }else{
       fn = (char *)calloc(l+1+4,sizeof(char));
       strcpy(fn,filename2);
@@ -292,9 +292,9 @@ int readEnviHeader(GenericImage *ImagePtr){
   ImagePtr->openFlag = TRUE;
 
   headerName = enviTidyImagename(filename);
-  if (! (f = fopen(headerName,"r"))){
+  if (! (f = open_file_for_read(headerName))){
     fprintf(stderr,"error opening header file %s for reading\n",headerName);
-    exit(0);
+    exit(1);
   }
   ImagePtr->imageNameH = headerName;
   ImagePtr->streamH = f;
@@ -319,7 +319,7 @@ int readEnviHeader(GenericImage *ImagePtr){
     ImagePtr->bits_per_pixel = (int)sizeof(float)*8;
   }else{
     fprintf(stderr,"error understanding pixel format for envi image: I only know about float (type 4) at present");
-    exit(0);
+    exit(1);
   }  
   reste = fgetData(f,"interleave");
   if(!(strcasecmp(reste,"bil")))
@@ -328,7 +328,7 @@ int readEnviHeader(GenericImage *ImagePtr){
     ImagePtr->arrayAccess=BSQ;
   else{
     fprintf(stderr,"error understanding pixel interleave format for envi image: I only know about bsq and bil at present");
-    exit(0);
+    exit(1);
   }
   free(reste);
   reste = fgetData(f,"test broken");

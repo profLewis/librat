@@ -276,13 +276,13 @@ void	read_default_materials(bb,verbose,material_list_Ptr,material_table,material
   }
   if(!material_name && !(material_name=(char **)calloc(2,sizeof(char *)))){
     fprintf(stderr,"error in core allocation\n");
-    exit(0);
+    exit(1);
   }
   
   len=MAX(strlen("WHITE")+1,strlen("TRANSPARENT")+1);
   if(timer==1 &&(!(material_name[0]=(char *)calloc(len,sizeof(char))) || !(material_name[1]=(char *)calloc(len,sizeof(char))))){
     fprintf(stderr,"error in core allocation\n");
-    exit(0);
+    exit(1);
   }
   
   strcpy(material_name[0],"WHITE");

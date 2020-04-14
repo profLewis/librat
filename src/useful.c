@@ -33,14 +33,14 @@ int	*fail_Ptr;
 		else if(str[i]=='.')dot_flag++;
 		else if(zero_flag && str[i]>'0' && str[i]<='9');
 		else if(fatal){
-			fprintf(stderr,"atoint:\tcannot read string %s as int\n",str);exit(-1);
+			fprintf(stderr,"atoint:\tcannot read string %s as int\n",str);exit(1);
 		}else{
 			*fail_Ptr=1;
 			return(0);
 		}
 		if(dot_flag>1){
 			if(fatal){
-				fprintf(stderr,"atoint:\tcannot read string %s as int\n",str);exit(-1);
+				fprintf(stderr,"atoint:\tcannot read string %s as int\n",str);exit(1);
 			}else{
 				*fail_Ptr=1;
 				return(0);
@@ -74,14 +74,14 @@ int	*fail_Ptr;
 		if(str[i]=='0')*fail_Ptr=0;
 		else if(str[i]=='.')dot_flag++;
 		else if(fatal){
-			fprintf(stderr,"atodouble:\tcannot read string %s as double\n",str);exit(-1);
+			fprintf(stderr,"atodouble:\tcannot read string %s as double\n",str);exit(1);
 		}else{
 			*fail_Ptr=1;
 			return(0.0);
 		}
 		if(dot_flag>1){
 			if(fatal){
-				fprintf(stderr,"atodouble:\tcannot read string %s as double\n",str);exit(-1);
+				fprintf(stderr,"atodouble:\tcannot read string %s as double\n",str);exit(1);
 			}else{
 				*fail_Ptr=1;
 				return(0.0);
@@ -112,7 +112,7 @@ int	*out;
 			for(i=0;i<argc;i++)
 				fprintf(stderr,"%s ",argv[i]);
 			fprintf(stderr,"\n");
-			exit(-1);
+			exit(1);
 		}else return(0);
 	}
 			
@@ -146,7 +146,7 @@ double	*out;
 			for(i=0;i<argc;i++)
 				fprintf(stderr,"%s ",argv[i]);
 			fprintf(stderr,"\n");
-			exit(-1);
+			exit(1);
 		}else return(0);
 	}
 	test_double=atodouble(argv[*i_Ptr+1],fatal,&fail);

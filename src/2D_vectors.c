@@ -319,7 +319,7 @@ PAIR	v0,v1,v2;INT	triangle_number;
 	void	exit();
 	mod_matrix=(v1.x*v2.y - v2.x*v1.y) - v0.x*(v2.y-v1.y) + v0.y*(v2.x - v1.x);
 	if(mod_matrix==0){
-		fprintf(stderr,"triangle %d incorrectly defined\n",triangle_number);exit(-4);
+		fprintf(stderr,"triangle %d incorrectly defined\n",triangle_number);exit(1);
 	}
 	out.vertex[0].x=(v0.x*v1.y-v0.y*v1.x)/mod_matrix;
 	out.vertex[0].y= -(v0.x*v2.y-v0.y*v2.x)/mod_matrix;

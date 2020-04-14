@@ -2227,18 +2227,18 @@ int setMaterialUseage(BigBag *bb,FlagBag *flagbag,MaterialBag *materialbag,char 
 
   if(!(materialbag->material_list->useage->materials=(char **)CALLOC(bb->PRAT_MAX_MATERIALS,sizeof(char *)))){
     fprintf(stderr,"error in core allocation\n");
-    exit(0);
+    exit(1);
   }
   if(!(materialbag->material_list->useage->names=(char **)CALLOC(bb->PRAT_MAX_MATERIALS,sizeof(char *)))){
     fprintf(stderr,"error in core allocation\n");
-    exit(0);
+    exit(1);
   }
   return(1);
 }
 
 int sortIllumination(int *no_of_sun_wavelength_samples,FlagBag *flagbag,IlluminationBag *illuminations,char *Filename){
   char buffer[1024];
-  FILE *fp=NULL;
+  FILE *fp=NULL,*open_file_for_read();
   double fdum,fdum2,sunValue;
   int i,expand_filename(),ii;
   triplet normalise(triplet);
@@ -2282,7 +2282,7 @@ int sortIllumination(int *no_of_sun_wavelength_samples,FlagBag *flagbag,Illumina
       if(strcpy(illumination->direct_file,filename)==0)error1("parser:\terror in specifying -direct option");
       flagbag->direct_flag=1;
       if(!expand_filename(&(illumination->direct_file),"DIRECT_ILLUMINATION",FALSE))error2("librat:\terror opening direct irradaince file",illumination->direct_file);
-      if((fp=fopen(illumination->direct_file,"r+"))==NULL)error2("parser:\terror in specifying -direct option - cannot open file",illumination->direct_file);
+      if((fp=open_file_for_read(illumination->direct_file))==NULL)error2("parser:\terror in specifying -direct option - cannot open file",illumination->direct_file);
       *no_of_sun_wavelength_samples=0;
       while( (fgets(buffer,1024-1,fp))!=NULL){
         if((sscanf(buffer,"%lf %lf",&fdum,&fdum2))==2){
@@ -2610,7 +2610,7 @@ int RATparser(RATobj *bb,int argc,char **argv,void *info,int *ii,int jj){
     found=1;
     break;
   case 'h':				/* -help */
-    RATprintOptions(bb);exit(1);
+    RATprintOptions(bb);exit(0);
     found=1;   
     break;
   case 'v':				/* verbose */
@@ -2956,7 +2956,7 @@ void RATstart(RATobj *bb){
   for(i=0;i<bb->PRAT_MAX_MATERIALS;i++)bb->material_name[i]=c_allocate(SHORT_STRING_LENGTH);
   if(!(bb->material_list.material=(Standard_Material_List *)CALLOC(bb->PRAT_MAX_MATERIALS,sizeof(Standard_Material_List))) || !(bb->bbox=(BBox *)CALLOC(1,sizeof(BBox)))){
     fprintf(stderr,"error in core allocation\n");
-    exit(0);
+    exit(1);
   }
   
   bb->materialbag->material_names=bb->material_name;

@@ -718,11 +718,10 @@ double **RATreadSpectra(char *filename){
   double **fdata=NULL;
   char buffer[MAX_STRING_LENGTH];
   char **ap,*Str,*strings[1024];
+  FILE *open_file_for_read();
 
-  if(!(fp=(FILE *)fopen(filename,"r"))){
-    fprintf(stderr,"error opening spectra file %s\n",filename);
-    exit(0);
-  }
+  fp=open_file_for_read(filename);
+
   /* read one line */
   char *tmp_=fgets(buffer,MAX_STRING_LENGTH-1,fp);
   /* how many columns? */
@@ -1140,15 +1139,14 @@ RATdevice  *RATreadACameraFile(char *file,RATobj *rat,RATdevice *ratCamera){
   char **scatteredImages=NULL;
   int *scatterStart=NULL,orthographic=1;	
   int *scatterEnd=NULL;
+  FILE *open_file_for_read();
+
   nBands = RATgetNWavebands(rat,NULL);
   if(!file || strcmp(filename,file)==0){
     file = nofile;
     fp = stdin;	
   }else{
-    if(!(fp=(FILE *)fopen(file,"r"))){
-      fprintf(stderr,"RATreadCameraFile: error opening file %s\n",file);
-      exit(1);
-    }
+    fp=open_file_for_read(file);
   }
   if(!ratCamera)ratCamera = (RATdevice *)v_allocate(1,sizeof(RATdevice));
   ratCamera->filename = (char *)v_allocate(strlen(file)+1,sizeof(char));
@@ -1602,11 +1600,11 @@ RATdevice  *RATreadACameraFile(char *file,RATobj *rat,RATdevice *ratCamera){
     if(ratCamera->pulseIPFile){
       /* read pulse file */
       {
-	FILE *fp;
+	FILE *fp,*open_file_for_read();
 	int i=0;
 	char buffer[MAX_STRING_LENGTH];
 	
-	if(!(fp=fopen(ratCamera->pulseIPFile,"r"))){
+	if(!(fp=open_file_for_read(ratCamera->pulseIPFile))){
 	  fprintf(stderr,"RATreadCameraFile: error opening input pulse file (pulseIPFile) %s\n",ratCamera->pulseIPFile);
 	  exit(1);
 	}
@@ -1885,7 +1883,7 @@ RATdevice *RATloadDummyCamera(int nBands,int nBins,int nOrders,double ***directR
   out->resultIntegralFilename=resultIntegralFilename;
   if(!(out->resultIntegralFp=(FILE *)fopen(resultIntegralFilename,"w"))){
     fprintf(stderr,"error opening file %s for write\n",resultIntegralFilename);
-    exit(0);
+    exit(1);
   }
   return(out);
 }
@@ -1977,11 +1975,11 @@ void RAToutputIntegral(RATobj *ratObj,RATdevice *camera){
   if(N==2)
   if(!(camera->resultIntegralFpDiffuse=(FILE *)fopen(filename,"w"))){
     fprintf(stderr,"error opening file %s for write\n",filename);
-    exit(0);
+    exit(1);
   }
   if(!(camera->resultIntegralFp=(FILE *)fopen(filename2,"w"))){
     fprintf(stderr,"error opening file %s for write\n",filename2);
-    exit(0);
+    exit(1);
   }
   
   fps[0] = camera->resultIntegralFp;
@@ -2171,6 +2169,7 @@ RATorder *RATsetOrderTerms(double **fdata,RATobj *rat,int *nLidarBins,char *resu
  double **data,binstart=0,binstep=0;
  RATmaterials *tmpm,*tmp;
  RATorder *orders=NULL,*order=NULL,*iorder=NULL;
+ FILE *open_file_for_read();
 
  if(rat)max_ray_depth=rat->flagbag->max_ray_depth;
 
@@ -2183,15 +2182,15 @@ RATorder *RATsetOrderTerms(double **fdata,RATobj *rat,int *nLidarBins,char *resu
   sprintf(order->filename[0],"%s.direct",order->rootfilename);
   sprintf(order->filename[1],"%s.diffuse",order->rootfilename);
   for(j=0;j<2;j++){
-   if(!(order->fp[j]=(FILE *)fopen(order->filename[j],"r"))){
+   if(!(order->fp[j]=(FILE *)open_file_for_read(order->filename[j]))){
     fprintf(stderr,"error opening file %s\n",order->filename[j]);
     exit(1);
    }
    if(!fgets(buffer,MAX_STRING_LENGTH-1,order->fp[j])){
-    fprintf(stderr,"error reading header line of file %s\n",order->filename[j]);exit(0);
+    fprintf(stderr,"error reading header line of file %s\n",order->filename[j]);exit(1);
    }
    if(sscanf(buffer,"%s %s %d %s %d %s %d %s %lf %s %lf",&(dum[0][0]),&(dum[1][0]),&(order->m),&(dum[2][0]),&max_ray_depth,&(dum[3][0]),nLidarBins,&(dum[4][0]),&binstart,&(dum[5][0]),&binstep)!=11){
-    fprintf(stderr,"error reading from header line of file %s\n",order->filename[j]);exit(0);
+    fprintf(stderr,"error reading from header line of file %s\n",order->filename[j]);exit(1);
    }
    *nLidarBins -= 2;
    if(*nLidarBins < 0)*nLidarBins=-1;
@@ -2238,7 +2237,7 @@ RATorder *RATsetOrderTerms(double **fdata,RATobj *rat,int *nLidarBins,char *resu
      order->ratMat = (RATmaterials *)v_allocate(order->m,sizeof(RATmaterials));
      for(j=0;j<order->m;j++){
       for(l=0;l<2;l++)if(!fgets(buffer,MAX_STRING_LENGTH-1,order->fp[l])){
-       fprintf(stderr,"error reading material header line of file %s\n",order->filename[l]);exit(0);
+       fprintf(stderr,"error reading material header line of file %s\n",order->filename[l]);exit(1);
       }
       sscanf(buffer,"%s %d %s %s",&dum[0][0],&order->ratMat[j].index,&dum[1][0],&dum[2][0]);
       Str=dum[1];

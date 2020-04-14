@@ -34,7 +34,7 @@ char	*file,*Env;
 		size=strlen(env)+add_slash+strlen(file)+1;
 		if(!(out=(char *)calloc(size+100,sizeof(char)))){
 			fprintf(stderr,"error in core allocation (%d bytes)\n",size);
-			exit(0);
+			exit(1);
 		}
 		strcpy(out,env);
 		if(add_slash)strcat(out,"/");
@@ -104,7 +104,7 @@ char	*env;
 	
 			if(strcmp(newfileName,fileName)!=0)fileName=newfileName;
                 	fprintf(stderr,"openFile: error opening file %s for mode %s\n",fileName,flag);
-                	exit(0);
+                	exit(1);
 		}else{
 			nOpen++;
 			strcpy(fileName,newfileName);

@@ -57,7 +57,7 @@ int	rsr_flag;
 			sensor_wavebands->sensor_rsr[i].no_of_samples=0;
 		}else{
 			fprintf(stderr,"read_spectral_file:\tread error at line %d in spectral file %s\n\t\t(%%d %%f) expected\n",i,filename[0]);
-			exit(-1);
+			exit(1);
 		}
 	}
 	if(verbose)fprintf(stderr,"read_spectral_file:\t%d data entries read in file %s\n",no_of_wavebands,filename[0]);

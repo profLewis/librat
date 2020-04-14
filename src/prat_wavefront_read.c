@@ -1068,7 +1068,7 @@ int	clone_read(bounds,clone,verbose,line,group_Ptr,bbox_Ptr,transformed_bbox_Ptr
 		}
 	}
 	if(!found_group){
-		fprintf(stderr,"prat_wavefront_read:\tgroup %s not found for cloning\n",hold);exit(-1);
+		fprintf(stderr,"prat_wavefront_read:\tgroup %s not found for cloning\n",hold);exit(1);
 	}
 	/*
 	 **	bounds 
@@ -2860,10 +2860,7 @@ int	parse_prat_wavefront_data(bb,verbose,top_root_bbox_Ptr,bbox_Ptr,fp,level,gro
 				FILE *fp2=NULL;
 				if(sscanf(liner,"%s",filename)==1){
 					fp2=fp;
-					if(!(fp=(FILE *)fopen(filename,"r"))){
-						fprintf(stderr,"error opening included object file %s\n",filename);
-						exit(1);
-					}
+                                        fp=open_file_for_read(filename);
 					if(verbose)fprintf(stderr,"#include %s",filename); 
 					parse_prat_wavefront_data(bb,verbose,top_root_bbox_Ptr,bbox_Ptr,fp,level,group_Ptr,current_mtl,vertices,normals,locals,normal,local_coords,m_inv_reverse_prev,m_inverse_fwd_prev,material_names,material_list_Ptr,material_table,vertexStore,angleTol,distanceTol,sizeTol); 
 					fclose(fp);
@@ -2965,7 +2962,7 @@ int	parse_prat_wavefront_data(bb,verbose,top_root_bbox_Ptr,bbox_Ptr,fp,level,gro
 						optioner[len]='\0';
 						if(group_Ptr->no_of_groups>=bb->max_number_of_groups){
 							fprintf(stderr,"Fatal error in reading wavefront file: Hey dummy ... you're trying to use more than %d groups ... you can increase this by e.g.\n\tsetenv MAX_GROUPS 100000\n",bb->max_number_of_groups);
-							exit(0);
+							exit(1);
 						}
 						group_Ptr->group_bboxes[group_Ptr->no_of_groups]=bbox_Ptr;
 						strcpy(group_Ptr->group_names[group_Ptr->no_of_groups],optioner);

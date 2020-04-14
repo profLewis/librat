@@ -57,13 +57,16 @@ export DIRECT_ILLUMINATION=$TEST
 
 if [ $verbose == 1 ]
 then
+  echo "==========="
+  env
+  echo "==========="
   "${bin}"/start < $TEST/starttest.ip -sensor_wavebands wavebands.dat -m 100 -sun_position 0 0 10 test.obj >& $TEST/$name.op
 
   echo "template:"
   echo "==========="
   cat $TEST/$name.test.op
 
-  echo "this"
+  echo "this:"
   echo "============="
   cat $TEST/$name.op
 

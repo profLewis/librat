@@ -32,7 +32,7 @@ int	fatal;
 /*
 **	try the env. variable area first
 */
-/*
+
 	if(filename[0] != '/' && (envVar=getenv(env))!=NULL){
 		strcpy(environment,envVar);
 		if((environment[0]=='/' && environment[strlen(environment)-1]!='/') || (strcmp(environment,".")==0 || strcmp(environment,"..")==0))
@@ -45,7 +45,7 @@ int	fatal;
 			strcpy(_filename,environment);
 		}
 	}
-*/	
+	
 	if(!found && (out=fopen(filename,f))==NULL){
 		if(fatal)
 			error2("open_file:\tfailed to open file:",filename);

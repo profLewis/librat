@@ -1,0 +1,14 @@
+mtllib plants.matlib
+!{
+!{
+#define
+g single needletwig.2.15
+usemtl leaf
+v 0 0 -20
+ell -1 0.5 1 20
+!}
+!{
+g needletwig.2.15
+clone 0 0 0 Rx 90 single needletwig.2.15
+!}
+!}

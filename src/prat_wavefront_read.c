@@ -1158,6 +1158,12 @@ int	mtllib_read(bb,verbose,line,material_list_Ptr,material_names,material_table)
 	timer++;
 	if(timer==1)filename=c_allocate(1024);
 	if(sscanf(line,"%s",filename)!=1)error1("prat_wavefront_read:\terror in mtllib specification");
+#ifdef DEBUG
+        fprintf(stderr,"+--%s\n",line);
+        fprintf(stderr," --%s\n",filename);
+#endif
+
+
 #ifdef PFAT
 	/* for PFAT, we need the lut early on, so cant make it very efficient as in prat */
 	allocate_partial_material_list();
@@ -2849,6 +2855,9 @@ int	parse_prat_wavefront_data(bb,verbose,top_root_bbox_Ptr,bbox_Ptr,fp,level,gro
 	prev_bbox=NULL;current_bbox=NULL;
 
 	while(fgets(line,1000,fp)){
+#ifdef DEBUG
+		fprintf(stderr,">>>%s\n",line);
+#endif
 		liner=line;
 		hit_check=1;
 		if(sscanf(liner,"%s",option)==1){

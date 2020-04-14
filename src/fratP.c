@@ -3075,6 +3075,10 @@ void RATreadObject(RATobj *bb){
    *	read default materials
    */
   if(!(materialbag->materials))materialbag->materials=bb->material_table;
+
+#ifdef DEBUG
+  fprintf(stderr,"reading default materials\n");
+#endif
   read_default_materials((BigBag *)bb,flagbag->data_verbose,materialbag->material_list,materialbag->materials,bb->material_name);
 
   bb->timer=bb->level=0;
@@ -3082,6 +3086,9 @@ void RATreadObject(RATobj *bb){
   /*
    *	read object file
    */
+#ifdef DEBUG
+  fprintf(stderr,"reading wavefront parse_prat_wavefront_data()\n");
+#endif
   parse_prat_wavefront_data((BigBag *)bb,flagbag->data_verbose,bb->bbox,bb->bbox,fp,&bb->level,&bb->group,&bb->current_mtl,&bb->vertices,&bb->normals,&bb->locals,flagbag->normal,flagbag->local,&bb->m_inv_reverse,&bb->m_inverse_fwd,
 bb->material_name,materialbag->material_list,materialbag->materials,flagbag->vertexStore,flagbag->angleTol,flagbag->distanceTol,flagbag->sizeTol); 
   /*

@@ -406,8 +406,11 @@ int	read_material_definition_file(bb,verbose,filename,material_list_Ptr,material
   Standard_Material_List  *sml=NULL;
 #endif
   timer++;
+#ifdef DEBUG
+  fprintf(stderr,"reading material library %s\n",*filename);
+#endif
   if(verbose)fprintf(stderr,"reading material library %s\n",*filename);
-  if(!(fp=openFile(filename,TRUE,"MATLIB"))){
+  if(!(fp=openFile(*filename,TRUE,"MATLIB"))){
     error2("Error opening MATLIB",filename);
     exit(1);
   }
@@ -698,7 +701,7 @@ int	read_material_definition_file(bb,verbose,filename,material_list_Ptr,material
 	(material_list_Ptr->no_of_materials)++;
 	/*(*no_of_materials_Ptr)++;*/
       }
-  fp=openFile(filename,CLOSE,fp);
+  fp=openFile(*filename,CLOSE,fp);
   return(1);
 }
 

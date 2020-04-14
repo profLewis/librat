@@ -59,7 +59,7 @@ all:		${LIBRAT}.${LIBEXT}
 # object building
 
 %.o:		%.c
-		$(CC) ${OPT} -I. -DDEBUG -DDOUBLEDEF  -D${ARCH} ${CFLAGS} -o $@ -c $<
+		$(CC) ${OPT} -I. -DDOUBLEDEF  -D${ARCH} ${CFLAGS} -o $@ -c $<
 
 clean:
 		rm -f *% *.o start start.o ${PRATOBJ} ${ANCOBJS} ${LIBRAT}.$(LIBEXT)
@@ -91,7 +91,7 @@ ${LIBRAT}.${LIBEXT}:	${PRATOBJ} ${ANCOBJS}
 
 start:		start.o
 		${EXE}
-		cd ..;test/test_start -v
+		cd ..;test/test_start 
 
 
 

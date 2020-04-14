@@ -47,12 +47,12 @@ export LD_LIBRARY_PATH="${libb}:$LD_LIBRARY_PATH"
 export DYLD_LIBRARY_PATH="${libb}:$DYLD_LIBRARY_PATH"
 
 export TEST=$BPMS/test/${name}_files
-export MATLIB=$TEST
-export MATERIAL=$TEST
-export RSRLIB=$TEST
-export SKY_ILLUMINATION=$TEST
-export ARARAT_OBJECT=$TEST
-export DIRECT_ILLUMINATION=$TEST
+#export MATLIB=$TEST
+#export MATERIAL=$TEST
+#export RSRLIB=$TEST
+#export SKY_ILLUMINATION=$TEST
+#export ARARAT_OBJECT=$TEST
+#export DIRECT_ILLUMINATION=$TEST
 export BPMS_FILES=$TEST
 
 
@@ -64,6 +64,7 @@ then
   "${bin}"/start < $TEST/starttest.ip -sensor_wavebands wavebands.dat -m 100 -sun_position 0 0 10 test.obj 1> $TEST/$name.op
 
   s=$?
+  echo "start exit code: $s"
   echo "template:"
   echo "==========="
   cat $TEST/$name.test.op

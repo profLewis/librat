@@ -31,6 +31,6 @@ int main(int argc,char **argv){
 		RATreadObject(ratObj);
 	
 	doStuff(ratObj,info);
-	return(1);
+	return(0);
 }
 

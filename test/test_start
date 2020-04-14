@@ -26,7 +26,8 @@ case $i in
     shift # past argument with no value
     ;;
     *)
-    echo "Unknown option $i in $name (from $HERE) args $*" >&2
+    echo "Error: Unknown option $i in $name (from $HERE) args $*" >&2
+    echo "  Options: $name [-i|--install_test] [-t|--test]" >&2
     exit 1
           # unknown option
     ;;

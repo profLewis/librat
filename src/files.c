@@ -30,6 +30,7 @@ int	fatal;
 			/*free(*filename);*filename=NULL;*/
 			if(!(*filename=(char *)calloc(strlen(environment)+1,sizeof(char))))
 				error2("openFileForRead:\terror in core allocation for string",*filename);
+                                exit(1);
 			strcpy(*filename,environment);
 #ifdef DEBUG
 	fprintf(stderr,"openFileForRead: extended %s\n",*filename);
@@ -40,6 +41,7 @@ int	fatal;
 	if(!found && (out=fopen(*filename,"r"))==NULL){
 		if(fatal)
 			error2("openFileForRead:\tfailed to open file:",*filename);
+                        exit(1);
 		else return((FILE *)-1);
 	}
 	return(out);

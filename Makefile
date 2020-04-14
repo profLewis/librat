@@ -17,7 +17,8 @@ sick:	src/makefile
 	@echo "stick your fingers down your throat"
 
 test_start.test.op:
-	@echo "test_start.test.op"
+	@echo "test_start ..."
+	test/test_start
 	
 
 distcheck:

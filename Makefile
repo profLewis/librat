@@ -18,7 +18,7 @@ sick:	src/makefile
 
 test_start.test.op:
 	@echo "test_start ..."
-	test/test_start
+	test/test_start -v
 	
 
 distcheck:

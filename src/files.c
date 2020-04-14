@@ -39,10 +39,10 @@ int	fatal;
 	}
 	
 	if(!found && (out=fopen(*filename,"r"))==NULL){
-		if(fatal)
+		if(fatal){
 			error2("openFileForRead:\tfailed to open file:",*filename);
                         exit(1);
-		else return((FILE *)-1);
+		}else return((FILE *)-1);
 	}
 	return(out);
 }

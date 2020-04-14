@@ -40,9 +40,9 @@ int	fatal;
 		strcat(environment,filename);
 		if((out=fopen(environment,f))!=NULL){
 			found=TRUE;
-			if(!(_filename=(char *)calloc(strlen(environment)+1,sizeof(char))))
+			if(!(filename=(char *)calloc(strlen(environment)+1,sizeof(char))))
 				error2("open_file:\terror in core allocation for string",_filename);
-			strcpy(_filename,environment);
+			strcpy(filename,environment);
 		}
 	}
 	

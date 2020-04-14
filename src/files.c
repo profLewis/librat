@@ -20,6 +20,47 @@ char	*filename;
 */
 
 FILE	*openFileForAny(filename,env,fatal,f)
+char	**filename,*env,*f;
+int	fatal;
+{
+	FILE	*out;
+	char	*envVar,environment[2000],*getenv();
+	void	error2();
+	int	found=FALSE;
+
+	out=NULL;
+#ifdef DEBUG
+	fprintf(stderr,"openFileForRead: %s\n",*filename);
+#endif
+/*
+**	try the env. variable area first
+*/
+	if((*filename)[0]!='/' && (envVar=getenv(env))!=NULL){
+		strcpy(environment,envVar);
+		if((environment[0]=='/' && environment[strlen(environment)-1]!='/') || (strcmp(environment,".")==0 || strcmp(environment,"..")==0))
+			strcat(environment,"/");
+		strcat(environment,*filename);
+		if((out=fopen(environment,"r"))!=NULL){
+			found=TRUE;
+			/*free(*filename);*filename=NULL;*/
+			if(!(*filename=(char *)calloc(strlen(environment)+1,sizeof(char))))
+				error2("open_file:\terror in core allocation for string",*filename);
+			strcpy(*filename,environment);
+#ifdef DEBUG
+	fprintf(stderr,"openFileForRead: extended %s\n",*filename);
+#endif
+		}
+	}
+	
+	if(!found && (out=fopen(*filename,"r"))==NULL){
+		if(fatal)
+			error2("open_file:\tfailed to open file:",*filename);
+		else return((FILE *)-1);
+	}
+	return(out);
+}
+
+FILE	*old_openFileForAny(filename,env,fatal,f)
 char	*filename,*env,*f;
 int	fatal;
 {

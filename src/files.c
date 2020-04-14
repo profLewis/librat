@@ -18,8 +18,9 @@ int	fatal;
 #endif
 /*
 **	try the env. variable area first
+** hack for windows
 */
-	if((*filename)[0]!='/' && (envVar=getenv(env))!=NULL){
+	if((*filename)[0]!='/' && (*filename)[1]!=':' &&  (envVar=getenv(env))!=NULL){
 		strcpy(environment,envVar);
 		if((environment[0]=='/' && environment[strlen(environment)-1]!='/') || (strcmp(environment,".")==0 || strcmp(environment,"..")==0))
 			strcat(environment,"/");

@@ -31,7 +31,7 @@ jobs:
       run: |
         pip install ctypesgen
     - name: make
-      run: make CC=clang clean all
+      run: make CC=clang clean all python
       
   build-ubuntu-gcc:
 

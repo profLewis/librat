@@ -26,17 +26,19 @@ int	fatal;
   	return(openFile(*filename,FALSE,env));
 }
 
+#define CLOSE -1
+
 int	get_no_of_columns_in_file(verbose,filename,rows)
 char	*filename;
 int	verbose,*rows;
 {
 	int	i[2],no_of_columns=0,no_of_columns_check=0;
-	FILE	*fp;
+	FILE	*fp,*openFile();
 	char	*Dummy,dummy[3000],dum[100];
 
 	i[0]=0;
 	i[1]=0;
-	fp=open_file_for_read(filename);
+	fp=openFile(filename,TRUE,"MATLIB");
 	while(fgets(dummy,3000,fp)!=NULL){
 		Dummy=dummy;
 		if(i[0]==0){
@@ -63,7 +65,7 @@ int	verbose,*rows;
 		fprintf(stderr,"%d lines   read in file %s\n",i[0],filename);
 		fprintf(stderr,"%d columns read in file %s\n",no_of_columns,filename);
 	}
-	fclose(fp);
+        fp=openFile(filename,CLOSE,fp);
 	i[1]=no_of_columns;
 	return(i[1]);
 }

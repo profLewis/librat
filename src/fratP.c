@@ -1555,7 +1555,7 @@ int RATreadWavefrontFile(RATobj *ratObj){
   if(!(fp=openFile(ratObj->wavebandbag->wavefront_file,TRUE,"ARARAT_OBJECT"))){
     error2("Error opening wavefront object file",ratObj->wavebandbag->wavefront_file);
     strcpy(ratObj->wavebandbag->wavefront_file,"");
-    return(0);
+    exit(1);
   }
 #ifdef DEBUG
   fprintf(stderr,"opening wavefront file");
@@ -2334,7 +2334,7 @@ int getMaxMaterials(char *objName,int verbose){
 
 
   if(verbose)fprintf(stderr,"testing object file for material library %s\n",objName);
-  if(!(fp=openFile(objName,TRUE,"ARARAT_OBJECT"))){
+  if(!(fp=openFile(objName,TRUE,"MATLIB"))){
     error2("Error opening object file for material library",objName);
     exit(1);
   }

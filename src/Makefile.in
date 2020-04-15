@@ -80,7 +80,7 @@ clean:
 # -undefined dynamic_lookup
 ifeq ($(LIBEXT),dll)
   CMD=$(CC) --shared -o ${LIBRAT}.${LIBEXT} ${PRATOBJ} ${ANCOBJS} -lmsvcrt -lm
-  EXE=$(CC) -o start start.o -L${HERE} -lratlib -lmsvcrt -lm
+  EXE=$(CC) -o start start.o -L. -lratlib -lmsvcrt -lm
 else
   CMD=$(CC) ${UND} -o ${LIBRAT}.${LIBEXT} ${PRATOBJ} ${ANCOBJS} -lc -lm
   EXE=$(CC) -o start start.o -L${HERE} -lratlib -lc -lm
@@ -95,8 +95,8 @@ start:		start.o
 		pwd
 		which ${MAKE}
 		${EXE}
-		./start
-		##cd ..;test/test_start -v
+		cc ..;src/start
+		cd ..;test/test_start -v
 
 
 

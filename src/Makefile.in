@@ -95,7 +95,8 @@ start:		start.o
 		# use 'test/test_start -v' for more verbose output
 		cd ..;test/test_start
 
-
+python:	
+	ctypesgen -L. -L${HERE} -I. -I${HERE}  -llibratlib.$(LIBEXT) hipl_format.h define_float.h useful3.h vectors2.h 4D_vectors.h 2D_vectors.h wavefront.h hips.h allocate.h intersect_objects.h materials.h prat_objects.h sensor_rsr.h camera.h globals.h reflectance.h volume.h rpv.h mtllib.h element_types.h reflectance_functions.h bags.h vector_macros.h 3D_vectors_double.h prat.h materials.h frat.h rat.h ratFront.h imagelib.h image_formats.h -o librat.py
 
 
 

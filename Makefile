@@ -7,3 +7,5 @@ src/makefile:
 clean:	src/makefile
 	@cd src;$(MAKE) clean
 
+python:
+	@cd src;$(MAKE) python

@@ -58,29 +58,34 @@ export BPMS_FILES=$TEST
 
 if [ $verbose == 1 ]
 then
-  "${bin}"/start -v < $TEST/starttest.ip -sensor_wavebands wavebands.dat -m 100 -sun_position 0 0 10 test.obj 1> $TEST/$name.op
+  ${bin}/start -v < $TEST/starttest.ip -sensor_wavebands wavebands.dat -m 100 -sun_position 0 0 10 test.obj 1> $TEST/$name.op
 
   s=$?
   echo "start exit code: $s"
-  echo "template:"
-  echo "==========="
-  cat $TEST/$name.test.op
+  if [ $s == 0 ]
+  then
+    echo "template:"
+    echo "==========="
+    cat $TEST/$name.test.op
 
-  echo "this:"
-  echo "============="
-  cat $TEST/$name.op
-  echo "sucess $s"
+    echo "this:"
+    echo "============="
+    cat $TEST/$name.op
+    echo "sucess $s"
+  else
+    echo "error"
+  fi
 else
-  "${bin}"/start < $TEST/starttest.ip -sensor_wavebands wavebands.dat -m 100 -sun_position 0 0 10 test.obj 1> $TEST/$name.op
+  ${bin}/start < $TEST/starttest.ip -sensor_wavebands wavebands.dat -m 100 -sun_position 0 0 10 test.obj 1> $TEST/$name.op
   s=$?
 fi
 
-if [ $s == 1 ]
+if [ $s != 0 ]
 then
   echo "error running " "${bin}/start < $TEST/starttest.ip -sensor_wavebands wavebands.dat -m 100 -sun_position 0 0 10 test.obj 1> $TEST/$name.op"
+else
+  diff $TEST/$name.test.op $TEST/$name.op >/dev/null
+  s=$?
 fi
-
-diff $TEST/$name.test.op $TEST/$name.op >/dev/null
-s=$?
 
 exit $s

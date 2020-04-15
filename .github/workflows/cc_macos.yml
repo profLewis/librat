@@ -1,4 +1,4 @@
-name: clang CI [ubuntu,macos] 
+name: CI macos
 
 on:
   push:

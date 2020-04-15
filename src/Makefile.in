@@ -96,6 +96,7 @@ start:		start.o
 		which ${MAKE}
 		${EXE}
 		cd ..;src/start
+		cd ../test/test_start_files;../../src/start -v -sensor_wavebands wavebands.dat -m 100 -sun_position 0 0 10 test.obj < starttest.ip > test_start.op
 		cd ..;test/test_start -v
 
 

@@ -63,9 +63,6 @@ export BPMS_FILES=$TEST
 
 if [ $verbose == 1 ]
 then
-  #echo "====XX-1-XX===="
-  #${bin}/start -v -sensor_wavebands wavebands.dat -m 100 -sun_position 0 0 10 $TEST/test.obj
-  echo "====XX-2-XX===="
   ${bin}/start -v < $TEST/starttest.ip -sensor_wavebands wavebands.dat -m 100 -sun_position 0 0 10 $TEST/test.obj 1> $TEST/$name.op
 
   s=$?
@@ -79,7 +76,7 @@ then
     echo "this:"
     echo "============="
     cat $TEST/$name.op
-    echo "sucess $s"
+    echo "success $s"
   else
     echo "error"
   fi
@@ -88,12 +85,13 @@ else
   s=$?
 fi
 
-if [ $s != 0 ]
+if [ $s == 0 ]
 then
-  echo "error running " "${bin}/start < $TEST/starttest.ip -sensor_wavebands wavebands.dat -m 100 -sun_position 0 0 10 test.obj 1> $TEST/$name.op"
-else
   diff $TEST/$name.test.op $TEST/$name.op >/dev/null
   s=$?
+else
+  echo "error running " "${bin}/start < $TEST/starttest.ip -sensor_wavebands wavebands.dat -m 100 -sun_position 0 0 10 $TEST/test.obj 1> $TEST/$name.op"
+  echo "from ${HERE}"
 fi
 
 exit $s

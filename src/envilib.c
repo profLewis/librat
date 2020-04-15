@@ -20,6 +20,18 @@
 #include <stdint.h>
 #include <errno.h>
 
+#ifndef EINVAL
+  #define EINVAL 22
+#endif
+
+#ifndef ENOMEM
+  #define ENOMEM 12
+#endif
+
+
+#ifndef EOVERFLOW
+  #define EOVERFLOW 75
+#endif
 /*
 https://solarianprogrammer.com/2019/04/03/c-programming-read-file-lines-fgets-getline-implement-portable-getline/
 

@@ -396,7 +396,7 @@ int	read_material_definition_file(bb,verbose,filename,material_list_Ptr,material
      Material_table	*material_table;
 {
   static int timer=0;
-  FILE	*fp, *openFile();
+  FILE	*fp;
   char	buf[1024],*line,k_filename[1024],bigtheta_filename[1024],rhoc_filename[1024],proportion_str[1024],material_name[1024],dum[1024],material_filename[1024],material[1024];
   int	i,j,ok_flag,found_material,*i_allocate(),read_brdf_material_file(),white=0;
   double	proportion,transWeightingThreshold;
@@ -951,10 +951,6 @@ int	read_material_file(bb,verbose,filename,material_list_Ptr,no_of_materials_Ptr
     rc=get_no_of_columns_in_file(verbose,filename,&rows);
     no_of_columns=rc;
     if(no_of_columns>5)error1("read_material_file:\tmaximum of 5 columns of data expected");
-    if(!(fp=openFile(filename,TRUE,"ARARAT_OBJECT"))){
-      error2("Error opening material file",filename);
-      exit(1);
-    }
     if(material_list_Ptr->material[*no_of_materials_Ptr].wavelength)
       free(material_list_Ptr->material[*no_of_materials_Ptr].wavelength);  
     if(material_list_Ptr->material[ *no_of_materials_Ptr].srm.diffuse_reflectance)

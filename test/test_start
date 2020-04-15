@@ -64,7 +64,7 @@ export BPMS_FILES=$TEST
 if [ $verbose == 1 ]
 then
   echo "====XX-1-XX===="
-  ${bin}/start -v -sensor_wavebands wavebands.dat -m 100 -sun_position 0 0 10
+  ${bin}/start -v -sensor_wavebands wavebands.dat -m 100 -sun_position 0 0 10 test.obj
   echo "====XX-2-XX===="
   ${bin}/start -v < $TEST/starttest.ip -sensor_wavebands wavebands.dat -m 100 -sun_position 0 0 10 test.obj 1> $TEST/$name.op
 

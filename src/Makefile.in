@@ -79,8 +79,7 @@ clean:
 # -Wl,--out-implib,${LIBRAT}.a
 # -undefined dynamic_lookup
 ifeq ($(LIBEXT),dll)
-  LIBEXT_="so"
-  CMD=$(CC) --shared -o ${LIBRAT}.${LIBEXT_} ${PRATOBJ} ${ANCOBJS} -lmsvcrt -lm
+  CMD=$(CC) --shared -o ${LIBRAT}.${LIBEXT} ${PRATOBJ} ${ANCOBJS} -lmsvcrt -lm
   EXE=$(CC) -o start start.o -L${HERE} -lratlib -lmsvcrt -lm
 else
   CMD=$(CC) ${UND} -o ${LIBRAT}.${LIBEXT} ${PRATOBJ} ${ANCOBJS} -lc -lm
@@ -89,9 +88,12 @@ endif
 
 
 ${LIBRAT}.${LIBEXT}:	${PRATOBJ} ${ANCOBJS}
+		pwd
 		$(CMD)
 
 start:		start.o
+		pwd
+		which ${MAKE}
 		${EXE}
 		cd ..;test/test_start -v
 

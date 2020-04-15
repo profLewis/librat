@@ -15,6 +15,7 @@ ARCH = @ARCH@
 BPMS = @BPMS@
 LIB = ${BPMS}/lib
 BIN = ${BPMS}/bin
+HERE = ${BPMS}/src
 
 CFLAGS = @CFLAGS@
 CC = @CC@
@@ -79,10 +80,10 @@ clean:
 # -undefined dynamic_lookup
 ifeq ($(LIBEXT),dll)
   CMD=$(CC) --shared -o ${LIBRAT}.${LIBEXT} ${PRATOBJ} ${ANCOBJS} -lmsvcrt -lm
-  EXE=$(CC) -o start start.o -L. -lratlib -lmsvcrt -lm
+  EXE=$(CC) -o start start.o -L${HERE} -lratlib -lmsvcrt -lm
 else
   CMD=$(CC) ${UND} -o ${LIBRAT}.${LIBEXT} ${PRATOBJ} ${ANCOBJS} -lc -lm
-  EXE=$(CC) -o start start.o -L. -lratlib -lc -lm
+  EXE=$(CC) -o start start.o -L${HERE} -lratlib -lc -lm
 endif
 
 

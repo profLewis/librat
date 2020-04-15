@@ -1,9 +1,5 @@
 
-![linux](docs/res/ubuntu_sm.png) [![Status](https://github.com/profLewis/librat/workflows/CI%20ubuntu/badge.svg)](https://github.com/profLewis/librat/actions?query=workflow%3A%22CI+ubuntu%22)
-
-![macOS](docs/res/apple_sm.png) [![Status](https://github.com/profLewis/librat/workflows/CI%20macos/badge.svg)](https://github.com/profLewis/librat/actions?query=workflow%3A%22CI+macos%22)
-
-![win](docs/res/win_sm.png) [![Status](https://github.com/profLewis/librat/workflows/CI%20windows/badge.svg)](https://github.com/profLewis/librat/actions?query=workflow%3A%22CI+windows%22)
+![linux](docs/res/ubuntu_sm.png) [![Status](https://github.com/profLewis/librat/workflows/CI%20ubuntu/badge.svg)](https://github.com/profLewis/librat/actions?query=workflow%3A%22CI+ubuntu%22)  ![macOS](docs/res/apple_sm.png) [![Status](https://github.com/profLewis/librat/workflows/CI%20macos/badge.svg)](https://github.com/profLewis/librat/actions?query=workflow%3A%22CI+macos%22). ![win](docs/res/win_sm.png) [![Status](https://github.com/profLewis/librat/workflows/CI%20windows/badge.svg)](https://github.com/profLewis/librat/actions?query=workflow%3A%22CI+windows%22)
 
 <p align="center">
   <a href="https://github.com/profLewis/librat">

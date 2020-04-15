@@ -86,8 +86,15 @@ fi
 
 if [ $s == 0 ]
 then
-  diff $TEST/$name.test.op $TEST/$name.op >/dev/null
-  s=$?
+  if [ $verbose == 1 ]
+  then
+    diff $TEST/$name.test.op $TEST/$name.op 
+    s=$?
+    echo "success $s"
+  else
+    diff $TEST/$name.test.op $TEST/$name.op >/dev/null
+    s=$?
+  fi
 else
   echo "error running " "${bin}/start < $TEST/starttest.ip -sensor_wavebands wavebands.dat -m 100 -sun_position 0 0 10 $TEST/test.obj 1> $TEST/$name.op"
   echo "from ${HERE}"

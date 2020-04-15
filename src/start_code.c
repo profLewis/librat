@@ -126,7 +126,7 @@ void doStuff(RATobj *ratObj,void *info){
 							if(ratTree->lengthToSun)fprintf(stdout,"lengthToSun: %f angleToSun %f\n",ratTree[k].lengthToSun[i],ratTree[k].angleToSun[i]);
 							fprintf(stdout,"\t\tdirect:\t\t\t");
 							for(j=0;j<nBands;j++){
-								fprintf(stdout,"%e ",ratTree[k].directRadiance[i*nBands+j]);
+								fprintf(stdout,"%8.6e ",ratTree[k].directRadiance[i*nBands+j]);
 							}
 							fprintf(stdout,"\n"); 
 						}else{
@@ -139,7 +139,7 @@ void doStuff(RATobj *ratObj,void *info){
 					fprintf(stdout,"\t\tsky  :\t\t\t%s\n",interactionType(ratTree->diffusePathIntersectType[i]));
 					fprintf(stdout,"\t\tdiffuse:\t\t");
 					for(j=0;j<nBands;j++){
-						fprintf(stdout,"%e ",ratTree->diffuseRadiance[i*nBands+j]);
+						fprintf(stdout,"%8.6e ",ratTree->diffuseRadiance[i*nBands+j]);
 					}
 					fprintf(stdout,"\n");
 				}

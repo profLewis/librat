@@ -38,5 +38,5 @@ jobs:
     - name: configure
       run: ./configure
     - name: make
-      run: make MAKE=mingw32-make CC=gcc clean all
+      run: make MAKE=make CC=gcc clean all
 

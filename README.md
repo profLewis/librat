@@ -1,5 +1,5 @@
 
-![linux](docs/res/linux_sm.png) [![Status](https://github.com/profLewis/librat/workflows/CI%20ubuntu/badge.svg)](https://github.com/profLewis/librat/actions)
+![linux](docs/res/ubuntu_sm.png) [![Status](https://github.com/profLewis/librat/workflows/CI%20ubuntu/badge.svg)](https://github.com/profLewis/librat/actions)
 
 ![macOS](docs/res/apple_sm.png) [![Status](https://github.com/profLewis/librat/workflows/CI%20macos/badge.svg)](https://github.com/profLewis/librat/actions)
 

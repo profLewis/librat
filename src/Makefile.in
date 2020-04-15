@@ -95,7 +95,7 @@ start:		start.o
 		pwd
 		which ${MAKE}
 		${EXE}
-		cc ..;src/start
+		cd ..;src/start
 		cd ..;test/test_start -v
 
 

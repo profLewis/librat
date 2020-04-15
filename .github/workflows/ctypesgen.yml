@@ -30,7 +30,3 @@ jobs:
     - name: ctypesgen
       run: |
         pip install ctypesgen
-    - name: Test with pytest
-      run: |
-        pip install pytest
-        pytest

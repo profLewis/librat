@@ -2,15 +2,15 @@
   
 # we are in $BPMS/test
 export HERE=`dirname "$0"`
-cd $HERE/..
+cd ${HERE}/..
 
 export BPMS=`pwd`
 name=`basename "$0"`
 
 
 # for testing
-libb=$BPMS/src
-bin=$BPMS/src
+libb=${BPMS}/src
+bin=${BPMS}/src
 verbose=0
 
 for i in "$@"
@@ -25,17 +25,17 @@ case $i in
     shift # past argument with no value
     ;;
     -i|--install_test)
-    libb=$BPMS/lib
-    bin=$BPMS/bin
+    libb=${BPMS}/lib
+    bin=${BPMS}/bin
     shift # past argument with no value
     ;;
     -t|--test)
-    libb=$BPMS/src
-    bin=$BPMS/src
+    libb=${BPMS}/src
+    bin=${BPMS}/src
     shift # past argument with no value
     ;;
     *)
-    echo "Error: Unknown option $i in $name (from $HERE) args $*" >&2
+    echo "Error: Unknown option $i in $name (from ${HERE}) args $*" >&2
     echo "  Options: $name [-v|--verbose] [-p|-q|-quiet] [-i|--install_test] [-t|--test]" >&2
     exit 1
           # unknown option
@@ -43,10 +43,15 @@ case $i in
 esac
 done
 
-export LD_LIBRARY_PATH="${libb}:$LD_LIBRARY_PATH"
-export DYLD_LIBRARY_PATH="${libb}:$DYLD_LIBRARY_PATH"
+# ensure something is set, even if just '.'
+DOT="."
+LD_LIBRARY_PATH=${LD_LIBRARY_PATH-$DOT}
+DYLD_LIBRARY_PATH=${DYLD_LIBRARY_PATH-$DOT}
 
-export TEST=$BPMS/test/${name}_files
+export LD_LIBRARY_PATH="${libb}:${LD_LIBRARY_PATH}"
+export DYLD_LIBRARY_PATH="${libb}:${DYLD_LIBRARY_PATH}"
+
+export TEST=${BPMS}/test/${name}_files
 export MATLIB=$TEST
 export MATERIAL=$TEST
 export RSRLIB=$TEST
@@ -58,6 +63,7 @@ export BPMS_FILES=$TEST
 
 if [ $verbose == 1 ]
 then
+  ${bin}/start
   ${bin}/start -v < $TEST/starttest.ip -sensor_wavebands wavebands.dat -m 100 -sun_position 0 0 10 test.obj 1> $TEST/$name.op
 
   s=$?

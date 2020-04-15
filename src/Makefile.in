@@ -92,7 +92,8 @@ ${LIBRAT}.${LIBEXT}:	${PRATOBJ} ${ANCOBJS}
 
 start:		start.o
 		${EXE}
-		cd ..;test/test_start -v
+		# use 'test/test_start -v' for more verbose output
+		cd ..;test/test_start
 
 
 

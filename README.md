@@ -1,8 +1,9 @@
 
-[![Status](https://github.com/profLewis/librat/workflows/gcc%20CI%20[ubuntu,macos,windows]/badge.svg)](https://github.com/profLewis/librat/actions)
+![linux](docs/res/linux_sm.png) [![Status](https://github.com/profLewis/librat/workflows/CI%20ubuntu/badge.svg)](https://github.com/profLewis/librat/actions)
 
-[![Status](https://github.com/profLewis/librat/workflows/clang%20CI%20[ubuntu,macos]/badge.svg)](https://github.com/profLewis/librat/actions)
+![macOS](docs/res/apple_sm.png) [![Status](https://github.com/profLewis/librat/workflows/CI%20macos/badge.svg)](https://github.com/profLewis/librat/actions)
 
+![win](docs/res/win_sm.png) [![Status](https://github.com/profLewis/librat/workflows/CI%20windows/badge.svg)](https://github.com/profLewis/librat/actions)
 
 
 <p align="center">

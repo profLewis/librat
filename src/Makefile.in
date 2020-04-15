@@ -83,7 +83,7 @@ ifeq ($(LIBEXT),dll)
   EXE=$(CC) -o start start.o -L. -lratlib -lmsvcrt -lm
 else
   CMD=$(CC) ${UND} -o ${LIBRAT}.${LIBEXT} ${PRATOBJ} ${ANCOBJS} -lc -lm
-  EXE=$(CC) -o start start.o -L${HERE} -lratlib -lc -lm
+  EXE=$(CC) -o start start.o -L. -lratlib -lc -lm
 endif
 
 

@@ -1,0 +1,398 @@
+<html>
+  <head>
+    <title>librat - Basic examples</title>
+    <link rel="stylesheet" href="static/style.css" type="text/css" />
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+  </head>
+  <body>
+    <div class="wiki" id="content_view" style="display: block;">
+<h1 id="toc0"><a name="Basic librat / start operation"></a>Basic librat / start operation</h1>
+ Librat is the library of function calls around which you can write your own code to do things such as read in and parse an object file, read in and parse camera, illumination files, waveband files and so on. However, <em>start</em> is a wrapper code around these commands which gives you access to all the basic operations, and so is the de facto tool for doing simulations. The key things required to carry out a simulation are:<br />
+<br />
+<ul><li>A camera file</li><li>An illumination file</li><li>A waveband file</li><li>An object file - this is always assumed to be the last file on the <em>start</em> command line</li></ul><br />
+Anything specific you want to do in any of these parts of the process is specified in these files. There are a limited number of additional command line options which either allow you to override a few key things in these files (the waveband file for example), or more usually are external to these things. Each of these can be passed through via the -RAT keyword. Examples are the ray tree depth (-RATm) , verbose level (-RATv), waveband file (-RATsensor_wavebands) etc.<br />
+<br />
+<h2 id="toc1"><a name="Basic librat / start operation-Example 1: simple object from lidar test"></a>Example 1: simple object from lidar test</h2>
+ <span style="font-family: verdana,arial,helvetica,'times new roman'; font-size: small; line-height: normal;">To run a simple lidar test, we consider a simple scene object <a href="http://librat.wikispaces.com/file/view/test0.obj">test0.obj</a> </span><br />
+<br />
+<br />
+<span style="font-family: 'courier new',courier;">mtllib plants.matlib </span><br />
+<span style="font-family: 'courier new',courier;">usemtl white </span><br />
+<span style="font-family: 'courier new',courier;">v 0 0 0 </span><br />
+<span style="font-family: 'courier new',courier;">v 0 0 1 </span><br />
+<span style="font-family: 'courier new',courier;">plane -1 -2 </span><br />
+<span style="font-family: 'courier new',courier;">!{</span><br />
+<span style="font-family: 'courier new',courier;">usemtl white </span><br />
+<span style="font-family: 'courier new',courier;"> !{ </span><br />
+<span style="font-family: 'courier new',courier;"> v 0 0 1000 </span><br />
+<span style="font-family: 'courier new',courier;"> ell -1 30000 30000 1000 </span><br />
+<span style="font-family: 'courier new',courier;"> !} </span><br />
+<span style="font-family: 'courier new',courier;">!}</span><br />
+<br />
+This defines a material library <a href="http://librat.wikispaces.com/file/view/plants.matlib">plants.matlib</a> that specifies the reflectance and transmittance properties of the scene materials.<br />
+<br />
+<tt><span style="font-family: 'courier new',courier;">srm white refl/white.dat</span></tt><br />
+<br />
+In this case, there is only a single material of type <tt><span style="font-family: 'courier new',courier;">srm</span></tt> (standard reflectance material - Lambertian reflectance (and/or transmittance). The material name is <tt><span style="font-family: 'courier new',courier;">white</span></tt> and the (ASCII) file giving the spectral reflectance function is <a href="http://librat.wikispaces.com/file/view/white.dat">refl/white.dat</a>. The file <span style="background-attachment: initial; background-clip: initial; background-color: initial; background-origin: initial; background-position: 100% 50%; background-repeat: no-repeat no-repeat; cursor: pointer; padding-right: 10px;"><a href="http://librat.wikispaces.com/file/view/white.dat">refl/white.dat</a></span> contains 2 columns: column 1 is wavelength, column 2 is reflectance for that wavelength (wavelength units are arbitrary, but we usually use nm). In this case, the file specifies:<br />
+<br />
+<tt><span style="font-family: 'courier new',courier;">0 1 </span></tt><br />
+<tt><span style="font-family: 'courier new',courier;">10000 1</span></tt><br />
+<br />
+which is a reflectance of 1.0 for any wavelength (less than or equal to an arbitrary upper limit 10000). If the file specifies transmittance as well, this is given as a third column. The lines:<br />
+<br />
+<tt><span style="font-family: 'courier new',courier;">mtllib plants.matlib </span></tt><br />
+<tt><span style="font-family: 'courier new',courier;">usemtl white</span></tt><br />
+<br />
+specify that the material library <span style="cursor: pointer;"><a href="http://librat.wikispaces.com/file/view/plants.matlib">plants.matlib</a></span> is to be loaded (only one library can be loaded in current versions), and that material <tt><span style="font-family: 'courier new',courier;">white</span></tt> is to be used for subsequent objects. The fields <tt><span style="font-family: 'courier new',courier;">!{</span></tt> and <tt><span style="font-family: 'courier new',courier;">!}</span></tt> specifiy that a bounding box should be placed around objects contained within the brackets. This allows for efficient intersection tests in the ray tracing.<br />
+<br />
+The fields <tt><span style="font-family: 'courier new',courier;">v</span></tt> denote a vertex (vector) (as in the standard wavefront format). This requires 3 numbers to be given after the <tt><span style="font-family: 'courier new',courier;">v</span></tt> giving the {x,y,z} coordinates of the vector. Note that <tt><span style="font-family: 'courier new',courier;">v</span></tt> fields can specify a location or direction vector. The fields <tt><span style="font-family: 'courier new',courier;">plane</span></tt> and <tt><span style="font-family: 'courier new',courier;">ell</span></tt> specify scene objects. We will look at a fuller range of such objects later, but these two allow for a simple scene specification. <tt><span style="font-family: 'courier new',courier;">plane</span></tt> is an infinite planar object. It is defined by an intersection point (location vector) <tt><span style="font-family: 'courier new',courier;"><strong>I</strong></span></tt> and a direction vector <tt><span style="font-family: 'courier new',courier;"><strong>N</strong></span></tt>. These vectors need to be defined before a call is made to the object, so in this case, we define <tt><span style="font-family: 'courier new',courier;"><strong>I</strong></span></tt> as <tt><span style="font-family: 'courier new',courier;">0 0 0</span></tt> and <tt><span style="font-family: 'courier new',courier;"><strong>N</strong></span></tt> as <tt><span style="font-family: 'courier new',courier;">0 0 1</span></tt>, i.e. an x-y plane at z=0.<br />
+Thus <tt><span style="font-family: 'courier new',courier;">plane -1 -2</span></tt> means 'define a plane with <tt><span style="font-family: 'courier new',courier;"><strong>N</strong></span></tt> given by the previous (-1) specified vector that goes through <tt><span style="font-family: 'courier new',courier;"><strong>I</strong></span></tt> given by the second to last specified vector.'<br />
+<br />
+<tt><span style="font-family: 'courier new',courier;">ell</span></tt> is an ellipsoid object. Its description requires definition of: (i) the <strong>base</strong> (N.B. not the centre) of the ellipsoid (<tt><span style="font-family: 'courier new',courier;">-1</span></tt> here, meaning the previously-defined vector - <tt><span style="font-family: 'courier new',courier;">0 0 1000</span></tt> in this case); (ii) the semi-axis lengths in x,y,z directions (<tt><span style="font-family: 'courier new',courier;">30000 30000 1000</span></tt> here).<br />
+so:<br />
+<br />
+<tt><span style="font-family: 'courier new',courier;">v 0 0 1000 </span></tt><br />
+<tt><span style="font-family: 'courier new',courier;">ell -1 30000 30000 1000</span></tt><br />
+<br />
+is in fact a spheroid of x-y semi-axis length 30000 units (arbitrary linear units) and z-semi-axis length 1000 units: a prolate spheroid that extends from -30000 to 30000 in the x- and y-directions and from 1000 to 3000 in the z-direction.<br />
+<br />
+<br />
+<h2 id="toc2"><a name="Basic librat / start operation-Example 2: running start with another simple object"></a><span style="font-size: 1.3em; margin: 0px; padding-bottom: 0px; padding-left: 0px; padding-right: 0px; padding-top: 5px;"><strong>Example 2: running start with another simple object</strong> </span></h2>
+ <br />
+<br />
+Another simple object file, <a href="http://librat.wikispaces.com/file/view/test.obj">test.obj</a>:<br />
+<br />
+!{<br />
+mtllib plants.matlib<br />
+v 0.000000 0.000000 0.000000<br />
+v 0.000000 0.000000 1.000000<br />
+usemtl soil<br />
+plane -1 -2<br />
+!{<br />
+#define<br />
+g object 0<br />
+usemtl stem<br />
+v 0 0 0<br />
+v 0 0 1<br />
+cyl -1 -2 0.1<br />
+sph -1 0.2<br />
+v -1 0 1<br />
+cyl -1 -2 0.1<br />
+!}<br />
+!{<br />
+clone 0 0 0 0 object 0<br />
+clone 0 1 0 90 object 0<br />
+clone -1 0 0 -90 object 0<br />
+!}<br />
+!}<br />
+<br />
+Note the braced bounding boxes. The <strong>mtllib</strong> specifies the name of the material library (relative to the obj file in this case). This file points to the <strong>locations</strong> of the spectral information for all the materials in the object file (specified by the <strong>usemtl</strong> lines - soil and stem here), not the actual spectral information. The plants.matlib file might look like:<br />
+<br />
+srm soil refl/price_soil.dat<br />
+srm stem refl/leaf.dat<br />
+<br />
+and so on. Where <strong>srm</strong> line (surface reflectance material) specifies a material and then the name of a file which contains the actual spectral information. Those files look like:<br />
+<br />
+450.00 0.048959<br />
+460.00 0.048783<br />
+470.00 0.048640<br />
+480.00 0.048541<br />
+490.00 0.048722<br />
+500.00 0.049784<br />
+510.00 0.056469<br />
+.........<br />
+<br />
+where each line is a waveband and a reflectance value. If three columns are specified the third column is assumed to be transmittance (for leaves for example). If transmittance is specified then you can (if required) define a value for t / (r + t) in the waveband file i.e. this is the ratio of transmittance to single-scattering albedo (total scattering i.e. r + t) and is assumed to be 0.5 by default. This value is used to weight the probability of transmittance to reflectance at each interaction (with this material). So if for example r &gt;&gt; t for a specific wavelength then a weighting of 0.5 will be inefficiently sampling as many t rays as r rays, when the r rays are far more significant. In this case, specifying t/(r+t) will weight the sampling properly.<br />
+<br />
+<br />
+<span style="border-collapse: collapse; font-family: arial,sans-serif; line-height: normal;">The object has a soil plane (material soil), defined by a &quot;vertex&quot; <strong>v</strong> which is the location</span><br />
+<br />
+<span style="border-collapse: collapse; font-family: arial,sans-serif; line-height: normal;">v 0.000000 0.000000 0.000000</span><br />
+<br />
+<span style="border-collapse: collapse; font-family: arial,sans-serif; line-height: normal;">and a normal</span><br />
+<br />
+<span style="border-collapse: collapse; font-family: arial,sans-serif; line-height: normal;">v 0.000000 0.000000 1.000000</span><br />
+<br />
+<span style="border-collapse: collapse; font-family: arial,sans-serif; line-height: normal;">i.e. normal is pointing vertically up. Then there is a #define group (g) called &quot;object 0&quot; is defined, which uses material stem, and is composed of a cylinder of radius 0.1, with base at 0 0 0 and tip at 0 0 1. The line</span><br />
+<br />
+<span style="border-collapse: collapse; font-family: arial,sans-serif; line-height: normal;">cyl -1 -2 0.1</span><br />
+<br />
+<span style="border-collapse: collapse; font-family: arial,sans-serif; line-height: normal;">specifies a cylinder with the bottom and top -1 and -2 vertex lines above this point in the file respectively. Then we have a sphere, located at the last vertex (v 0 0 1) and of radius 0.2, then another cylinder. So &quot;cyl&quot;, &quot;sph&quot; and so on are the primitives that the ray tracer works with - it can also use ellipsoids (ell), closed cylinders (ccyl) and more basically, facets (f) defined by vertices e.g.:</span><br />
+<br />
+<span style="border-collapse: collapse; font-family: arial,sans-serif; line-height: normal;"> v 0 0 0</span><br />
+<span style="border-collapse: collapse; font-family: arial,sans-serif; line-height: normal;"> v 0 1 0</span><br />
+<span style="border-collapse: collapse; font-family: arial,sans-serif; line-height: normal;"> v 1.41 1.41 0</span><br />
+<span style="border-collapse: collapse; font-family: arial,sans-serif; line-height: normal;"> f -3 -2 -1</span><br />
+<br />
+<span style="border-collapse: collapse; font-family: arial,sans-serif; line-height: normal;"> defines an equilateral triangle in the x,y plane of side length 1, with 1 vertex at 0, 0, 0.</span><br />
+<br />
+<span style="border-collapse: collapse; font-family: arial,sans-serif; line-height: normal;">Returning to the file above, another cylinder is specified which has its base at </span>1 0 1 and its tip in the same location as <span style="border-collapse: collapse; font-family: arial,sans-serif; line-height: normal;">the tip of the first one (the share this vertex line). This means the object is asymmetric so we can see the effect of rotating it during cloning. So although we have defined an object (<strong>object 0</strong>), we haven't actually invoked it yet. The lines:</span><br />
+<br />
+<span style="border-collapse: collapse; font-family: arial,sans-serif; line-height: normal;"> !{</span><br />
+<span style="border-collapse: collapse; font-family: arial,sans-serif; line-height: normal;"> clone 0 0 0 0 object 0</span><br />
+<span style="border-collapse: collapse; font-family: arial,sans-serif; line-height: normal;"> clone 0 1 0 90 object 0</span><br />
+<span style="border-collapse: collapse; font-family: arial,sans-serif; line-height: normal;"> clone -1 0 0 -90 object 0</span><br />
+<span style="border-collapse: collapse; font-family: arial,sans-serif; line-height: normal;"> !}</span><br />
+<br />
+<br />
+<span style="border-collapse: collapse; font-family: arial,sans-serif; line-height: normal;"> define actual instances of the object &quot;object 0&quot;. So we now clone the object 3 times, with the numbers in each case being </span><br />
+<br />
+<span style="border-collapse: collapse; font-family: arial,sans-serif; line-height: normal;">x, y, z, azimuth_angle</span><br />
+<br />
+<h2 id="toc3"><a name="Basic librat / start operation-Running start"></a><span style="border-collapse: collapse; font-family: arial,sans-serif; line-height: normal;">Running start</span></h2>
+ <span style="border-collapse: collapse; font-family: arial,sans-serif; line-height: normal;">You can run <em>start</em> direct in interactive mode just by typing <em>start</em> on the cmd line. Thi waits for input and if you enter an unspecified option number it will list the available options:</span><br />
+<br />
+<span style="border-collapse: collapse; font-family: arial,sans-serif; line-height: normal;">pallas% start</span><br />
+<span style="border-collapse: collapse; font-family: arial,sans-serif; line-height: normal;">23</span><br />
+<span style="border-collapse: collapse; font-family: arial,sans-serif; line-height: normal;">options:</span><br />
+<span style="border-collapse: collapse; font-family: arial,sans-serif; line-height: normal;"> -2 : print PID</span><br />
+<span style="border-collapse: collapse; font-family: arial,sans-serif; line-height: normal;"> -1 : print memory use</span><br />
+<span style="border-collapse: collapse; font-family: arial,sans-serif; line-height: normal;"> 0 : quit</span><br />
+<span style="border-collapse: collapse; font-family: arial,sans-serif; line-height: normal;"> 1 n s1x s1y s1z ... : set sun vectors</span><br />
+<span style="border-collapse: collapse; font-family: arial,sans-serif; line-height: normal;"> 2 : print sun vectors</span><br />
+<span style="border-collapse: collapse; font-family: arial,sans-serif; line-height: normal;"> 3 n b1 w1 ...i bn wn: set wavebands</span><br />
+<span style="border-collapse: collapse; font-family: arial,sans-serif; line-height: normal;"> 4 : print wavebands</span><br />
+<span style="border-collapse: collapse; font-family: arial,sans-serif; line-height: normal;"> 5 file.obj : read object file</span><br />
+<span style="border-collapse: collapse; font-family: arial,sans-serif; line-height: normal;"> 6 fx fy fz dx dy dz : trace ray from f in direction d</span><br />
+<span style="border-collapse: collapse; font-family: arial,sans-serif; line-height: normal;"> 7 : get and print materials</span><br />
+<span style="border-collapse: collapse; font-family: arial,sans-serif; line-height: normal;"> 8 : print object information</span><br />
+<span style="border-collapse: collapse; font-family: arial,sans-serif; line-height: normal;"> 9 : print info on materials used</span><br />
+<span style="border-collapse: collapse; font-family: arial,sans-serif; line-height: normal;"> 10 : get and set verbosity level (0-1)</span><br />
+<span style="border-collapse: collapse; font-family: arial,sans-serif; line-height: normal;"> 11 : get and print object bbox information</span><br />
+<span style="border-collapse: collapse; font-family: arial,sans-serif; line-height: normal;"> 12 :</span><br />
+<span style="border-collapse: collapse; font-family: arial,sans-serif; line-height: normal;"> 13 : same as 14 assuming filenames camera.dat light.dat</span><br />
+<span style="border-collapse: collapse; font-family: arial,sans-serif; line-height: normal;"> 14 camera.dat light.dat : ray tracing using defined camera &amp; illumination</span><br />
+<span style="border-collapse: collapse; font-family: arial,sans-serif; line-height: normal;"> 15 : dont go there</span><br />
+<span style="border-collapse: collapse; font-family: arial,sans-serif; line-height: normal;"> 16 cx cy cz sx sy nrows ncols rpp name : produce a height map in name</span><br />
+<br />
+The simplest operation is to generate a s<span style="border-collapse: collapse; font-family: arial,sans-serif; line-height: normal;">imple height map (option 16)</span><br />
+<br />
+set obj = test.obj<br />
+pallas% set obj = test.obj<br />
+pallas% echo 16 0 0 1000 3 3 256 256 1 $obj.zbuf | nice +19 start -v $obj<br />
+<br />
+so here the option to start is 16, and we look from 0, 0, 1000 units at an area of 3 x 3 units, with an op image of 256 x 256 pixels, 1 ray per pixel and with an output image name of $obj.zbuf. The code outputs the progress of the simulation to the stderr channel. The op of the simulation is a HIPS format image (<strong>XXXX</strong>), a single frame of floating point values giving the height (in scene units) of the first object intercepted by a single ray in each pixel. If we look at the stats of the image using a HIPS utility called hipstats (included with the librat distribution in $BPMS/bin/x86_64/hipstats) we see:<br />
+<br />
+pallas% hipstats test.obj.zbuf<br />
+Frame 0 : n=65536 mean=0.097 SD=0.313 Min=0.000 Max=1.200<br />
+<br />
+i.e. the max height in the scene is 1.2 units as we would hope. We can display this image using either xv (which needs /home/mdisney/bin/x86_64 to be in your $path variable), by converting it to a byte format HIPS image using another HIPS utility (also included with the librat distribution), linear. This performs a linear contrast stretch, converts the output to byte format (0-255) and then writes the result to stdout so it can be piped to xv:<br />
+<br />
+pallas% linear &lt; test.obj.zbuf | xv -<br />
+<br />
+which should look like:<br />
+<br />
+<table class="captionBox"><tr><td class="captionedImage"><img src="files/test1.gif" alt="test1.gif" title="test1.gif" /></td></tr><tr><td class="imageCaption">test1.gif</td></tr></table><br />
+<br />
+We can do thesame via a wrapper script (xvc), which is in /home/plewis/bpms/bin/csh so you also need this in $path i.e.<br />
+<br />
+pallas% xvc test.obj.zbuf<br />
+<br />
+This is a quick way to test whether the obj file works as we expect it to and looks sensible.<br />
+<br />
+<h2 id="toc4"><a name="Basic librat / start operation-Converting a HIPS file to something more generic"></a>Converting a HIPS file to something more generic</h2>
+ We can use hips2pbm, a HIPS utility (also included with the librat distribution) to convert to a pbm file (portable bit map):<br />
+<br />
+pallas% linear &lt; test.obj.zbuf | hips2pbm &gt; test.obj.zbuf.pbm<br />
+<br />
+and then display the result using any number of things including ImageMagick:<br />
+<br />
+pallas% display test.obj.zbuf.pbm<br />
+<br />
+and we can use ImageMagick to any other format we like, via convert:<br />
+<br />
+<br />
+pallas% convert test.obj.zbuf.pbm test.obj.zbuf.gif<br />
+<br />
+<h2 id="toc5"> </h2>
+ <h2 id="toc6"><a name="Basic librat / start operation-Running start using camera and light files"></a>Running start using camera and light files</h2>
+ More often, we want to use start to simulate some type of sensor / observation characteristics. In this case we specify a camera file, a light file and the various spectral and simulation characteristics accompanying them. Then we can use option 14 to start, which expects the next two files to be the camera and light files respectively.<br />
+<br />
+A camera file looks like <a href="http://librat.wikispaces.com/file/view/camera.test.dat">camera.test.dat</a> (note all lines starting # are ignored - these are either comments or provide additional options which we will explore later):<br />
+<br />
+camera {<br />
+#camera type - others are spherical, planar, albedo<br />
+camera.name = &quot;simple camera&quot;;<br />
+#default is orthographic<br />
+geometry.perspective = TRUE;<br />
+<br />
+#geometry<br />
+geometry.azimuth = 0.0;<br />
+geometry.zenith = 0.0;<br />
+geometry.twist = 0.0;<br />
+geometry.lookAt = 0, 0, 0;<br />
+geometry.boomLength = 10.;<br />
+geometry.idealArea = 5;<br />
+#geometry.fieldOfView = FOV;<br />
+geometry.boomLength = 10.;<br />
+samplingCharacteristics.nPixels = 262144;<br />
+samplingCharacteristics.rpp = 4;<br />
+<br />
+#basic o/p<br />
+result.integral.mode = &quot;scattering order&quot;<br />
+result.integral.format = &quot;ascii&quot;<br />
+#result.integral.mode = &quot;waveband&quot;<br />
+result.image = &quot;op.hips&quot;<br />
+result.integral = &quot;op.results&quot;<br />
+<br />
+#sampling options<br />
+#result.samplingImage = &quot;samplingImage.hips&quot;<br />
+#samplingPattern.OPImage = &quot;testOPImage.hips&quot;<br />
+#samplingPattern.sampleCountImage = &quot;testsampleCountImage.hips&quot;<br />
+#samplingPattern.gridMap = &quot;testgridMap.hips&quot;<br />
+#samplingPattern.size = 512,512;<br />
+#samplingPattern.form = &quot;circular&quot;<br />
+#samplingPattern.form = &quot;gaussian&quot;<br />
+#samplingPattern.sd = 50,50;<br />
+#samplingPattern.centre = 0,0;<br />
+<br />
+#lidar options<br />
+#result.integral = &quot;results_lidar.dat&quot;<br />
+#result.integral.mode = &quot;distance&quot;<br />
+#lidar.nBins = 150<br />
+#lidar.binStart = 17.6<br />
+#lidar.binStep = 0.1<br />
+}<br />
+<br />
+<br />
+A light file looks like <a href="http://librat.wikispaces.com/file/view/light.test.dat">light.test.dat</a>:<br />
+<br />
+<br />
+camera {<br />
+camera.name = &quot;simple illumination&quot;;<br />
+geometry.azimuth = 0.0;<br />
+geometry.zenith = 0.0;<br />
+}<br />
+<br />
+and we can run a simulation of this type as:<br />
+<br />
+pallas% echo 14 camera.test.dat light.test.dat | nice +19 start -v -RATm 5 -RATsensor_wavebands wb.test.dat $obj<br />
+<br />
+where -RATm 5 specifies 5 orders of scattering, the verbose level is set and the waveband file <a href="http://librat.wikispaces.com/file/view/wb.test.dat">wb.test.dat</a> looks like this:<br />
+<br />
+0 450<br />
+1 550<br />
+2 650<br />
+3 850<br />
+<br />
+The result is a HIPS image op.hips which has 4 frames, so we can generate a fcc image as follows:<br />
+<br />
+pallas% reseq 3 2 1 &lt; op.hips |linear | hips2pbm | xv -<br />
+<a href="http://librat.wikispaces.com/file/view/op.gif"><img src="files/op.gif" alt="op.gif" title="op.gif" /></a><br />
+<br />
+The actual simulated data are in the file <a href="http://librat.wikispaces.com/file/view/op.results.direct">op.results.direct</a> and look like:<br />
+<br />
+<ol><li>integral results, ordered by: scattering order (rows 5 ) waveband (cols 4 ) distance (frames 1)</li><li>Distance (start of bin): -1.000000e+00</li><li>Wavelength:</li><li>4.500000e+02 5.500000e+02 6.500000e+02 8.500000e+02</li></ol>1 4.373408e-02 7.572531e-02 9.658440e-02 1.624538e-01<br />
+2 2.082191e-05 6.769709e-05 1.074853e-04 4.715291e-04<br />
+3 3.809157e-06 2.112662e-05 4.297797e-05 2.893788e-04<br />
+4 2.480746e-08 2.563754e-07 6.507600e-07 1.090333e-05<br />
+5 1.032238e-09 1.880159e-08 6.054241e-08 1.903158e-06<br />
+<br />
+so the first 5 orders of scattering are as above (4 wb, left to right). To calculate the total scattering in each waveband we simply add up the individual interactions i.e.<br />
+<br />
+pallas% grep -v # op.results.direct | gawk '{for(i=2;i&lt;=NF;i++) r[i-1]+=$i;}END{for(i=1;i&lt;=NF-1;i++) print r[i];}'<br />
+0.0437587<br />
+<br />
+0.0758144<br />
+0.0967356<br />
+0.163228<br />
+<br />
+<br />
+And if we want to plot reflectance as a function of waveband we can do:<br />
+<br />
+pallas% grep -v # op.results.direct | gawk '{for(i=2;i&lt;=NF;i++) r[i-1]+=$i;}END{for(i=1;i&lt;=NF-1;i++) print r[i];}' | paste wb.test.dat - | gawk '{print $2, $3;}' &gt; op.results.direct.plot<br />
+pallas% generate_graph op.results.direct.plot<br />
+<br />
+Now let's look at a much more complex example of a single birch tree, using the file <a href="http://librat.wikispaces.com/file/view/Birch_new1.tmp.obj">Birch_new1.tmp.obj</a>. We can edit the camera file to give a different o/p by changing the lines:<br />
+<br />
+result.image = &quot;birch.op.hips&quot;<br />
+result.integral = &quot;birch.op.results&quot;<br />
+<br />
+we can check t<br />
+<br />
+pallas% set obj = Birch_new1.tmp.obj<br />
+pallas% echo 14 camera.test.dat light.test.dat | nice +19 start -v -RATm 5 -RATsensor_wavebands wb.test.dat $obj<br />
+pallas% reseq 3 2 1 &lt; birch.op.hips | linear | hips2pbm | xv -<br />
+<br />
+which looks a funny colour as linear stretches the range 0 - 1 to 0 - 255 by default. If we look at the image stats we see there's not much above 0.5 even in the NIR, so we can set a range for the contrast stretch which will make better use of the colours e.g.<br />
+<br />
+pallas% reseq 3 2 1 &lt; birch.op.hips | linear 0 0.6 | hips2pbm | xv -<br />
+<br />
+<img src="files/birch.op.gif" alt="birch.op.gif" title="birch.op.gif" /><br />
+<br />
+<br />
+<h2 id="toc7"><a name="Basic librat / start operation-Building scenes: combining multiple object files with #include"></a>Building scenes: combining multiple object files with #include</h2>
+ We can make combine multiple object files efficiently using #include e.g. in <a href="http://librat.wikispaces.com/file/view/test.include.obj">test.include.obj</a>:<br />
+<br />
+mtllib plants.matlib<br />
+#include Birch_new1.include.obj<br />
+!{<br />
+v 0.000000 0.000000 0.000000<br />
+v 0.000000 0.000000 1.000000<br />
+usemtl soil<br />
+plane -1 -2<br />
+!}<br />
+clone 0 0 0 0 Birch_new1.tmp.obj 0<br />
+clone -2 0 0 55.35 Birch_new1.tmp.obj 0<br />
+!}<br />
+!}<br />
+<br />
+Note the object file Birch_new1.include.obj is slightly modified from above - we have to remove the plants.matlib line and the soil plane as we already have one of those in our global object. However now we can duplicate this plant wherever we want in the scene at little extra computational cost.<br />
+<br />
+<img src="files/birch.op.clone.gif" alt="birch.op.clone.gif" title="birch.op.clone.gif" /><br />
+<br />
+<br />
+<strong>Rotations and transformations</strong><br />
+Clones can be rotated individually around the x, y, z axes by using Rx, Ry and Rz labels, followed by an angle e.g.<br />
+<br />
+clone 0 0.555556 0 Ry 137.508<br />
+<br />
+Clones can also make use of the povray type translation and scaling transforms (see<br />
+<a class="wiki_link_ext" href="http://graphics.stanford.edu/~cek/rayshade/raynotes/6-transf/transfor.htm" rel="nofollow">http://graphics.stanford.edu/~cek/rayshade/raynotes/6-transf/transfor.htm</a> for more details). In this case, the transformation is defined as:<br />
+<br />
+clone 0 0 0 Transform -0.001937 0.04222 -0.09063 -0.09989 -0.004583 0 0.004154 -0.09054 -0.04226 object<br />
+<br />
+which transforms (translates, rotates and scale) the specified object. The first three numbers specify the standard x, y, z clone translation (move/shift) operation. The nine numbers following the Transform label (x1 - z3) describe a 3 x 3 transformation matrix, which can provide scaling and shear.<br />
+<br />
+<strong>Material maps</strong><br />
+This allows mapping of an image on to the surface of an object. To use a material map, each vertex in the <a class="wiki_link_ext" href="http://www2.geog.ucl.ac.uk/~plewis/ararat/html/new_plant.obj" rel="nofollow">object file</a> must have a local (2D) coordinate associated with it e.g.<br />
+<hr />
+<br />
+<span style="font-family: Courier New,Courier;">mtllib <a class="wiki_link_ext" href="http://www2.geog.ucl.ac.uk/~plewis/ararat/html/plants.matlib" rel="nofollow">plants.matlib</a></span><br />
+<span style="font-family: Courier New,Courier;">v -20 -20 1</span><br />
+<span style="font-family: Courier New,Courier;">!n -1 0 0 1</span><br />
+<span style="font-family: Courier New,Courier;">!local -1 0 0</span><br />
+<span style="font-family: Courier New,Courier;">v -20 20 1</span><br />
+<span style="font-family: Courier New,Courier;">!n -1 0 0 1</span><br />
+<span style="font-family: Courier New,Courier;">!local -1 0 1</span><br />
+<span style="font-family: Courier New,Courier;">v 20 20 1</span><br />
+<span style="font-family: Courier New,Courier;">!n -1 0 0 1</span><br />
+<span style="font-family: Courier New,Courier;">!local -1 1 1</span><br />
+<span style="font-family: Courier New,Courier;">v 20 -20 1</span><br />
+<span style="font-family: Courier New,Courier;">!n -1 0 1 0</span><br />
+<span style="font-family: Courier New,Courier;">!local -1 1 0</span><br />
+<span style="font-family: Courier New,Courier;">usemtl leaf</span><br />
+<span style="font-family: Courier New,Courier;">f -2 -3 -4</span><br />
+<span style="font-family: Courier New,Courier;">f -1 -2 -4</span><br />
+<hr />
+Here, 4 vertices are defined, along with associated normal vector (<span style="font-family: Courier New,Courier;">!n vertexNumber dx dy dz</span>) and local coordinate (within the range 0 to 1). The object represented above consists of two [[<a class="wiki_link_ext" href="http://www2.geog.ucl.ac.uk/~plewis/ararat/html/matmap.html#f" rel="nofollow">http://www2.geog.ucl.ac.uk/~plewis/ararat/html/matmap.html#f</a> -2 -3 -4|triangles]], forming a square, defined over the local coordinate system (0,0) to (1,1). The material named <span style="font-family: Courier New,Courier;"><a class="wiki_link_ext" href="http://www2.geog.ucl.ac.uk/~plewis/ararat/html/matmap.html#usemtl" rel="nofollow">leaf</a></span> is used for these triangles. The file <a class="wiki_link_ext" href="http://www2.geog.ucl.ac.uk/~plewis/ararat/html/plants.matlib" rel="nofollow">plants.matlib </a>contains a definition of the material <span style="font-family: Courier New,Courier;">leaf</span>:<br />
+<br />
+<hr />
+<br />
+<span style="font-family: Courier New,Courier;">matmap leaf leaf.matmap</span><br />
+<hr />
+which means the material named leaf is a material map (matmap), which is defined in the file <a class="wiki_link_ext" href="http://www2.geog.ucl.ac.uk/~plewis/ararat/html/leaf.matmap" rel="nofollow">leaf.matmap</a>.<br />
+<br />
+<hr />
+<br />
+<span style="font-family: Courier New,Courier;">material_map: plewis.hips</span><br />
+<span style="font-family: Courier New,Courier;">attributes:</span><br />
+<span style="font-family: Courier New,Courier;">0 material0</span><br />
+<span style="font-family: Courier New,Courier;">1 material1</span><br />
+<span style="font-family: Courier New,Courier;">... etc</span><br />
+<hr />
+In this file, the actual map is given as the file <a class="wiki_link_ext" href="http://www2.geog.ucl.ac.uk/~plewis/ararat/html/plewis.hips" rel="nofollow">plewis.hips</a>, a byte HIPL-format image:<br />
+<div style="text-align: center"><a href="http://www2.geog.ucl.ac.uk/~plewis/ararat/html/images/plewis.gif" rel="nofollow"><img src="http://www2.geog.ucl.ac.uk/~plewis/ararat/html/plewis.gif" alt="external image plewis.gif" title="external image plewis.gif" style="height: 32px; width: 32px;" /></a></div>The attributes section of the file <a class="wiki_link_ext" href="http://www2.geog.ucl.ac.uk/~plewis/ararat/html/leaf.matmap" rel="nofollow">leaf.matmap</a>. associates a material name with each DN in the image <a class="wiki_link_ext" href="http://www2.geog.ucl.ac.uk/~plewis/ararat/html/plewis.hips" rel="nofollow">plewis.hips</a>. Thus, DN 0 is associated with material0, DN 1 with material1. The material names material0, material1 etc, are defined in <a class="wiki_link_ext" href="http://www2.geog.ucl.ac.uk/~plewis/ararat/html/plants.matlib" rel="nofollow">plants.matlib</a>.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,39 @@
+<html>
+  <head>
+    <title>librat - Generic format</title>
+    <link rel="stylesheet" href="static/style.css" type="text/css" />
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+  </head>
+  <body>
+    <div class="wiki" id="content_view" style="display: block;">
+<h1 id="toc0"><a name="Generic format"></a>Generic format</h1>
+ This format can be used to maintain all scattering path information, as a function of material type and scattering order i.e. the number of scattering interactions of each order, with each material. As a result, the information is (essentially) independent of wavelength i.e. it is spectrally invariant. This means a generic format simulation can be carried out once, and any waveband can then be generated from this info by plugging in the spectral reflectance and transmittance properties in <em>a posteriori</em>. To run a generic mode simulation simply leave out the waveband file from the command line.<br />
+<br />
+i.e.<br />
+<br />
+RAMI example<br />
+~/RAMI_IV/HET_TWO_LAYER/HET16/results.NIR/results.RAMI_SZA_20_SAA_90_VZA_-75_VAA_0.HET16.NIR.direct<br />
+<br />
+<br />
+For 3 materials, soil, leaf reflectance and leaf transmittance The output looks as follows:<br />
+<br />
+<ol><li>RATORDER materials= 3 maxrtd= 100 nbins= 1 binstart= 0.000000e+00 binstep= 1.000000e+00</li><li>material 0 &quot;soil&quot; &quot;srm with reflectance&quot;</li><li>material 1 &quot;leaf&quot; &quot;srm with reflectance&quot;</li><li>material 2 &quot;leaf&quot; &quot;srm with transmittance&quot;</li><li>BIN 0 0.000000e+00</li></ol>0 0 1 4.35662236636162672476224599904526e-02<br />
+0 1 0 9.78375394546527887840170478739310e-02<br />
+1 0 0 1.77175219414523854588594531378476e-01<br />
+0 0 2 3.81254557335507990312173376423743e-02<br />
+0 1 1 9.86164371452448312860283863301447e-02<br />
+0 2 0 5.91153551333151519586728284139099e-02<br />
+1 0 1 5.46644186600409170972980632541294e-02<br />
+1 1 0 6.34110679869839405364828621713968e-02<br />
+0 0 3 2.70814682604717839320418448778582e-02<br />
+0 1 2 9.54156592056581431826600692147622e-02<br />
+0 2 1 1.09255412392057979498183328814775e-01<br />
+0 3 0 3.83875500110241879569983325382054e-02<br />
+1 0 2 3.68347908045242103391991861371935e-02<br />
+1 1 1 8.20920971036835228629158223156992e-02<br />
+1 2 0 4.92332871761706342139675030011858e-02<br />
+<br />
+On each line, the first n columns are the number of interactions of each material, and the last column is the proportion of scattering contributed by those interactions. So the first line above shows the contribution of single instances of leaf transmittance, second line shows the contribution of single instances leaf reflectance and the third line shows the contribution of a single interaction with the soil.
+    </div>
+  </body>
+</html>

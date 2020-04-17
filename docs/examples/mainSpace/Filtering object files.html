@@ -1,0 +1,143 @@
+<html>
+  <head>
+    <title>librat - Filtering object files</title>
+    <link rel="stylesheet" href="static/style.css" type="text/css" />
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+  </head>
+  <body>
+    <div class="wiki" id="content_view" style="display: block;">
+<h1 id="toc0"><a name="Filtering files from OnyxTREE etc. to librat wavefront obj format"></a>Filtering files from OnyxTREE etc. to librat wavefront obj format</h1>
+ <br />
+Scripts required, what they do and dependencies:<br />
+<br />
+<strong>makeSceneInclude</strong><br />
+csh-script to take raw .obj files output from OnyxTREE particularly, and convert each obj file into a stand-alone librat object file, which can be included easily (via #include) into a scene object file.<br />
+<br />
+Location/usage: <br />
+<br />
+<span style="font-family: 'Lucida Console',Monaco,monospace;">/home/mdisney/bin/csh/makeSceneInclude: [-i plants.dat][-o scene.obj][-d distn.dat][-dbh][-l][-h][-order nOrdersCloning][-nBoxes nBboxesScene]</span><br />
+<br />
+where the plants.dat driver file is a list of unfiltered OnyxTREE obj files, specified as follows:<br />
+<br />
+<span style="font-family: 'Lucida Console',Monaco,monospace;">cobro_tree5_final1.obj 30 1</span><br />
+<span style="font-family: 'Lucida Console',Monaco,monospace;">cobro_tree5_final2.obj 10 5</span><br />
+<span style="font-family: 'Lucida Console',Monaco,monospace;">cobro_tree5_final3.obj 30 1</span><br />
+<br />
+where column two specifies how many of each tree object are meant to be included in the final scene, and column three is a nominal buffer around each randomly placed tree object in the scene i.e. each object is guaranteed to be at least this distance away from any other object unless an iteration limit is exceeded (too many trees with too large a buffer). This script would be invoked as follows:<br />
+<br />
+<span style="font-family: 'Lucida Console',Monaco,monospace;">makeSceneInclude -l -h -i plants.dat -a 30 -o scene.obj </span><br />
+<br />
+so specifying a final scene output file called scene.obj, covering a square area of 30 x 30 scene units (care must be taken to ensure this is the same as the obj units e.g. OnyxTREE default is m, but TreeGrow default is mm). The individual files in plants.dat are filtered into files of the form <span style="font-family: Arial,Helvetica,sans-serif;">cobro_tree5_final1.tmp.obj and the object area information is written to files of the form cobro_tree5_final1.tmp.obj.lai, which look like:</span><br />
+<br />
+<span style="font-family: 'Lucida Console',Monaco,monospace;">Branch3: lai = 4.82109</span><br />
+<span style="font-family: 'Lucida Console',Monaco,monospace;"> Leaf1: lai = 95.1108</span><br />
+<span style="font-family: 'Lucida Console',Monaco,monospace;"> Trunk: lai = 4.59656</span><br />
+<span style="font-family: 'Lucida Console',Monaco,monospace;"> Bough: lai = 9.00721</span><br />
+<span style="font-family: 'Lucida Console',Monaco,monospace;"> Branch1: lai = 11.284</span><br />
+<span style="font-family: 'Lucida Console',Monaco,monospace;"> Branch2: lai = 8.35034</span><br />
+<br />
+<br />
+<span style="font-family: Arial,Helvetica,sans-serif;"> where the total one-sided area of each object sub-unit type output by OnyxTREE is written out. The &quot;actual&quot; LAI of this tree would obviously then be the total leaf LAI (95 m^2 here), divided by the tree's projected area. You could work this out by simulating a height map of the individual tree (option 16 in start) and then working out the ratio of non-zero pixels to total image size, multiplied by the image size in ground units. However, you CAN'T do this directly with the tree file as output by makeSceneInclude, as these files are intended to be included in the full scene.obj file, and so do not have soil, plant material libs included etc. So you would need to alter that to calculate tree LAI this way, then use start like:</span><br />
+<br />
+<br />
+<br />
+<span style="font-family: 'Lucida Console',Monaco,monospace;">echo 16 0 0 1000 5 5 512 512 2 cobro_tree5_final1.tmp.obj.single.zbuf.hips | start -RATv cobro_tree5_final1.tmp.obj</span><br />
+<br />
+<br />
+where the options to start are: heightmapFlag x y z xextent yextent x_im_pixels y_im_pixels rays_per_pixel op.hips<br />
+<br />
+Now, the final scene output scene.obj looks like this:<br />
+<br />
+<span style="font-family: 'Lucida Console',Monaco,monospace;">mtllib plants.matlib</span><br />
+<span style="font-family: 'Lucida Console',Monaco,monospace;">!{</span><br />
+<span style="font-family: 'Lucida Console',Monaco,monospace;">g lovelyScene 0</span><br />
+<span style="font-family: 'Lucida Console',Monaco,monospace;">!{</span><br />
+<span style="font-family: 'Lucida Console',Monaco,monospace;">usemtl soil</span><br />
+<span style="font-family: 'Lucida Console',Monaco,monospace;">v 0 0 0</span><br />
+<span style="font-family: 'Lucida Console',Monaco,monospace;">v 0 0 1</span><br />
+<span style="font-family: 'Lucida Console',Monaco,monospace;">plane -1 -2</span><br />
+<span style="font-family: 'Lucida Console',Monaco,monospace; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; margin-top: 0px; padding-bottom: 0px; padding-left: 0px; padding-right: 0px; padding-top: 0px;">#include cobro_tree5_final1.tmp.obj</span><br />
+<span style="font-family: 'Lucida Console',Monaco,monospace; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; margin-top: 0px; padding-bottom: 0px; padding-left: 0px; padding-right: 0px; padding-top: 0px;">#include cobro_tree5_final2.tmp.obj</span><br />
+<span style="font-family: 'Lucida Console',Monaco,monospace;">#include cobro_tree5_final3.tmp.obj</span><br />
+<span style="font-family: 'Lucida Console',Monaco,monospace;">!{</span><br />
+<span style="font-family: 'Lucida Console',Monaco,monospace;">clone -10.9022 10.4697 0 320.87 cobro_tree5_final2.tmp.obj 0</span><br />
+<span style="font-family: 'Lucida Console',Monaco,monospace;">!}</span><br />
+<span style="font-family: 'Lucida Console',Monaco,monospace;">!{</span><br />
+<span style="font-family: 'Lucida Console',Monaco,monospace;">clone -12.9853 8.9431 0 189.076 cobro_tree5_final2.tmp.obj 0</span><br />
+<span style="font-family: 'Lucida Console',Monaco,monospace;">!}</span><br />
+<span style="font-family: 'Lucida Console',Monaco,monospace;">!{</span><br />
+<span style="font-family: 'Lucida Console',Monaco,monospace;">clone -11.3887 -1.63216 0 303.38 cobro_tree5_final1.tmp.obj 0</span><br />
+<span style="font-family: 'Lucida Console',Monaco,monospace;">!}</span><br />
+<span style="font-family: 'Lucida Console',Monaco,monospace;">!{</span><br />
+<span style="font-family: 'Lucida Console',Monaco,monospace;">clone -14.9404 -11.992 0 240.187 cobro_tree5_final3.tmp.obj 0</span><br />
+<span style="font-family: 'Lucida Console',Monaco,monospace;">!}</span><br />
+<span style="font-family: 'Lucida Console',Monaco,monospace;">!{</span><br />
+<span style="font-family: 'Lucida Console',Monaco,monospace;">clone -7.48228 4.09839 0 19.3367 cobro_tree5_final3.tmp.obj 0</span><br />
+<span style="font-family: 'Lucida Console',Monaco,monospace;">!}</span><br />
+<span style="font-family: 'Lucida Console',Monaco,monospace;">........</span><br />
+<span style="font-family: 'Lucida Console',Monaco,monospace;">........</span><br />
+<span style="font-family: 'Lucida Console',Monaco,monospace;">........</span><br />
+<span style="font-family: 'Lucida Console',Monaco,monospace;">!}</span><br />
+<span style="font-family: 'Lucida Console',Monaco,monospace;">!}</span><br />
+<span style="font-family: 'Lucida Console',Monaco,monospace;">!{</span><br />
+<span style="font-family: 'Lucida Console',Monaco,monospace;">g lovelyScene1 0</span><br />
+<span style="font-family: 'Lucida Console',Monaco,monospace;">#define</span><br />
+<span style="font-family: 'Lucida Console',Monaco,monospace;">clone -30 -30 0 lovelyScene 0</span><br />
+<span style="font-family: 'Lucida Console',Monaco,monospace;">clone -30 0 0 lovelyScene 0</span><br />
+<span style="font-family: 'Lucida Console',Monaco,monospace;">clone -30 30 0 lovelyScene 0</span><br />
+<span style="font-family: 'Lucida Console',Monaco,monospace;">clone 0 -30 0 lovelyScene 0</span><br />
+<span style="font-family: 'Lucida Console',Monaco,monospace;">clone 0 0 0 lovelyScene 0</span><br />
+<span style="font-family: 'Lucida Console',Monaco,monospace;">clone 0 30 0 lovelyScene 0</span><br />
+<span style="font-family: 'Lucida Console',Monaco,monospace;">clone 30 -30 0 lovelyScene 0</span><br />
+<span style="font-family: 'Lucida Console',Monaco,monospace;">clone 30 0 0 lovelyScene 0</span><br />
+<span style="font-family: 'Lucida Console',Monaco,monospace;">clone 30 30 0 lovelyScene 0</span><br />
+<span style="font-family: 'Lucida Console',Monaco,monospace;">!}</span><br />
+<span style="font-family: 'Lucida Console',Monaco,monospace;">!{</span><br />
+<span style="font-family: 'Lucida Console',Monaco,monospace;">g lovelyScene11 0</span><br />
+<span style="font-family: 'Lucida Console',Monaco,monospace;">#define</span><br />
+<span style="font-family: 'Lucida Console',Monaco,monospace;">clone -90 -90 0 lovelyScene1 0</span><br />
+<span style="font-family: 'Lucida Console',Monaco,monospace;">clone -90 0 0 lovelyScene1 0</span><br />
+<span style="font-family: 'Lucida Console',Monaco,monospace;">clone -90 90 0 lovelyScene1 0</span><br />
+<span style="font-family: 'Lucida Console',Monaco,monospace;">clone 0 -90 0 lovelyScene1 0</span><br />
+<span style="font-family: 'Lucida Console',Monaco,monospace;">clone 0 0 0 lovelyScene1 0</span><br />
+<span style="font-family: 'Lucida Console',Monaco,monospace;">clone 0 90 0 lovelyScene1 0</span><br />
+<span style="font-family: 'Lucida Console',Monaco,monospace;">clone 90 -90 0 lovelyScene1 0</span><br />
+<span style="font-family: 'Lucida Console',Monaco,monospace;">clone 90 0 0 lovelyScene1 0</span><br />
+<span style="font-family: 'Lucida Console',Monaco,monospace;">clone 90 90 0 lovelyScene1 0</span><br />
+<span style="font-family: 'Lucida Console',Monaco,monospace;">!}</span><br />
+<span style="font-family: 'Lucida Console',Monaco,monospace;">!{</span><br />
+<span style="font-family: 'Lucida Console',Monaco,monospace;">g lovelyScene111 0</span><br />
+<span style="font-family: 'Lucida Console',Monaco,monospace;">clone -270 -270 0 lovelyScene11 0</span><br />
+<span style="font-family: 'Lucida Console',Monaco,monospace;">clone -270 0 0 lovelyScene11 0</span><br />
+<span style="font-family: 'Lucida Console',Monaco,monospace;">clone -270 270 0 lovelyScene11 0</span><br />
+<span style="font-family: 'Lucida Console',Monaco,monospace;">clone 0 -270 0 lovelyScene11 0</span><br />
+<span style="font-family: 'Lucida Console',Monaco,monospace;">clone 0 0 0 lovelyScene11 0</span><br />
+<span style="font-family: 'Lucida Console',Monaco,monospace;">clone 0 270 0 lovelyScene11 0</span><br />
+<span style="font-family: 'Lucida Console',Monaco,monospace;">clone 270 -270 0 lovelyScene11 0</span><br />
+<span style="font-family: 'Lucida Console',Monaco,monospace;">clone 270 0 0 lovelyScene11 0</span><br />
+<span style="font-family: 'Lucida Console',Monaco,monospace;">clone 270 270 0 lovelyScene11 0</span><br />
+<span style="font-family: 'Lucida Console',Monaco,monospace;">!}</span><br />
+<br />
+Note that the last three sections above are the hierarchical cloning of the actual scene extent (30 x 30) out to three orders, so 90 x 90 and then 270 x 270. This is the default in makeSceneInclude, but can be set via the -order option. By doing this, at little extra cost the scene is extended in the x, y domain to avoid edge effects, which you ought to consider even if you are only interested in the central 30 x 30 unit region.<br />
+<br />
+makeSceneInclude depends on a range of other shell and awk scripts including <br />
+<br />
+filtOnyx: /home/mdisney/bin/csh/filtOnyx: [-i infile][-o outfile][-c cloneObj][-f][-rs rowSpacing][-cs colSpacing][-rj rowJigger][-cj colJigger][-nr nRows][-nc nCols][-random extent][-nclones nClones][-thresh thresh][-matmap][-c][-b][-lai][-lad][-h][-help]<br />
+<ul><li>/home/mdisney/bin/csh/wavefront_bbox.csh - calculates max x, y, z extent of an object file</li><li>/home/mdisney/bin/csh/filtOnyx.awk - does the direct filtering on the OnyxTREE format into librat format - explains the file formats too</li><li>/home/plewis/bpms/bin/csh/boundObj.awk - calculates efficient bounding boxes for an object file</li><li>/home/plewis/bpms/bin/csh/clearEmpties.awk - clears empty bounding boxes generated by b</li></ul>oundObj.awk<br />
+<ul><li>/home/plewis/bpms/bin/csh/sendInTheClones.awk - generates regularly spaced rows of clones - for crops or plantation forests, with randomly jittered spacing if required</li><li>/home/mdisney/bin/csh/randomClones.awk - generates randomly located clones - deprecated in favour of....</li><li><br />
+</li></ul>/home/mdisney/bin/csh/randomClonesMulti.awk - <br />
+generates randomly located clones based on the 3 cols of data in the scene driver file i.e. filename nClones bufferThresh<br />
+<ul><li><br />
+</li></ul>/home/mdisney/bin/csh/multiClone.awk - generates the n orders of cloned, repeated scene as in the order 3, base size 30 x 30 e<br />
+xample above <br />
+<br />
+onyx_dbh: /home/mdisney/bin/csh/onyx_dbh: [-i infile][-obj Trunk|Bough|Branch1|Branch2|Branch3|Twig] &gt; dbh.dat - calculates the dbh of any specified sub-group name from within an OnyxTREE file. Can be used stand-alone e.g.<br />
+<br />
+<span style="font-family: 'Lucida Console',Monaco,monospace;">onyx_dbh -i file.tmp.obj -obj Trunk &gt; file.tmp.obj.Trunk.dbh</span><br />
+<br />
+requires: <br />
+<ul><li><br />
+</li></ul>home/mdisney/bin/csh/onyx_zbin.awk - slices up the trunk object vertically into bins and calculates the dbh in each bin - not good if the trunk is very wobbly in z but....
+    </div>
+  </body>
+</html>

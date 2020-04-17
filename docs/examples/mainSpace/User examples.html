@@ -1,0 +1,159 @@
+<html>
+  <head>
+    <title>librat - User examples</title>
+    <link rel="stylesheet" href="static/style.css" type="text/css" />
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+  </head>
+  <body>
+    <div class="wiki" id="content_view" style="display: block;">
+<h1 id="toc0"><a name="User examples"></a>User examples</h1>
+ A page for librat users to add their examples. Put as much detail as you can, and upload any files / scripts that are required to the wiki unless they are large.<br />
+<br />
+<hr />
+<br />
+<h1 id="toc1"><a name="Validation of airborne waveform lidar simulations for a complex 3D savanna in Australia"></a>Validation of airborne waveform lidar simulations for a complex 3D savanna in Australia</h1>
+ Code, models, data and instructions are provided for lidar simulations. This document is a work in progress.<br />
+<br />
+<h2 id="toc2"><a name="Validation of airborne waveform lidar simulations for a complex 3D savanna in Australia-1. Building mixed tree-grass scenes"></a><u>1. Building mixed tree-grass scenes</u></h2>
+ <h3 id="toc3"><a name="Validation of airborne waveform lidar simulations for a complex 3D savanna in Australia-1. Building mixed tree-grass scenes-Generating tree and grass object files"></a>Generating tree and grass object files</h3>
+ OnyxTree tree models:<br />
+- direct parameterisation in OnyxTree<br />
+- adjustment of LAD to known distribution<br />
+- material mapping of leaves<br />
+Onyxtree grass models:<br />
+- matched to scene estimates of mean height and cover<br />
+- random distribution assumed<br />
+Scene objects:<br />
+- testing random vs. clumped distribution of trees<br />
+<h3 id="toc4"><a name="Validation of airborne waveform lidar simulations for a complex 3D savanna in Australia-1. Building mixed tree-grass scenes-Validation of generated scenes"></a>Validation of generated scenes</h3>
+ - ability to replicate measured CCP-FPC and SBA-FPC relationships<br />
+- comparison of measured and modelled gap size distributions<br />
+<h2 id="toc5"><a name="Validation of airborne waveform lidar simulations for a complex 3D savanna in Australia-2. Librat lidar simulations"></a><u>2. Librat lidar simulations</u></h2>
+ <h3 id="toc6"><a name="Validation of airborne waveform lidar simulations for a complex 3D savanna in Australia-2. Librat lidar simulations-Simulating the airborne survey configuration"></a>Simulating the airborne survey configuration</h3>
+ System parameterisation:<br />
+- transmitted pulse properties<br />
+- simulation of survey configuration<br />
+<br />
+<strong>Table 1.</strong> Airborne survey configurations. These were used for planning lidar acquisitions for validation.<br />
+
+
+<table class="wiki_table">
+    <tr>
+        <td style="text-align: left;"><strong>Configuration Parameters</strong><br />
+</td>
+        <td style="text-align: left;"><strong>A1</strong><br />
+</td>
+        <td style="text-align: left;"><strong>A2</strong><br />
+</td>
+        <td style="text-align: left;"><strong>A3</strong><br />
+</td>
+    </tr>
+    <tr>
+        <td style="text-align: left;">Flying height (m)<br />
+</td>
+        <td style="text-align: left;">550<br />
+</td>
+        <td style="text-align: left;">1000<br />
+</td>
+        <td style="text-align: left;">1300<br />
+</td>
+    </tr>
+    <tr>
+        <td style="text-align: left;">Flying speed (m/s)<br />
+</td>
+        <td style="text-align: left;">55<br />
+</td>
+        <td style="text-align: left;">55<br />
+</td>
+        <td style="text-align: left;">55<br />
+</td>
+    </tr>
+    <tr>
+        <td style="text-align: left;">Flight distance (km)<br />
+</td>
+        <td style="text-align: left;">10<br />
+</td>
+        <td style="text-align: left;">10<br />
+</td>
+        <td style="text-align: left;">10<br />
+</td>
+    </tr>
+    <tr>
+        <td style="text-align: left;">No. parallel flightlines<br />
+</td>
+        <td style="text-align: left;">3<br />
+</td>
+        <td style="text-align: left;">3<br />
+</td>
+        <td style="text-align: left;">3<br />
+</td>
+    </tr>
+    <tr>
+        <td style="text-align: left;">Ground overlap (%)<br />
+</td>
+        <td style="text-align: left;">60<br />
+</td>
+        <td style="text-align: left;">60<br />
+</td>
+        <td style="text-align: left;">60<br />
+</td>
+    </tr>
+    <tr>
+        <td style="text-align: left;">Pulse rate (kHz)<br />
+</td>
+        <td style="text-align: left;">200<br />
+</td>
+        <td style="text-align: left;">200<br />
+</td>
+        <td style="text-align: left;">150<br />
+</td>
+    </tr>
+    <tr>
+        <td style="text-align: left;">Scan rate (Hz)<br />
+</td>
+        <td style="text-align: left;">113<br />
+</td>
+        <td style="text-align: left;">80<br />
+</td>
+        <td style="text-align: left;">63<br />
+</td>
+    </tr>
+    <tr>
+        <td style="text-align: left;">Beam divergence (mrad)<br />
+</td>
+        <td style="text-align: left;">0.5<br />
+</td>
+        <td style="text-align: left;">0.5<br />
+</td>
+        <td style="text-align: left;">0.5<br />
+</td>
+    </tr>
+    <tr>
+        <td style="text-align: left;">Field of view (deg)<br />
+</td>
+        <td style="text-align: left;">60<br />
+</td>
+        <td style="text-align: left;">60<br />
+</td>
+        <td style="text-align: left;">60<br />
+</td>
+    </tr>
+</table>
+
+<br />
+<h3 id="toc7"><a name="Validation of airborne waveform lidar simulations for a complex 3D savanna in Australia-2. Librat lidar simulations-Batch processing using start"></a>Batch processing using <em>start</em></h3>
+ <br />
+<br />
+<br />
+<h3 id="toc8"><a name="Validation of airborne waveform lidar simulations for a complex 3D savanna in Australia-2. Librat lidar simulations-Post-processing of simulations"></a>Post-processing of simulations</h3>
+ <br />
+<br />
+<h3 id="toc9"><a name="Validation of airborne waveform lidar simulations for a complex 3D savanna in Australia-2. Librat lidar simulations-Visualisation of simulations"></a>Visualisation of simulations</h3>
+ <br />
+<br />
+<h2 id="toc10"><a name="Validation of airborne waveform lidar simulations for a complex 3D savanna in Australia-3. Comparison with measured lidar waveforms"></a><u>3. Comparison with measured lidar waveforms</u></h2>
+ <hr />
+
+    </div>
+  </body>
+</html>

@@ -1,0 +1,418 @@
+<html>
+  <head>
+    <title>librat - Tools</title>
+    <link rel="stylesheet" href="static/style.css" type="text/css" />
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+  </head>
+  <body>
+    <div class="wiki" id="content_view" style="display: block;">
+<h1 id="toc0"><a name="Tools"></a>Tools</h1>
+ Location for tools developed by anyone using librat - please upload tool code, user info. and documentation if you have any.<br />
+<hr />
+<h1 id="toc1"><a name="Python tools for librat"></a>Python tools for librat</h1>
+ <br />
+<a href="files/librattools-0.1.tar.gz">librattools-0.1.tar.gz</a><br />
+<br />
+LibratTools is a set of python modules that makes it easier (possibly only for me) to construct 3D tree/grass scenes using Eucalyptus tree models developed in the commercial software OnyxTree, derive/change structural attributes of these scenes, and automate lidar simulations. A good portion of the methods are Python implementations of ideas/CSH/AWK by Mat Disney. A start on Python bindings to the librat library using the Simplified Wrapper and Interface Generator (SWIG; <a class="wiki_link_ext" href="http://www.swig.org/" rel="nofollow">http://www.swig.org/</a>) has also been added, which has been useful for testing and understanding the inner workings of librat where required.<br />
+<br />
+These Python tools were written for my own use during the course of my Ph.D. They come without any warranty, or assurance that they will be useful in any way.<br />
+It is also important to note again that I have only used wavefront object files produced by the commercial software OnyxTree, so many of methods do not currently work with some types of objects found in librat *.obj files.<br />
+The following basic structure is also assumed for scene objects:<br />
+<br />
+Download and untar to where you keep other Python packages/modules. You will need to make sure the path to the librattools-0.1 directory is in your PythonPath. The environment variable LIBRATTOOLS also needs to be set to this path.<br />
+&quot;LibratTools&quot; have been developed/tested using Python 2.6.4, with all dependent modules independently installed. I have not tested them using the Enthought Python distribution, but they might work if someone wants to try.<br />
+<ol><li><a class="wiki_link" href="Tools#CommandLineTools">Command line tools</a><ul><li><a class="wiki_link" href="Tools#onyxtree_get_lad">onyxtree_get_lad.py</a></li><li><a class="wiki_link" href="Tools#onyxtree_get_par">onyxtree_get_par.py</a></li><li><a class="wiki_link" href="Tools#onyxtree_set_lad">onyxtree_set_lad.py</a></li><li><a class="wiki_link" href="Tools#onyxtree_to_librat">onyxtree_to_librat.py</a></li><li><a class="wiki_link" href="Tools#tree_vertical_profile">onyxtree_vertical_profile.py</a></li><li><a class="wiki_link" href="Tools#scene_crown_map">scene_crown_map.py</a></li><li><a class="wiki_link" href="Tools#make_scene">scene_make.py</a></li><li><a class="wiki_link" href="Tools#scene_vertical_profile">scene_vertical_profile.py</a></li><li><a class="wiki_link" href="Tools#tree_vertical_profile">tree_vertical_profile.py</a></li></ul></li><li><a class="wiki_link" href="Tools#SWIGPythonBindings">Python modules</a></li></ol><br />
+<h2 id="toc2"><a name="Python tools for librat-1. Command line tools"></a><a name="commandLineTools"></a><u>1. Command line tools</u></h2>
+ <h3 id="toc3"><a name="Python tools for librat-1. Command line tools-scene_crown_map.py"></a>scene_crown_map.py</h3>
+ Creates a scene crown extent map by fitting convex hulls to each tree object.<br />
+<h4 id="toc4"><a name="Python tools for librat-1. Command line tools-scene_crown_map.py-Usage:"></a><em>Usage:</em></h4>
+ 
+<style type="text/css"><!--
+/**
+ * GeSHi (C) 2004 - 2007 Nigel McNie, 2007 - 2008 Benny Baumann
+ * (http://qbnz.com/highlighter/ and http://geshi.org/)
+ */
+.text  {font-family:monospace;}
+.text .imp {font-weight: bold; color: red;}
+.text span.xtra { display:block; }
+
+-->
+</style><pre class="text">$ scene_crown_map.py
+Usage: scene_crown_map.py [options]
+&nbsp;
+Options:
+ -h, --help show this help message and exit
+ -o OBJFILE, --objFile=OBJFILE
+ Librat object scene file.
+ -t TREEOBJFILE, --treeObjFile=TREEOBJFILE
+ Specify filename if the tree objects are cloned in a
+ #include object file.
+ -e EXTENT, --extent=EXTENT
+ X and Y extent. Default 50 m.
+ -y YCENTRE, --yCentre=YCENTRE
+ Y centre coordinate. Default 0.0.
+ -x XCENTRE, --xCentre=XCENTRE
+ X centre coordinate. Default 0.0.
+ -r RESOLUTION, --resolution=RESOLUTION
+ Spatial resolution of map. Default 0.1 m.
+ -f FORMAT, --format=FORMAT
+ Output file format (use GDAL driver names). Default
+ &quot;ENVI&quot;
+The wavefront object scene file must be set.
+&nbsp;</pre>
+
+<h4 id="toc5"><a name="Python tools for librat-1. Command line tools-scene_crown_map.py-Example output for a savanna scene:"></a><em>Example output for a savanna scene:</em></h4>
+ 
+
+<table class="wiki_table">
+    <tr>
+        <th>Height<br />
+</th>
+        <th>Crown<br />
+</th>
+    </tr>
+    <tr>
+        <td><img src="files/chat0101_scene_clones_random_maxheight.png" alt="chat0101_scene_clones_random_maxheight.png" title="chat0101_scene_clones_random_maxheight.png" style="height: 300px; width: 300px;" /><br />
+</td>
+        <td><img src="files/chat0101_scene_clones_random_crownextent.png" alt="chat0101_scene_clones_random_crownextent.png" title="chat0101_scene_clones_random_crownextent.png" style="height: 300px; width: 300px;" /><br />
+</td>
+    </tr>
+</table>
+
+<br />
+<h3 id="toc6"><a name="Python tools for librat-1. Command line tools-onyxtree_vertical_profile.py or tree_vertical_profile"></a><a name="tree_vertical_profile"></a>onyxtree_vertical_profile.py or tree_vertical_profile</h3>
+ Derive and plot the vertical foliage profile of a tree from an OnyxTree (onyxtree_get_lad.py) or librat (tree_vertical_profile.py) wavefront tree object.<br />
+Note that leaf area is two-sided and that the difference between plate area and leaf area has not been accounted for.<br />
+<h4 id="toc7"><a name="Python tools for librat-1. Command line tools-onyxtree_vertical_profile.py or tree_vertical_profile-Usage:"></a><em>Usage:</em></h4>
+ <br />
+
+<style type="text/css"><!--
+/**
+ * GeSHi (C) 2004 - 2007 Nigel McNie, 2007 - 2008 Benny Baumann
+ * (http://qbnz.com/highlighter/ and http://geshi.org/)
+ */
+.text  {font-family:monospace;}
+.text .imp {font-weight: bold; color: red;}
+.text span.xtra { display:block; }
+
+-->
+</style><pre class="text">$ onyxtree_vertical_profile.py (OnyxTree) or tree_vertical_profile.py (librat)
+Usage: onyxtree_vertical_profile.py or tree_vertical_profile [options]
+&nbsp;
+Options:
+ -h, --help show this help message and exit
+ -o OBJFILE, --objFile=OBJFILE
+ OnyxTree wavefront object file.
+ -b BINSIZE, --binSize=BINSIZE
+ Vertical bin size (m). Default 0.5 m.
+ -m MAXVAL, --maxVal=MAXVAL
+ Maximum height value used to calculate profile.
+ Default 50m.
+ -p, --plot Plot resulting vertical profile. Default False.
+ The wavefront object file must be set.
+&nbsp;</pre>
+
+<h4 id="toc8"><a name="Python tools for librat-1. Command line tools-onyxtree_vertical_profile.py or tree_vertical_profile-Example output:"></a><em>Example output:</em></h4>
+ <img src="files/eudre_live_n033_plates_random_verticalprofile.png" alt="eudre_live_n033_plates_random_verticalprofile.png" title="eudre_live_n033_plates_random_verticalprofile.png" style="height: 349px; width: 548px;" /><br />
+<br />
+<br />
+<h3 id="toc9"><a name="Python tools for librat-1. Command line tools-scene_vertical_profile.py"></a><a name="scene_vertical_profile"></a>scene_vertical_profile.py</h3>
+ Derive the vertical profile of different materials within a scene.<br />
+Note that leaf area is two-sided and that the difference between plate area and leaf area has not been accounted for.<br />
+<strong>WARNING:</strong> This may take a while for a complex scene.<br />
+<h4 id="toc10"><a name="Python tools for librat-1. Command line tools-scene_vertical_profile.py-Usage:"></a><em>Usage:</em></h4>
+ 
+<style type="text/css"><!--
+/**
+ * GeSHi (C) 2004 - 2007 Nigel McNie, 2007 - 2008 Benny Baumann
+ * (http://qbnz.com/highlighter/ and http://geshi.org/)
+ */
+.text  {font-family:monospace;}
+.text .imp {font-weight: bold; color: red;}
+.text span.xtra { display:block; }
+
+-->
+</style><pre class="text">Usage: scene_vertical_profile.py [options]
+&nbsp;
+Options:
+ -h, --help show this help message and exit
+ -o OBJFILE, --objFile=OBJFILE
+ Wavefront object scene file.
+ -t TREEOBJFILE, --treeObjFile=TREEOBJFILE
+ Specify filename if the tree objects are cloned in a
+ #include object file.
+ -b BINSIZE, --binSize=BINSIZE
+ Vertical bin size (m). Default 0.5 m.
+ -m MAXVAL, --maxVal=MAXVAL
+ Maximum height value used to calculate profile.
+ Default 50m.
+ --xMax=XMAX Set maximum x bound on extracted profile
+ --yMax=YMAX Set maximum y bound on extracted profile
+ --xMin=XMIN Set minimum x bound on extracted profile
+ --yMin=YMIN Set minimum y bound on extracted profile
+The wavefront object file and spatial bounds must be set.
+&nbsp;</pre>
+
+<br />
+<h3 id="toc11"><a name="Python tools for librat-1. Command line tools-onyxtree_get_lad.py"></a><a name="onyxtree_get_lad"></a>onyxtree_get_lad.py</h3>
+ Retrieve and plot the leaf angle distribution of an OnyxTree object<br />
+<h4 id="toc12"><a name="Python tools for librat-1. Command line tools-onyxtree_get_lad.py-Usage:"></a><em>Usage:</em></h4>
+ 
+<style type="text/css"><!--
+/**
+ * GeSHi (C) 2004 - 2007 Nigel McNie, 2007 - 2008 Benny Baumann
+ * (http://qbnz.com/highlighter/ and http://geshi.org/)
+ */
+.text  {font-family:monospace;}
+.text .imp {font-weight: bold; color: red;}
+.text span.xtra { display:block; }
+
+-->
+</style><pre class="text">$ onyxtree_get_lad.py
+Usage: onyxtree_get_lad.py [options]
+&nbsp;
+Options:
+ -h, --help show this help message and exit
+ -o OBJFILE, --objFile=OBJFILE
+ OnyxTree wavefront object file.
+ -b BINSIZE, --binSize=BINSIZE
+ Bin size (degrees). Default 5 degrees.
+ -p, --plot Plot resulting LAD. Default False.
+ -n, --normed Normalise the LAD so the integral over the range is 1.
+ Default False.
+The OnyxTree wavefront object file must be set.
+&nbsp;</pre>
+
+<h4 id="toc13"><a name="Python tools for librat-1. Command line tools-onyxtree_get_lad.py-Example output:"></a><em>Example output:</em></h4>
+ <img src="files/maspx_live_n106_plates_random_lad.png" alt="maspx_live_n106_plates_random_lad.png" title="maspx_live_n106_plates_random_lad.png" style="height: 349px; width: 548px;" /><br />
+<br />
+<h3 id="toc14"><a name="Python tools for librat-1. Command line tools-onyxtree_set_lad.py"></a><a name="onyxtree_set_lad"></a>onyxtree_set_lad.py</h3>
+ Change the leaf angle distribution of an OnyxTree object<br />
+<h4 id="toc15"><a name="Python tools for librat-1. Command line tools-onyxtree_set_lad.py-Usage:"></a><em>Usage:</em></h4>
+ 
+<style type="text/css"><!--
+/**
+ * GeSHi (C) 2004 - 2007 Nigel McNie, 2007 - 2008 Benny Baumann
+ * (http://qbnz.com/highlighter/ and http://geshi.org/)
+ */
+.text  {font-family:monospace;}
+.text .imp {font-weight: bold; color: red;}
+.text span.xtra { display:block; }
+
+-->
+</style><pre class="text">$ onyxtree_set_lad.py
+Usage: onyxtree_set_lad.py [options]
+&nbsp;
+Options:
+ -h, --help show this help message and exit
+ -o OBJFILE, --objFile=OBJFILE
+ OnyxTree wavefront object file.
+ -n NEWFILE, --newFile=NEWFILE
+ New OnyxTree wavefront object filename (optional).
+ Default has distribution name appended to objFile
+ name.
+ -d DISTRIBUTION, --distribution=DISTRIBUTION
+ New LAD. Default is uniform &quot;random&quot; (spherical).
+ &quot;uniform&quot; is also currently available but mostly for
+ testing purposes.
+ -m MEANLEAFANGLE, --meanLeafAngle=MEANLEAFANGLE
+ Mean leaf angle (for applicable distributions).
+The OnyxTree wavefront object file must be set.</pre>
+
+<h4 id="toc16"><a name="Python tools for librat-1. Command line tools-onyxtree_set_lad.py-Example output (vertical view) for uniform LAD:"></a><em>Example output (vertical view) for uniform LAD:</em></h4>
+ 
+
+<table class="wiki_table">
+    <tr>
+        <th>Zenith of leaf normal = 10 degrees<br />
+</th>
+        <th>Zenith of leaf normal = 45 degrees<br />
+</th>
+        <th>Zenith of leaf normal = 80 degrees<br />
+</th>
+    </tr>
+    <tr>
+        <td><img src="files/test_zoom_height_leafangle10.png" alt="test_zoom_height_leafangle10.png" title="test_zoom_height_leafangle10.png" /><br />
+</td>
+        <td><img src="files/test_zoom_height_leafangle45.png" alt="test_zoom_height_leafangle45.png" title="test_zoom_height_leafangle45.png" /><br />
+</td>
+        <td><img src="files/test_zoom_height_leafangle80.png" alt="test_zoom_height_leafangle80.png" title="test_zoom_height_leafangle80.png" /><br />
+</td>
+    </tr>
+</table>
+
+<br />
+<h3 id="toc17"><a name="Python tools for librat-1. Command line tools-onyxtree_get_par.py"></a><a name="onyxtree_get_par"></a>onyxtree_get_par.py</h3>
+ <h4 id="toc18"><a name="Python tools for librat-1. Command line tools-onyxtree_get_par.py-Extract a number of commonly measured tree metrics from an OnyxTree file."></a>Extract a number of commonly measured tree metrics from an OnyxTree file.</h4>
+ <h4 id="toc19"><a name="Python tools for librat-1. Command line tools-onyxtree_get_par.py-Usage:"></a><em>Usage:</em></h4>
+ 
+<style type="text/css"><!--
+/**
+ * GeSHi (C) 2004 - 2007 Nigel McNie, 2007 - 2008 Benny Baumann
+ * (http://qbnz.com/highlighter/ and http://geshi.org/)
+ */
+.text  {font-family:monospace;}
+.text .imp {font-weight: bold; color: red;}
+.text span.xtra { display:block; }
+
+-->
+</style><pre class="text">$ onyxtree_get_par.py
+Usage: onyxtree_get_par.py [options]
+&nbsp;
+Options:
+ -h, --help show this help message and exit
+ -o OBJFILE, --objFile=OBJFILE
+ OnyxTree wavefront object file.
+ --outputFile=OUTPUTFILE
+ Output file name.
+The OnyxTree wavefront object file must be set.
+&nbsp;</pre>
+
+<h4 id="toc20"><a name="Python tools for librat-1. Command line tools-onyxtree_get_par.py-Example output:"></a><em>Example output:</em></h4>
+ LeafArea: 608.239971 # m^2<br />
+PlantArea: 624.566226 # m^2<br />
+MeanLeafAngle: 28.933967 # degrees (zenith of leaf normal)<br />
+DiamBreastHeight: 0.292475 # m (130cm height)<br />
+DiamBaseHeight: 0.324059 # m (30cm height)<br />
+TopHeight: 15.945580 # m<br />
+CrownBaseHeightLeaf: 11.042698 # m<br />
+CrownBaseHeightBough: 7.622293 # m<br />
+CrownArea: 34.342006 # m^2 (convex hull)<br />
+CrownDiameter: 7.657738 # m^2 (maximum)<br />
+<h3 id="toc21"> </h3>
+ <br />
+<h3 id="toc22"><a name="Python tools for librat-1. Command line tools-make_scene.py"></a><a name="make_scene"></a>make_scene.py</h3>
+ Create a tree/grass scene of clones with a random, clumped (Neyman-A), uniform or measured tree distribution.<br />
+<h4 id="toc23"><a name="Python tools for librat-1. Command line tools-make_scene.py-Usage:"></a><em>Usage:</em></h4>
+ 
+<style type="text/css"><!--
+/**
+ * GeSHi (C) 2004 - 2007 Nigel McNie, 2007 - 2008 Benny Baumann
+ * (http://qbnz.com/highlighter/ and http://geshi.org/)
+ */
+.text  {font-family:monospace;}
+.text .imp {font-weight: bold; color: red;}
+.text span.xtra { display:block; }
+
+-->
+</style><pre class="text">$ scene_make.py
+Usage: scene_make.py [options]
+&nbsp;
+Options:
+ -h, --help show this help message and exit
+ -m MATLIB, --matlib=MATLIB
+ Material library
+ -g GROUNDOBJ, --groundObj=GROUNDOBJ
+ librat object for ground
+ -e EXTENT, --extent=EXTENT
+ Scene extent (m)
+ -o OUTOBJ, --outObj=OUTOBJ
+ Output librat object scene file.
+ --doTree Include a tree layer.
+ --treeList=TREELIST List of tree clones.
+ --treeDist=TREEDIST Tree distribution (default: random)
+ --m2tree=M2TREE Neyman m2 (clumping) parameter for trees (default: 5)
+ --doGrass Include a grass layer.
+ --grassPlants=GRASSPLANTS
+ Number of unique grass swards (default: 10)
+ --grassDist=GRASSDIST
+ Grass distribution (default: random)
+ --m2grass=M2GRASS Neyman m2 (clumping) parameter for grass (default: 5)
+ --grassCover=GRASSCOVER
+ Grass cover (default: 0.5)
+ --grassHeight=GRASSHEIGHT
+ Grass height (m; default: 0.5)
+ --renameMaterials Rename materials to PV and NPV.
+&nbsp;</pre>
+
+<br />
+<br />
+<h3 id="toc24"><a name="Python tools for librat-1. Command line tools-onyxtree_to_librat.py"></a><a name="onyxtree_to_librat"></a>onyxtree_to_librat.py</h3>
+ Convert an OnyxTree file to a librat object file.<br />
+<h4 id="toc25"><a name="Python tools for librat-1. Command line tools-onyxtree_to_librat.py-Usage:"></a><em>Usage:</em></h4>
+ Most of the hard work here is done by Mat's filtOnyx awk script.<br />
+
+<style type="text/css"><!--
+/**
+ * GeSHi (C) 2004 - 2007 Nigel McNie, 2007 - 2008 Benny Baumann
+ * (http://qbnz.com/highlighter/ and http://geshi.org/)
+ */
+.text  {font-family:monospace;}
+.text .imp {font-weight: bold; color: red;}
+.text span.xtra { display:block; }
+
+-->
+</style><pre class="text">$ onyxtree_to_librat.py
+Usage: onyxtree_to_librat.py [options]
+&nbsp;
+Options:
+ -h, --help show this help message and exit
+ -o OBJLIST, --objList=OBJLIST
+ Text file listing OnyxTree wavefront object files.
+ -l LAD, --lad=LAD New LAD. Default is to retain current.
+ --Trunk Remove this material from object. Default False.
+ --Bough Remove this material from object. Default False.
+ --Branch1 Remove this material from object. Default False.
+ --Branch2 Remove this material from object. Default False.
+ --Branch3 Remove this material from object. Default False.
+ --Twig Remove this material from object. Default False.
+ --Stem1 Remove this material from object. Default False.
+ --Leaf01 Remove this material from object. Default False.
+ --Leaf1 Remove this material from object. Default False.
+The OnyxTree wavefront object file list must be set.
+&nbsp;</pre>
+
+<br />
+<br />
+<h2 id="toc26"><a name="Python tools for librat-2. Python modules"></a><a name="SWIGPythonBindings"></a><u>2. Python modules</u></h2>
+ The Python modules have number of classes and functions used in the above command line tools. Importing these modules from within Python are shown below. ${LIBRATTOOLS} (e.g. /usr/dev/librattools-0.1) needs to be in your PythonPath.<br />
+To see details on the classes and functions, navigate the html documents in the librattools-0.1.tar.gz docs/ directory.<br />
+
+<style type="text/css"><!--
+/**
+ * GeSHi (C) 2004 - 2007 Nigel McNie, 2007 - 2008 Benny Baumann
+ * (http://qbnz.com/highlighter/ and http://geshi.org/)
+ */
+.text  {font-family:monospace;}
+.text .imp {font-weight: bold; color: red;}
+.text span.xtra { display:block; }
+
+-->
+</style><pre class="text">$ python
+Python 2.6.4 (r264:75706, Nov 11 2009, 14:04:05)
+[GCC 4.4.2] on linux2
+Type &quot;help&quot;, &quot;copyright&quot;, &quot;credits&quot; or &quot;license&quot; for more information.
+&gt;&gt;&gt; # Micellaneous numerical utilites
+&gt;&gt;&gt; from librattools import utilities
+&nbsp;
+&gt;&gt;&gt; # Methods for creating tree/grass scenes
+&gt;&gt;&gt; from librattools import libratscene
+&nbsp;
+&gt;&gt;&gt; # Methods for querying/modifying librat wavefront object files
+&gt;&gt;&gt; from librattools import libratobject
+&nbsp;
+&gt;&gt;&gt; # Methods for creating height, material and crown maps, HIPS I/O
+&gt;&gt;&gt; # Some methods require the librat &quot;start&quot; program to be in your path
+&gt;&gt;&gt; from librattools import libratmaps
+&nbsp;
+&gt;&gt;&gt; # Methods for querying/modifying OnyxTree wavefront object files
+&gt;&gt;&gt; from librattools import onyxtree
+&nbsp;
+&gt;&gt;&gt; # Methods for simulating airborne/terrestrial survey characteristics
+&gt;&gt;&gt; from librattools import lidarsurvey
+&nbsp;
+&gt;&gt;&gt; # Methods for running batch simulations on the QDERM HPC
+&gt;&gt;&gt; from librattools import pbsbatch
+&nbsp;
+&gt;&gt;&gt; # Methods for configuring camera/light files used by &quot;start&quot;
+&gt;&gt;&gt; from librattools import libratconfig
+&nbsp;
+&gt;&gt;&gt; # librat SWIG Python bindings
+&gt;&gt;&gt; import librat</pre>
+
+The last module imported are the Python bindings to the librat library. For testing various components of librat, direct access to librat functions from Python can be quite handy. Most simulations will still require <em>start</em> or a similar C program to iterate quickly, but further development of these tools for calling RATfront.c functions may help if Python scripting of librat simulations ever becomes required.<br />
+Once compiled, <em>librat.py</em> and <em>_librat.so</em> in ${LIBRATTOOLS}/src/swig needs to be added to your PythonPath.<br />
+To show what the interface is like, a very simple example of tracing a single ray is here: <a href="http://librat.wikispaces.com/file/view/simple_librat_example.py">simple_librat_example.py</a>. More documentation on using these bindings might appear someday.
+    </div>
+  </body>
+</html>

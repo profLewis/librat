@@ -1,0 +1,57 @@
+<html>
+  <head>
+    <title>librat - Installing Librat</title>
+    <link rel="stylesheet" href="static/style.css" type="text/css" />
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+  </head>
+  <body>
+    <div class="wiki" id="content_view" style="display: block;">
+- Download the configure script.<br />
+- change directory to wherever the configure script has been downloaded to<br />
+- run the configue script by typing the command :<br />
+<br />
+./configure<br />
+<br />
+Note: if you get an error saying &quot;permission denied&quot;, you need to change the mode of the file by typing:<br />
+<br />
+chmod +x ./configure<br />
+<br />
+Once the configure script has run successfully, you should have a new folder in your home directory called bpms. This folder contains the bin and src folders.<br />
+<br />
+The script configure compiled the code in src/lib and should put the executable in bin/xxx where xxx is your machine architecture, similarly for src/lib for the libraries (.so files).<br />
+<br />
+So to run it, you need to either have the binary directory (bin/xxx) in the PATH variable for your shell, or explicitly specify where the executable is (ie run it as /xxxx/yyy/bin/xxx/start).<br />
+It needs access to the shared object libraries, so you also need the directory that has the .so files in in your LD_LIBRARY_PATH. All of that is standard for running Unix codes.<br />
+<br />
+To make changes to the environment variables, type in:<br />
+<br />
+vi .bashrc<br />
+<br />
+This opens an editor. You will now edit the .bashrc file, which is located in your home/username directory<br />
+To add the directories to the PATH and LD_LIBRARY_PATH variables, press &quot;a&quot; (without the quotes) to append the file, then type in the following commands:<br />
+<br />
+export PATH=${PATH}:/home/usrnm/bpms/bin/xxx<br />
+export PATH=${PATH}:/home/usrnm/bpms/bin/csh<br />
+export LD_LIBRARY_PATH=${ LD_LIBRARY_PATH}:/home/usrnm/bpms/src/lib<br />
+<br />
+where usrnm is your username and xxx is your machine architecture.<br />
+You can check your machine architecture using the following command:<br />
+<br />
+<br />
+uname -m<br />
+<br />
+(This should return something like x86_64)<br />
+Once this is done, press esc to exit edit mode. Then type &quot;:w&quot; (without the quotes) to save the changes. Press ZZ to exit the editor.<br />
+Check that these directories have been added to your environment variables by typing in a new terminal:<br />
+<br />
+echo $PATH<br />
+echo $LD_LIBRARY_PATH<br />
+<br />
+The new directories should be included in the environment variables. You should be able to run a command such as:<br />
+<br />
+start &lt; starttest.ip -sensor_wavebands wavebands.dat -m 100 -sun_position 0 0 10 test.obj<br />
+<br />
+to test the start program.
+    </div>
+  </body>
+</html>

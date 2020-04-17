@@ -1,0 +1,46 @@
+- Download the configure script. 
+- change directory to wherever the configure script has been downloaded to
+- run the configue script by typing the command :
+
+	./configure
+
+Note: if you get an error saying "permission denied", you need to change the mode of the file by typing:
+
+	chmod +x ./configure 
+
+Once the configure script has run successfully, you should have a new folder in your home directory called bpms. This folder contains the bin and src folder. 
+
+The script configure compiled the code in src/lib and should put the executable in bin/xxx where xxx is your machine architecture, similarly for src/lib for the libraries (.so files). 
+In case things get messed up, there are various options to re script (configure -help), such as -clean, which restarts the whole process invade it is corrupted.
+
+So to run it, you need to either have the binary directory (bin/xxx) in the PATH variable for your shell, or explicitly specify where the executable is (ie run it as /xxxx/yyy/bin/xxx/start).
+It needs access to the shared object libraries, so you also need the directory that has the .so files in in your LD_LIBRARY_PATH.  All of that is standard for running Unix codes.
+
+To make changes to the environment variables, type in:
+	
+	vi .bashrc
+
+This opens an editor. You will now edit the .bashrc file, which is located in your home/username directory
+To add the directories to the PATH and LD_LIBRARY_PATH variables, press "a" (without the quotes) to append the file, then type in the following commands:
+
+	export PATH=${PATH}:/home/usrnm/bpms/bin/xxx
+	export PATH=${PATH}:/home/ourman/bpms/bin/csh
+	export LD_LIBRARY_PATH=${ LD_LIBRARY_PATH}:/home/usrnm/bpms/src/lib
+
+where usrnm is your username and xxx is your machine architecture.  
+You can check your machine architecture using the following command:
+	
+	uname -m
+
+(This should return something like x86_64)
+Once this is done, press esc to exit edit mode.  Then type ":w" (without the quotes) to save the changes. Press ZZ to exit the editor.
+Check that these directories have been added to your environment variables by typing in a new terminal:
+
+	echo $PATH
+	echo $LD_LIBRARY_PATH
+
+The new directories should be included in the environment variables. You should be able to run a command such as:
+
+	start < starttest.ip -sensor_wavebands wavebands.dat -m 100 -sun_position 0 0 10 test.obj 
+
+to test the start program.

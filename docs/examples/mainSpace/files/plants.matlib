@@ -1,0 +1,18 @@
+srm white refl/white.dat
+srm soil refl/price_soil.dat
+srm stem refl/LOPEX_bark.dat
+srm soil.0.25 refl/price_soil.dat.resamp.soilp.0.25
+srm soil.0.5 refl/price_soil.dat.resamp.soilp.0.5
+srm soil.0.75 refl/price_soil.dat.resamp.soilp.0.75
+srm leaf refl/leaf.dat
+srm Trunk refl/LOPEX_bark.dat
+srm Bough refl/LOPEX_bark.dat
+srm Branch1 refl/LOPEX_bark.dat
+srm Branch2 refl/LOPEX_bark.dat
+srm Branch3 refl/LOPEX_bark.dat
+srm Twig refl/LOPEX_bark.dat
+srm Stem1 refl/LOPEX_bark.dat
+srm Cuts_BG refl/LOPEX_bark.dat
+srm material0 refl/birch.refl.trans.dat 0.4
+srm material255 refl/refl.255.dat
+matmap Leaf1 refl/leaf.matmap

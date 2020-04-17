@@ -1,0 +1,41 @@
+<html>
+  <head>
+    <title>librat - Lidar simulations</title>
+    <link rel="stylesheet" href="static/style.css" type="text/css" />
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+  </head>
+  <body>
+    <div class="wiki" id="content_view" style="display: block;">
+<h1 id="toc0"><a name="Lidar simulations"></a>Lidar simulations</h1>
+ Basic lidar examples are given <a class="wiki_link_ext" href="http://www2.geog.ucl.ac.uk/~plewis/bpms/src/start/tests/lidar/lidar0.html" rel="nofollow">here</a> - including all the files need to run these tests.<br />
+<br />
+<br />
+<strong>&quot;Features:&quot; ;-)</strong><br />
+<br />
+The camera definition file will work if you do not leave a space &quot;camera&quot; and &quot;{&quot; BUT it will be a null camera:<br />
+<br />
+<span style="font-family: 'courier new',courier;">camera{</span><br />
+<br />
+<br />
+so you must make sure the first line is:<br />
+<br />
+camera {<br />
+<br />
+The light defintion for a lidar simulation must specify either a fov or an ideal area i.e.<br />
+<br />
+geometry.idealArea = IDEAL<br />
+<br />
+or<br />
+<br />
+geometry.fieldOfView = FOV<br />
+<br />
+If not, the lidar beam will be an inifinitesimal ray, and the return will be a bit strange i.e. will come from the first / only thing that it is possible for the lidar beam to hit/illuminate.<br />
+<br />
+<strong>Bin start and end points</strong><br />
+Lidar simulations require the specification of the distance over which the lidar signal should be binned, in terms of a bin start distance (<em>lidar.binStart</em>), bin end distance<br />
+(<em>lidar.binEnd</em>), and the number of bins in which to collect returns signals (<em>lidar.nBins</em>). These are calculated as follows:<br />
+<br />
+<ul><li><em>lidar.binStep</em>: this is the required vertical resolution in scene units, d;</li><li><em>lidar.binStart:</em> for a camera at height H (and illumination at the same point), over a target of max height h, this is the minimum return distance from sensor to target &amp; back i.e. 2 x (H - h);</li><li><em>lidar.nBins</em>: the (minimum) number of bins required to cover the longest possible (direct) route from the top of the target to the ground and back. This will occur at the edge of the illuminated footprint. For a footprint of radius r (defined by either ideal area/2, or FOV = 2 x tan^-1(r/H)), this distance is 2 x sqrt(H^2 + r^2). So the maximum binning distance is then (lidar.binEnd - lidar.binStart), and dividing by d we obtain lidar.nBins = (lidar.binEnd - lidar.binStart)/d. In practice, specifying more bins than this ensures capturing any multiple scattering that may occur in the bins above the maximum height of the target.</li></ul>
+    </div>
+  </body>
+</html>

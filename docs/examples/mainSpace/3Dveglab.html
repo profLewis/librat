@@ -1,0 +1,90 @@
+<html>
+  <head>
+    <title>librat - 3Dveglab</title>
+    <link rel="stylesheet" href="static/style.css" type="text/css" />
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+  </head>
+  <body>
+    <div class="wiki" id="content_view" style="display: block;">
+<h1 id="toc0"> </h1>
+ <br />
+<h1 id="toc1"><a name="x3D Veglab stuff"></a>3D Veglab stuff</h1>
+ Note the proposal documents and details etc. of management plans, finances <a class="wiki_link_ext" href="http://www2.geog.ucl.ac.uk/~mdisney/ESA/3Dveglab/" rel="nofollow">etc. are all here </a>(and are all password protected).<br />
+<br />
+The techinical proposal submitted to ESA is: <a class="wiki_link_ext" href="http://www2.geog.ucl.ac.uk/~mdisney/ESA/3Dveglab/3DVegLab_TechProp_V1_redgrx.pdf" rel="nofollow">3DVegLab_TechProp_V1_redgrx.pdf</a><br />
+<br />
+ESA's fax requesting clarification / confirmation of technical points is here: <a class="wiki_link_ext" href="http://www2.geog.ucl.ac.uk/~mdisney/ESA/3Dveglab/ESA_Fax.pdf" rel="nofollow">ESA_fax.pdf</a><br />
+<br />
+The RSL/consortia response to ESA is here: <a class="wiki_link_ext" href="http://www2.geog.ucl.ac.uk/~mdisney/ESA/3Dveglab/3DVegLab_Reply_RSL.pdf" rel="nofollow">3DVegLab_Reply_RSL.pdf</a><br />
+<br />
+<h1 id="toc2"><a name="UCL tasks"></a>UCL tasks</h1>
+ <br />
+<h2 id="toc3"><a name="UCL tasks-Task 3: Toolbox design"></a>Task 3: Toolbox design</h2>
+ Builds on Requirement Baseline (RB) to be prepared by RSL (FM) which is<span style="font-family: Arial,Helvetica,sans-serif; font-size: 90%; line-height: normal;"><span style="font-family: Arial,Helvetica,sans-serif;" class="s1"> comprised of </span>scientiﬁc requirements review, analysis of existing sites </span><span style="font-family: Arial,Helvetica,sans-serif; font-size: 12px; line-height: 17px;">and networks and speciﬁcation of the required toolbox functionality</span><br />
+<br />
+<h3 id="toc4"><a name="UCL tasks-Task 3: Toolbox design-Inputs"></a><strong>Inputs</strong></h3>
+ <span class="s1">•</span> D1.1 – Requirement baseline (RB) <br />
+<span class="s1">•</span> Requirements and speciﬁcations of the SoW <br />
+<span class="s1">•</span> D1.2 - Field Protocol (FP) relevant for the speciﬁcation of data input &amp; interfaces <br />
+<span class="s1">•</span> D1.3 Site and data set speciﬁcation (SDS) <br />
+<br />
+<h3 id="toc5"><a name="UCL tasks-Task 3: Toolbox design-Outputs / deliverables"></a>Outputs / deliverables</h3>
+ Technical specification (TS) of the toolbox, and the Design Definition File (DDF)<br />
+Both required at KO + 9 i.e. end 11/2011<br />
+<br />
+<br />
+<strong>Technical Specification</strong><br />
+<span style="font-family: Arial,Helvetica,sans-serif; font-size: 120%;">The TS document generated will <span style="line-height: normal;">contain a precise and coherent deﬁnition of all the functions,required modules and performance expectations for the toolbox. This will be expressed in a modular fashion, according to the organisation of the toolbox modules presented above. The technical speciﬁcations for interfaces and outputs, including data formats and metadata, will be documented in the TS. Space Engineering Software Standards will be adhered to while specifying and designing the toolbox. This process will be guided and checked by our software developers, Netcetera.</span></span><br />
+<br />
+<span style="font-family: Arial,Helvetica,sans-serif; font-size: 120%; line-height: normal;">See <a class="wiki_link_ext" href="http://www.everyspec.com/ESA/ECSS-E-40_Part_1B_2481/" rel="nofollow">here for ESA definitions of </a></span><span style="font-family: Arial,Helvetica,sans-serif; font-size: 14px;"><a class="wiki_link_ext" href="http://www.everyspec.com/ESA/ECSS-E-40_Part_1B_2481/" rel="nofollow">Space Engineering Software Standards</a> </span><br />
+<br />
+<strong>Design Definition File</strong><br />
+<span style="font-family: Arial,Helvetica,sans-serif; font-size: 110%;">Note from the above doc that the DDF contains: <span style="line-height: normal;">all the levels of design engineering results, including software code listings, along with a wide range of other things including specification for code installation and acceptance testing at each stage.</span></span><br />
+<br />
+<span style="font-family: Arial,Helvetica,sans-serif; font-size: 120%;">Based on the <em>Technical Speciﬁcations</em> a <em>Design Deﬁnition File</em> <em>(DDF)</em> shall be developed containing the description of the ﬁnal algorithms and processing chain. The toolbox shall follow a modular structure, which will allow for its efﬁcient extension and development in the future. Speciﬁcally the canopy and atmosphere RTM shall be considered as independent modules, which can be exchanged. For the atmospheric RTM the LibRadtran [RD-7| model shall be considered and employed if possible. </span><br />
+<br />
+<strong><span style="font-family: Arial,Helvetica,sans-serif; font-size: 120%;">There is a little here that is unclear in the submitted proposal......p42 of 3DVegLab_TechProp_V1_red.pdf and p41 p </span></strong><strong><span style="font-family: Arial,Helvetica,sans-serif; font-size: 14px;">DVegLab_TechProp_V1_redgrx.pdf</span></strong><br />
+<br />
+<span style="font-family: Arial,Helvetica,sans-serif; font-size: 120%; line-height: normal;">...during Task 2 all the software engineering process as required in the ECSS-40B and adequate Tailoring). This standard shall be followed up to the Qualiﬁcation and Acceptance Test Review. Software shall be developed as Open Source code and as an operation system independent platform. </span><br />
+<br />
+<span style="font-family: Arial,Helvetica,sans-serif; font-size: 120%;">More speciﬁcally it is intended to develop this toolbox as a plug-in within the BEAM Toolbox in order to capitalise of the already available functionality as well as to facilitate the integration with EO data, if the consortium identiﬁes no major obstacles. The design of the toolbox as a BEAM plug-in shall thus follow the BEAM architecture [RD-8] and ensure compatibility with the BEAM developer environment. While the toolbox itself shall be Open Source code the RTM module might be included as proprietary code as long as the toolbox as a whole can be distributed freely. The </span><span style="font-family: Arial,Helvetica,sans-serif; font-size: 14px;">import module of the toolbox shall be designed to allow for variable input data. At the end of this step a <em>Critical Design Review (CDR)</em> shall be carried out in order to approve the proposed design. </span><br />
+<br />
+<span style="font-family: Arial,Helvetica,sans-serif; font-size: 120%;"><strong>Deliverables</strong></span><br />
+<span style="font-family: Arial,Helvetica,sans-serif; font-size: 120%;"><strong>D1.4: Technical Speciﬁcation (TS) of the toolbox</strong> </span><br />
+<span style="font-family: Arial,Helvetica,sans-serif; font-size: 120%;"><strong>D1.5: Design Deﬁnition File (DDF) of the toolbox</strong> </span><br />
+<br />
+<br />
+Elements from the SoW of relevance to the TS are (SoW, p.6): <br />
+<ul><li>Observed in-situ parameters shall include measurements of the 3-D vegetation structure (by terrestrial lidar and ideally airborne lidar ALS), biophysical canopy characterization and auxiliary information (e.g meteorological observations, soil moisture, land cover).</li><li>Intensive in-situ measurements shall cover at least the pixel extension of a medium resolution EO sensor (e.g. MERIS) as well as be representative for the phenological variability of the respective selected site. The general sampling scheme of the in-situ measurements shall be representative on the stand level.</li><li>The toolbox capabilities shall be capable of supporting the development and improvement of EO retrieval methods of Sentinel-2 and Sentinel-3 level 2 products</li><li>The toolbox shall simulated top of canopy and top of atmosphere reﬂectance based on validated physically-based radiative transfer models</li><li>The software shall be developed as open source code and as an BEAM plug-in. The ﬁnal toolbox shall be freely available to scientiﬁc community</li><li>The toolbox shall enable a comprehensive canopy parameterization of complex canopies based on detailed in-situ data, including a realistic tree reconstruction</li><li>The toolbox shall follow a modular structure and be extendable to accommodate for future requirements.</li><li>The format requirements of the toolbox shall be ﬂexible, so that different data sets can easily be processed</li></ul><br />
+<h3 id="toc6"><a name="UCL tasks-Task 3: Toolbox design-Components we defined in T3:"></a>Components we defined in T3:</h3>
+ <h3 id="toc7"> </h3>
+ A <strong>radiometric simulation</strong> module<br />
+Desired <strong>sensor characteristics and</strong> <strong>illumination characteristics</strong><br />
+<br />
+The <strong>atmospheric characterisation</strong><br />
+<strong>Scene characteristics and s</strong><br />
+<span style="display: inline !important;">cene analysis <strong>module</strong></span><br />
+<br />
+<br />
+<br />
+<span style="margin: 0px; padding: 0px;"><strong>Primary output</strong></span><br />
+<span style="display: inline !important;">Simulated EO signal</span><br />
+<br />
+<strong><span style="display: inline !important;">DART parameters: most included as XML files</span></strong><br />
+<br />
+<span style="display: inline !important; font-size: 120%;">direction angles: sun and view directions, hot spot sampling, additional view directions, etc. </span><br />
+<span style="display: inline !important; font-size: 120%;">optical properties: data base names, multiplicative factors (useful for LUT creation), etc. </span><br />
+<span style="display: inline !important; font-size: 120%;">scene and scene element (houses, turbid trees, agricultural plots, etc.) dimensions and positions, types of products, etc.</span><br />
+<br />
+<h3 id="toc8"><a name="UCL tasks-Task 3: Toolbox design-Task 6: Scientific demonstration study"></a><span style="display: inline !important; font-size: 120%;">Task 6: Scientific demonstration study</span></h3>
+ Note the second task here was redefined from the initial proposal following feedback from ESA regarding the EOLDAS exploitation one (See ESA_Fax.pdf and .<br />
+3DVegLab_Reply_RSL.pdf):<br />
+<br />
+<ol><li>Demonstration of the toolbox for modelling changing LAI in a 3D canopy, constrained by EOD at two points (leaf on, leaf off) and with the transitions between these two states modelled to follow an approximate logistic green-up and senescence of a deciduous forest.</li><li><span style="font-family: Arial,Helvetica,sans-serif; font-size: 12px; line-height: normal;">Demonstation of the toolbox to explore synthetic Sentinel-like observations for buiophysical parameter retrieval. We will use the toolbox to construct a look-up-table (LUT) of possible solutions to the inverse RT problem across a range of LAI and canopy types, considering each case individually via standard LUT methods. The retrieval problem will then be phrased in terms of a sensitivity analysis to quantify the ability of Sentinel-like observations to estimate LAI, under different noise levels representing different levels of uncertainty in the surface and atmospheric RT processes, and the information content of the observations themselves.</span></li></ol><br />
+<h3 id="toc9"><a name="UCL tasks-Task 3: Toolbox design-Deliverables"></a>Deliverables</h3>
+ <span style="font-family: Arial,Helvetica,sans-serif; font-size: 120%;">D3.1: Exploitation Report (ER) i.e. summary document detailing the comparisons across the test cases, showing how toolbox can be used, and providing guidance on how this might be developed </span><br />
+<span style="font-family: Arial,Helvetica,sans-serif; font-size: 120%;">further. </span><br />
+<span style="font-family: Arial,Helvetica,sans-serif; font-size: 120%;">D3.2: Suite of 3D model scenes representing a range of test cases, plus simulations thereof for demo cases, plus indications as to how this can be extended.</span>
+    </div>
+  </body>
+</html>

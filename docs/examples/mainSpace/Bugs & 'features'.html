@@ -1,0 +1,41 @@
+<html>
+  <head>
+    <title>librat - Bugs & 'features'</title>
+    <link rel="stylesheet" href="static/style.css" type="text/css" />
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+  </head>
+  <body>
+    <div class="wiki" id="content_view" style="display: block;">
+<h1 id="toc0"><a name="Known issues, features and bugs to be addressed in librat"></a>Known issues, features and bugs to be addressed in librat</h1>
+ <br />
+<strong>Issue</strong><br />
+Cause<br />
+Divide by zero due to<span style="border-collapse: collapse; font-family: arial,sans-serif; line-height: normal;"> a 1/cos(zenith) in the geometry.location &amp; geometry.lookat</span><br />
+<br />
+<span style="border-collapse: collapse; font-family: arial,sans-serif; line-height: normal;">Effect</span><br />
+<span style="border-collapse: collapse; color: #500050; font-family: arial,sans-serif; line-height: normal;">rat: signal interrupt 11 for process 47658</span><br />
+<span style="border-collapse: collapse; color: #500050; font-family: arial,sans-serif; line-height: normal;">(try switching it off and on again ;-)</span><br />
+<br />
+Fix: trap better in code<br />
+<br />
+<strong>Issue</strong><br />
+<span style="margin-bottom: 0px; margin-left: 0px; margin-right: 0px; margin-top: 0px; padding-bottom: 0px; padding-left: 0px; padding-right: 0px; padding-top: 0px;">Cause</span><br />
+Number of groups permitted is hardwired to 50000. This is problem if you have many large object files<br />
+<br />
+<span style="margin-bottom: 0px; margin-left: 0px; margin-right: 0px; margin-top: 0px; padding-bottom: 0px; padding-left: 0px; padding-right: 0px; padding-top: 0px;"><span style="border-collapse: collapse; font-family: arial,sans-serif; line-height: normal;">Effect</span></span><br />
+<span style="margin-bottom: 0px; margin-left: 0px; margin-right: 0px; margin-top: 0px; padding-bottom: 0px; padding-left: 0px; padding-right: 0px; padding-top: 0px;"><span style="border-collapse: collapse; color: #500050; font-family: arial,sans-serif; line-height: normal;">rat: signal interrupt 11 for process 47658</span></span><br />
+<span style="margin-bottom: 0px; margin-left: 0px; margin-right: 0px; margin-top: 0px; padding-bottom: 0px; padding-left: 0px; padding-right: 0px; padding-top: 0px;"><span style="border-collapse: collapse; color: #500050; font-family: arial,sans-serif; line-height: normal;">(try switching it off and on again ;-)</span></span><br />
+<br />
+<span style="border-collapse: collapse; color: #500050; font-family: arial,sans-serif; line-height: normal;">Fix:</span><br />
+<span style="color: #500050;"><span style="font-family: arial,sans-serif;"><span style="border-collapse: collapse; line-height: normal;">Can be overridden by </span></span></span>setting environment variable MAX_GROUPS i.e. setenv MAX_GROUPS 200000 say. Other environment variables used in librat:<br />
+<br />
+MAX_SUNS (default = 180)<br />
+PRAT_MAX_MATERIALS (default = 1024)<br />
+<br />
+<strong>Issue</strong><br />
+Non-Lambertian material properties not accounted for in spectral invariant mode<br />
+<br />
+Fix: pass through in code
+    </div>
+  </body>
+</html>

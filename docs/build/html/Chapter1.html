@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Basic librat / start operation &mdash; librat  documentation</title>
+  <title>1. Basic librat / start operation &mdash; librat  documentation</title>
   
 
   
@@ -34,7 +34,6 @@
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
     <link rel="top" title="librat  documentation" href="index.html"/>
-        <link rel="next" title="Environment Variables and some bash commands" href="Appendix1.html"/>
         <link rel="prev" title="Welcome to librat" href="index.html"/> 
 
   
@@ -83,11 +82,12 @@
             
                 <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Basic librat / start operation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#Object-example-1:-planes-and-ellipsoids">Object example 1: planes and ellipsoids</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#Environment-variables">Environment variables</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#Object-example-2:-clones">Object example 2: clones</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Appendix1.html">Environment Variables and some <code class="docutils literal notranslate"><span class="pre">bash</span></code> commands</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">1. Basic librat / start operation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#Object-example-1:-planes-and-ellipsoids">1.1. Object example 1: planes and ellipsoids</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Environment-variables">1.2. Environment variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Object-example-2:-clones">1.3. Object example 2: clones</a></li>
+</ul>
+</li>
 </ul>
 
             
@@ -132,7 +132,7 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>Basic librat / start operation</li>
+      <li><span class="section-number">1. </span>Basic librat / start operation</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -372,7 +372,7 @@ div.rendered_html tbody tr:hover {
 }
 </style>
 <div class="section" id="Basic-librat-/-start-operation">
-<h1>Basic librat / start operation<a class="headerlink" href="#Basic-librat-/-start-operation" title="Permalink to this headline">¶</a></h1>
+<h1><span class="section-number">1. </span>Basic librat / start operation<a class="headerlink" href="#Basic-librat-/-start-operation" title="Permalink to this headline">¶</a></h1>
 <p>Librat is the library of function calls around which you can write your own code to do things such as read in and parse an object file, read in and parse camera, illumination files, waveband files and so on. However, start is a wrapper code around these commands which gives you access to all the basic operations, and so is the de facto tool for doing simulations. The key things required to carry out a simulation are:</p>
 <ul class="simple">
 <li><p>A camera file</p></li>
@@ -381,10 +381,9 @@ div.rendered_html tbody tr:hover {
 <li><p>An object file - this is always assumed to be the last file on the start command line</p></li>
 </ul>
 <p>Anything specific you want to do in any of these parts of the process is specified in these files. There are a limited number of additional command line options which either allow you to override a few key things in these files (the waveband file for example), or more usually are external to these things. Each of these can be passed through via the <code class="docutils literal notranslate"><span class="pre">-RAT</span></code> keyword. Examples are the ray tree depth (<code class="docutils literal notranslate"><span class="pre">-RATm</span></code>) , verbose level (<code class="docutils literal notranslate"><span class="pre">-RATv</span></code>), waveband file (<code class="docutils literal notranslate"><span class="pre">-RATsensor_wavebands</span></code>) etc.</p>
-</div>
 <hr class="docutils" />
 <div class="section" id="Object-example-1:-planes-and-ellipsoids">
-<h1>Object example 1: planes and ellipsoids<a class="headerlink" href="#Object-example-1:-planes-and-ellipsoids" title="Permalink to this headline">¶</a></h1>
+<h2><span class="section-number">1.1. </span>Object example 1: planes and ellipsoids<a class="headerlink" href="#Object-example-1:-planes-and-ellipsoids" title="Permalink to this headline">¶</a></h2>
 <hr class="docutils" />
 <p>We will create the files we need as we go along, using <code class="docutils literal notranslate"><span class="pre">bash</span></code> shell <code class="docutils literal notranslate"><span class="pre">cat</span> <span class="pre">&lt;&lt;EOF</span> <span class="pre">&gt;</span> <span class="pre">filename</span></code> syntax. If we type:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cat</span> <span class="o">&lt;&lt;</span><span class="n">EOF</span> <span class="o">&gt;</span> <span class="n">filename</span>
@@ -400,7 +399,7 @@ div.rendered_html tbody tr:hover {
 </div>
 <p>We first create a directory to do our work (using the <code class="docutils literal notranslate"><span class="pre">linux</span></code> command <code class="docutils literal notranslate"><span class="pre">mkdir</span></code> in a <code class="docutils literal notranslate"><span class="pre">bash</span></code> shell):</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
 <div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
@@ -411,7 +410,7 @@ mkdir -p test/test_examples
 </div>
 <p>Now, a simple scene object <code class="docutils literal notranslate"><span class="pre">`test/test_examples/first.obj</span></code> &lt;test/test_examples/first.obj&gt;`__</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
 <div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
@@ -484,7 +483,7 @@ cat <span class="s">&lt;&lt;EOF &gt; test/test_examples/refl/white.dat</span>
 <p>tells the librat reader to load the ‘material library’ called <code class="docutils literal notranslate"><span class="pre">`plants.matlib</span></code> &lt;test/test_examples/plants.matlib&gt;`__. First, it will look in the current directory for the file. If it doesn’t find it there, it will see if the environment variable <code class="docutils literal notranslate"><span class="pre">MATLIB</span></code> is set. If so, it will look there next.</p>
 </div>
 <div class="section" id="Environment-variables">
-<h1>Environment variables<a class="headerlink" href="#Environment-variables" title="Permalink to this headline">¶</a></h1>
+<h2><span class="section-number">1.2. </span>Environment variables<a class="headerlink" href="#Environment-variables" title="Permalink to this headline">¶</a></h2>
 <p>The following environmental variables can be used:</p>
 <table class="docutils align-default">
 <colgroup>
@@ -749,7 +748,7 @@ start found ok
 </div>
 </div>
 <div class="section" id="Object-example-2:-clones">
-<h1>Object example 2: clones<a class="headerlink" href="#Object-example-2:-clones" title="Permalink to this headline">¶</a></h1>
+<h2><span class="section-number">1.3. </span>Object example 2: clones<a class="headerlink" href="#Object-example-2:-clones" title="Permalink to this headline">¶</a></h2>
 <hr class="docutils" />
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
@@ -787,6 +786,7 @@ cat <span class="s">&lt;&lt;EOF &gt; test/test_examples/second.obj</span>
 </div>
 </div>
 </div>
+</div>
 
 
            </div>
@@ -794,8 +794,6 @@ cat <span class="s">&lt;&lt;EOF &gt; test/test_examples/second.obj</span>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="Appendix1.html" class="btn btn-neutral float-right" title="Environment Variables and some bash commands" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="index.html" class="btn btn-neutral" title="Welcome to librat" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>

@@ -11,13 +11,14 @@ UCL Geography/NCEO librat software
 |image0|
 
 .. toctree::
-   :maxdepth: 2
+   :numbered:
+   :glob:
+   :maxdepth: 3
    :caption: Contents:
 
-   Chapter1.rst
+   Chapter*
 
-   :caption: Appendices:
-   Appendix1.rst
+   Appendix1
 
 .. _Chapter1: https://mybinder.org/v2/gh/profLewis/librat.git/master?filepath=Chapter1.ipynb
 .. _Appendix1: https://mybinder.org/v2/gh/profLewis/librat.git/master?filepath=Appendix1.ipynb

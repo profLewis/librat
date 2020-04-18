@@ -1,0 +1,18 @@
+name: librat
+channels: 
+    - conda-forge
+dependencies:
+    - numpy
+    - beautifulsoup4
+    - lxml
+    - cryptography
+    - python>=3.6
+    - numpy 
+    - scipy
+    - matplotlib 
+    - gdal>2.2
+    - pandas  
+    - requests
+    - earthengine-api
+    - ipython
+    - jupyter

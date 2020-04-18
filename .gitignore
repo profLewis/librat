@@ -9,6 +9,7 @@ start
 *.cache
 makefile
 *checkpoint*
+.DS_Store
 
 # Object files
 *.o

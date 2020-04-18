@@ -1,1 +1,2 @@
-srm white refl/white.dat
+srm green white.dat
+srm white white.dat

@@ -2,12 +2,12 @@
 #
 # preamble 
 #
-export BPMS=/Users/plewis/librat
+BPMS=${BPMS-$(pwd)}
 # set shell variables lib, bin, verbose
 # with defaults in case not set 
 lib=${lib-"$BPMS/src"}
 bin=${bin-"$BPMS/src"}
-VERBOSE=${VERBOSE-0}
+VERBOSE=${VERBOSE-1}
 
 # set up required environment variables for bash
 export LD_LIBRARY_PATH="${lib}:${LD_LIBRARY_PATH}"
@@ -15,16 +15,16 @@ export DYLD_LIBRARY_PATH="${lib}:${DYLD_LIBRARY_PATH}"
 export PATH="${bin}:${PATH}"
 
 # set up required environment variables for librat
-export BPMSROOT=${BPMSROOT-$BPMS/test/test_examples}
+export TEST=${BPMS}/test/test_example
+export MATLIB=$TEST
+export RSRLIB=$TEST
+export ARARAT_OBJECT=$TEST
+export DIRECT_ILLUMINATION=$TEST
+export BPMS_FILES=$TEST
 
-export MATLIB=$BPMSROOT
-export RSRLIB=$BPMSROOT
-export ARARAT_OBJECT=$BPMSROOT
-export DIRECT_ILLUMINATION=$BPMSROOT
-export BPMS_FILES=$BPMSROOT
 if [ "$(which start)" == "${bin}/start" ]
 then
-  if [ "$VERBOSE" == 1 ]; then
+  if [ "$VERBOSE" ]; then
       echo "start found ok"
   fi
 else

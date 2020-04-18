@@ -15,6 +15,8 @@ UCL Geography/NCEO librat software
    :caption: Contents:
 
    Chapter1.rst
+
+   :caption: Appendices:
    Appendix1.rst
 
 .. _Chapter1: https://mybinder.org/v2/gh/profLewis/librat.git/master?filepath=Chapter1.ipynb

@@ -8,6 +8,7 @@ start
 .libs
 *.cache
 makefile
+*checkpoint*
 
 # Object files
 *.o

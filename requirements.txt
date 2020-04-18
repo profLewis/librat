@@ -1,3 +1,4 @@
 
 flake8
 pytest
+pip install stanford_theme

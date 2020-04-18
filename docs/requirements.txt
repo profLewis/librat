@@ -8,3 +8,4 @@ ipywidgets
 sphinx-copybutton
 sphinx-gallery
 jupytext
+pip install stanford_theme

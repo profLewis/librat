@@ -1,0 +1,9 @@
+include LICENSE
+include *.rst
+include docs/requirements.txt
+include docs/source/conf.py
+include docs/source/*.rst
+include docs/source/*.ipynb
+include docs/res/*
+include docs/source/references.bib
+include docs/source/ipython_kernel_config.py

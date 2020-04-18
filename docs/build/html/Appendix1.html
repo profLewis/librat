@@ -1,0 +1,1468 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Environment Variables and some bash commands &#8212; librat  documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="# Basic librat / start operation" href="Chapter1.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput.container,
+div.nbinput.container div.prompt,
+div.nbinput.container div.input_area,
+div.nbinput.container div[class*=highlight],
+div.nbinput.container div[class*=highlight] pre,
+div.nboutput.container,
+div.nboutput.container div.prompt,
+div.nboutput.container div.output_area,
+div.nboutput.container div[class*=highlight],
+div.nboutput.container div[class*=highlight] pre {
+    background: none;
+    border: none;
+    padding: 0 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+/* avoid gaps between output lines */
+div.nboutput.container div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput.container,
+div.nboutput.container {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput.container,
+    div.nboutput.container {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput.container {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast.container {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput.container div.prompt pre {
+    color: #307FC1;
+}
+
+/* output prompt */
+div.nboutput.container div.prompt pre {
+    color: #BF5B3D;
+}
+
+/* all prompts */
+div.nbinput.container div.prompt,
+div.nboutput.container div.prompt {
+    min-width: 5.5ex;
+    padding-top: 0.3rem;
+    padding-right: 0.3rem;
+    text-align: right;
+    flex: 0;
+}
+@media (max-width: 540px) {
+    div.nbinput.container div.prompt,
+    div.nboutput.container div.prompt {
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput.container div.prompt.empty {
+        padding: 0;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput.container div.prompt pre,
+div.nboutput.container div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput.container div.input_area,
+div.nboutput.container div.output_area {
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput.container div.input_area,
+    div.nboutput.container div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput.container div.input_area {
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+    background: #f5f5f5;
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput.container div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.imgmath center alignment in output cells */
+div.nboutput.container div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput.container div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+
+
+div.nbinput.container div.input_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight].math,
+div.nboutput.container div.output_area.rendered_html,
+div.nboutput.container div.output_area > div.output_javascript,
+div.nboutput.container div.output_area:not(.rendered_html) > img{
+    padding: 0.3rem;
+}
+
+/* fix copybtn overflow problem in chromium (needed for 'sphinx_copybutton') */
+div.nbinput.container div.input_area > div[class^='highlight'],
+div.nboutput.container div.output_area > div[class^='highlight']{
+    overflow-y: hidden;
+}
+
+/* hide copybtn icon on prompts (needed for 'sphinx_copybutton') */
+.prompt a.copybtn {
+    display: none;
+}
+
+/* Some additional styling taken form the Jupyter notebook CSS */
+div.rendered_html table {
+  border: none;
+  border-collapse: collapse;
+  border-spacing: 0;
+  color: black;
+  font-size: 12px;
+  table-layout: fixed;
+}
+div.rendered_html thead {
+  border-bottom: 1px solid black;
+  vertical-align: bottom;
+}
+div.rendered_html tr,
+div.rendered_html th,
+div.rendered_html td {
+  text-align: right;
+  vertical-align: middle;
+  padding: 0.5em 0.5em;
+  line-height: normal;
+  white-space: normal;
+  max-width: none;
+  border: none;
+}
+div.rendered_html th {
+  font-weight: bold;
+}
+div.rendered_html tbody tr:nth-child(odd) {
+  background: #f5f5f5;
+}
+div.rendered_html tbody tr:hover {
+  background: rgba(66, 165, 245, 0.2);
+}
+</style>
+<div class="section" id="Environment-Variables-and-some-bash-commands">
+<h1>Environment Variables and some <code class="docutils literal notranslate"><span class="pre">bash</span></code> commands<a class="headerlink" href="#Environment-Variables-and-some-bash-commands" title="Permalink to this headline">¶</a></h1>
+<p>To use <code class="docutils literal notranslate"><span class="pre">librat</span></code>, we need to have a passing awareness of some computer system settings called <a class="reference external" href="https://en.wikipedia.org/wiki/Environment_variable">environment variables</a>. We do this in this chapter, alongside a few other basic linux/unix commands that may be useful to know.</p>
+<p>In practical terms, the important thing here is that you can generate the file <code class="docutils literal notranslate"><span class="pre">`test/test_examples/init.sh</span></code> &lt;test/test_examples/init.sh&gt;`__ and modify it to your needs. The rest you can skip for now, if you really want to. But you may well find yourself returning to this chapter when you want to ask more of your computer and of this tool.</p>
+<p>Our focus will be on <code class="docutils literal notranslate"><span class="pre">`bash</span></code> &lt;<a class="reference external" href="https://opensource.com/article/19/8/what-are-environment-variables">https://opensource.com/article/19/8/what-are-environment-variables</a>&gt;`__ environment variables.</p>
+<p>This chapter is not generally critical for understanding <code class="docutils literal notranslate"><span class="pre">librat</span></code> but may help if you go into any details on your setup, or have problems.</p>
+<p>The chapter covers:</p>
+<ul class="simple">
+<li><p>Introduction to shell and environment variables</p></li>
+<li><p>Some important environment variables and related</p></li>
+<li><p>Important environment variables for librat</p></li>
+</ul>
+<div class="section" id="Introduction-to-shell-and-environment-variables">
+<h2>Introduction to shell and environment variables<a class="headerlink" href="#Introduction-to-shell-and-environment-variables" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="export">
+<h3>export<a class="headerlink" href="#export" title="Permalink to this headline">¶</a></h3>
+<p>An <strong>environment variable</strong> is one that is passed through from a shell to any child processes.</p>
+<p>We can recognise these as they are usually defined in upper case (capital letters), and (in bash) defined with a <code class="docutils literal notranslate"><span class="pre">export</span></code> command: e.g.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">export</span> <span class="n">MATLIB</span><span class="o">=</span><span class="n">test</span><span class="o">/</span><span class="n">test_examples</span>
+</pre></div>
+</div>
+<p>In this case, this would set the environment variable called <code class="docutils literal notranslate"><span class="pre">MATLIB</span></code> to <code class="docutils literal notranslate"><span class="pre">test/test_examples</span></code>. The syntax is:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">export</span> <span class="n">NAME</span><span class="o">=</span><span class="n">value</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="White-space-and-single-quotes-'">
+<h3>White space and single quotes <code class="docutils literal notranslate"><span class="pre">'</span></code><a class="headerlink" href="#White-space-and-single-quotes-'" title="Permalink to this headline">¶</a></h3>
+<p>If <code class="docutils literal notranslate"><span class="pre">value</span></code> has white space (gaps in the name), it will need quotes to contain the string, e.g.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">export</span> <span class="n">SOMEHWERE</span><span class="o">=</span><span class="s1">&#39;C:/Program Files&#39;</span>
+</pre></div>
+</div>
+<p>Here, we contain the string <code class="docutils literal notranslate"><span class="pre">C:/Program</span> <span class="pre">Files</span></code>, which has white space, in single quotes (<code class="docutils literal notranslate"><span class="pre">'</span></code>). Its a good idea to avoid white space in filenames as they can cause problems. Use dash <code class="docutils literal notranslate"><span class="pre">-</span></code> or underscore <code class="docutils literal notranslate"><span class="pre">_</span></code> instead.</p>
+</div>
+<div class="section" id="echo">
+<h3><code class="docutils literal notranslate"><span class="pre">echo</span></code><a class="headerlink" href="#echo" title="Permalink to this headline">¶</a></h3>
+<p>We can see the value a variable is set to with the command <code class="docutils literal notranslate"><span class="pre">echo</span></code>, and refer to the <em>value</em> of a variable with a <code class="docutils literal notranslate"><span class="pre">$</span></code> symbol e.g.:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[155]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
+<span></span>%%bash
+
+<span class="nb">export</span> <span class="nv">MATLIB</span><span class="o">=</span>test/test_examples
+<span class="nb">echo</span> <span class="s2">&quot;MATLIB is set to </span><span class="nv">$MATLIB</span><span class="s2">&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+MATLIB is set to test/test_examples
+</pre></div></div>
+</div>
+<p>Note that there must be no gaps in <code class="docutils literal notranslate"><span class="pre">NAME=value</span></code> part of the statement. That is a typical thing for new users to get wrong and which can cause problems.</p>
+</div>
+<div class="section" id="Double-quotes-&quot;-and-backslash-escape-/">
+<h3>Double quotes <code class="docutils literal notranslate"><span class="pre">&quot;</span></code> and backslash escape <code class="docutils literal notranslate"><span class="pre">/</span></code><a class="headerlink" href="#Double-quotes-"-and-backslash-escape-/" title="Permalink to this headline">¶</a></h3>
+<p>If you want to replace the value of a variable in a string, then you should generally use double quotes (<code class="docutils literal notranslate"><span class="pre">&quot;</span></code>) instead of single quotes <code class="docutils literal notranslate"><span class="pre">'</span></code> as above:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[156]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
+<span></span>%%bash
+
+<span class="nb">export</span> <span class="nv">MATLIB</span><span class="o">=</span>test/test_examples
+
+<span class="nb">echo</span> <span class="s1">&#39;1. MATLIB is set to $MATLIB in single quotes&#39;</span>
+<span class="nb">echo</span> <span class="s2">&quot;2. MATLIB is set to </span><span class="nv">$MATLIB</span><span class="s2"> in double quotes&quot;</span>
+<span class="nb">echo</span> <span class="s2">&quot;2. MATLIB is set to \$MATLIB in double quotes but with \ escaping the \$&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+1. MATLIB is set to $MATLIB in single quotes
+2. MATLIB is set to test/test_examples in double quotes
+2. MATLIB is set to $MATLIB in double quotes but with \ escaping the $
+</pre></div></div>
+</div>
+<p>However, we can also ‘escape’ the interpretation of the <code class="docutils literal notranslate"><span class="pre">$</span></code> symbol in the double quoted string, with the backslash <a class="reference external" href="https://www.shellscript.sh/escape.html">escape symbol</a> <code class="docutils literal notranslate"><span class="pre">\</span></code>, as in example 3.</p>
+</div>
+<div class="section" id="env,-grep,-pipe-|">
+<h3><code class="docutils literal notranslate"><span class="pre">env</span></code>, <code class="docutils literal notranslate"><span class="pre">grep</span></code>, pipe <code class="docutils literal notranslate"><span class="pre">|</span></code><a class="headerlink" href="#env,-grep,-pipe-|" title="Permalink to this headline">¶</a></h3>
+<p>To see the values of all environment variables, type <code class="docutils literal notranslate"><span class="pre">env</span></code> (or <code class="docutils literal notranslate"><span class="pre">printenv</span></code>). Because this list can be quite long, we might want to select only certain lines from the list. One way to do this is to use the command <code class="docutils literal notranslate"><span class="pre">`grep</span></code> &lt;<a class="reference external" href="https://en.wikipedia.org/wiki/Grep">https://en.wikipedia.org/wiki/Grep</a>&gt;`__, which searches for patterns in the each line:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[157]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
+<span></span>%%bash
+
+<span class="nb">export</span> <span class="nv">MATLIB</span><span class="o">=</span>test/test_examples
+
+env <span class="p">|</span> grep M
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+TERM_PROGRAM=Apple_Terminal
+TERM=xterm-color
+TMPDIR=/var/folders/mp/9cxd5s793bjd4q3zng6dv_cw0000gn/T/
+CONDA_PROMPT_MODIFIER=(base)
+TERM_PROGRAM_VERSION=433
+TERM_SESSION_ID=0BE86765-1DFB-4C8E-AF11-30EEB0228998
+KERNEL_LAUNCH_TIMEOUT=40
+MATLIB=test/test_examples
+PATH=/Users/plewis/opt/anaconda3/bin:/Users/plewis/opt/anaconda3/condabin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/VMware Fusion.app/Contents/Public:/opt/X11/bin:/Library/Apple/usr/bin
+MPLBACKEND=module://ipykernel.pylab.backend_inline
+_CE_M=
+XPC_SERVICE_NAME=0
+HOME=/Users/plewis
+LOGNAME=plewis
+DISPLAY=/private/tmp/com.apple.launchd.QXhbUM7ewC/org.macosforge.xquartz:0
+</pre></div></div>
+</div>
+<p>Here, we <a class="reference external" href="https://en.wikipedia.org/wiki/Pipeline_(Unix)">‘pipe’</a> the output of the command <code class="docutils literal notranslate"><span class="pre">env</span></code> into the command <code class="docutils literal notranslate"><span class="pre">grep</span></code> with the pipe symbol <code class="docutils literal notranslate"><span class="pre">|</span></code>. <code class="docutils literal notranslate"><span class="pre">grep</span> <span class="pre">M</span></code> will filter only lines containing the character <code class="docutils literal notranslate"><span class="pre">M</span></code>. We see that this includes the variable <code class="docutils literal notranslate"><span class="pre">MATLIB</span></code> that we have set.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">EXERCISE</span>
+
+<span class="mf">1.</span> <span class="n">Try</span> <span class="n">removing</span> <span class="n">the</span> <span class="s1">&#39;| grep M&#39;</span> <span class="n">above</span> <span class="n">to</span> <span class="n">see</span> <span class="n">the</span> <span class="n">full</span> <span class="nb">list</span> <span class="n">of</span> <span class="n">environment</span> <span class="n">variables</span><span class="o">.</span>
+<span class="mf">2.</span> <span class="n">Try</span> <span class="n">some</span> <span class="n">other</span> <span class="s1">&#39;grep&#39;</span> <span class="n">filters</span><span class="p">,</span> <span class="n">such</span> <span class="k">as</span> <span class="n">filtering</span> <span class="n">lines</span> <span class="n">containing</span> <span class="n">the</span> <span class="n">string</span> <span class="s1">&#39;PATH&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="Shell-variable">
+<h3>Shell variable<a class="headerlink" href="#Shell-variable" title="Permalink to this headline">¶</a></h3>
+<p>A <strong>shell variable</strong> is one that is <em>not</em> passed through from a shell to any child processes. It is only relevant to the shell it is run in.</p>
+<p>These are sometimes set as lower case variables (to distinguish from environment variables). The syntax is similar to that of the environment variable, but without the <code class="docutils literal notranslate"><span class="pre">export</span></code>. The syntax is:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">name</span><span class="o">=</span><span class="n">value</span>
+</pre></div>
+</div>
+<p>for example:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[158]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
+<span></span>%%bash
+
+<span class="nv">hello</span><span class="o">=</span><span class="s2">&quot;hello world </span><span class="nv">$USER</span><span class="s2">&quot;</span>
+<span class="nb">echo</span> <span class="nv">$hello</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+hello world plewis
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="set,-head-,-tail">
+<h3><code class="docutils literal notranslate"><span class="pre">set</span></code>, <code class="docutils literal notranslate"><span class="pre">head</span></code> , <code class="docutils literal notranslate"><span class="pre">tail</span></code><a class="headerlink" href="#set,-head-,-tail" title="Permalink to this headline">¶</a></h3>
+<p>We can see the values of shell variables with the <code class="docutils literal notranslate"><span class="pre">set</span></code> command.</p>
+<p>Like <code class="docutils literal notranslate"><span class="pre">env</span></code>, this is likely to produce a long list. We could filter as above, with <code class="docutils literal notranslate"><span class="pre">grep</span></code>, or here, we use <code class="docutils literal notranslate"><span class="pre">tail</span></code> to take the <em>last</em> <code class="docutils literal notranslate"><span class="pre">N</span></code> lines produced or <code class="docutils literal notranslate"><span class="pre">head</span></code> for the first <code class="docutils literal notranslate"><span class="pre">N</span></code> lines. The syntax is:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">head</span> <span class="o">-</span><span class="n">N</span>
+<span class="n">tail</span> <span class="o">-</span><span class="n">N</span>
+</pre></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[129]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
+<span></span>%%bash
+
+<span class="nb">echo</span> <span class="s1">&#39;--------------------&#39;</span>
+<span class="nb">echo</span> <span class="s2">&quot;1. The first 5 shell variables ...&quot;</span>
+<span class="nb">echo</span> <span class="s1">&#39;--------------------&#39;</span>
+<span class="nb">set</span> <span class="p">|</span> head -5
+<span class="nb">echo</span>
+
+<span class="nb">echo</span> <span class="s1">&#39;--------------------&#39;</span>
+<span class="nb">echo</span> <span class="s2">&quot;2. The last 5 shell variables ...&quot;</span>
+<span class="nb">echo</span> <span class="s1">&#39;--------------------&#39;</span>
+<span class="nb">set</span> <span class="p">|</span> tail -5
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+--------------------
+1. The first 5 shell variables ...
+--------------------
+BASH=/bin/bash
+BASH_ARGC=()
+BASH_ARGV=()
+BASH_LINENO=()
+BASH_SOURCE=()
+
+--------------------
+2. The last 5 shell variables ...
+--------------------
+XPC_SERVICE_NAME=0
+_=--------------------
+_CE_CONDA=
+_CE_M=
+__CF_USER_TEXT_ENCODING=0x1F5:0:2
+</pre></div></div>
+</div>
+</div>
+</div>
+<div class="section" id="Some-important-environment-variables-and-related">
+<h2>Some important environment variables and related<a class="headerlink" href="#Some-important-environment-variables-and-related" title="Permalink to this headline">¶</a></h2>
+<p>When running <em>any</em> code, we should be aware of the following shell environment variables:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">PATH</span>
+<span class="n">LD_LIBRARY_PATH</span>
+<span class="n">DYLD_LIBRARY_PATH</span>
+</pre></div>
+</div>
+<div class="section" id="PATH">
+<h3><code class="docutils literal notranslate"><span class="pre">PATH</span></code><a class="headerlink" href="#PATH" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">`$PATH</span></code> &lt;<a class="reference external" href="https://opensource.com/article/17/6/set-path-linux">https://opensource.com/article/17/6/set-path-linux</a>&gt;`__ tells the <a class="reference external" href="https://www.gnu.org/software/bash/">shell</a> where to look for executable files (codes that it can run). This is simply a list of locations (directories) in the computer file system that the shell will look. Elements of the list are separated by <code class="docutils literal notranslate"><span class="pre">:</span></code>. so, if for example we have the <code class="docutils literal notranslate"><span class="pre">PATH</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">PATH</span><span class="o">=</span><span class="s2">&quot;/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin&quot;</span>
+</pre></div>
+</div>
+<p>and tell the shell to run an executable called <code class="docutils literal notranslate"><span class="pre">`ls</span></code> &lt;<a class="reference external" href="https://en.wikipedia.org/wiki/Ls">https://en.wikipedia.org/wiki/Ls</a>&gt;`__, then it will first look in <code class="docutils literal notranslate"><span class="pre">/usr/local/bin</span></code>, then <code class="docutils literal notranslate"><span class="pre">/usr/bin</span></code> and so on, until it finds <code class="docutils literal notranslate"><span class="pre">ls</span></code>.</p>
+<p>We have used double quotes <code class="docutils literal notranslate"><span class="pre">&quot;</span></code> around the variable, in case any of the elements had white space (they don’t here).</p>
+</div>
+<div class="section" id="which">
+<h3><code class="docutils literal notranslate"><span class="pre">which</span></code><a class="headerlink" href="#which" title="Permalink to this headline">¶</a></h3>
+<p>We can see which one it finds with the command <code class="docutils literal notranslate"><span class="pre">`which</span></code> &lt;<a class="reference external" href="https://en.wikipedia.org/wiki/Which_(command)">https://en.wikipedia.org/wiki/Which_(command)</a>&gt;`__:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
+<span></span>%%bash
+
+which ls
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+/bin/ls
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="ls">
+<h3><code class="docutils literal notranslate"><span class="pre">ls</span></code><a class="headerlink" href="#ls" title="Permalink to this headline">¶</a></h3>
+<p>As we saw above, <code class="docutils literal notranslate"><span class="pre">`ls</span></code> &lt;<a class="reference external" href="https://en.wikipedia.org/wiki/Ls">https://en.wikipedia.org/wiki/Ls</a>&gt;`__ gives a listing of files and directories. If we use the <code class="docutils literal notranslate"><span class="pre">-C</span></code> option, it outputs multiple columns of information, which is handy if there are lots of entries.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
+<span></span>%%bash
+
+<span class="c1"># get a listing of the current directory, just to see whats here</span>
+ls -C
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+AUTHORS                 TODO                    librat.1
+COPYING                 bin                     man
+ChangeLog               changelog.txt           requirements.txt
+INSTALL                 chapter1.ipynb          setup.py
+LICENSE                 chapter2.ipynb          share
+Makefile                configure               src
+NEWS                    docs                    test
+README.md               environment.yml         tmp.dat
+THANKS                  lib
+</pre></div></div>
+</div>
+</div>
+<div class="section" id=".bash_profile,-.bashrc,-wildcard-*">
+<h3><code class="docutils literal notranslate"><span class="pre">.bash_profile</span></code>, <code class="docutils literal notranslate"><span class="pre">.bashrc</span></code>, wildcard <code class="docutils literal notranslate"><span class="pre">*</span></code><a class="headerlink" href="#.bash_profile,-.bashrc,-wildcard-*" title="Permalink to this headline">¶</a></h3>
+<p>These core environment variables are usually set with default values appropriate to your system. This may be done in <cite>system-wide files such as `</cite>/etc/profile``, or personal files &lt;<a class="reference external" href="https://www.gnu.org/software/bash/manual/html_node/Bash-Startup-Files.html">https://www.gnu.org/software/bash/manual/html_node/Bash-Startup-Files.html</a>&gt;`__ such as <code class="docutils literal notranslate"><span class="pre">~/.bashrc</span></code> or <code class="docutils literal notranslate"><span class="pre">~/.bash_profile</span></code>, where <code class="docutils literal notranslate"><span class="pre">~</span></code> is the symbol for your home directory. This will almost certainly set <code class="docutils literal notranslate"><span class="pre">$PATH</span></code>.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
+<span></span>%%bash
+<span class="c1"># -d -&gt; no directories</span>
+
+ls -Cd  ~/.bash*
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+/Users/plewis/.bash_history
+/Users/plewis/.bash_profile
+/Users/plewis/.bash_profile-anaconda3.bak
+/Users/plewis/.bash_profile.backup
+/Users/plewis/.bash_sessions
+</pre></div></div>
+</div>
+<p>above, we use the wildcard symbol <code class="docutils literal notranslate"><span class="pre">*</span></code>, interpreted by the shell as any file matching the pattern <code class="docutils literal notranslate"><span class="pre">~/.bash*</span></code> with <code class="docutils literal notranslate"><span class="pre">*</span></code> being zero or more characters. The <code class="docutils literal notranslate"><span class="pre">~</span></code> is matched to the user’s home directory name in this case.</p>
+<p>For many purposes, the default options to <code class="docutils literal notranslate"><span class="pre">ls</span></code> will do. The <code class="docutils literal notranslate"><span class="pre">-C</span></code> option we would hardly use, but is useful above for better note formatting. The <code class="docutils literal notranslate"><span class="pre">-d</span></code> option is again rarely used, but useful in this case as we only want to see files in the home directory.</p>
+</div>
+<div class="section" id="ls--l">
+<h3><code class="docutils literal notranslate"><span class="pre">ls</span> <span class="pre">-l</span></code><a class="headerlink" href="#ls--l" title="Permalink to this headline">¶</a></h3>
+<p>One useful option to <code class="docutils literal notranslate"><span class="pre">ls</span></code> is <code class="docutils literal notranslate"><span class="pre">-l</span></code>, that gives ‘long listing’:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
+<span></span>%%bash
+<span class="c1"># -d -&gt; no directories</span>
+
+ls -lhd  ~/.bash*
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+-rw-------    1 plewis  staff    27K 17 Apr 18:32 /Users/plewis/.bash_history
+-rw-r--r--    1 plewis  staff   3.0K 17 Apr 17:00 /Users/plewis/.bash_profile
+-rw-r--r--    1 plewis  staff   1.1K 15 Jul  2019 /Users/plewis/.bash_profile-anaconda3.bak
+-rw-r--r--    1 plewis  staff   727B 15 Jul  2019 /Users/plewis/.bash_profile.backup
+drwx------  108 plewis  staff   3.4K  2 Feb 14:42 /Users/plewis/.bash_sessions
+</pre></div></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">-l</span></code> option gives the file sizes and other useful information in this ‘long’ listing. The file sizes here are given in <code class="docutils literal notranslate"><span class="pre">K</span></code> or other human-readable (^3) units, as we have set the <code class="docutils literal notranslate"><span class="pre">-h</span></code> option. Many unix commands that involve file sizes will have a similar <code class="docutils literal notranslate"><span class="pre">-h</span></code> option.</p>
+<p>The first set of information, such as <code class="docutils literal notranslate"><span class="pre">-rw-r--r--</span></code> gives us information on file permissions. It represents a 10-bit field, where bits are set ‘on’ (1) or off (0). After the first bit (the sticky bit), the fields are 3 sets of 3-bit fields (so, octal - base 8 = 2^3). These 3 bits represent <code class="docutils literal notranslate"><span class="pre">rwx</span></code>, with</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">r</span></code>: read permission</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">w</span></code>: write permission</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">x</span></code>: execute permission</p></li>
+</ul>
+<p>So:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">rw-</span></code> means that permission is set for reading the file and writing to it</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">r--</span></code> means reading but not writing</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rwx</span></code> means reading, writing and execute</p></li>
+</ul>
+<p>The first set of 3 bits represents permissions for the file owner, the second for users in the same group, and the third for all users (others).</p>
+<p>So:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">-rw-r--r--</span></code> means read and write for the owner, but only read permission for group and all. This is the typical setting for a non-executable file: everyone can read it, but only the owner can write. In octal, this is 644.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-rwxr-xr-x</span></code> means read, write and execute for the owner, and read and execute permission for others. This is the typical setting for an executable file: everyone can execute it and read it, but only the owner can write. In octal, this is 755.</p></li>
+</ul>
+<p>In fact, the final ‘bit’, known as the <a class="reference external" href="https://en.wikipedia.org/wiki/Sticky_bit">sticky bit</a> can have more settings than just <code class="docutils literal notranslate"><span class="pre">-</span></code> or <code class="docutils literal notranslate"><span class="pre">x</span></code>, but we need not worry about that here.</p>
+</div>
+<div class="section" id="chmod,-&gt;,-rm--f,-mkdir--p">
+<h3><code class="docutils literal notranslate"><span class="pre">chmod</span></code>, <code class="docutils literal notranslate"><span class="pre">&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">rm</span> <span class="pre">-f</span></code>, <code class="docutils literal notranslate"><span class="pre">mkdir</span> <span class="pre">-p</span></code><a class="headerlink" href="#chmod,->,-rm--f,-mkdir--p" title="Permalink to this headline">¶</a></h3>
+<p>We can change the file permissions, using the command <code class="docutils literal notranslate"><span class="pre">`chmod</span></code> &lt;<a class="reference external" href="https://en.wikipedia.org/wiki/Chmod">https://en.wikipedia.org/wiki/Chmod</a>&gt;`__. Most typically, we use options such as <code class="docutils literal notranslate"><span class="pre">+x</span></code> to add an executable bit, or <code class="docutils literal notranslate"><span class="pre">go-r</span></code> to remove read permissions (for group and other, here).</p>
+<p>We create a file in a directory <code class="docutils literal notranslate"><span class="pre">files.$$</span></code>, where <code class="docutils literal notranslate"><span class="pre">$$</span></code> is the <a class="reference external" href="https://en.wikipedia.org/wiki/Process_identifier">shell process ID</a> which we can use to give probably a unique directory name (i.e. one very unlikely to be created by any other process). First, we must create (make) the directory if it doesn’t already exist. This is done with <code class="docutils literal notranslate"><span class="pre">mkdir</span> <span class="pre">-p</span></code>. The <code class="docutils literal notranslate"><span class="pre">-p</span></code> option will not fail if the directory alreay exists, and also will create any depth of directories specified.</p>
+<p>The file is called <code class="docutils literal notranslate"><span class="pre">files/hello.dat</span></code> and is created by <a class="reference external" href="https://en.wikipedia.org/wiki/Redirection_(computing)">redirecting the standard output</a> (<code class="docutils literal notranslate"><span class="pre">stdout</span></code>) of a command to a file, i.e. sending the text coming from <code class="docutils literal notranslate"><span class="pre">echo</span> <span class="pre">&quot;hello</span> <span class="pre">world&quot;</span></code> into the file. The symbol for redirection of <code class="docutils literal notranslate"><span class="pre">stdout</span></code> is <code class="docutils literal notranslate"><span class="pre">&gt;</span></code>. This redirection is the same process used above when we redirected output to a pipe.</p>
+<p>Just in case the file already exists, and we have previously messed around with the file permissions, we first run the command <code class="docutils literal notranslate"><span class="pre">rm</span> <span class="pre">-f</span></code> to delete (remove) the file. The <code class="docutils literal notranslate"><span class="pre">-f</span></code> option tells us to ‘force’ this, regardless of the file’s permissions or whether the file already exists. At the end of the shell, we use <code class="docutils literal notranslate"><span class="pre">rm</span> <span class="pre">-rf</span></code> to delete the directory and anythinbg in it (a recursice delete).</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[36]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
+<span></span>%%bash
+
+<span class="c1"># create a unique directory name</span>
+<span class="nv">dir</span><span class="o">=</span>/tmp/files.<span class="nv">$$</span>
+
+<span class="c1"># make directory</span>
+mkdir -p <span class="nv">$dir</span>
+
+<span class="c1"># force delete the file, in case it exists</span>
+rm -f <span class="nv">$dir</span>/hello.dat
+
+<span class="c1"># generate the file</span>
+<span class="c1"># it should contain 11 characters (bytes) plus</span>
+<span class="c1"># an End Of File (EOF) character (^D), so 12B</span>
+<span class="nb">echo</span> <span class="s2">&quot;hello world&quot;</span> &gt; <span class="nv">$dir</span>/hello.dat
+
+<span class="c1"># listing</span>
+<span class="c1"># The default permission should be rw-r--r--</span>
+ls -lh <span class="nv">$dir</span>/hello.dat
+
+<span class="c1"># We now remove the read permissions using chmod</span>
+<span class="c1"># The permission should be rw-------</span>
+chmod go-r <span class="nv">$dir</span>/hello.dat
+ls -lh <span class="nv">$dir</span>/hello.dat
+
+<span class="c1"># now add user execute</span>
+chmod u+x <span class="nv">$dir</span>/hello.dat
+ls -lh <span class="nv">$dir</span>/hello.dat
+
+<span class="c1"># clean up after ourselves</span>
+<span class="c1"># remove everything in files.$$, along with the directory</span>
+rm -rf <span class="nv">$dir</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+-rw-r--r--  1 plewis  wheel    12B 17 Apr 22:30 /tmp/files.23331/hello.dat
+-rw-------  1 plewis  wheel    12B 17 Apr 22:30 /tmp/files.23331/hello.dat
+-rwx------  1 plewis  wheel    12B 17 Apr 22:30 /tmp/files.23331/hello.dat
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="cat">
+<h3><code class="docutils literal notranslate"><span class="pre">cat</span></code><a class="headerlink" href="#cat" title="Permalink to this headline">¶</a></h3>
+<p>We can use the command <code class="docutils literal notranslate"><span class="pre">`cat</span></code> &lt;<a class="reference external" href="https://en.wikipedia.org/wiki/Cat_(Unix)">https://en.wikipedia.org/wiki/Cat_(Unix)</a>&gt;`__ to create or to ‘view’ the contents of a file. For example, the command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cat</span> <span class="o">~/.</span><span class="n">bash_profile</span>
+</pre></div>
+</div>
+<p>would ‘print’ (send to the terminal, rather) the contents of the file <code class="docutils literal notranslate"><span class="pre">~/.bash_profile</span></code>.</p>
+<p>Since this may be quite long, we will use <code class="docutils literal notranslate"><span class="pre">head</span></code> just to see the first <code class="docutils literal notranslate"><span class="pre">N</span></code> lines:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[37]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
+<span></span>%%bash
+
+cat ~/.bash_profile <span class="p">|</span> head -5
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+# added by Anaconda3 2019.03 installer
+# &gt;&gt;&gt; conda init &gt;&gt;&gt;
+# !! Contents within this block are managed by &#39;conda init&#39; !!
+__conda_setup=&#34;$(CONDA_REPORT_ERRORS=false &#39;/anaconda3/bin/conda&#39; shell.bash hook 2&gt; /dev/null)&#34;
+if [ $? -eq 0 ]; then
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="pwd,-cd">
+<h3><code class="docutils literal notranslate"><span class="pre">pwd</span></code>, <code class="docutils literal notranslate"><span class="pre">cd</span></code><a class="headerlink" href="#pwd,-cd" title="Permalink to this headline">¶</a></h3>
+<p>The command <code class="docutils literal notranslate"><span class="pre">pwd</span></code> returns the <a class="reference external" href="https://en.wikipedia.org/wiki/Pwd">current working directory</a>. This is extremely useful to know, especially as new users often get lost in a shell on the file system. To find out where you are, in a shell, type:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pwd</span>
+</pre></div>
+</div>
+<p>This will return the ‘location’ you are at in that shell.</p>
+<p>The command <code class="docutils literal notranslate"><span class="pre">cd</span></code> is used to change directory. The syntax is:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">location</span>
+</pre></div>
+</div>
+<p>where <code class="docutils literal notranslate"><span class="pre">location</span></code> is somewhere on the file system.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[38]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
+<span></span>%%bash
+
+
+<span class="nb">echo</span> -n <span class="s2">&quot;where am I now?: &quot;</span>
+<span class="nb">pwd</span>
+
+<span class="c1"># go home using &#39;cd ~&#39;&#39;</span>
+<span class="nb">echo</span> <span class="s2">&quot;go home (~): &quot;</span>
+<span class="nb">cd</span> ~
+<span class="nb">echo</span> -n <span class="s2">&quot;where am I now?: &quot;</span>
+<span class="nb">pwd</span>
+
+<span class="c1"># go to directory librat &#39;cd librat&#39;</span>
+<span class="nb">echo</span> <span class="s2">&quot;go to librat: &quot;</span>
+<span class="nb">cd</span> librat
+<span class="nb">echo</span> -n <span class="s2">&quot;where am I now?: &quot;</span>
+<span class="nb">pwd</span>
+
+<span class="c1"># go to directory librat &#39;cd ~/librat&#39;</span>
+<span class="nb">echo</span> <span class="s2">&quot;go to ~/librat: &quot;</span>
+<span class="nb">cd</span> ~/librat
+<span class="nb">echo</span> -n <span class="s2">&quot;where am I now?: &quot;</span>
+<span class="nb">pwd</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+where am I now?: /Users/plewis/librat
+go home (~):
+where am I now?: /Users/plewis
+go to librat:
+where am I now?: /Users/plewis/librat
+go to ~/librat:
+where am I now?: /Users/plewis/librat
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="$(pwd)">
+<h3><code class="docutils literal notranslate"><span class="pre">$(pwd)</span></code><a class="headerlink" href="#$(pwd)" title="Permalink to this headline">¶</a></h3>
+<p>Sometimes we want to set a variable to the result returned by running an executable. For example, the command <code class="docutils literal notranslate"><span class="pre">pwd</span></code> returns the <a class="reference external" href="https://en.wikipedia.org/wiki/Pwd">current working directory</a>. We can set a variable to this, with the following example syntax:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>PWD=$(pwd)
+</pre></div>
+</div>
+<p>Note the round brackets <code class="docutils literal notranslate"><span class="pre">$()</span></code> enclosing the command (<code class="docutils literal notranslate"><span class="pre">pwd</span></code> here).</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[39]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
+<span></span>%%bash
+
+<span class="c1"># set PWD to the result of running `pwd`</span>
+<span class="nb">echo</span> -n <span class="s2">&quot;1. Run the command pwd: &quot;</span>
+<span class="nb">pwd</span>
+
+<span class="c1"># Note the use of \$ in printing here. This will make sure $ is printed,</span>
+<span class="c1"># rather than $(pwd) in this statement</span>
+<span class="nb">echo</span> <span class="s2">&quot;2. Set the variable PWD the result of running the command pwd with PWD=\$(pwd):&quot;</span>
+
+<span class="nv">PWD</span><span class="o">=</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>
+
+<span class="nb">echo</span> <span class="s2">&quot;3. Now print that out: PWD is set to </span><span class="nv">$PWD</span><span class="s2">&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+1. Run the command pwd: /Users/plewis/librat
+2. Set the variable PWD the result of running the command pwd with PWD=$(pwd):
+3. Now print that out: PWD is set to /Users/plewis/librat
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="${BPMS-$(pwd)}">
+<h3><code class="docutils literal notranslate"><span class="pre">${BPMS-$(pwd)}</span></code><a class="headerlink" href="#${BPMS-$(pwd)}" title="Permalink to this headline">¶</a></h3>
+<p>In <code class="docutils literal notranslate"><span class="pre">bash</span></code> we often use syntax that only sets a valiable if it is not already set. This is done in the example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>BPMS=${BPMS-$(pwd)}
+</pre></div>
+</div>
+<p>where some variable <code class="docutils literal notranslate"><span class="pre">BPMS</span></code> is set to the result of running <code class="docutils literal notranslate"><span class="pre">pwd</span></code>, unless it is already set.</p>
+<p>Note the curley brackets in <code class="docutils literal notranslate"><span class="pre">${}</span></code>.</p>
+<p>Note that the environment <code class="docutils literal notranslate"><span class="pre">BPMS</span></code> is generally used to define the top level directory of <code class="docutils literal notranslate"><span class="pre">librat</span></code> codes.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[40]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
+<span></span>%%bash
+
+<span class="c1">#</span>
+<span class="c1"># example using ${BPMS-$(pwd)}</span>
+<span class="c1">#</span>
+
+<span class="c1"># set BPMS variable to result of pwd, unless its already set</span>
+<span class="nv">BPMS</span><span class="o">=</span><span class="s2">&quot;Previous Value&quot;</span>
+<span class="nv">BPMS</span><span class="o">=</span><span class="si">${</span><span class="nv">BPMS</span><span class="p">-</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span><span class="si">}</span>
+<span class="nb">echo</span> <span class="s2">&quot;1. BPMS set to </span><span class="nv">$BPMS</span><span class="s2"> because BPMS is set&quot;</span>
+
+<span class="c1"># unset the variable, so its no longer set</span>
+<span class="nb">unset</span> BPMS
+<span class="nv">BPMS</span><span class="o">=</span><span class="si">${</span><span class="nv">BPMS</span><span class="p">-</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span><span class="si">}</span>
+<span class="nb">echo</span> <span class="s2">&quot;2. BPMS set to </span><span class="nv">$BPMS</span><span class="s2">, from running pwd, because BPMS is not set&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+1. BPMS set to Previous Value because BPMS is set
+2. BPMS set to /Users/plewis/librat, from running pwd, because BPMS is not set
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="edit">
+<h3>edit<a class="headerlink" href="#edit" title="Permalink to this headline">¶</a></h3>
+<p>If you want to make changes to important environment variables, you would normally edit them in your <code class="docutils literal notranslate"><span class="pre">.bash_profile</span></code> file in your home directory. Here is an exercise to do that. It assumes that you know: (i) the location in the filesystem of your librat distribution; (ii) some text file editor (N.B. <strong>Not</strong> Microsoft word or similar: that is a word processor, not a text editor!). Examples would be:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 38%" />
+<col style="width: 29%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><img alt="MacOS" src="docs/res/apple_med.png" /></p></th>
+<th class="head"><p><img alt="Windows" src="docs/res/win_med.png" /></p></th>
+<th class="head"><p><img alt="linux" src="docs/res/linux_med.png" /></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">`textedit</span></code> &lt;<a class="reference external" href="https://en.wikipedia.org/wiki/TextEdit">https://en.wikipedia.org/wiki/TextEdit</a>&gt;`__</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">`Notepad</span></code> &lt;<a class="reference external" href="https://en.wikipedia.org/wiki/Microsoft_Notepad">https://en.wikipedia.org/wiki/Microsoft_Notepad</a>&gt;`__</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">`gedit</span></code> &lt;<a class="reference external" href="https://en.wikipedia.org/wiki/Gedit">https://en.wikipedia.org/wiki/Gedit</a>&gt;`__</p></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>EXERCISE
+
+    1. Make a copy of your ~/.bash_profile, just in case you mess things up. Do this only the once!
+
+        cp ~/.bash_profile ~/.bash_profile.bak
+
+    If the file doesn&#39;t already exist, don&#39;t worry about this part
+
+    2. Find out where your librat installation is located e.g. /Users/plewis/librat)
+
+    3. Now, edit the file ~/.bash_profile and add a line at the end of the file that says (the *equivalent* of):
+
+        export BPMS=/Users/plewis/librat
+
+    where you use the location of your librat distribution.
+
+    4. Save the file and quit the editor.
+
+    5. Open a new shell. At the command prompt, type:
+
+            source ~/.bash_profile
+
+    Then
+
+            echo $BPMS
+
+    It should show the value you set it to.
+
+    999. If you get stuck, or think you have messed up, copy the original bash_profile file back in place:
+
+        cp ~/.bash_profile.bak ~/.bash_profile
+
+    Then source that in a shell:
+
+        source ~/.bash_profile
+
+    to (mostly) set things back to how they were before.
+</pre></div>
+</div>
+</div>
+<div class="section" id="Update-PATH">
+<h3>Update PATH<a class="headerlink" href="#Update-PATH" title="Permalink to this headline">¶</a></h3>
+<p>Recall that <code class="docutils literal notranslate"><span class="pre">PATH</span></code> is a list (separated by <code class="docutils literal notranslate"><span class="pre">:</span></code>) fo directories to search for executables, e.g.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">PATH</span><span class="o">=</span><span class="s2">&quot;/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin&quot;</span>
+</pre></div>
+</div>
+<p>Then, if we want to put a <code class="docutils literal notranslate"><span class="pre">librat</span></code> directory at the front of this path (so we look there first), we follow the following example syntax:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[41]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
+<span></span>%%bash
+
+<span class="c1"># example initial setting of PATH</span>
+<span class="c1"># NB Only an example, your shell will set something</span>
+<span class="c1"># different!</span>
+<span class="nv">PATH</span><span class="o">=</span><span class="s2">&quot;/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin&quot;</span>
+
+<span class="nb">echo</span> <span class="s2">&quot;1. PATH is </span><span class="nv">$PATH</span><span class="s2">&quot;</span>
+
+<span class="nv">BPMS</span><span class="o">=</span><span class="si">${</span><span class="nv">BPMS</span><span class="p">-</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span><span class="si">}</span>
+<span class="nv">bin</span><span class="o">=</span><span class="nv">$BPMS</span>/src
+
+<span class="c1"># put $bin on the front of PATH</span>
+<span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$bin</span><span class="s2">:</span><span class="nv">$PATH</span><span class="s2">&quot;</span>
+
+<span class="nb">echo</span> <span class="s2">&quot;2. PATH is </span><span class="nv">$PATH</span><span class="s2">&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+1. PATH is /usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
+2. PATH is /Users/plewis/librat/src:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
+</pre></div></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>EXERCISE
+
+    1. Edit your ~/.bash_profile to update your PATH variable
+
+    You should type the following lines into the end of ~/.bash_profile:
+
+    # replace this line below by BPMS= the location of your librat dist
+    BPMS=/Users/plewis/librat
+    bin=$BPMS/src
+    export PATH=&quot;$bin:$PATH&quot;
+
+
+    2. Save the file and quit the editor.
+
+    3. Open a new shell. At the command prompt, type:
+
+            source ~/.bash_profile
+
+    Then
+
+            echo $PATH
+
+    It should show the updated PATH variable.
+</pre></div>
+</div>
+</div>
+<div class="section" id="LD_LIBRARY_PATH,-DYLD_LIBRARY_PATH">
+<h3>LD_LIBRARY_PATH, DYLD_LIBRARY_PATH<a class="headerlink" href="#LD_LIBRARY_PATH,-DYLD_LIBRARY_PATH" title="Permalink to this headline">¶</a></h3>
+<p>On some systems, <code class="docutils literal notranslate"><span class="pre">LD_LIBRARY_PATH</span></code> and/or <code class="docutils literal notranslate"><span class="pre">DYLD_LIBRARY_PATH</span></code> may be set in your <code class="docutils literal notranslate"><span class="pre">bash</span></code> shell. Just to make sure, we will set them in our examples.</p>
+<p>These variables tell an executable where to look for shared object libraries (libraries of functions stored on the computer). Again, they are simply lists of locations (directories) in the computer file system that the shell will look. Elements of the list are separated by <code class="docutils literal notranslate"><span class="pre">:</span></code>. so, if for example we have the <code class="docutils literal notranslate"><span class="pre">PATH</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">LD_LIBRARY_PATH</span><span class="o">=</span><span class="s2">&quot;/usr/local/lib:/usr/lib&quot;</span>
+<span class="n">DYLD_LIBRARY_PATH</span><span class="o">=</span><span class="s2">&quot;/usr/local/lib:/usr/lib&quot;</span>
+</pre></div>
+</div>
+<p>then when an executable makes a call to a function in a shared object library, it will look first in <code class="docutils literal notranslate"><span class="pre">/usr/local/lib</span></code>, and then in <code class="docutils literal notranslate"><span class="pre">/usr/lib</span></code> for these libraries.</p>
+</div>
+<div class="section" id="Update-LD_LIBRARY_PATH,-DYLD_LIBRARY_PATH">
+<h3>Update <code class="docutils literal notranslate"><span class="pre">LD_LIBRARY_PATH</span></code>, <code class="docutils literal notranslate"><span class="pre">DYLD_LIBRARY_PATH</span></code><a class="headerlink" href="#Update-LD_LIBRARY_PATH,-DYLD_LIBRARY_PATH" title="Permalink to this headline">¶</a></h3>
+<p>We can again add search directories to the front of the library paths:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[42]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
+<span></span>%%bash
+
+<span class="c1"># example initial setting of LD_LIBRARY_PATH</span>
+<span class="c1"># NB Only an example, your shell will set something</span>
+<span class="c1"># different!</span>
+<span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span><span class="s2">&quot;/usr/local/lib:/usr/lib&quot;</span>
+
+<span class="nb">echo</span> <span class="s2">&quot;1. LD_LIBRARY_PATH is </span><span class="nv">$LD_LIBRARY_PATH</span><span class="s2">&quot;</span>
+
+<span class="nv">BPMS</span><span class="o">=</span><span class="si">${</span><span class="nv">BPMS</span><span class="p">-</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span><span class="si">}</span>
+<span class="nv">lib</span><span class="o">=</span><span class="nv">$BPMS</span>/src
+
+<span class="c1"># put $bin on the front of PATH</span>
+<span class="nb">export</span> <span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$lib</span><span class="s2">:</span><span class="nv">$LD_LIBRARY_PATH</span><span class="s2">&quot;</span>
+
+<span class="nb">echo</span> <span class="s2">&quot;2. LD_LIBRARY_PATH is </span><span class="nv">$LD_LIBRARY_PATH</span><span class="s2">&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+1. LD_LIBRARY_PATH is /usr/local/lib:/usr/lib
+2. LD_LIBRARY_PATH is /Users/plewis/librat/src:/usr/local/lib:/usr/lib
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[43]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
+<span></span>%%bash
+
+<span class="c1"># example initial setting of DYLD_LIBRARY_PATH</span>
+<span class="c1"># NB Only an example, your shell will set something</span>
+<span class="c1"># different!</span>
+<span class="nv">DYLD_LIBRARY_PATH</span><span class="o">=</span><span class="s2">&quot;/usr/local/lib:/usr/lib&quot;</span>
+
+<span class="nb">echo</span> <span class="s2">&quot;1. DYLD_LIBRARY_PATH is </span><span class="nv">$DYLD_LIBRARY_PATH</span><span class="s2">&quot;</span>
+
+<span class="nv">BPMS</span><span class="o">=</span><span class="si">${</span><span class="nv">BPMS</span><span class="p">-</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span><span class="si">}</span>
+<span class="nv">lib</span><span class="o">=</span><span class="nv">$BPMS</span>/src
+
+<span class="c1"># put $bin on the front of PATH</span>
+<span class="nb">export</span> <span class="nv">DYLD_LIBRARY_PATH</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$lib</span><span class="s2">:</span><span class="nv">$DYLD_LIBRARY_PATH</span><span class="s2">&quot;</span>
+
+<span class="nb">echo</span> <span class="s2">&quot;2. DYLD_LIBRARY_PATH is </span><span class="nv">$DYLD_LIBRARY_PATH</span><span class="s2">&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+1. DYLD_LIBRARY_PATH is /usr/local/lib:/usr/lib
+2. DYLD_LIBRARY_PATH is /Users/plewis/librat/src:/usr/local/lib:/usr/lib
+</pre></div></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>EXERCISE
+
+    1. Similar to the previous exercise, edit your ~/.bash_profile to now update your LD_LIBRARY_PATH and DYLD_LIBRARY_PATH variables
+
+    You should type the following lines into the end of ~/.bash_profile:
+
+    # replace this line below by BPMS= the location of your librat dist
+    BPMS=/Users/plewis/librat
+    lib=$BPMS/src
+    export LD_LIBRARY_PATH=&quot;$lib:$LD_LIBRARY_PATH&quot;
+    export DYLD_LIBRARY_PATH=&quot;$lib:$DYLD_LIBRARY_PATH&quot;
+
+
+    2. Save the file and quit the editor.
+
+    3. Open a new shell. At the command prompt, type:
+
+            source ~/.bash_profile
+
+    Then
+
+            echo $LD_LIBRARY_PATH $DYLD_LIBRARY_PATH
+
+    It should show the updated variables.
+</pre></div>
+</div>
+</div>
+<div class="section" id="Which-operating-system?-uname,-if">
+<h3>Which operating system? <code class="docutils literal notranslate"><span class="pre">uname</span></code>, <code class="docutils literal notranslate"><span class="pre">if</span></code><a class="headerlink" href="#Which-operating-system?-uname,-if" title="Permalink to this headline">¶</a></h3>
+<p>Before proceeding, it is useful to see how to determine which operatinbg system we are using, and how to perform conditional statements in <code class="docutils literal notranslate"><span class="pre">bash</span></code>.</p>
+<p>Mostly, you can get information on which operating system you are using by using either <code class="docutils literal notranslate"><span class="pre">uname</span> <span class="pre">-s</span></code>. You may sometime have problems if you are using virtual machines of any sort, as the top level operating system may not be apparant.</p>
+<p>In the example below, we use <code class="docutils literal notranslate"><span class="pre">uname</span> <span class="pre">-s</span></code> to test for values of <code class="docutils literal notranslate"><span class="pre">MINGW64</span></code> (a common windows environment with compilers and some other useful features), <code class="docutils literal notranslate"><span class="pre">Darwin</span></code> (macOS of some sort), or other (assumed linux).</p>
+<p>We set the variabler <code class="docutils literal notranslate"><span class="pre">OS</span></code> to the result of running <code class="docutils literal notranslate"><span class="pre">uname</span> <span class="pre">-s</span></code>, then use bash conditional statement syntax:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>if [ $VAR = value1 ]
+then
+  ... do something 1 ...
+elif [ $VAR = value2 ]
+then
+  ... do something 2 ...
+else
+  ... do something else ...
+fi
+</pre></div>
+</div>
+<p>to test the options we consider. The syntax is a little fiddly.</p>
+<p>Note that the spaces in <code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">[</span> <span class="pre">$VAR</span> <span class="pre">=</span> <span class="pre">value1</span> <span class="pre">]</span></code> are critical. Note that the <code class="docutils literal notranslate"><span class="pre">then</span></code> statements are also critical.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[262]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
+<span></span>%%bash
+
+<span class="c1"># these to see what sort of computer we are running on</span>
+<span class="nv">OS</span><span class="o">=</span><span class="k">$(</span>uname -s<span class="k">)</span>
+
+<span class="c1"># print the first 5 lines in the shared object</span>
+<span class="k">if</span> <span class="o">[</span> <span class="nv">$OS</span> <span class="o">=</span> MINGW64 <span class="o">]</span>
+<span class="k">then</span>
+  <span class="nb">echo</span> <span class="s2">&quot;I am windows: </span><span class="nv">$OS</span><span class="s2">&quot;</span>
+<span class="k">elif</span> <span class="o">[</span> <span class="nv">$OS</span> <span class="o">=</span> Darwin <span class="o">]</span>
+<span class="k">then</span>
+  <span class="nb">echo</span> <span class="s2">&quot;I am macOS: </span><span class="nv">$OS</span><span class="s2">&quot;</span>
+<span class="k">else</span>
+  <span class="nb">echo</span> <span class="s2">&quot;I am neither macOS nor MINGW64: </span><span class="nv">$OS</span><span class="s2">&quot;</span>
+<span class="k">fi</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+I am macOS: Darwin
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="Contents-of-libraries:-nm-or-ar">
+<h3>Contents of libraries: nm or ar<a class="headerlink" href="#Contents-of-libraries:-nm-or-ar" title="Permalink to this headline">¶</a></h3>
+<p>The libraries will have the suffix <code class="docutils literal notranslate"><span class="pre">`dll</span></code> &lt;<a class="reference external" href="https://en.wikipedia.org/wiki/Dynamic-link_library">https://en.wikipedia.org/wiki/Dynamic-link_library</a>&gt;`__ on windows systems. On various unix systems, they may be <code class="docutils literal notranslate"><span class="pre">`so</span></code> &lt;<a class="reference external" href="https://en.wikipedia.org/wiki/Library_(computing">https://en.wikipedia.org/wiki/Library_(computing</a>)#Shared_libraries&gt;`__ or for on <code class="docutils literal notranslate"><span class="pre">OS</span> <span class="pre">X</span></code>, <code class="docutils literal notranslate"><span class="pre">`dylib</span></code> &lt;<a class="reference external" href="https://developer.apple.com/library/archive/documentation/DeveloperTools/Conceptual/DynamicLibraries/000-Introduction/Introduction.html">https://developer.apple.com/library/archive/documentation/DeveloperTools/Conceptual/DynamicLibraries/000-Introduction/Introduction.html</a>&gt;`__. Normally, you will only need <code class="docutils literal notranslate"><span class="pre">DYLD_LIBRARY_PATH</span></code> on <code class="docutils literal notranslate"><span class="pre">OS</span> <span class="pre">X</span></code>, but we might as well set
+it for all cases. If you want to see which functions are contained in a particular library then:</p>
+<p>On <code class="docutils literal notranslate"><span class="pre">OS</span> <span class="pre">X</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>nm -gU  src/libratlib.${ext}
+</pre></div>
+</div>
+<p>Otherwise:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>ar tv src/libratlib.${ext}
+</pre></div>
+</div>
+<p>where <code class="docutils literal notranslate"><span class="pre">${ext}</span></code> is <code class="docutils literal notranslate"><span class="pre">so</span></code> or <code class="docutils literal notranslate"><span class="pre">dll</span></code> or <code class="docutils literal notranslate"><span class="pre">dylib</span></code> as appropriate. We use the construct above for determining the operating system and for using <code class="docutils literal notranslate"><span class="pre">ar</span></code> or <code class="docutils literal notranslate"><span class="pre">nm</span></code> as appropriate.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[263]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
+<span></span>%%bash
+
+<span class="c1"># these to see what sort of computer we are running on</span>
+<span class="nv">OS</span><span class="o">=</span><span class="k">$(</span>uname -s<span class="k">)</span>
+<span class="nb">echo</span> <span class="nv">$OS</span>
+
+<span class="c1"># print the first 5 lines in the shared object</span>
+<span class="k">if</span> <span class="o">[</span> <span class="nv">$OS</span> <span class="o">=</span> MINGW64 <span class="o">]</span>
+<span class="k">then</span>
+  <span class="c1"># windows</span>
+  ar tv src/libratlib.dll <span class="p">|</span> head -5
+<span class="k">elif</span> <span class="o">[</span> <span class="nv">$OS</span> <span class="o">=</span> Darwin <span class="o">]</span>
+<span class="k">then</span>
+  <span class="c1"># OS X</span>
+  nm -gU src/libratlib.so <span class="p">|</span> head -5
+<span class="k">else</span>
+  <span class="c1"># linux</span>
+  ar tv src/libratlib.dll <span class="p">|</span> head -5
+<span class="k">fi</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Darwin
+0000000000047500 T _Add_2D
+00000000000477c0 T _Affine_transform
+0000000000049090 T _B_allocate
+00000000000477f0 T _Backwards_affine_transform
+00000000000470b0 T _Bbox
+</pre></div></div>
+</div>
+<p>where we see that the shared object library for <code class="docutils literal notranslate"><span class="pre">librat</span></code> (in a file called <code class="docutils literal notranslate"><span class="pre">libratlib.${ext}</span></code>) contains some functions <code class="docutils literal notranslate"><span class="pre">_Add_2D()</span></code>, <code class="docutils literal notranslate"><span class="pre">_Affine_transform()</span></code> etc. which are part of the library we use.</p>
+<p>Notice that <code class="docutils literal notranslate"><span class="pre">lib.${ext}</span></code> is added on the end of a library name to give its filename.</p>
+</div>
+</div>
+<div class="section" id="Important-environment-variables-for-librat">
+<h2>Important environment variables for librat<a class="headerlink" href="#Important-environment-variables-for-librat" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="cat-&lt;&lt;EOF-&gt;-output-...-EOF">
+<h3><code class="docutils literal notranslate"><span class="pre">cat</span> <span class="pre">&lt;&lt;EOF</span> <span class="pre">&gt;</span> <span class="pre">output</span> <span class="pre">...</span> <span class="pre">EOF</span></code><a class="headerlink" href="#cat-<<EOF->-output-...-EOF" title="Permalink to this headline">¶</a></h3>
+<p>We can conveniently create files in <code class="docutils literal notranslate"><span class="pre">bash</span></code> from text in the bash shell. This is done using <code class="docutils literal notranslate"><span class="pre">cat</span></code> and defining a marker (often <code class="docutils literal notranslate"><span class="pre">EOF</span></code>, meaning End Of File), such as:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[264]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
+<span></span>%%bash
+
+cat <span class="s">&lt;&lt;EOF &gt; test/test_examples/first.obj</span>
+<span class="s"># My first object file</span>
+<span class="s">mtllib plants.matlib</span>
+<span class="s">usemtl white</span>
+<span class="s">v 0 0 0</span>
+<span class="s">v 0 0 1</span>
+<span class="s">plane -1 -2</span>
+<span class="s">!{</span>
+<span class="s">usemtl white</span>
+<span class="s">!{</span>
+<span class="s">v 0 0 1000</span>
+<span class="s">ell -1 30000 30000 1000</span>
+<span class="s">!}</span>
+<span class="s">!}</span>
+<span class="s">EOF</span>
+</pre></div>
+</div>
+</div>
+<p>Let’s look at the file we have just created:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[265]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
+<span></span>%%bash
+
+cat test/test_examples/first.obj
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+# My first object file
+mtllib plants.matlib
+usemtl white
+v 0 0 0
+v 0 0 1
+plane -1 -2
+!{
+usemtl white
+!{
+v 0 0 1000
+ell -1 30000 30000 1000
+!}
+!}
+</pre></div></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>EXERCISE
+
+Use the approach above (`cat &lt;&lt;EOF &gt; output ... EOF`) to create your own text file, then check the contents are as you expected.
+</pre></div>
+</div>
+</div>
+<div class="section" id="MATLIB,-RSRLIB-etc.">
+<h3><code class="docutils literal notranslate"><span class="pre">MATLIB</span></code>, <code class="docutils literal notranslate"><span class="pre">RSRLIB</span></code> etc.<a class="headerlink" href="#MATLIB,-RSRLIB-etc." title="Permalink to this headline">¶</a></h3>
+<p>In <code class="docutils literal notranslate"><span class="pre">librat</span></code>, there is a considerable set of data that we need to describe world data for any particular simulation. For example, we need to have one or more object files giving the geometry, material files describing the spectral scattering properties of materials, sensor spectral response functions etc.</p>
+<p>To try to make models and simulation scenarios portable, we want to avoid ‘hardwiring’ these file locations. One way to do that is to simply use relative file names throughout the description, so that we can then determine the full filenames from some core base directory.</p>
+<p>If we happen to run the simulation <em>from</em> this directory, then clearly the relative filenames we use would directly describe all file locations.</p>
+<p>However, if we run the simulation from elsewhere on the system, we need a mechanism to describe the <em>base</em> of the scene description files. More generally, we might want to store spectral response files in one part of the file system, and spectral scattering properties elsewhere. In that case, we need a set of <em>base</em> descriptors for these different types of file.</p>
+<p>That is the file system philosophy used in <code class="docutils literal notranslate"><span class="pre">librat</span></code>. These <em>base</em> locations are defined by environment variables which we will describe below. Whilst you do not <em>have</em> to use these, it makes sense to set them up, even if they are all set to the same value (i.e. the <em>base</em> of the model files is the same for all file types).</p>
+<p>The following environmental variables can be used:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Name</p></th>
+<th class="head"><p>File types</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">MATLIB</span></code></p></td>
+<td><p>material library e.g. <code class="docutils literal notranslate"><span class="pre">`plants.matlib</span></code> &lt;test/test_examples/plants.matlib&gt;`__, all materials defined in a material library e.g. <code class="docutils literal notranslate"><span class="pre">`refl/white.dat</span></code> &lt;test/test_examples/refl/white.dat&gt;`__</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ARARAT_OBJECT</span></code></p></td>
+<td><p>(extended) wavefront object files e.g. <code class="docutils literal notranslate"><span class="pre">`first.obj</span></code> &lt;test/test_examples/first.obj&gt;`__</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">DIRECT_ILLUMINATION</span></code></p></td>
+<td><p>spectral files for direct illumination: those defined in -RATdirect command line option</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">RSRLIB</span></code></p></td>
+<td><p>sensor waveband files: those defined in -RATsensor_wavebands command line option</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">BPMS_FILES</span></code></p></td>
+<td><p>Not used</p></td>
+</tr>
+</tbody>
+</table>
+<p>As noted, you can set all of these to the same value, in which case the database of files is all defined relative to that point. This is the most typical use of <code class="docutils literal notranslate"><span class="pre">librat</span></code>. We illustrate this setup below for the <code class="docutils literal notranslate"><span class="pre">librat</span></code> distribution, where a set of examples use files from the directory <code class="docutils literal notranslate"><span class="pre">test/test_example</span></code>.</p>
+<p>Additionally, the following environment variables can be set to extend the size of some aspects of the model. You would only need to use these in some extreme case.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Name</p></th>
+<th class="head"><p>Purpose</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">MAX_GROUPS</span></code></p></td>
+<td><p>Maximum number of groups allowed (100000)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">PRAT_MAX_MATERIALS</span></code></p></td>
+<td><p>Maximum number of materials allowed (DEFAULT_PRAT_MAX_MATERIALS=1024 in <code class="docutils literal notranslate"><span class="pre">mtllib.h</span></code>)</p></td>
+</tr>
+</tbody>
+</table>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[270]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
+<span></span>%%bash
+
+<span class="c1"># create the init.sh file we want</span>
+<span class="nv">outfile</span><span class="o">=</span>test/test_examples/init.sh
+
+cat <span class="s">&lt;&lt;EOF &gt; $outfile</span>
+<span class="s">#!/bin/bash</span>
+<span class="s">#</span>
+<span class="s"># preamble</span>
+<span class="s">#</span>
+<span class="s">BPMS=\${BPMS-\$(pwd)}</span>
+<span class="s"># set shell variables lib, bin, verbose</span>
+<span class="s"># with defaults in case not set</span>
+<span class="s">lib=\${lib-&quot;\$BPMS/src&quot;}</span>
+<span class="s">bin=\${bin-&quot;\$BPMS/src&quot;}</span>
+<span class="s">VERBOSE=\${VERBOSE-1}</span>
+
+<span class="s"># set up required environment variables for bash</span>
+<span class="s">export LD_LIBRARY_PATH=&quot;\${lib}:\${LD_LIBRARY_PATH}&quot;</span>
+<span class="s">export DYLD_LIBRARY_PATH=&quot;\${lib}:\${DYLD_LIBRARY_PATH}&quot;</span>
+<span class="s">export PATH=&quot;\${bin}:\${PATH}&quot;</span>
+
+<span class="s"># set up required environment variables for librat</span>
+<span class="s">export TEST=\${BPMS}/test/test_example</span>
+<span class="s">export MATLIB=\$TEST</span>
+<span class="s">export RSRLIB=\$TEST</span>
+<span class="s">export ARARAT_OBJECT=\$TEST</span>
+<span class="s">export DIRECT_ILLUMINATION=\$TEST</span>
+<span class="s">export BPMS_FILES=\$TEST</span>
+
+<span class="s">if [ &quot;\$(which start)&quot; == &quot;\${bin}/start&quot; ]</span>
+<span class="s">then</span>
+<span class="s">  if [ &quot;\$VERBOSE&quot; ]; then</span>
+<span class="s">      echo &quot;start found ok&quot;</span>
+<span class="s">  fi</span>
+<span class="s">else</span>
+<span class="s">  # we should create them</span>
+<span class="s">  make clean all</span>
+<span class="s">fi</span>
+<span class="s">EOF</span>
+
+<span class="c1"># set executable mode</span>
+chmod +x <span class="nv">$outfile</span>
+<span class="c1"># test run</span>
+<span class="nv">$outfile</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+start found ok
+</pre></div></div>
+</div>
+</div>
+</div>
+<div class="section" id="Summary">
+<h2>Summary<a class="headerlink" href="#Summary" title="Permalink to this headline">¶</a></h2>
+<p>In this chapter, we have covered a range of basic unix/linux and <code class="docutils literal notranslate"><span class="pre">bash</span></code> commands, so you should be able to navigate you way around a unix file system, and find your way back safely. Being familiar with these tools takes somne time of course, so you might now want to go on and take <a class="reference external" href="https://www.unixtutorial.org/basic-unix-commands">some other unix/linux course</a> to see if you can deepen your understanding in that way. Alternatively, just spend some time exploring your system, looking to see
+what files are where, reading on the internet or help pages what they do, and so on.</p>
+<p>Maybe thats wishful thinking on my part though. You may not feel you have time for basic unix at the moment … and we did say at the top of this chapter that it was not compulsory … I’d reccomend you <em>do</em> spend some time on <em>unix</em> … you’ll develop skills that willlast you a lifetime! ;-)</p>
+<p>In practical terms, as we have said, the important thing here is that you can generate the file <code class="docutils literal notranslate"><span class="pre">`test/test_examples/init.sh</span></code> &lt;test/test_examples/init.sh&gt;`__ and modify it to your needs.</p>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">librat</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Chapter1.html"># Basic librat / start operation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Chapter1.html#Object-example-1:-planes-and-ellipsoids">Object example 1: planes and ellipsoids</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Chapter1.html#Environment-variables">Environment variables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Chapter1.html#Object-example-2:-clones">Object example 2: clones</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Environment Variables and some <code class="docutils literal notranslate"><span class="pre">bash</span></code> commands</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#Introduction-to-shell-and-environment-variables">Introduction to shell and environment variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Some-important-environment-variables-and-related">Some important environment variables and related</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Important-environment-variables-for-librat">Important environment variables for librat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Summary">Summary</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="Chapter1.html" title="previous chapter"># Basic librat / start operation</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Prof. P. Lewis.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.0.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/Appendix1.ipynb.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

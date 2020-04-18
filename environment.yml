@@ -1,7 +1,8 @@
-name: geog0111
+name: librat
 channels: 
     - conda-forge
 dependencies:
+    - numpy
     - beautifulsoup4
     - lxml
     - cryptography
@@ -12,5 +13,7 @@ dependencies:
     - gdal>2.2
     - pandas  
     - requests
+    - earthengine-api
     - ipython
     - jupyter
+    - nbsphinx

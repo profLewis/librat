@@ -3,14 +3,24 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to librat's documentation!
-==================================
+Welcome to librat
+=================
+
+UCL Geography/NCEO librat software
+ 
+|image0|
 
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
+   Chapter1.rst
+   Appendix1.rst
 
+.. _Chapter1: https://mybinder.org/v2/gh/profLewis/librat.git/master?filepath=Chapter1.ipynb
+.. _Appendix1: https://mybinder.org/v2/gh/profLewis/librat.git/master?filepath=Appendix1.ipynb
+
+.. |image0| image:: ../res/ucl_logo.png 
 
 Indices and tables
 ==================

@@ -3,15 +3,6 @@ channels:
     - conda-forge
 dependencies:
     - numpy
-    - beautifulsoup4
-    - lxml
-    - cryptography
-    - python>=3.6
-    - numpy 
-    - scipy
     - matplotlib 
     - pandas  
-    - requests
-    - ipython
-    - jupyter
     - nbsphinx

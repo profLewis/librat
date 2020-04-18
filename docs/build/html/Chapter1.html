@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>1. Basic librat / start operation &mdash; librat  documentation</title>
+  <title>1. Initialisation &mdash; librat  documentation</title>
   
 
   
@@ -34,6 +34,7 @@
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
     <link rel="top" title="librat  documentation" href="index.html"/>
+        <link rel="next" title="2. Basic librat / start operation" href="Chapter2.html"/>
         <link rel="prev" title="Welcome to librat" href="index.html"/> 
 
   
@@ -82,12 +83,13 @@
             
                 <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">1. Basic librat / start operation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#Object-example-1:-planes-and-ellipsoids">1.1. Object example 1: planes and ellipsoids</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#Environment-variables">1.2. Environment variables</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#Object-example-2:-clones">1.3. Object example 2: clones</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">1. Initialisation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#Environment-variables">1.1. Environment variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Making-files">1.2. Making files</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="Chapter2.html">2. Basic librat / start operation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Appendix1.html">3. Appendix 1: <code class="docutils literal notranslate"><span class="pre">bash</span></code> help</a></li>
 </ul>
 
             
@@ -132,7 +134,7 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li><span class="section-number">1. </span>Basic librat / start operation</li>
+      <li><span class="section-number">1. </span>Initialisation</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -371,120 +373,144 @@ div.rendered_html tbody tr:hover {
   background: rgba(66, 165, 245, 0.2);
 }
 </style>
-<div class="section" id="Basic-librat-/-start-operation">
-<h1><span class="section-number">1. </span>Basic librat / start operation<a class="headerlink" href="#Basic-librat-/-start-operation" title="Permalink to this headline">¶</a></h1>
-<p>Librat is the library of function calls around which you can write your own code to do things such as read in and parse an object file, read in and parse camera, illumination files, waveband files and so on. However, start is a wrapper code around these commands which gives you access to all the basic operations, and so is the de facto tool for doing simulations. The key things required to carry out a simulation are:</p>
-<ul class="simple">
-<li><p>A camera file</p></li>
-<li><p>An illumination file</p></li>
-<li><p>A waveband file</p></li>
-<li><p>An object file - this is always assumed to be the last file on the start command line</p></li>
-</ul>
-<p>Anything specific you want to do in any of these parts of the process is specified in these files. There are a limited number of additional command line options which either allow you to override a few key things in these files (the waveband file for example), or more usually are external to these things. Each of these can be passed through via the <code class="docutils literal notranslate"><span class="pre">-RAT</span></code> keyword. Examples are the ray tree depth (<code class="docutils literal notranslate"><span class="pre">-RATm</span></code>) , verbose level (<code class="docutils literal notranslate"><span class="pre">-RATv</span></code>), waveband file (<code class="docutils literal notranslate"><span class="pre">-RATsensor_wavebands</span></code>) etc.</p>
-<hr class="docutils" />
-<div class="section" id="Object-example-1:-planes-and-ellipsoids">
-<h2><span class="section-number">1.1. </span>Object example 1: planes and ellipsoids<a class="headerlink" href="#Object-example-1:-planes-and-ellipsoids" title="Permalink to this headline">¶</a></h2>
-<hr class="docutils" />
-<p>We will create the files we need as we go along, using <code class="docutils literal notranslate"><span class="pre">bash</span></code> shell <code class="docutils literal notranslate"><span class="pre">cat</span> <span class="pre">&lt;&lt;EOF</span> <span class="pre">&gt;</span> <span class="pre">filename</span></code> syntax. If we type:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cat</span> <span class="o">&lt;&lt;</span><span class="n">EOF</span> <span class="o">&gt;</span> <span class="n">filename</span>
-<span class="n">this</span> <span class="ow">is</span> <span class="n">line</span> <span class="mi">1</span>
-<span class="n">this</span> <span class="ow">is</span> <span class="n">line</span> <span class="mi">2</span>
-<span class="n">EOF</span>
-</pre></div>
-</div>
-<p>then a file called <code class="docutils literal notranslate"><span class="pre">filename</span></code> will be generated, containing the information up to the <code class="docutils literal notranslate"><span class="pre">EOF</span></code> marker:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">this</span> <span class="ow">is</span> <span class="n">line</span> <span class="mi">1</span>
-<span class="n">this</span> <span class="ow">is</span> <span class="n">line</span> <span class="mi">2</span>
-</pre></div>
-</div>
-<p>We first create a directory to do our work (using the <code class="docutils literal notranslate"><span class="pre">linux</span></code> command <code class="docutils literal notranslate"><span class="pre">mkdir</span></code> in a <code class="docutils literal notranslate"><span class="pre">bash</span></code> shell):</p>
+<div class="section" id="Initialisation">
+<h1><span class="section-number">1. </span>Initialisation<a class="headerlink" href="#Initialisation" title="Permalink to this headline">¶</a></h1>
+<p>Before proceeding, we make sure that an appropriate initialisation (‘init’) file has been generated. We also want to test that the software runs ok. We generate a <code class="docutils literal notranslate"><span class="pre">bash</span></code> shell to achieve this here, and use to his in subsequent notes.</p>
+<p>You can modify any of this as a user, but be careful not to break it! 🙄. In an emergency, you can always just re-download this set of notes and software from <a class="reference external" href="https://github.com/profLewis/librat">github</a> and start again.</p>
+<p>If you want to know more about setting up this sort of file, and what it all means, see <a class="reference external" href="Appendix1">Appendix 1</a>. At the moment, you just need to be aware of it, not understand all of the intricacies.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
 <div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
 <span></span>%%bash
-mkdir -p test/test_examples
+
+<span class="c1"># change directory from docs/source up to root</span>
+<span class="nb">cd</span> ../..
+<span class="nv">BPMS</span><span class="o">=</span><span class="si">${</span><span class="nv">BPMS</span><span class="p">-</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span><span class="si">}</span>
+<span class="c1"># create the init.sh file we want</span>
+<span class="nv">INIT</span><span class="o">=</span><span class="nv">$BPMS</span>/test/test_examples/init.sh
+
+cat <span class="s">&lt;&lt;EOF &gt; $INIT</span>
+<span class="s">#!/bin/bash</span>
+<span class="s">#</span>
+<span class="s"># preamble</span>
+<span class="s">#</span>
+<span class="s">export BPMS=$BPMS</span>
+<span class="s"># set shell variables lib, bin, verbose</span>
+<span class="s"># with defaults in case not set</span>
+<span class="s">lib=\${lib-&quot;\$BPMS/src&quot;}</span>
+<span class="s">bin=\${bin-&quot;\$BPMS/src&quot;}</span>
+<span class="s">VERBOSE=\${VERBOSE-0}</span>
+
+<span class="s"># set up required environment variables for bash</span>
+<span class="s">export LD_LIBRARY_PATH=&quot;\${lib}:\${LD_LIBRARY_PATH}&quot;</span>
+<span class="s">export DYLD_LIBRARY_PATH=&quot;\${lib}:\${DYLD_LIBRARY_PATH}&quot;</span>
+<span class="s">export PATH=&quot;\${bin}:\${PATH}&quot;</span>
+
+<span class="s"># set up required environment variables for librat</span>
+<span class="s">export BPMSROOT=\${BPMSROOT-\$BPMS/test/test_examples}</span>
+
+<span class="s">export MATLIB=\$BPMSROOT</span>
+<span class="s">export RSRLIB=\$BPMSROOT</span>
+<span class="s">export ARARAT_OBJECT=\$BPMSROOT</span>
+<span class="s">export DIRECT_ILLUMINATION=\$BPMSROOT</span>
+<span class="s">export BPMS_FILES=\$BPMSROOT</span>
+<span class="s">if [ &quot;\$(which start)&quot; == &quot;\${bin}/start&quot; ]</span>
+<span class="s">then</span>
+<span class="s">  if [ &quot;\$VERBOSE&quot; == 1 ]; then</span>
+<span class="s">      echo &quot;start found ok&quot;</span>
+<span class="s">  fi</span>
+<span class="s">else</span>
+<span class="s">  # we should create them</span>
+<span class="s">  make clean all</span>
+<span class="s">fi</span>
+<span class="s">EOF</span>
+<span class="c1"># set executable mode</span>
+chmod +x <span class="nv">$INIT</span>
 </pre></div>
 </div>
 </div>
-<p>Now, a simple scene object <code class="docutils literal notranslate"><span class="pre">`test/test_examples/first.obj</span></code> &lt;test/test_examples/first.obj&gt;`__</p>
-<div class="nbinput nblast docutils container">
+<p>Let’s look at the file we generated:</p>
+<div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
 <div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
 <span></span>%%bash
 
-cat <span class="s">&lt;&lt;EOF &gt; test/test_examples/first.obj</span>
-<span class="s"># My first object file</span>
-<span class="s">mtllib plants.matlib</span>
-<span class="s">usemtl white</span>
-<span class="s">v 0 0 0</span>
-<span class="s">v 0 0 1</span>
-<span class="s">plane -1 -2</span>
-<span class="s">!{</span>
-<span class="s">usemtl white</span>
-<span class="s">!{</span>
-<span class="s">v 0 0 1000</span>
-<span class="s">ell -1 30000 30000 1000</span>
-<span class="s">!}</span>
-<span class="s">!}</span>
-<span class="s">EOF</span>
+cat ../../test/test_examples/init.sh
 </pre></div>
 </div>
 </div>
-<p>This object uses a material library <code class="docutils literal notranslate"><span class="pre">`plants.matlib</span></code> &lt;test/test_examples/plants.matlib&gt;`__ that specifies the reflectance and transmittance properties of the scene materials.</p>
-<div class="nbinput nblast docutils container">
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+#!/bin/bash
+#
+# preamble
+#
+export BPMS=/Users/plewis/librat
+# set shell variables lib, bin, verbose
+# with defaults in case not set
+lib=${lib-&#34;$BPMS/src&#34;}
+bin=${bin-&#34;$BPMS/src&#34;}
+VERBOSE=${VERBOSE-0}
+
+# set up required environment variables for bash
+export LD_LIBRARY_PATH=&#34;${lib}:${LD_LIBRARY_PATH}&#34;
+export DYLD_LIBRARY_PATH=&#34;${lib}:${DYLD_LIBRARY_PATH}&#34;
+export PATH=&#34;${bin}:${PATH}&#34;
+
+# set up required environment variables for librat
+export BPMSROOT=${BPMSROOT-$BPMS/test/test_examples}
+
+export MATLIB=$BPMSROOT
+export RSRLIB=$BPMSROOT
+export ARARAT_OBJECT=$BPMSROOT
+export DIRECT_ILLUMINATION=$BPMSROOT
+export BPMS_FILES=$BPMSROOT
+if [ &#34;$(which start)&#34; == &#34;${bin}/start&#34; ]
+then
+  if [ &#34;$VERBOSE&#34; == 1 ]; then
+      echo &#34;start found ok&#34;
+  fi
+else
+  # we should create them
+  make clean all
+fi
+</pre></div></div>
+</div>
+<div class="section" id="Environment-variables">
+<h2><span class="section-number">1.1. </span>Environment variables<a class="headerlink" href="#Environment-variables" title="Permalink to this headline">¶</a></h2>
+<p>We might notice that the init shell sets a number of environment variables, namely <code class="docutils literal notranslate"><span class="pre">MATLIB</span></code>, <code class="docutils literal notranslate"><span class="pre">RSRLIB</span></code> etc.</p>
+<p>If you are interested, the meaning of these is given in the table below.</p>
+<p>Alternatively, just notice that in the init shell, all of these variables are set to <code class="docutils literal notranslate"><span class="pre">BPMSROOT</span></code>, so if we want to point to the location of an object and material database for librat, we need only set the environment variable <code class="docutils literal notranslate"><span class="pre">BPMSROOT</span></code> appropriately. In this case it defaults to <code class="docutils literal notranslate"><span class="pre">$BPMS/test/test_example</span></code>.</p>
+<p>If you want to run a shell that uses the <code class="docutils literal notranslate"><span class="pre">init.sh</span></code> setup, you will need to use the command <code class="docutils literal notranslate"><span class="pre">source</span></code> to export the variables to your shell.</p>
+<div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
 <span></span>%%bash
 
-cat <span class="s">&lt;&lt;EOF &gt; test/test_examples/plants.matlib</span>
-<span class="s">srm white refl/white.dat</span>
-<span class="s">EOF</span>
-</pre></div>
-</div>
-</div>
-<p>In this example, the file contains the single line:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">srm</span> <span class="n">white</span> <span class="n">refl</span><span class="o">/</span><span class="n">white</span><span class="o">.</span><span class="n">dat</span>
-</pre></div>
-</div>
-<p>so there is only a single material of type <code class="docutils literal notranslate"><span class="pre">srm</span></code> (standard reflectance material - Lambertian reflectance (and/or transmittance). The material name is <code class="docutils literal notranslate"><span class="pre">white</span></code> and the (ASCII) file giving the spectral reflectance function is <code class="docutils literal notranslate"><span class="pre">`refl/white.dat</span></code> &lt;test/test_examples/refl/white.dat&gt;`__.</p>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
-</pre></div>
-</div>
-<div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
-<span></span>%%bash
+<span class="nb">source</span> ../../test/test_examples/init.sh
 
-mkdir -p test/test_examples/refl
-
-cat <span class="s">&lt;&lt;EOF &gt; test/test_examples/refl/white.dat</span>
-<span class="s">0 1</span>
-<span class="s">10000 1</span>
-<span class="s">EOF</span>
+<span class="nb">echo</span> <span class="s2">&quot;MATLIB is set to </span><span class="nv">$MATLIB</span><span class="s2">&quot;</span>
 </pre></div>
 </div>
 </div>
-<p>The file <code class="docutils literal notranslate"><span class="pre">`refl/white.dat</span></code> &lt;test/test_examples/refl/white.dat&gt;`__ contains 2 columns: column 1 is ‘wavelength’ (really, a pseudo-wavelength in this case), column 2 is reflectance for that wavelength (wavelength units are arbitrary, but we usually use nm).</p>
-<p>In this case, the file specifies:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">0</span> <span class="mi">1</span>
-<span class="mi">10000</span> <span class="mi">1</span>
-</pre></div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
 </div>
-<p>which is a reflectance of 1.0 for any wavelength (less than or equal to an arbitrary upper limit 10000). If the file specifies transmittance as well, this is given as a third column.</p>
-<p>Looking back to <code class="docutils literal notranslate"><span class="pre">`test/test_examples/first.obj</span></code> &lt;test/test_examples/first.obj&gt;`__, the line:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mtllib</span> <span class="n">plants</span><span class="o">.</span><span class="n">matlib</span>
-</pre></div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+MATLIB is set to /Users/plewis/librat/test/test_examples
+</pre></div></div>
 </div>
-<p>tells the librat reader to load the ‘material library’ called <code class="docutils literal notranslate"><span class="pre">`plants.matlib</span></code> &lt;test/test_examples/plants.matlib&gt;`__. First, it will look in the current directory for the file. If it doesn’t find it there, it will see if the environment variable <code class="docutils literal notranslate"><span class="pre">MATLIB</span></code> is set. If so, it will look there next.</p>
-</div>
-<div class="section" id="Environment-variables">
-<h2><span class="section-number">1.2. </span>Environment variables<a class="headerlink" href="#Environment-variables" title="Permalink to this headline">¶</a></h2>
-<p>The following environmental variables can be used:</p>
+<p><strong>Table explaining librat object environment variables:</strong></p>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 50%" />
@@ -515,6 +541,7 @@ cat <span class="s">&lt;&lt;EOF &gt; test/test_examples/refl/white.dat</span>
 </table>
 <p>You can set all of these to the same value, in which case the database of files is all defined relative to that point. This is the most typical use of <code class="docutils literal notranslate"><span class="pre">librat</span></code>. We illustrate this setup below for the <code class="docutils literal notranslate"><span class="pre">librat</span></code> distribution, where a set of examples use files from the directory <code class="docutils literal notranslate"><span class="pre">test/test_example</span></code>.</p>
 <p>Additionally, the following environment variables can be set to extend the size of some aspects of the model. You would only need to use these in some extreme case.</p>
+<p><strong>Table explaining additional librat environment variables:</strong></p>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 50%" />
@@ -534,69 +561,20 @@ cat <span class="s">&lt;&lt;EOF &gt; test/test_examples/refl/white.dat</span>
 </tr>
 </tbody>
 </table>
-<p>In this case, we would want to set <code class="docutils literal notranslate"><span class="pre">MATLIB</span></code> to <code class="docutils literal notranslate"><span class="pre">test/test_examples</span></code> before invoking <code class="docutils literal notranslate"><span class="pre">librat</span></code>. In <code class="docutils literal notranslate"><span class="pre">bash</span></code> for example, this is done with:</p>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[84]:
-</pre></div>
-</div>
-<div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
-<span></span>%%bash
-
-<span class="nb">export</span> <span class="nv">MATLIB</span><span class="o">=</span>test/test_examples
-</pre></div>
-</div>
-</div>
-<p>Let’s put all of these into a shell called <code class="docutils literal notranslate"><span class="pre">`init.sh</span></code> &lt;test/test_examples/init.sh&gt;`__:</p>
+<p>You can test the init file by running the cell (shell) below.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[85]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
 <div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
 <span></span>%%bash
+<span class="c1"># test the init file</span>
 
-<span class="c1"># create the init.sh file we want</span>
-<span class="nv">outfile</span><span class="o">=</span>test/test_examples/init.sh
+<span class="c1"># change directory from docs/source up to root</span>
+<span class="nv">INIT</span><span class="o">=</span>../../test/test_examples/init.sh
 
-cat <span class="s">&lt;&lt;EOF &gt; $outfile</span>
-<span class="s">#!/bin/bash</span>
-<span class="s">#</span>
-<span class="s"># preamble</span>
-<span class="s">#</span>
-<span class="s">BPMS=\${BPMS-\$(pwd)}</span>
-<span class="s"># set shell variables lib, bin, verbose</span>
-<span class="s"># with defaults in case not set</span>
-<span class="s">lib=\${lib-&quot;\$BPMS/src&quot;}</span>
-<span class="s">bin=\${bin-&quot;\$BPMS/src&quot;}</span>
-<span class="s">VERBOSE=\${VERBOSE-1}</span>
-
-<span class="s"># set up required environment variables for bash</span>
-<span class="s">export LD_LIBRARY_PATH=&quot;\${lib}:\${LD_LIBRARY_PATH}&quot;</span>
-<span class="s">export DYLD_LIBRARY_PATH=&quot;\${lib}:\${DYLD_LIBRARY_PATH}&quot;</span>
-<span class="s">export PATH=&quot;\${bin}:\${PATH}&quot;</span>
-
-<span class="s"># set up required environment variables for librat</span>
-<span class="s">export TEST=\${BPMS}/test/test_example</span>
-<span class="s">export MATLIB=\$TEST</span>
-<span class="s">export RSRLIB=\$TEST</span>
-<span class="s">export ARARAT_OBJECT=\$TEST</span>
-<span class="s">export DIRECT_ILLUMINATION=\$TEST</span>
-<span class="s">export BPMS_FILES=\$TEST</span>
-
-<span class="s">if [ &quot;\$(which start)&quot; == &quot;\${bin}/start&quot; ]</span>
-<span class="s">then</span>
-<span class="s">  if [ &quot;\$VERBOSE&quot; ]; then</span>
-<span class="s">      echo &quot;start found ok&quot;</span>
-<span class="s">  fi</span>
-<span class="s">else</span>
-<span class="s">  # we should create them</span>
-<span class="s">  make clean all</span>
-<span class="s">fi</span>
-<span class="s">EOF</span>
-
-<span class="c1"># set executable mode</span>
-chmod +x <span class="nv">$outfile</span>
-<span class="c1"># test run</span>
-<span class="nv">$outfile</span>
+<span class="nb">export</span> <span class="nv">VERBOSE</span><span class="o">=</span><span class="m">1</span>
+<span class="nv">$INIT</span>
 </pre></div>
 </div>
 </div>
@@ -606,6 +584,274 @@ chmod +x <span class="nv">$outfile</span>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 start found ok
+</pre></div></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">EXERCISE</span> <span class="mf">1.1</span>
+
+    <span class="mf">1.</span> <span class="n">Try</span> <span class="n">changing</span> <span class="n">the</span> <span class="n">environment</span> <span class="n">variable</span> <span class="n">VERBOSE</span> <span class="n">to</span> <span class="mi">1</span> <span class="p">(</span><span class="kc">True</span><span class="p">)</span> <span class="ow">or</span> <span class="mi">0</span> <span class="p">(</span><span class="kc">False</span><span class="p">)</span> <span class="n">to</span> <span class="n">see</span> <span class="n">the</span> <span class="n">effect</span><span class="o">.</span>
+
+    <span class="mf">2.</span> <span class="n">You</span> <span class="n">can</span> <span class="n">change</span> <span class="n">the</span> <span class="n">name</span> <span class="n">of</span> <span class="n">the</span> <span class="n">directory</span> <span class="n">where</span> <span class="n">the</span> <span class="nb">object</span> <span class="ow">and</span> <span class="n">material</span> <span class="n">files</span> <span class="n">are</span> <span class="n">through</span> <span class="n">the</span> <span class="n">environment</span> <span class="n">variable</span> <span class="n">BPMSROOT</span><span class="o">.</span> <span class="n">See</span> <span class="k">if</span> <span class="n">you</span> <span class="n">can</span> <span class="n">find</span> <span class="n">what</span> <span class="n">BPMSROOT</span> <span class="ow">is</span> <span class="nb">set</span> <span class="n">to</span><span class="p">,</span> <span class="ow">and</span> <span class="n">also</span> <span class="n">see</span> <span class="k">if</span> <span class="n">yoiu</span> <span class="n">can</span> <span class="n">modify</span> <span class="n">it</span><span class="o">.</span>
+</pre></div>
+</div>
+<p><strong>Answers below:</strong></p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
+<span></span>%%bash
+<span class="c1">#----------------------</span>
+<span class="c1"># this part same as above</span>
+<span class="c1">#</span>
+<span class="c1"># test the init file</span>
+<span class="nv">INIT</span><span class="o">=</span>../../test/test_examples/init.sh
+<span class="c1">#----------------------</span>
+
+<span class="c1"># 1.1.1: Try changing the environment variable VERBOSE to 1</span>
+<span class="c1"># (True) and 0 (False) to see the effect.</span>
+
+<span class="c1"># ANSWER</span>
+<span class="c1"># this sets verbose mode and prints a message</span>
+<span class="c1"># &#39;start found ok&#39; if it finds the librat start</span>
+<span class="c1"># executable</span>
+<span class="nb">echo</span>  <span class="s2">&quot;----set VERBOSE 1---&quot;</span>
+<span class="nb">export</span> <span class="nv">VERBOSE</span><span class="o">=</span><span class="m">1</span>
+<span class="nv">$INIT</span>
+
+<span class="c1"># this turns off the verbose mode</span>
+<span class="c1"># so no message is printed</span>
+<span class="nb">echo</span> <span class="s2">&quot;----set VERBOSE 0---&quot;</span>
+<span class="nb">export</span> <span class="nv">VERBOSE</span><span class="o">=</span><span class="m">0</span>
+<span class="nv">$INIT</span>
+
+<span class="c1"># 1.1.2: You can change the name of the directory where the</span>
+<span class="c1"># object and material files are through the</span>
+<span class="c1"># environment variable BPMSROOT.</span>
+<span class="c1"># See if you can find what BPMSROOT is set to,</span>
+<span class="c1"># and also see if yoiu can modify it.</span>
+
+<span class="c1"># ANSWER</span>
+<span class="c1"># we need to see the value of the</span>
+<span class="c1"># environment variable BPMSROOT, but we need it</span>
+<span class="c1"># in this shell. So we *source* the file</span>
+<span class="c1"># rather than running it.</span>
+<span class="nb">echo</span> <span class="s2">&quot;----get BPMSROOT---&quot;</span>
+<span class="nb">source</span> <span class="nv">$INIT</span>
+<span class="nb">echo</span> <span class="s2">&quot;BPMSROOT is </span><span class="nv">$BPMSROOT</span><span class="s2">&quot;</span>
+<span class="nb">echo</span> <span class="s2">&quot;----set BPMSROOT---&quot;</span>
+<span class="c1"># To change it, just set it before sourcing</span>
+<span class="nb">export</span> <span class="nv">BPMSROOT</span><span class="o">=</span><span class="s2">&quot;/tmp&quot;</span>
+<span class="nb">source</span> <span class="nv">$INIT</span>
+<span class="nb">echo</span> <span class="s2">&quot;BPMSROOT is </span><span class="nv">$BPMSROOT</span><span class="s2">&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+----set VERBOSE 1---
+start found ok
+----set VERBOSE 0---
+----get BPMSROOT---
+BPMSROOT is /Users/plewis/librat/test/test_examples
+----set BPMSROOT---
+BPMSROOT is /tmp
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="Making-files">
+<h2><span class="section-number">1.2. </span>Making files<a class="headerlink" href="#Making-files" title="Permalink to this headline">¶</a></h2>
+<p>We will create the files we need as we go along, using <code class="docutils literal notranslate"><span class="pre">bash</span></code> shell <code class="docutils literal notranslate"><span class="pre">cat</span> <span class="pre">&lt;&lt;EOF</span> <span class="pre">&gt;</span> <span class="pre">filename</span></code> syntax. You may have noticed that we did this above in creating the <code class="docutils literal notranslate"><span class="pre">init</span></code> file.</p>
+<p>If we type:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cat</span> <span class="o">&lt;&lt;</span><span class="n">EOF</span> <span class="o">&gt;</span> <span class="n">filename</span>
+<span class="n">this</span> <span class="ow">is</span> <span class="n">line</span> <span class="mi">1</span>
+<span class="n">this</span> <span class="ow">is</span> <span class="n">line</span> <span class="mi">2</span>
+<span class="n">EOF</span>
+</pre></div>
+</div>
+<p>then a file called <code class="docutils literal notranslate"><span class="pre">filename</span></code> will be generated, containing the information up to the <code class="docutils literal notranslate"><span class="pre">EOF</span></code> marker:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">this</span> <span class="ow">is</span> <span class="n">line</span> <span class="mi">1</span>
+<span class="n">this</span> <span class="ow">is</span> <span class="n">line</span> <span class="mi">2</span>
+</pre></div>
+</div>
+<p>Wew can try that now:</p>
+<p>We first create a directory to do our work (using the <code class="docutils literal notranslate"><span class="pre">linux</span></code> command <code class="docutils literal notranslate"><span class="pre">mkdir</span></code> in a <code class="docutils literal notranslate"><span class="pre">bash</span></code> shell):</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
+<span></span>%%bash
+<span class="nb">export</span> <span class="nv">BPMS</span><span class="o">=</span>../..
+mkdir -p <span class="nv">$BPMS</span>/test/test_examples
+</pre></div>
+</div>
+</div>
+<p>Now we will put some text in a file in that directory:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
+<span></span>%%bash
+<span class="nb">export</span> <span class="nv">BPMS</span><span class="o">=</span>../..
+<span class="nb">cd</span> <span class="nv">$BPMS</span>
+<span class="nb">export</span> <span class="nv">BPMS</span><span class="o">=</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>
+
+cat <span class="s">&lt;&lt;EOF &gt; $BPMS/test/test_examples/first.obj</span>
+<span class="s"># My first object file</span>
+<span class="s">mtllib plants.matlib</span>
+<span class="s">usemtl green</span>
+<span class="s">v 0 0 0</span>
+<span class="s">v 0 0 1</span>
+<span class="s">plane -1 -2</span>
+<span class="s">!{</span>
+<span class="s">usemtl white</span>
+<span class="s">!{</span>
+<span class="s">v 0 0 1000</span>
+<span class="s">ell -1 30000 30000 30000</span>
+<span class="s">!}</span>
+<span class="s">!}</span>
+<span class="s">EOF</span>
+
+cat <span class="s">&lt;&lt;EOF &gt; $BPMS/test/test_examples/wavebands.dat</span>
+<span class="s">1 1</span>
+<span class="s">2 1</span>
+<span class="s">EOF</span>
+
+cat <span class="s">&lt;&lt;EOF &gt; $BPMS/test/test_examples/white.dat</span>
+<span class="s">40 1.0</span>
+<span class="s">300 0.5</span>
+<span class="s">EOF</span>
+
+cat <span class="s">&lt;&lt;EOF &gt; $BPMS/test/test_examples/plants.matlib</span>
+<span class="s">srm green white.dat</span>
+<span class="s">srm white white.dat</span>
+<span class="s">EOF</span>
+</pre></div>
+</div>
+</div>
+<p>And now run a simple example:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
+<span></span>%%bash
+<span class="nb">export</span> <span class="nv">BPMS</span><span class="o">=</span>../..
+<span class="nb">cd</span> <span class="nv">$BPMS</span>
+<span class="nb">export</span> <span class="nv">BPMS</span><span class="o">=</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>
+<span class="nb">source</span> <span class="nv">$BPMS</span>/test/test_examples/init.sh
+
+<span class="nb">echo</span> <span class="m">6</span> <span class="m">6</span> <span class="m">6</span> <span class="m">40000</span> <span class="m">0</span> <span class="m">0</span> -1 <span class="p">|</span> start -RATsensor_wavebands <span class="nv">$BPMS</span>/test/test_examples/wavebands.dat -RATsun_position <span class="m">0</span> <span class="m">1</span> <span class="m">1</span> <span class="nv">$BPMS</span>/test/test_examples/first.obj
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+RTD 0
+order: 0        intersection point:     6.000000 6.000000 0.000020
+                ray length:             39999.999980
+                intersection material:  2
+                sun 0:                  1 reflectance
+lengthToSun: 7.874008 angleToSun 82.703725
+                direct:                 0.127000 0.127000
+                sky  :                  reflectance
+                diffuse:                0.000000 0.000000
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
+<span></span>%%bash
+<span class="nb">export</span> <span class="nv">BPMS</span><span class="o">=</span>../..
+<span class="nb">source</span> <span class="nv">$BPMS</span>/test/test_examples/init.sh
+
+cat <span class="s">&lt;&lt;EOF | start $BPMS/test/test_examples/first.obj</span>
+<span class="s">11</span>
+<span class="s">1 2 0 1 1 1 1 1</span>
+<span class="s">3 3 1 300 2 400 3 500</span>
+<span class="s">4</span>
+<span class="s">6 6 6 80000 0 0 -1</span>
+<span class="s">EOF</span>
+
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+x: -29994.000300 30006.000300
+y: -29994.000300 30006.000300
+z: 1000.200010 61012.200610
+bbox centre @ 6.000000 6.000000 31006.200310
+wavebands: 40.461336 304.242129 232.325066
+RTD 0
+order: 0        intersection point:     6.000000 6.000000 60999.998810
+                ray length:             19000.001190
+                intersection material:  3
+                sun 0:                  1 reflectance
+                direct:                 0.707248 0.707248 0.707248
+                sun 1:                  1 reflectance
+                direct:                 0.577581 0.577581 0.577581
+                sky  :                  reflectance
+                diffuse:                1.000000 1.000000 1.000000
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+how many sun vectors? (&gt;0): enter sun vector number 1 (3 floats): enter sun vector number 2 (3 floats):
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
+<span></span>%%bash
+<span class="nb">export</span> <span class="nv">BPMS</span><span class="o">=</span>../..
+<span class="nb">source</span> <span class="nv">$BPMS</span>/test/test_examples/init.sh
+<span class="nb">echo</span> <span class="m">10000</span> <span class="p">|</span> start <span class="nv">$BPMS</span>/test/test_examples/first.obj
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+options:
+        -2                   : print PID
+        -1                   : print memory use
+         0                   : quit
+         1 n s1x s1y s1z ... : set sun vectors
+         2                   : print sun vectors
+         3 n b1 w1 ...i bn wn: set wavebands
+         4                   : print wavebands
+         5 file.obj          : read object file
+         6 fx fy fz dx dy dz : trace ray from f in direction d
+         7                   : get and print materials
+         8                   : print object information
+         9                   : print info on materials used
+         10                  : get and set verbosity level (0-1)
+         11                  : get and print object bbox information
+         12                    :
+         13                  : same as 14 assuming filenames camera.dat light.dat
+         14 camera.dat light.dat                : ray tracing using defined camera &amp; illumination
+         15                    : dont go there
+         16 cx cy cz sx sy nrows ncols rpp name : produce a height map in name
 </pre></div></div>
 </div>
 <div class="nbinput nblast docutils container">
@@ -617,171 +863,12 @@ start found ok
 </pre></div>
 </div>
 </div>
-<p>The object code line:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usemtl</span> <span class="n">white</span>
-</pre></div>
-</div>
-<p>tells <code class="docutils literal notranslate"><span class="pre">librat</span></code> to load the material named <code class="docutils literal notranslate"><span class="pre">white</span></code>. Since we defined that in <code class="docutils literal notranslate"><span class="pre">`plants.matlib</span></code> &lt;test/test_examples/plants.matlib&gt;`__ as type <code class="docutils literal notranslate"><span class="pre">srm</span></code> with spectral file <code class="docutils literal notranslate"><span class="pre">`refl/white.dat</span></code> &lt;test/test_examples/refl/white.dat&gt;`__, the material will have a Lambertian reflectance of <code class="docutils literal notranslate"><span class="pre">1.0</span></code> for all (up to 10000 units) wavelengths.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
-<div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
-<span></span>%%bash
-
-cat <span class="s">&lt;&lt;EOF &gt; test/test_examples/white.dat</span>
-<span class="s">1 1.0</span>
-<span class="s">1000 1.0</span>
-<span class="s">EOF</span>
-</pre></div>
-</div>
-</div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>mtllib plants.matlib
-usemtl white
-v 0 0 0
-v 0 0 1
-plane -1 -2
-!{
-usemtl white
-!{
-v 0 0 1000
-ell -1 30000 30000 1000
-!}
-!}
-</pre></div>
-</div>
-<p>The fields starting <code class="docutils literal notranslate"><span class="pre">v</span></code> in <code class="docutils literal notranslate"><span class="pre">`test/test_examples/first.obj</span></code> &lt;test/test_examples/first.obj&gt;`__ denote a vertex (vector) (as in the standard wavefront format). This requires 3 numbers to be given after the <code class="docutils literal notranslate"><span class="pre">v</span></code> giving the {x,y,z} coordinates of the vector. Note that <code class="docutils literal notranslate"><span class="pre">v</span></code> fields can specify a <em>location</em> or <em>direction</em> vector.</p>
-<p>The fields <code class="docutils literal notranslate"><span class="pre">plane</span></code> and <code class="docutils literal notranslate"><span class="pre">ell</span></code> specify scene objects. We will look at a fuller range of such objects later, but these two allow for a simple scene specification. plane is an infinite planar object. It is defined by an intersection point (location vector) <code class="docutils literal notranslate"><span class="pre">I</span></code> and a direction vector <code class="docutils literal notranslate"><span class="pre">N</span></code>. These vectors need to be defined before a call is made to the object, so in this case, we define <code class="docutils literal notranslate"><span class="pre">I</span></code> as <code class="docutils literal notranslate"><span class="pre">0</span> <span class="pre">0</span> <span class="pre">0</span></code> and <code class="docutils literal notranslate"><span class="pre">N</span></code> as <code class="docutils literal notranslate"><span class="pre">0</span> <span class="pre">0</span> <span class="pre">1</span></code>, i.e. an x-y plane at z=0.</p>
-<p>Thus <code class="docutils literal notranslate"><span class="pre">plane</span> <span class="pre">-1</span> <span class="pre">-2</span></code> means ‘define a plane with <code class="docutils literal notranslate"><span class="pre">N</span></code> given by the previous (<code class="docutils literal notranslate"><span class="pre">-1</span></code>) specified vector that goes through <code class="docutils literal notranslate"><span class="pre">I</span></code> given by the second to last specified vector (<code class="docutils literal notranslate"><span class="pre">-2</span></code>).’</p>
-<p><code class="docutils literal notranslate"><span class="pre">ell</span></code> is an ellipsoid object. Its description requires definition of:</p>
-<ul class="simple">
-<li><p>the base (N.B. not the centre) of the ellipsoid (<code class="docutils literal notranslate"><span class="pre">-1</span></code> here, meaning the previously-defined vector - <code class="docutils literal notranslate"><span class="pre">0</span> <span class="pre">0</span> <span class="pre">1000</span></code> in this case);</p></li>
-<li><p>the semi-axis lengths in <code class="docutils literal notranslate"><span class="pre">x,y,z</span></code> directions (<code class="docutils literal notranslate"><span class="pre">30000</span> <span class="pre">30000</span> <span class="pre">1000</span></code> here).</p></li>
-</ul>
-<p>so:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">v</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">1000</span>
-<span class="n">ell</span> <span class="o">-</span><span class="mi">1</span> <span class="mi">30000</span> <span class="mi">30000</span> <span class="mi">1000</span>
-</pre></div>
-</div>
-<p>is in fact a spheroid of x-y semi-axis length 30000 units (arbitrary linear units) and z-semi-axis length 1000 units: a <em>prolate</em> spheroid that extends from <code class="docutils literal notranslate"><span class="pre">-30000</span></code> to <code class="docutils literal notranslate"><span class="pre">30000</span></code> in the x- and y-directions and from <code class="docutils literal notranslate"><span class="pre">1000</span></code> to <code class="docutils literal notranslate"><span class="pre">3000</span></code> in the z-direction. Not that the physical unit for these dimensions is arbitrary, but must be consistent throughout.</p>
-<p>The fields <code class="docutils literal notranslate"><span class="pre">!{</span></code> and <code class="docutils literal notranslate"><span class="pre">!}</span></code> in <code class="docutils literal notranslate"><span class="pre">`test/test_examples/first.obj</span></code> &lt;test/test_examples/first.obj&gt;`__ specify that a bounding box should be placed around objects contained within the brackets. This allows for efficient intersection tests in the ray tracing.</p>
-<p>We now want to use the code <code class="docutils literal notranslate"><span class="pre">start</span></code> to run <code class="docutils literal notranslate"><span class="pre">librat</span></code> functionality.</p>
-<p>If you have compiled the code, the executable and library should be in the directory <code class="docutils literal notranslate"><span class="pre">`src</span></code> &lt;src&gt;`__ as</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">src</span><span class="o">/</span><span class="n">start</span>
-<span class="n">src</span><span class="o">/</span><span class="n">libratlib</span><span class="o">.</span><span class="p">[</span><span class="n">dll</span><span class="p">,</span><span class="n">so</span><span class="p">]</span>
-</pre></div>
-</div>
-<p>The suffix for the library will be <code class="docutils literal notranslate"><span class="pre">dll</span></code> on windows, and <code class="docutils literal notranslate"><span class="pre">so</span></code> on other operating systems. Lets just check they are there:</p>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
-</pre></div>
-</div>
-<div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
-<span></span>%%bash
-
-<span class="nv">lib</span><span class="o">=</span><span class="s1">&#39;./src&#39;</span>
-<span class="nv">bin</span><span class="o">=</span><span class="s1">&#39;./src&#39;</span>
-
-ls -l <span class="si">${</span><span class="nv">lib</span><span class="si">}</span>/start <span class="si">${</span><span class="nv">bin</span><span class="si">}</span>/libratlib.*
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
--rwxr-xr-x  1 plewis  staff  435444 15 Apr 20:07 ./src/libratlib.so
--rwxr-xr-x  1 plewis  staff   12836 15 Apr 20:07 ./src/start
-</pre></div></div>
-</div>
-<p>Don’t worry too much if its not there as we can make it when we need it.</p>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[34]:
-</pre></div>
-</div>
-<div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
-<span></span>%%bash
-
-<span class="c1">#</span>
-<span class="c1"># shell preamble</span>
-<span class="c1">#</span>
-
-<span class="c1"># set shell variables lib, bin, verbose</span>
-<span class="c1"># with defaults in case not set</span>
-<span class="nv">lib</span><span class="o">=</span><span class="si">${</span><span class="nv">lib</span><span class="p">-</span><span class="s1">&#39;./src&#39;</span><span class="si">}</span>
-<span class="nv">bin</span><span class="o">=</span><span class="si">${</span><span class="nv">bin</span><span class="p">-</span><span class="s1">&#39;./src&#39;</span><span class="si">}</span>
-<span class="nv">verbose</span><span class="o">=</span><span class="si">${</span><span class="nv">verbose</span><span class="p">-1</span><span class="si">}</span>
-
-<span class="c1"># set up required environment variables for bash</span>
-<span class="nb">export</span> <span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">lib</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">LD_LIBRARY_PATH</span><span class="si">}</span><span class="s2">&quot;</span>
-<span class="nb">export</span> <span class="nv">DYLD_LIBRARY_PATH</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">lib</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">DYLD_LIBRARY_PATH</span><span class="si">}</span><span class="s2">&quot;</span>
-<span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">bin</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">PATH</span><span class="si">}</span><span class="s2">&quot;</span>
-
-<span class="c1"># set up required environment variables for librat</span>
-<span class="nb">export</span> <span class="nv">TEST</span><span class="o">=</span><span class="si">${</span><span class="nv">BPMS</span><span class="si">}</span>/test/test_example
-<span class="nb">export</span> <span class="nv">MATLIB</span><span class="o">=</span><span class="nv">$TEST</span>
-<span class="nb">export</span> <span class="nv">RSRLIB</span><span class="o">=</span><span class="nv">$TEST</span>
-<span class="nb">export</span> <span class="nv">ARARAT_OBJECT</span><span class="o">=</span><span class="nv">$TEST</span>
-<span class="nb">export</span> <span class="nv">DIRECT_ILLUMINATION</span><span class="o">=</span><span class="nv">$TEST</span>
-<span class="nb">export</span> <span class="nv">BPMS_FILES</span><span class="o">=</span><span class="nv">$TEST</span>
-
-<span class="k">if</span> <span class="o">[</span> <span class="k">$(</span>which start<span class="k">)</span> <span class="o">==</span> <span class="s1">&#39;./src/start&#39;</span> <span class="o">]</span>
-<span class="k">then</span>
-  <span class="k">if</span> <span class="o">[</span> <span class="nv">$verbose</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
-      <span class="nb">echo</span> <span class="s2">&quot;start found ok&quot;</span>
-  <span class="k">fi</span>
-<span class="k">else</span>
-  <span class="c1"># we should create them</span>
-  make clean all
-<span class="k">fi</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-start found ok
-</pre></div></div>
-</div>
-</div>
-<div class="section" id="Object-example-2:-clones">
-<h2><span class="section-number">1.3. </span>Object example 2: clones<a class="headerlink" href="#Object-example-2:-clones" title="Permalink to this headline">¶</a></h2>
-<hr class="docutils" />
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
-</pre></div>
-</div>
-<div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
-<span></span>%%bash
-
-cat <span class="s">&lt;&lt;EOF &gt; test/test_examples/second.obj</span>
-<span class="s">!{</span>
-<span class="s">mtllib plants.matlib</span>
-<span class="s">v 0.000000 0.000000 0.000000</span>
-<span class="s">v 0.000000 0.000000 1.000000</span>
-<span class="s">usemtl full</span>
-<span class="s">plane -1 -2</span>
-<span class="s">!{</span>
-<span class="s">#define</span>
-<span class="s">g object 0</span>
-<span class="s">usemtl half</span>
-<span class="s">v 0 0 0</span>
-<span class="s">v 0 0 1</span>
-<span class="s">cyl -1 -2 0.1</span>
-<span class="s">sph -1 0.2</span>
-<span class="s">v -1 0 1</span>
-<span class="s">cyl -1 -2 0.1</span>
-<span class="s">!}</span>
-<span class="s">!{</span>
-<span class="s">clone 0 0 0 0 object 0</span>
-<span class="s">clone 0 1 0 90 object 0</span>
-<span class="s">clone -1 0 0 -90 object 0</span>
-<span class="s">!}</span>
-<span class="s">!}</span>
-<span class="s">EOF</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>
 </pre></div>
 </div>
 </div>
@@ -794,6 +881,8 @@ cat <span class="s">&lt;&lt;EOF &gt; test/test_examples/second.obj</span>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="Chapter2.html" class="btn btn-neutral float-right" title="2. Basic librat / start operation" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="index.html" class="btn btn-neutral" title="Welcome to librat" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>

@@ -1,0 +1,878 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>2. Basic librat / start operation &mdash; librat  documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="librat  documentation" href="index.html"/>
+        <link rel="next" title="3. Appendix 1: bash help" href="Appendix1.html"/>
+        <link rel="prev" title="1. Initialisation" href="Chapter1.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> librat
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Chapter1.html">1. Initialisation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">2. Basic librat / start operation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#Object-example-1:-planes-and-ellipsoids">2.1. Object example 1: planes and ellipsoids</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Environment-variables">2.2. Environment variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Object-example-2:-clones">2.3. Object example 2: clones</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Appendix1.html">3. Appendix 1: <code class="docutils literal notranslate"><span class="pre">bash</span></code> help</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">librat</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li><span class="section-number">2. </span>Basic librat / start operation</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/Chapter2.ipynb.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput.container,
+div.nbinput.container div.prompt,
+div.nbinput.container div.input_area,
+div.nbinput.container div[class*=highlight],
+div.nbinput.container div[class*=highlight] pre,
+div.nboutput.container,
+div.nboutput.container div.prompt,
+div.nboutput.container div.output_area,
+div.nboutput.container div[class*=highlight],
+div.nboutput.container div[class*=highlight] pre {
+    background: none;
+    border: none;
+    padding: 0 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+/* avoid gaps between output lines */
+div.nboutput.container div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput.container,
+div.nboutput.container {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput.container,
+    div.nboutput.container {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput.container {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast.container {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput.container div.prompt pre {
+    color: #307FC1;
+}
+
+/* output prompt */
+div.nboutput.container div.prompt pre {
+    color: #BF5B3D;
+}
+
+/* all prompts */
+div.nbinput.container div.prompt,
+div.nboutput.container div.prompt {
+    min-width: 7ex;
+    padding-top: 0.3rem;
+    padding-right: 0.3rem;
+    text-align: right;
+    flex: 0;
+}
+@media (max-width: 540px) {
+    div.nbinput.container div.prompt,
+    div.nboutput.container div.prompt {
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput.container div.prompt.empty {
+        padding: 0;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput.container div.prompt pre,
+div.nboutput.container div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput.container div.input_area,
+div.nboutput.container div.output_area {
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput.container div.input_area,
+    div.nboutput.container div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput.container div.input_area {
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+    background: #f5f5f5;
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput.container div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.imgmath center alignment in output cells */
+div.nboutput.container div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput.container div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+
+
+div.nbinput.container div.input_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight].math,
+div.nboutput.container div.output_area.rendered_html,
+div.nboutput.container div.output_area > div.output_javascript,
+div.nboutput.container div.output_area:not(.rendered_html) > img{
+    padding: 0.3rem;
+}
+
+/* fix copybtn overflow problem in chromium (needed for 'sphinx_copybutton') */
+div.nbinput.container div.input_area > div[class^='highlight'],
+div.nboutput.container div.output_area > div[class^='highlight']{
+    overflow-y: hidden;
+}
+
+/* hide copybtn icon on prompts (needed for 'sphinx_copybutton') */
+.prompt a.copybtn {
+    display: none;
+}
+
+/* Some additional styling taken form the Jupyter notebook CSS */
+div.rendered_html table {
+  border: none;
+  border-collapse: collapse;
+  border-spacing: 0;
+  color: black;
+  font-size: 12px;
+  table-layout: fixed;
+}
+div.rendered_html thead {
+  border-bottom: 1px solid black;
+  vertical-align: bottom;
+}
+div.rendered_html tr,
+div.rendered_html th,
+div.rendered_html td {
+  text-align: right;
+  vertical-align: middle;
+  padding: 0.5em 0.5em;
+  line-height: normal;
+  white-space: normal;
+  max-width: none;
+  border: none;
+}
+div.rendered_html th {
+  font-weight: bold;
+}
+div.rendered_html tbody tr:nth-child(odd) {
+  background: #f5f5f5;
+}
+div.rendered_html tbody tr:hover {
+  background: rgba(66, 165, 245, 0.2);
+}
+</style>
+<div class="section" id="Basic-librat-/-start-operation">
+<h1><span class="section-number">2. </span>Basic librat / start operation<a class="headerlink" href="#Basic-librat-/-start-operation" title="Permalink to this headline">¶</a></h1>
+<p>Librat is the library of function calls around which you can write your own code to do things such as read in and parse an object file, read in and parse camera, illumination files, waveband files and so on. However, start is a wrapper code around these commands which gives you access to all the basic operations, and so is the de facto tool for doing simulations. The key things required to carry out a simulation are:</p>
+<ul class="simple">
+<li><p>A camera file</p></li>
+<li><p>An illumination file</p></li>
+<li><p>A waveband file</p></li>
+<li><p>An object file - this is always assumed to be the last file on the start command line</p></li>
+</ul>
+<p>Anything specific you want to do in any of these parts of the process is specified in these files. There are a limited number of additional command line options which either allow you to override a few key things in these files (the waveband file for example), or more usually are external to these things. Each of these can be passed through via the <code class="docutils literal notranslate"><span class="pre">-RAT</span></code> keyword. Examples are the ray tree depth (<code class="docutils literal notranslate"><span class="pre">-RATm</span></code>) , verbose level (<code class="docutils literal notranslate"><span class="pre">-RATv</span></code>), waveband file (<code class="docutils literal notranslate"><span class="pre">-RATsensor_wavebands</span></code>) etc.</p>
+<hr class="docutils" />
+<div class="section" id="Object-example-1:-planes-and-ellipsoids">
+<h2><span class="section-number">2.1. </span>Object example 1: planes and ellipsoids<a class="headerlink" href="#Object-example-1:-planes-and-ellipsoids" title="Permalink to this headline">¶</a></h2>
+<hr class="docutils" />
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
+<span></span>%%bash
+mkdir -p test/test_examples
+</pre></div>
+</div>
+</div>
+<p>Now, a simple scene object <code class="docutils literal notranslate"><span class="pre">`test/test_examples/first.obj</span></code> &lt;test/test_examples/first.obj&gt;`__</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
+<span></span>%%bash
+
+cat <span class="s">&lt;&lt;EOF &gt; test/test_examples/first.obj</span>
+<span class="s"># My first object file</span>
+<span class="s">mtllib plants.matlib</span>
+<span class="s">usemtl white</span>
+<span class="s">v 0 0 0</span>
+<span class="s">v 0 0 1</span>
+<span class="s">plane -1 -2</span>
+<span class="s">!{</span>
+<span class="s">usemtl white</span>
+<span class="s">!{</span>
+<span class="s">v 0 0 1000</span>
+<span class="s">ell -1 30000 30000 1000</span>
+<span class="s">!}</span>
+<span class="s">!}</span>
+<span class="s">EOF</span>
+</pre></div>
+</div>
+</div>
+<p>This object uses a material library <code class="docutils literal notranslate"><span class="pre">`plants.matlib</span></code> &lt;test/test_examples/plants.matlib&gt;`__ that specifies the reflectance and transmittance properties of the scene materials.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
+<span></span>%%bash
+
+cat <span class="s">&lt;&lt;EOF &gt; test/test_examples/plants.matlib</span>
+<span class="s">srm white refl/white.dat</span>
+<span class="s">EOF</span>
+</pre></div>
+</div>
+</div>
+<p>In this example, the file contains the single line:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">srm</span> <span class="n">white</span> <span class="n">refl</span><span class="o">/</span><span class="n">white</span><span class="o">.</span><span class="n">dat</span>
+</pre></div>
+</div>
+<p>so there is only a single material of type <code class="docutils literal notranslate"><span class="pre">srm</span></code> (standard reflectance material - Lambertian reflectance (and/or transmittance). The material name is <code class="docutils literal notranslate"><span class="pre">white</span></code> and the (ASCII) file giving the spectral reflectance function is <code class="docutils literal notranslate"><span class="pre">`refl/white.dat</span></code> &lt;test/test_examples/refl/white.dat&gt;`__.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
+<span></span>%%bash
+
+mkdir -p test/test_examples/refl
+
+cat <span class="s">&lt;&lt;EOF &gt; test/test_examples/refl/white.dat</span>
+<span class="s">0 1</span>
+<span class="s">10000 1</span>
+<span class="s">EOF</span>
+</pre></div>
+</div>
+</div>
+<p>The file <code class="docutils literal notranslate"><span class="pre">`refl/white.dat</span></code> &lt;test/test_examples/refl/white.dat&gt;`__ contains 2 columns: column 1 is ‘wavelength’ (really, a pseudo-wavelength in this case), column 2 is reflectance for that wavelength (wavelength units are arbitrary, but we usually use nm).</p>
+<p>In this case, the file specifies:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">0</span> <span class="mi">1</span>
+<span class="mi">10000</span> <span class="mi">1</span>
+</pre></div>
+</div>
+<p>which is a reflectance of 1.0 for any wavelength (less than or equal to an arbitrary upper limit 10000). If the file specifies transmittance as well, this is given as a third column.</p>
+<p>Looking back to <code class="docutils literal notranslate"><span class="pre">`test/test_examples/first.obj</span></code> &lt;test/test_examples/first.obj&gt;`__, the line:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mtllib</span> <span class="n">plants</span><span class="o">.</span><span class="n">matlib</span>
+</pre></div>
+</div>
+<p>tells the librat reader to load the ‘material library’ called <code class="docutils literal notranslate"><span class="pre">`plants.matlib</span></code> &lt;test/test_examples/plants.matlib&gt;`__. First, it will look in the current directory for the file. If it doesn’t find it there, it will see if the environment variable <code class="docutils literal notranslate"><span class="pre">MATLIB</span></code> is set. If so, it will look there next.</p>
+</div>
+<div class="section" id="Environment-variables">
+<h2><span class="section-number">2.2. </span>Environment variables<a class="headerlink" href="#Environment-variables" title="Permalink to this headline">¶</a></h2>
+<p>The following environmental variables can be used:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Name</p></th>
+<th class="head"><p>File types</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">MATLIB</span></code></p></td>
+<td><p>material library e.g. <code class="docutils literal notranslate"><span class="pre">`plants.matlib</span></code> &lt;test/test_examples/plants.matlib&gt;`__, all materials defined in a material library e.g. <code class="docutils literal notranslate"><span class="pre">`refl/white.dat</span></code> &lt;test/test_examples/refl/white.dat&gt;`__</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ARARAT_OBJECT</span></code></p></td>
+<td><p>(extended) wavefront object files e.g. <code class="docutils literal notranslate"><span class="pre">`first.obj</span></code> &lt;test/test_examples/first.obj&gt;`__</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">DIRECT_ILLUMINATION</span></code></p></td>
+<td><p>spectral files for direct illumination: those defined in -RATdirect command line option</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">RSRLIB</span></code></p></td>
+<td><p>sensor waveband files: those defined in -RATsensor_wavebands command line option</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">BPMS_FILES</span></code></p></td>
+<td><p>Not used</p></td>
+</tr>
+</tbody>
+</table>
+<p>You can set all of these to the same value, in which case the database of files is all defined relative to that point. This is the most typical use of <code class="docutils literal notranslate"><span class="pre">librat</span></code>. We illustrate this setup below for the <code class="docutils literal notranslate"><span class="pre">librat</span></code> distribution, where a set of examples use files from the directory <code class="docutils literal notranslate"><span class="pre">test/test_example</span></code>.</p>
+<p>Additionally, the following environment variables can be set to extend the size of some aspects of the model. You would only need to use these in some extreme case.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Name</p></th>
+<th class="head"><p>Purpose</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">MAX_GROUPS</span></code></p></td>
+<td><p>Maximum number of groups allowed (100000)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">PRAT_MAX_MATERIALS</span></code></p></td>
+<td><p>Maximum number of materials allowed (DEFAULT_PRAT_MAX_MATERIALS=1024 in <code class="docutils literal notranslate"><span class="pre">mtllib.h</span></code>)</p></td>
+</tr>
+</tbody>
+</table>
+<p>In this case, we would want to set <code class="docutils literal notranslate"><span class="pre">MATLIB</span></code> to <code class="docutils literal notranslate"><span class="pre">test/test_examples</span></code> before invoking <code class="docutils literal notranslate"><span class="pre">librat</span></code>. In <code class="docutils literal notranslate"><span class="pre">bash</span></code> for example, this is done with:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
+<span></span>%%bash
+
+<span class="nb">export</span> <span class="nv">MATLIB</span><span class="o">=</span>test/test_examples
+</pre></div>
+</div>
+</div>
+<p>Let’s put all of these into a shell called <code class="docutils literal notranslate"><span class="pre">`init.sh</span></code> &lt;test/test_examples/init.sh&gt;`__:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
+<span></span>%%bash
+
+<span class="c1"># create the init.sh file we want</span>
+<span class="nv">outfile</span><span class="o">=</span>test/test_examples/init.sh
+
+cat <span class="s">&lt;&lt;EOF &gt; $outfile</span>
+<span class="s">#!/bin/bash</span>
+<span class="s">#</span>
+<span class="s"># preamble</span>
+<span class="s">#</span>
+<span class="s">BPMS=\${BPMS-\$(pwd)}</span>
+<span class="s"># set shell variables lib, bin, verbose</span>
+<span class="s"># with defaults in case not set</span>
+<span class="s">lib=\${lib-&quot;\$BPMS/src&quot;}</span>
+<span class="s">bin=\${bin-&quot;\$BPMS/src&quot;}</span>
+<span class="s">VERBOSE=\${VERBOSE-1}</span>
+
+<span class="s"># set up required environment variables for bash</span>
+<span class="s">export LD_LIBRARY_PATH=&quot;\${lib}:\${LD_LIBRARY_PATH}&quot;</span>
+<span class="s">export DYLD_LIBRARY_PATH=&quot;\${lib}:\${DYLD_LIBRARY_PATH}&quot;</span>
+<span class="s">export PATH=&quot;\${bin}:\${PATH}&quot;</span>
+
+<span class="s"># set up required environment variables for librat</span>
+<span class="s">export TEST=\${BPMS}/test/test_example</span>
+<span class="s">export MATLIB=\$TEST</span>
+<span class="s">export RSRLIB=\$TEST</span>
+<span class="s">export ARARAT_OBJECT=\$TEST</span>
+<span class="s">export DIRECT_ILLUMINATION=\$TEST</span>
+<span class="s">export BPMS_FILES=\$TEST</span>
+
+<span class="s">if [ &quot;\$(which start)&quot; == &quot;\${bin}/start&quot; ]</span>
+<span class="s">then</span>
+<span class="s">  if [ &quot;\$VERBOSE&quot; ]; then</span>
+<span class="s">      echo &quot;start found ok&quot;</span>
+<span class="s">  fi</span>
+<span class="s">else</span>
+<span class="s">  # we should create them</span>
+<span class="s">  make clean all</span>
+<span class="s">fi</span>
+<span class="s">EOF</span>
+
+<span class="c1"># set executable mode</span>
+chmod +x <span class="nv">$outfile</span>
+<span class="c1"># test run</span>
+<span class="nv">$outfile</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+make: *** No rule to make target `clean&#39;.  Stop.
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">CalledProcessError</span>                        Traceback (most recent call last)
+<span class="ansi-green-fg">&lt;ipython-input-6-d988add8e183&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
+<span class="ansi-green-fg">----&gt; 1</span><span class="ansi-red-fg"> </span>get_ipython<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">.</span>run_cell_magic<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">&#39;bash&#39;</span><span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">&#39;&#39;</span><span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">&#39;\n# create the init.sh file we want\noutfile=test/test_examples/init.sh\n\ncat &lt;&lt;EOF &gt; $outfile\n#!/bin/bash\n#\n# preamble \n#\nBPMS=\\${BPMS-\\$(pwd)}\n# set shell variables lib, bin, verbose\n# with defaults in case not set \nlib=\\${lib-&#34;\\$BPMS/src&#34;}\nbin=\\${bin-&#34;\\$BPMS/src&#34;}\nVERBOSE=\\${VERBOSE-1}\n\n# set up required environment variables for bash\nexport LD_LIBRARY_PATH=&#34;\\${lib}:\\${LD_LIBRARY_PATH}&#34;\nexport DYLD_LIBRARY_PATH=&#34;\\${lib}:\\${DYLD_LIBRARY_PATH}&#34;\nexport PATH=&#34;\\${bin}:\\${PATH}&#34;\n\n# set up required environment variables for librat\nexport TEST=\\${BPMS}/test/test_example\nexport MATLIB=\\$TEST\nexport RSRLIB=\\$TEST\nexport ARARAT_OBJECT=\\$TEST\nexport DIRECT_ILLUMINATION=\\$TEST\nexport BPMS_FILES=\\$TEST\n\nif [ &#34;\\$(which start)&#34; == &#34;\\${bin}/start&#34; ]\nthen\n  if [ &#34;\\$VERBOSE&#34; ]; then\n      echo &#34;start found ok&#34;\n  fi\nelse\n  # we should create them\n  make clean all \nfi\nEOF\n\n# set executable mode\nchmod +x $outfile\n# test run\n$outfile\n&#39;</span><span class="ansi-blue-fg">)</span>
+
+<span class="ansi-green-fg">~/opt/anaconda3/envs/librat/lib/python3.8/site-packages/IPython/core/interactiveshell.py</span> in <span class="ansi-cyan-fg">run_cell_magic</span><span class="ansi-blue-fg">(self, magic_name, line, cell)</span>
+<span class="ansi-green-intense-fg ansi-bold">   2360</span>             <span class="ansi-green-fg">with</span> self<span class="ansi-blue-fg">.</span>builtin_trap<span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">   2361</span>                 args <span class="ansi-blue-fg">=</span> <span class="ansi-blue-fg">(</span>magic_arg_s<span class="ansi-blue-fg">,</span> cell<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-fg">-&gt; 2362</span><span class="ansi-red-fg">                 </span>result <span class="ansi-blue-fg">=</span> fn<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">*</span>args<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">**</span>kwargs<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">   2363</span>             <span class="ansi-green-fg">return</span> result
+<span class="ansi-green-intense-fg ansi-bold">   2364</span>
+
+<span class="ansi-green-fg">~/opt/anaconda3/envs/librat/lib/python3.8/site-packages/IPython/core/magics/script.py</span> in <span class="ansi-cyan-fg">named_script_magic</span><span class="ansi-blue-fg">(line, cell)</span>
+<span class="ansi-green-intense-fg ansi-bold">    140</span>             <span class="ansi-green-fg">else</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">    141</span>                 line <span class="ansi-blue-fg">=</span> script
+<span class="ansi-green-fg">--&gt; 142</span><span class="ansi-red-fg">             </span><span class="ansi-green-fg">return</span> self<span class="ansi-blue-fg">.</span>shebang<span class="ansi-blue-fg">(</span>line<span class="ansi-blue-fg">,</span> cell<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    143</span>
+<span class="ansi-green-intense-fg ansi-bold">    144</span>         <span class="ansi-red-fg"># write a basic docstring:</span>
+
+<span class="ansi-green-fg">&lt;decorator-gen-110&gt;</span> in <span class="ansi-cyan-fg">shebang</span><span class="ansi-blue-fg">(self, line, cell)</span>
+
+<span class="ansi-green-fg">~/opt/anaconda3/envs/librat/lib/python3.8/site-packages/IPython/core/magic.py</span> in <span class="ansi-cyan-fg">&lt;lambda&gt;</span><span class="ansi-blue-fg">(f, *a, **k)</span>
+<span class="ansi-green-intense-fg ansi-bold">    185</span>     <span class="ansi-red-fg"># but it&#39;s overkill for just that one bit of state.</span>
+<span class="ansi-green-intense-fg ansi-bold">    186</span>     <span class="ansi-green-fg">def</span> magic_deco<span class="ansi-blue-fg">(</span>arg<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-fg">--&gt; 187</span><span class="ansi-red-fg">         </span>call <span class="ansi-blue-fg">=</span> <span class="ansi-green-fg">lambda</span> f<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">*</span>a<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">**</span>k<span class="ansi-blue-fg">:</span> f<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">*</span>a<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">**</span>k<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    188</span>
+<span class="ansi-green-intense-fg ansi-bold">    189</span>         <span class="ansi-green-fg">if</span> callable<span class="ansi-blue-fg">(</span>arg<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+
+<span class="ansi-green-fg">~/opt/anaconda3/envs/librat/lib/python3.8/site-packages/IPython/core/magics/script.py</span> in <span class="ansi-cyan-fg">shebang</span><span class="ansi-blue-fg">(self, line, cell)</span>
+<span class="ansi-green-intense-fg ansi-bold">    243</span>             sys<span class="ansi-blue-fg">.</span>stderr<span class="ansi-blue-fg">.</span>flush<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    244</span>         <span class="ansi-green-fg">if</span> args<span class="ansi-blue-fg">.</span>raise_error <span class="ansi-green-fg">and</span> p<span class="ansi-blue-fg">.</span>returncode<span class="ansi-blue-fg">!=</span><span class="ansi-cyan-fg">0</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-fg">--&gt; 245</span><span class="ansi-red-fg">             </span><span class="ansi-green-fg">raise</span> CalledProcessError<span class="ansi-blue-fg">(</span>p<span class="ansi-blue-fg">.</span>returncode<span class="ansi-blue-fg">,</span> cell<span class="ansi-blue-fg">,</span> output<span class="ansi-blue-fg">=</span>out<span class="ansi-blue-fg">,</span> stderr<span class="ansi-blue-fg">=</span>err<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    246</span>
+<span class="ansi-green-intense-fg ansi-bold">    247</span>     <span class="ansi-green-fg">def</span> _run_script<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">,</span> p<span class="ansi-blue-fg">,</span> cell<span class="ansi-blue-fg">,</span> to_close<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+
+<span class="ansi-red-fg">CalledProcessError</span>: Command &#39;b&#39;\n# create the init.sh file we want\noutfile=test/test_examples/init.sh\n\ncat &lt;&lt;EOF &gt; $outfile\n#!/bin/bash\n#\n# preamble \n#\nBPMS=\\${BPMS-\\$(pwd)}\n# set shell variables lib, bin, verbose\n# with defaults in case not set \nlib=\\${lib-&#34;\\$BPMS/src&#34;}\nbin=\\${bin-&#34;\\$BPMS/src&#34;}\nVERBOSE=\\${VERBOSE-1}\n\n# set up required environment variables for bash\nexport LD_LIBRARY_PATH=&#34;\\${lib}:\\${LD_LIBRARY_PATH}&#34;\nexport DYLD_LIBRARY_PATH=&#34;\\${lib}:\\${DYLD_LIBRARY_PATH}&#34;\nexport PATH=&#34;\\${bin}:\\${PATH}&#34;\n\n# set up required environment variables for librat\nexport TEST=\\${BPMS}/test/test_example\nexport MATLIB=\\$TEST\nexport RSRLIB=\\$TEST\nexport ARARAT_OBJECT=\\$TEST\nexport DIRECT_ILLUMINATION=\\$TEST\nexport BPMS_FILES=\\$TEST\n\nif [ &#34;\\$(which start)&#34; == &#34;\\${bin}/start&#34; ]\nthen\n  if [ &#34;\\$VERBOSE&#34; ]; then\n      echo &#34;start found ok&#34;\n  fi\nelse\n  # we should create them\n  make clean all \nfi\nEOF\n\n# set executable mode\nchmod +x $outfile\n# test run\n$outfile\n&#39;&#39; returned non-zero exit status 2.
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>
+</pre></div>
+</div>
+</div>
+<p>The object code line:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usemtl</span> <span class="n">white</span>
+</pre></div>
+</div>
+<p>tells <code class="docutils literal notranslate"><span class="pre">librat</span></code> to load the material named <code class="docutils literal notranslate"><span class="pre">white</span></code>. Since we defined that in <code class="docutils literal notranslate"><span class="pre">`plants.matlib</span></code> &lt;test/test_examples/plants.matlib&gt;`__ as type <code class="docutils literal notranslate"><span class="pre">srm</span></code> with spectral file <code class="docutils literal notranslate"><span class="pre">`refl/white.dat</span></code> &lt;test/test_examples/refl/white.dat&gt;`__, the material will have a Lambertian reflectance of <code class="docutils literal notranslate"><span class="pre">1.0</span></code> for all (up to 10000 units) wavelengths.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
+<span></span>%%bash
+
+cat <span class="s">&lt;&lt;EOF &gt; test/test_examples/white.dat</span>
+<span class="s">1 1.0</span>
+<span class="s">1000 1.0</span>
+<span class="s">EOF</span>
+</pre></div>
+</div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>mtllib plants.matlib
+usemtl white
+v 0 0 0
+v 0 0 1
+plane -1 -2
+!{
+usemtl white
+!{
+v 0 0 1000
+ell -1 30000 30000 1000
+!}
+!}
+</pre></div>
+</div>
+<p>The fields starting <code class="docutils literal notranslate"><span class="pre">v</span></code> in <code class="docutils literal notranslate"><span class="pre">`test/test_examples/first.obj</span></code> &lt;test/test_examples/first.obj&gt;`__ denote a vertex (vector) (as in the standard wavefront format). This requires 3 numbers to be given after the <code class="docutils literal notranslate"><span class="pre">v</span></code> giving the {x,y,z} coordinates of the vector. Note that <code class="docutils literal notranslate"><span class="pre">v</span></code> fields can specify a <em>location</em> or <em>direction</em> vector.</p>
+<p>The fields <code class="docutils literal notranslate"><span class="pre">plane</span></code> and <code class="docutils literal notranslate"><span class="pre">ell</span></code> specify scene objects. We will look at a fuller range of such objects later, but these two allow for a simple scene specification. plane is an infinite planar object. It is defined by an intersection point (location vector) <code class="docutils literal notranslate"><span class="pre">I</span></code> and a direction vector <code class="docutils literal notranslate"><span class="pre">N</span></code>. These vectors need to be defined before a call is made to the object, so in this case, we define <code class="docutils literal notranslate"><span class="pre">I</span></code> as <code class="docutils literal notranslate"><span class="pre">0</span> <span class="pre">0</span> <span class="pre">0</span></code> and <code class="docutils literal notranslate"><span class="pre">N</span></code> as <code class="docutils literal notranslate"><span class="pre">0</span> <span class="pre">0</span> <span class="pre">1</span></code>, i.e. an x-y plane at z=0.</p>
+<p>Thus <code class="docutils literal notranslate"><span class="pre">plane</span> <span class="pre">-1</span> <span class="pre">-2</span></code> means ‘define a plane with <code class="docutils literal notranslate"><span class="pre">N</span></code> given by the previous (<code class="docutils literal notranslate"><span class="pre">-1</span></code>) specified vector that goes through <code class="docutils literal notranslate"><span class="pre">I</span></code> given by the second to last specified vector (<code class="docutils literal notranslate"><span class="pre">-2</span></code>).’</p>
+<p><code class="docutils literal notranslate"><span class="pre">ell</span></code> is an ellipsoid object. Its description requires definition of:</p>
+<ul class="simple">
+<li><p>the base (N.B. not the centre) of the ellipsoid (<code class="docutils literal notranslate"><span class="pre">-1</span></code> here, meaning the previously-defined vector - <code class="docutils literal notranslate"><span class="pre">0</span> <span class="pre">0</span> <span class="pre">1000</span></code> in this case);</p></li>
+<li><p>the semi-axis lengths in <code class="docutils literal notranslate"><span class="pre">x,y,z</span></code> directions (<code class="docutils literal notranslate"><span class="pre">30000</span> <span class="pre">30000</span> <span class="pre">1000</span></code> here).</p></li>
+</ul>
+<p>so:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">v</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">1000</span>
+<span class="n">ell</span> <span class="o">-</span><span class="mi">1</span> <span class="mi">30000</span> <span class="mi">30000</span> <span class="mi">1000</span>
+</pre></div>
+</div>
+<p>is in fact a spheroid of x-y semi-axis length 30000 units (arbitrary linear units) and z-semi-axis length 1000 units: a <em>prolate</em> spheroid that extends from <code class="docutils literal notranslate"><span class="pre">-30000</span></code> to <code class="docutils literal notranslate"><span class="pre">30000</span></code> in the x- and y-directions and from <code class="docutils literal notranslate"><span class="pre">1000</span></code> to <code class="docutils literal notranslate"><span class="pre">3000</span></code> in the z-direction. Not that the physical unit for these dimensions is arbitrary, but must be consistent throughout.</p>
+<p>The fields <code class="docutils literal notranslate"><span class="pre">!{</span></code> and <code class="docutils literal notranslate"><span class="pre">!}</span></code> in <code class="docutils literal notranslate"><span class="pre">`test/test_examples/first.obj</span></code> &lt;test/test_examples/first.obj&gt;`__ specify that a bounding box should be placed around objects contained within the brackets. This allows for efficient intersection tests in the ray tracing.</p>
+<p>We now want to use the code <code class="docutils literal notranslate"><span class="pre">start</span></code> to run <code class="docutils literal notranslate"><span class="pre">librat</span></code> functionality.</p>
+<p>If you have compiled the code, the executable and library should be in the directory <code class="docutils literal notranslate"><span class="pre">`src</span></code> &lt;src&gt;`__ as</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">src</span><span class="o">/</span><span class="n">start</span>
+<span class="n">src</span><span class="o">/</span><span class="n">libratlib</span><span class="o">.</span><span class="p">[</span><span class="n">dll</span><span class="p">,</span><span class="n">so</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>The suffix for the library will be <code class="docutils literal notranslate"><span class="pre">dll</span></code> on windows, and <code class="docutils literal notranslate"><span class="pre">so</span></code> on other operating systems. Lets just check they are there:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
+<span></span>%%bash
+
+<span class="nv">lib</span><span class="o">=</span><span class="s1">&#39;./src&#39;</span>
+<span class="nv">bin</span><span class="o">=</span><span class="s1">&#39;./src&#39;</span>
+
+ls -l <span class="si">${</span><span class="nv">lib</span><span class="si">}</span>/start <span class="si">${</span><span class="nv">bin</span><span class="si">}</span>/libratlib.*
+</pre></div>
+</div>
+</div>
+<p>Don’t worry too much if its not there as we can make it when we need it.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
+<span></span>%%bash
+
+<span class="c1">#</span>
+<span class="c1"># shell preamble</span>
+<span class="c1">#</span>
+
+<span class="c1"># set shell variables lib, bin, verbose</span>
+<span class="c1"># with defaults in case not set</span>
+<span class="nv">lib</span><span class="o">=</span><span class="si">${</span><span class="nv">lib</span><span class="p">-</span><span class="s1">&#39;./src&#39;</span><span class="si">}</span>
+<span class="nv">bin</span><span class="o">=</span><span class="si">${</span><span class="nv">bin</span><span class="p">-</span><span class="s1">&#39;./src&#39;</span><span class="si">}</span>
+<span class="nv">verbose</span><span class="o">=</span><span class="si">${</span><span class="nv">verbose</span><span class="p">-1</span><span class="si">}</span>
+
+<span class="c1"># set up required environment variables for bash</span>
+<span class="nb">export</span> <span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">lib</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">LD_LIBRARY_PATH</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="nb">export</span> <span class="nv">DYLD_LIBRARY_PATH</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">lib</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">DYLD_LIBRARY_PATH</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">bin</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">PATH</span><span class="si">}</span><span class="s2">&quot;</span>
+
+<span class="c1"># set up required environment variables for librat</span>
+<span class="nb">export</span> <span class="nv">TEST</span><span class="o">=</span><span class="si">${</span><span class="nv">BPMS</span><span class="si">}</span>/test/test_example
+<span class="nb">export</span> <span class="nv">MATLIB</span><span class="o">=</span><span class="nv">$TEST</span>
+<span class="nb">export</span> <span class="nv">RSRLIB</span><span class="o">=</span><span class="nv">$TEST</span>
+<span class="nb">export</span> <span class="nv">ARARAT_OBJECT</span><span class="o">=</span><span class="nv">$TEST</span>
+<span class="nb">export</span> <span class="nv">DIRECT_ILLUMINATION</span><span class="o">=</span><span class="nv">$TEST</span>
+<span class="nb">export</span> <span class="nv">BPMS_FILES</span><span class="o">=</span><span class="nv">$TEST</span>
+
+<span class="k">if</span> <span class="o">[</span> <span class="k">$(</span>which start<span class="k">)</span> <span class="o">==</span> <span class="s1">&#39;./src/start&#39;</span> <span class="o">]</span>
+<span class="k">then</span>
+  <span class="k">if</span> <span class="o">[</span> <span class="nv">$verbose</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+      <span class="nb">echo</span> <span class="s2">&quot;start found ok&quot;</span>
+  <span class="k">fi</span>
+<span class="k">else</span>
+  <span class="c1"># we should create them</span>
+  make clean all
+<span class="k">fi</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Object-example-2:-clones">
+<h2><span class="section-number">2.3. </span>Object example 2: clones<a class="headerlink" href="#Object-example-2:-clones" title="Permalink to this headline">¶</a></h2>
+<hr class="docutils" />
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
+<span></span>%%bash
+
+cat <span class="s">&lt;&lt;EOF &gt; test/test_examples/second.obj</span>
+<span class="s">!{</span>
+<span class="s">mtllib plants.matlib</span>
+<span class="s">v 0.000000 0.000000 0.000000</span>
+<span class="s">v 0.000000 0.000000 1.000000</span>
+<span class="s">usemtl full</span>
+<span class="s">plane -1 -2</span>
+<span class="s">!{</span>
+<span class="s">#define</span>
+<span class="s">g object 0</span>
+<span class="s">usemtl half</span>
+<span class="s">v 0 0 0</span>
+<span class="s">v 0 0 1</span>
+<span class="s">cyl -1 -2 0.1</span>
+<span class="s">sph -1 0.2</span>
+<span class="s">v -1 0 1</span>
+<span class="s">cyl -1 -2 0.1</span>
+<span class="s">!}</span>
+<span class="s">!{</span>
+<span class="s">clone 0 0 0 0 object 0</span>
+<span class="s">clone 0 1 0 90 object 0</span>
+<span class="s">clone -1 0 0 -90 object 0</span>
+<span class="s">!}</span>
+<span class="s">!}</span>
+<span class="s">EOF</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="Appendix1.html" class="btn btn-neutral float-right" title="3. Appendix 1: bash help" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="Chapter1.html" class="btn btn-neutral" title="1. Initialisation" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Prof. P. Lewis.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> and ❤️  using a custom <a href="https://github.com/LinxiFan/Stanford-theme">theme</a> based on <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="_static/language_data.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

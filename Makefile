@@ -1,7 +1,6 @@
 all:	src/makefile 
-	@cd src;$(MAKE) all ratstart
-	@cd docs;$(MAKE) html
-	@cd docs;$(MAKE) latexpdf
+	cd src;$(MAKE) all ratstart
+	cd docs;$(MAKE) html
 
 
 src/makefile:

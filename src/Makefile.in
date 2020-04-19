@@ -59,6 +59,9 @@ all:		${LIBRAT}.${LIBEXT}
 
 # object building
 
+RATstart.o:	
+		$(CC) ${OPT} -I. -DDOUBLEDEF  -D${ARCH} ${CFLAGS} -o RATstart.o -c RATstart.c
+
 %.o:		%.c
 		$(CC) ${OPT} -I. -DDOUBLEDEF  -D${ARCH} ${CFLAGS} -o $@ -c $<
 

@@ -6,3 +6,4 @@ dependencies:
     - matplotlib 
     - pandas  
     - nbsphinx
+    - sphinx

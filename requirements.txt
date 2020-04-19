@@ -1,4 +1,4 @@
-
+sphinx
 flake8
 pytest
 stanford_theme

@@ -158,11 +158,11 @@ To compile and test the library (after running [`./configure`)](configure), type
 
     make clean all test
     
-Press the `<return>` key to execute the command. In fact, if you forget to run [`./configure`)](configure), this will run it for you, via the file [`makefile`](makefile). The command `make clean` clears out any previously compiled code. Then `make all` compiles the library `${BPMS}/lib/${ARCH}/libratlib.so` (so, you refer to this as `-L ${BPMS}/lib/${ARCH} -lratlib`. It also compiles a `C` language interface to the library, `${BPMS}/bin/${ARCH}/start`. `make test` runs a test on the `start` code, comparing a simple ray tracing outout to a reference one.
+Press the `<return>` key to execute the command. In fact, if you forget to run [`./configure`)](configure), this will run it for you, via the file [`makefile`](makefile). The command `make clean` clears out any previously compiled code. Then `make all` compiles the library `${BPMS}/lib/${ARCH}/libratlib.so` (so, you refer to this as `-L ${BPMS}/lib/${ARCH} -lratlib`. It also compiles a `C` language interface to the library, `${BPMS}/bin/${ARCH}/ratstart`. `make test` runs a test on the `ratstart` code, comparing a simple ray tracing outout to a reference one.
 
 To sum up, after compilation, you will have generated files in
 
-* [`bin/${ARCH}`](bin/x86_64) : executable -- `start`
+* [`bin/${ARCH}`](bin/x86_64) : executable -- `ratstart`
 * [`lib/${ARCH}`](lib/x86_64) : shared object library -- `libratlib.so`
 
 Notice that these links ⛓ (`bin/x86_64`, `lib/x86_64`)  don't exist on the github repository: they are user-generated!

@@ -1,5 +1,8 @@
 all:	src/makefile 
-	@cd src;$(MAKE) clean all ratstart
+	@cd src;$(MAKE) all ratstart
+	@cd docs;$(MAKE) html
+	@cd docs;$(MAKE) latexpdf
+
 
 src/makefile:
 	./configure

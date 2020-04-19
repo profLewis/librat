@@ -7,7 +7,7 @@ OPTS=("-fPIC" "-I." )
 
 
 # specify a temporary directory
-TMP=/tmp
+TEMP=/tmp
 
 
 # see
@@ -88,29 +88,29 @@ mkdir -p bin/${OS}
 PATH=".:c/MinGW/bin:bin:bin/${OS}:${PATH}"
 
 # create test C code file
-echo '#include <stdio.h>' > $TMP/test_$$.c
-echo 'int no_main(int argc,char ** argv){printf("hello world\\n");return(1);}' >> $TMP/test_$$.c
-echo '' >> $TMP/test_$$.c
+echo '#include <stdio.h>' > $TEMP/test_$$.c
+echo 'int no_main(int argc,char ** argv){printf("hello world\\n");return(1);}' >> $TEMP/test_$$.c
+echo '' >> $TEMP/test_$$.c
 
 ##################
 # $CC
 ##################
 CC=$(test_cmd "which" "${CCS[@]}")
-sed < ${BPMS}/src/makefile 's/@CC@/'"$CC"'/' > $TMP/tmp.$$; mv $TMP/tmp.$$ ${BPMS}/src/makefile
+sed < ${BPMS}/src/makefile 's/@CC@/'"$CC"'/' > $TEMP/tmp.$$; mv $TEMP/tmp.$$ ${BPMS}/src/makefile
 
 ##################
 # $CFLAGS
 ##################
-CFLAGS=$(test_cmd "${CC} $TMP/test_$$.c -o $TMP/test_$$.o -c" "${CFLAGSS[@]}")
-sed < ${BPMS}/src/makefile 's/@CFLAGS@/'"$CFLAGS"'/' > $TMP/tmp.$$; mv $TMP/tmp.$$ ${BPMS}/src/makefile
+CFLAGS=$(test_cmd "${CC} $TEMP/test_$$.c -o $TEMP/test_$$.o -c" "${CFLAGSS[@]}")
+sed < ${BPMS}/src/makefile 's/@CFLAGS@/'"$CFLAGS"'/' > $TEMP/tmp.$$; mv $TEMP/tmp.$$ ${BPMS}/src/makefile
 
 ################## 
 # $OPT
 ##################
-OPT=$(test_cmd "${CC} ${CFLAGS} $TMP/test_$$.c -o $TMP/test_$$.o -c" "${OPTS[@]}")
-sed < ${BPMS}/src/makefile 's/@OPT@/'"$OPT"'/' > $TMP/tmp.$$; mv $TMP/tmp.$$ ${BPMS}/src/makefile
+OPT=$(test_cmd "${CC} ${CFLAGS} $TEMP/test_$$.c -o $TEMP/test_$$.o -c" "${OPTS[@]}")
+sed < ${BPMS}/src/makefile 's/@OPT@/'"$OPT"'/' > $TEMP/tmp.$$; mv $TEMP/tmp.$$ ${BPMS}/src/makefile
 
 # tidy up
-rm -f $TMP/test_$$.c
+rm -f $TEMP/test_$$.c
 exit 0 
 

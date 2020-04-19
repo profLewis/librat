@@ -432,7 +432,7 @@ chmod +x <span class="nv">$INIT</span>
 </div>
 </div>
 <p>Let’s look at the file we generated:</p>
-<div class="nbinput docutils container">
+<div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
@@ -443,53 +443,13 @@ cat ../../test/test_examples/init.sh
 </pre></div>
 </div>
 </div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-#!/bin/bash
-#
-# preamble
-#
-export BPMS=/Users/plewis/librat
-# set shell variables lib, bin, verbose
-# with defaults in case not set
-lib=${lib-&#34;$BPMS/src&#34;}
-bin=${bin-&#34;$BPMS/src&#34;}
-VERBOSE=${VERBOSE-0}
-
-# set up required environment variables for bash
-export LD_LIBRARY_PATH=&#34;${lib}:${LD_LIBRARY_PATH}&#34;
-export DYLD_LIBRARY_PATH=&#34;${lib}:${DYLD_LIBRARY_PATH}&#34;
-export PATH=&#34;${bin}:${PATH}&#34;
-
-# set up required environment variables for librat
-export BPMSROOT=${BPMSROOT-$BPMS/test/test_examples}
-
-export MATLIB=$BPMSROOT
-export RSRLIB=$BPMSROOT
-export ARARAT_OBJECT=$BPMSROOT
-export DIRECT_ILLUMINATION=$BPMSROOT
-export BPMS_FILES=$BPMSROOT
-if [ &#34;$(which start)&#34; == &#34;${bin}/start&#34; ]
-then
-  if [ &#34;$VERBOSE&#34; == 1 ]; then
-      echo &#34;start found ok&#34;
-  fi
-else
-  # we should create them
-  make clean all
-fi
-</pre></div></div>
-</div>
 <div class="section" id="Environment-variables">
 <h2><span class="section-number">1.1. </span>Environment variables<a class="headerlink" href="#Environment-variables" title="Permalink to this headline">¶</a></h2>
 <p>We might notice that the init shell sets a number of environment variables, namely <code class="docutils literal notranslate"><span class="pre">MATLIB</span></code>, <code class="docutils literal notranslate"><span class="pre">RSRLIB</span></code> etc.</p>
 <p>If you are interested, the meaning of these is given in the table below.</p>
 <p>Alternatively, just notice that in the init shell, all of these variables are set to <code class="docutils literal notranslate"><span class="pre">BPMSROOT</span></code>, so if we want to point to the location of an object and material database for librat, we need only set the environment variable <code class="docutils literal notranslate"><span class="pre">BPMSROOT</span></code> appropriately. In this case it defaults to <code class="docutils literal notranslate"><span class="pre">$BPMS/test/test_example</span></code>.</p>
 <p>If you want to run a shell that uses the <code class="docutils literal notranslate"><span class="pre">init.sh</span></code> setup, you will need to use the command <code class="docutils literal notranslate"><span class="pre">source</span></code> to export the variables to your shell.</p>
-<div class="nbinput docutils container">
+<div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
@@ -501,14 +461,6 @@ fi
 <span class="nb">echo</span> <span class="s2">&quot;MATLIB is set to </span><span class="nv">$MATLIB</span><span class="s2">&quot;</span>
 </pre></div>
 </div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-MATLIB is set to /Users/plewis/librat/test/test_examples
-</pre></div></div>
 </div>
 <p><strong>Table explaining librat object environment variables:</strong></p>
 <table class="docutils align-default">
@@ -679,7 +631,7 @@ BPMSROOT is /tmp
 <p>Wew can try that now:</p>
 <p>We first create a directory to do our work (using the <code class="docutils literal notranslate"><span class="pre">linux</span></code> command <code class="docutils literal notranslate"><span class="pre">mkdir</span></code> in a <code class="docutils literal notranslate"><span class="pre">bash</span></code> shell):</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
 </pre></div>
 </div>
 <div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
@@ -689,9 +641,9 @@ mkdir -p <span class="nv">$BPMS</span>/test/test_examples
 </pre></div>
 </div>
 </div>
-<p>Now we will put some text in a file in that directory:</p>
+<p>Now we will put some text some files in that directory. We will be creating files that we need to run a radiative transfer simulation. We will look into what these mean and their formats later in the notes.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[67]:
 </pre></div>
 </div>
 <div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
@@ -700,6 +652,10 @@ mkdir -p <span class="nv">$BPMS</span>/test/test_examples
 <span class="nb">cd</span> <span class="nv">$BPMS</span>
 <span class="nb">export</span> <span class="nv">BPMS</span><span class="o">=</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>
 
+<span class="c1"># simple object file</span>
+<span class="c1"># with green plane</span>
+<span class="c1"># and sphere of radius 100 mm</span>
+<span class="c1"># centred at (0,0,0)</span>
 cat <span class="s">&lt;&lt;EOF &gt; $BPMS/test/test_examples/first.obj</span>
 <span class="s"># My first object file</span>
 <span class="s">mtllib plants.matlib</span>
@@ -710,24 +666,36 @@ cat <span class="s">&lt;&lt;EOF &gt; $BPMS/test/test_examples/first.obj</span>
 <span class="s">!{</span>
 <span class="s">usemtl white</span>
 <span class="s">!{</span>
-<span class="s">v 0 0 1000</span>
-<span class="s">ell -1 30000 30000 30000</span>
+<span class="s">v 0 0 0</span>
+<span class="s">sph -1 100</span>
 <span class="s">!}</span>
 <span class="s">!}</span>
 <span class="s">EOF</span>
 
+<span class="c1"># wavelengths (nm)</span>
 cat <span class="s">&lt;&lt;EOF &gt; $BPMS/test/test_examples/wavebands.dat</span>
-<span class="s">1 1</span>
-<span class="s">2 1</span>
+<span class="s">1 650</span>
+<span class="s">2 550</span>
+<span class="s">3 450</span>
 <span class="s">EOF</span>
 
+<span class="c1"># spectrum for white</span>
 cat <span class="s">&lt;&lt;EOF &gt; $BPMS/test/test_examples/white.dat</span>
-<span class="s">40 1.0</span>
-<span class="s">300 0.5</span>
+<span class="s">450 1</span>
+<span class="s">550 1</span>
+<span class="s">650 1</span>
 <span class="s">EOF</span>
 
+<span class="c1"># spectrum for green</span>
+cat <span class="s">&lt;&lt;EOF &gt; $BPMS/test/test_examples/green.dat</span>
+<span class="s">450 0.1</span>
+<span class="s">550 0.5</span>
+<span class="s">650 0.1</span>
+<span class="s">EOF</span>
+
+<span class="c1"># library listing materials</span>
 cat <span class="s">&lt;&lt;EOF &gt; $BPMS/test/test_examples/plants.matlib</span>
-<span class="s">srm green white.dat</span>
+<span class="s">srm green green.dat</span>
 <span class="s">srm white white.dat</span>
 <span class="s">EOF</span>
 </pre></div>
@@ -735,7 +703,7 @@ cat <span class="s">&lt;&lt;EOF &gt; $BPMS/test/test_examples/plants.matlib</spa
 </div>
 <p>And now run a simple example:</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[68]:
 </pre></div>
 </div>
 <div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
@@ -745,7 +713,8 @@ cat <span class="s">&lt;&lt;EOF &gt; $BPMS/test/test_examples/plants.matlib</spa
 <span class="nb">export</span> <span class="nv">BPMS</span><span class="o">=</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>
 <span class="nb">source</span> <span class="nv">$BPMS</span>/test/test_examples/init.sh
 
-<span class="nb">echo</span> <span class="m">6</span> <span class="m">6</span> <span class="m">6</span> <span class="m">40000</span> <span class="m">0</span> <span class="m">0</span> -1 <span class="p">|</span> start -RATsensor_wavebands <span class="nv">$BPMS</span>/test/test_examples/wavebands.dat -RATsun_position <span class="m">0</span> <span class="m">1</span> <span class="m">1</span> <span class="nv">$BPMS</span>/test/test_examples/first.obj
+<span class="nb">echo</span> <span class="m">11</span> <span class="p">|</span> start -RATsensor_wavebands <span class="nv">$BPMS</span>/test/test_examples/wavebands.dat <span class="se">\</span>
+                -RATsun_position <span class="m">0</span> <span class="m">1</span> <span class="m">1</span> <span class="nv">$BPMS</span>/test/test_examples/first.obj
 </pre></div>
 </div>
 </div>
@@ -754,69 +723,156 @@ cat <span class="s">&lt;&lt;EOF &gt; $BPMS/test/test_examples/plants.matlib</spa
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-RTD 0
-order: 0        intersection point:     6.000000 6.000000 0.000020
-                ray length:             39999.999980
-                intersection material:  2
-                sun 0:                  1 reflectance
-lengthToSun: 7.874008 angleToSun 82.703725
-                direct:                 0.127000 0.127000
-                sky  :                  reflectance
-                diffuse:                0.000000 0.000000
+x: -99.980001 100.020001
+y: -99.980001 100.020001
+z: -99.980001 100.020001
+bbox centre @ 0.020000 0.020000 0.020000
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[69]:
 </pre></div>
 </div>
 <div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
 <span></span>%%bash
 <span class="nb">export</span> <span class="nv">BPMS</span><span class="o">=</span>../..
+<span class="nb">cd</span> <span class="nv">$BPMS</span>
+<span class="nb">export</span> <span class="nv">BPMS</span><span class="o">=</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>
 <span class="nb">source</span> <span class="nv">$BPMS</span>/test/test_examples/init.sh
 
-cat <span class="s">&lt;&lt;EOF | start $BPMS/test/test_examples/first.obj</span>
-<span class="s">11</span>
-<span class="s">1 2 0 1 1 1 1 1</span>
-<span class="s">3 3 1 300 2 400 3 500</span>
-<span class="s">4</span>
-<span class="s">6 6 6 80000 0 0 -1</span>
-<span class="s">EOF</span>
 
+<span class="nb">echo</span> <span class="s2">&quot;16 0 0 400 400 400  200 200 1 </span><span class="nv">$BPMS</span><span class="s2">/test/test_examples/out.hips&quot;</span> <span class="p">|</span> start <span class="se">\</span>
+    -RATsensor_wavebands <span class="nv">$BPMS</span>/test/test_examples/wavebands.dat  <span class="se">\</span>
+    -RATv  -RATsun_position <span class="m">0</span> <span class="m">1</span> <span class="m">1</span> <span class="nv">$BPMS</span>/test/test_examples/first.obj
 </pre></div>
 </div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-x: -29994.000300 30006.000300
-y: -29994.000300 30006.000300
-z: 1000.200010 61012.200610
-bbox centre @ 6.000000 6.000000 31006.200310
-wavebands: 40.461336 304.242129 232.325066
-RTD 0
-order: 0        intersection point:     6.000000 6.000000 60999.998810
-                ray length:             19000.001190
-                intersection material:  3
-                sun 0:                  1 reflectance
-                direct:                 0.707248 0.707248 0.707248
-                sun 1:                  1 reflectance
-                direct:                 0.577581 0.577581 0.577581
-                sky  :                  reflectance
-                diffuse:                1.000000 1.000000 1.000000
-</pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-how many sun vectors? (&gt;0): enter sun vector number 1 (3 floats): enter sun vector number 2 (3 floats):
+start:
+        VERBOSE flag on (-v option)
+read_spectral_file:     3 data entries read in file /Users/plewis/librat/test/test_examples/wavebands.dat
+( 99.9975)
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[70]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">libhipl</span> <span class="kn">import</span> <span class="n">Hipl</span>
+<span class="kn">import</span> <span class="nn">pylab</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="n">f</span> <span class="o">=</span> <span class="s1">&#39;../../test/test_examples/out.hips&#39;</span>
+<span class="n">rabbit</span><span class="o">=</span><span class="n">Hipl</span><span class="p">()</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">rabbit</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[70]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;matplotlib.colorbar.Colorbar at 0x116d4a6a0&gt;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="_images/Chapter1_18_1.svg" src="_images/Chapter1_18_1.svg" /></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[65]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
+<span></span>%%bash
+<span class="nb">export</span> <span class="nv">BPMS</span><span class="o">=</span>../..
+<span class="nb">cd</span> <span class="nv">$BPMS</span>
+<span class="nb">export</span> <span class="nv">BPMS</span><span class="o">=</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>
+<span class="nb">source</span> <span class="nv">$BPMS</span>/test/test_examples/init.sh
+
+<span class="nb">echo</span> <span class="m">6</span> <span class="m">0</span> <span class="m">0</span> <span class="m">110</span> <span class="m">0</span> <span class="m">0</span> -1 <span class="p">|</span> start -RATsensor_wavebands <span class="nv">$BPMS</span>/test/test_examples/wavebands.dat -RATsun_position <span class="m">0</span> <span class="m">1</span> <span class="m">1</span> <span class="nv">$BPMS</span>/test/test_examples/first.obj
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+RTD 0
+order: 0        intersection point:     0.000000 0.000000 100.000010
+                ray length:             9.999990
+                intersection material:  3
+                sun 0:                  no hit
+                sky  :                  reflectance
+                diffuse:                1.000000 1.000000
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
+<span></span>%%bash
+
+<span class="c1">### wavebands</span>
+
+<span class="nb">export</span> <span class="nv">BPMS</span><span class="o">=</span>../..
+<span class="nb">source</span> <span class="nv">$BPMS</span>/test/test_examples/init.sh
+
+
+<span class="k">for</span> i in <span class="k">$(</span>seq <span class="m">1</span> <span class="m">2</span> <span class="m">40</span><span class="k">)</span>
+<span class="k">do</span>
+cat <span class="s">&lt;&lt;EOF | start -RATr $i $BPMS/test/test_examples/first.obj</span>
+<span class="s">3 3 200 20 300 20 400 20</span>
+<span class="s">4</span>
+<span class="s">EOF</span>
+<span class="k">done</span>
+
+
+<span class="c1"># wavelength is min and width</span>
+
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+wavebands: 202.630756 315.112106 409.173003
+wavebands: 207.892267 305.336319 407.519008
+wavebands: 213.153779 315.560532 405.865013
+wavebands: 218.415290 305.784745 404.211018
+wavebands: 203.676802 316.008958 402.557024
+wavebands: 208.938313 306.233171 400.903029
+wavebands: 214.199825 316.457384 419.249034
+wavebands: 219.461336 306.681597 417.595040
+wavebands: 204.722848 316.905810 415.941045
+wavebands: 209.984359 307.130022 414.287050
+wavebands: 215.245871 317.354235 412.633055
+wavebands: 200.507383 307.578448 410.979061
+wavebands: 205.768894 317.802661 409.325066
+wavebands: 211.030406 308.026874 407.671071
+wavebands: 216.291917 318.251087 406.017077
+wavebands: 201.553429 308.475300 404.363082
+wavebands: 206.814940 318.699513 402.709087
+wavebands: 212.076452 308.923726 401.055092
+wavebands: 217.337963 319.147938 419.401098
+wavebands: 202.599475 309.372151 417.747103
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
 </pre></div>
 </div>
 <div class="input_area highlight-bash notranslate"><div class="highlight"><pre>

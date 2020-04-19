@@ -16,11 +16,12 @@ UCL Geography/NCEO librat software
    :maxdepth: 3
    :caption: Contents:
 
-   Chapter*
-
+   Chapter1
+   Chapter2
    Appendix1
 
 .. _Chapter1: https://mybinder.org/v2/gh/profLewis/librat.git/master?filepath=Chapter1.ipynb
+.. _Chapter2: https://mybinder.org/v2/gh/profLewis/librat.git/master?filepath=Chapter2.ipynb
 .. _Appendix1: https://mybinder.org/v2/gh/profLewis/librat.git/master?filepath=Appendix1.ipynb
 
 .. |image0| image:: ../res/ucl_logo.png 

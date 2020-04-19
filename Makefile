@@ -1,5 +1,5 @@
 all:	src/makefile 
-	@cd src;$(MAKE) clean all start
+	@cd src;$(MAKE) clean all ratstart
 
 src/makefile:
 	./configure

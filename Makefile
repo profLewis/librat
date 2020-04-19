@@ -1,5 +1,5 @@
 all:	src/makefile 
-	cd src;$(MAKE) all ratstart
+	cd src;$(MAKE) all RATstart
 	cd docs;$(MAKE) html
 
 

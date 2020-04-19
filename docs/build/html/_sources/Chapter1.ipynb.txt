@@ -4,84 +4,168 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "# Initialisation\n",
+    "# librat\n",
     "\n",
-    "Before proceeding, we make sure that an appropriate initialisation ('init') file has been generated. We also want to test that the software runs ok. We generate a `bash` shell to achieve this here, and use to his in subsequent notes. \n",
+    "## `libratlib`\n",
     "\n",
-    "You can modify any of this as a user, but be careful not to break it! 🙄. In an emergency, you can always just re-download this set of notes and software from [github](https://github.com/profLewis/librat) and start again.\n",
+    "Its a shared object library ... explain.\n",
     "\n",
-    "If you want to know more about setting up this sort of file, and what it all means, see [Appendix 1](Appendix1). At the moment, you just need to be aware of it, not understand all of the intricacies."
+    "## `RATstart` (formerly `start`)\n",
+    "\n",
+    "Although we could access `librat` functionality directly from the shared object library, its often easier to do this via a simple (`C` code) interface program called `RATstart` (formerly `start`)."
    ]
   },
   {
    "cell_type": "code",
-   "execution_count": 1,
+   "execution_count": 111,
    "metadata": {},
-   "outputs": [],
+   "outputs": [
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "options:\n",
+      "\t-2                   : print PID\n",
+      "\t-1                   : print memory use\n",
+      "\t 0                   : quit\n",
+      "\t 1 n s1x s1y s1z ... : set sun vectors\n",
+      "\t 2                   : print sun vectors\n",
+      "\t 3 n b1 w1 ...i bn wn: set wavebands\n",
+      "\t 4                   : print wavebands\n",
+      "\t 5 file.obj          : read object file\n",
+      "\t 6 fx fy fz dx dy dz : trace ray from f in direction d\n",
+      "\t 7                   : get and print materials\n",
+      "\t 8                   : print object information\n",
+      "\t 9                   : print info on materials used\n",
+      "\t 10                  : get and set verbosity level (0-1)\n",
+      "\t 11                  : get and print object bbox information\n",
+      "\t 12\t\t       :\n",
+      "\t 13                  : same as 14 assuming filenames camera.dat light.dat\n",
+      "\t 14 camera.dat light.dat                : ray tracing using defined camera & illumination\n",
+      "\t 15 \t\t       : dont go there\n",
+      "\t 16 cx cy cz sx sy nrows ncols rpp name : produce a height map in name\n"
+     ]
+    }
+   ],
    "source": [
     "%%bash\n",
-    "\n",
-    "# change directory from docs/source up to root\n",
-    "cd ../..\n",
-    "BPMS=${BPMS-$(pwd)}\n",
-    "# create the init.sh file we want\n",
-    "INIT=$BPMS/test/test_examples/init.sh\n",
-    "\n",
-    "cat <<EOF > $INIT\n",
-    "#!/bin/bash\n",
-    "#\n",
-    "# preamble \n",
-    "#\n",
-    "export BPMS=$BPMS\n",
-    "# set shell variables lib, bin, verbose\n",
-    "# with defaults in case not set \n",
-    "lib=\\${lib-\"\\$BPMS/src\"}\n",
-    "bin=\\${bin-\"\\$BPMS/src\"}\n",
-    "VERBOSE=\\${VERBOSE-0}\n",
-    "\n",
-    "# set up required environment variables for bash\n",
-    "export LD_LIBRARY_PATH=\"\\${lib}:\\${LD_LIBRARY_PATH}\"\n",
-    "export DYLD_LIBRARY_PATH=\"\\${lib}:\\${DYLD_LIBRARY_PATH}\"\n",
-    "export PATH=\"\\${bin}:\\${PATH}\"\n",
-    "\n",
-    "# set up required environment variables for librat\n",
-    "export BPMSROOT=\\${BPMSROOT-\\$BPMS/test/test_examples}\n",
-    "\n",
-    "export MATLIB=\\$BPMSROOT\n",
-    "export RSRLIB=\\$BPMSROOT\n",
-    "export ARARAT_OBJECT=\\$BPMSROOT\n",
-    "export DIRECT_ILLUMINATION=\\$BPMSROOT\n",
-    "export BPMS_FILES=\\$BPMSROOT\n",
-    "if [ \"\\$(which ratstart)\" == \"\\${bin}/ratstart\" ]\n",
-    "then\n",
-    "  if [ \"\\$VERBOSE\" == 1 ]; then\n",
-    "      echo \"ratstart found ok\"\n",
-    "  fi\n",
-    "else\n",
-    "  # we should create them\n",
-    "  make clean all \n",
-    "fi\n",
+    "BPMS=\"../..\"\n",
+    "TEMP=/tmp\n",
+    "cd $BPMS;BPMS=$(pwd)\n",
+    "cat <<EOF > $TEMP/tmp.$$.obj\n",
+    "!{\n",
+    "usemtl WHITE\n",
+    "v 0 0 0 \n",
+    "sph -1 100\n",
+    "!}\n",
     "EOF\n",
-    "# set executable mode\n",
-    "chmod +x $INIT"
+    "lib=${lib-\"src\"}\n",
+    "export LD_LIBRARY_PATH=\"${lib}:${LD_LIBRARY_PATH}\"\n",
+    "export DYLD_LIBRARY_PATH=\"${lib}:${DYLD_LIBRARY_PATH}\"\n",
+    "echo 1000| src/RATstart $TEMP/tmp.$$.obj; rm -f $TEMP/tmp.$$.obj"
    ]
   },
   {
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "Let's look at the file we generated:"
+    "\n",
+    "\n",
+    "### Initialisation shells\n",
+    "\n",
+    "Before proceeding, we make sure we set appropriate environment variables to run a set of examples with RATstart.\n",
+    "\n",
+    "initialisation ('init') file has been generated. We also want to test that the software runs ok. We generate a `bash` shell to achieve this here, and use to his in subsequent notes. \n",
+    "\n",
+    "You can modify any of this as a user, but be careful not to break it! 🙄. In an emergency, you can always just re-download this set of notes and software from [github](https://github.com/profLewis/librat) and start again.\n",
+    "\n",
+    "If you want to know more about setting up this sort of file, and what it all means, see [Appendix 1](Appendix1). At the moment, you just need to be aware of it, not understand all of the intricacies.\n",
+    "\n",
+    "We set up two configuration files `examples_init.sh` and `local_init.sh`:"
    ]
   },
   {
    "cell_type": "code",
-   "execution_count": 2,
+   "execution_count": 82,
    "metadata": {},
    "outputs": [],
    "source": [
     "%%bash\n",
+    "#\n",
+    "# create local_init.sh\n",
+    "# for local initialisation\n",
+    "#\n",
     "\n",
-    "cat ../../test/test_examples/init.sh"
+    "cat <<EOF > local_init.sh\n",
+    "#!/bin/bash\n",
+    "export HERE=$(pwd)\n",
+    "export BPMS=\\${BPMS-\\${HERE%librat*}librat}\n",
+    "export BPMSROOT=\\$BPMS/test/test_examples\n",
+    "mkdir -p \\$BPMSROOT\n",
+    "export INIT=\\$BPMSROOT/examples_init.sh\n",
+    "EOF"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 83,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "RATstart found ok\n"
+     ]
+    }
+   ],
+   "source": [
+    "%%bash\n",
+    "#\n",
+    "# create examples_init.sh\n",
+    "# for examples initialisation\n",
+    "#\n",
+    "\n",
+    "source ./local_init.sh\n",
+    "# create the init shell\n",
+    "cat <<EOF > $INIT\n",
+    "#!/bin/bash\n",
+    "#\n",
+    "# defaults\n",
+    "#\n",
+    "export BPMS=\\${BPMS-$BPMS}\n",
+    "lib=\\${lib-\"\\$BPMS/src\"}\n",
+    "bin=\\${bin-\"\\$BPMS/src\"}\n",
+    "VERBOSE=\\${VERBOSE-0}\n",
+    "export TEMP=\\${TEMP-/tmp}\n",
+    "\n",
+    "# set up required environment variables for bash\n",
+    "export LD_LIBRARY_PATH=\"\\${lib}:\\${LD_LIBRARY_PATH}\"\n",
+    "export DYLD_LIBRARY_PATH=\"\\${lib}:\\${DYLD_LIBRARY_PATH}\"\n",
+    "export PATH=\"\\${bin}:\\${PATH}\"\n",
+    "\n",
+    "export MATLIB=\\$BPMSROOT\n",
+    "export RSRLIB=\\$BPMSROOT\n",
+    "export ARARAT_OBJECT=\\$BPMSROOT\n",
+    "export DIRECT_ILLUMINATION=\\$BPMSROOT\n",
+    "export BPMS_FILES=\\$BPMSROOT\n",
+    "if [ \"\\$(which RATstart)\" == \"\\${bin}/RATstart\" ]\n",
+    "then\n",
+    "  if [ \"\\$VERBOSE\" == 1 ]; then\n",
+    "      echo \"RATstart found ok\"\n",
+    "  fi\n",
+    "else\n",
+    "  # we should create them\n",
+    "  make clean all \n",
+    "fi\n",
+    "EOF\n",
+    "\n",
+    "# set executable mode and run\n",
+    "# with VERBOSE=1 should print\n",
+    "# 'RATstart found ok'\n",
+    "chmod +x $INIT\n",
+    "export VERBOSE=1\n",
+    "$INIT"
    ]
   },
   {
@@ -90,7 +174,62 @@
    "source": [
     "## Environment variables\n",
     "\n",
-    "We might notice that the init shell sets a number of environment variables, namely `MATLIB`, `RSRLIB` etc. \n",
+    "Let's look at the `examples_init.sh` file we generated:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 84,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "#!/bin/bash\n",
+      "#\n",
+      "# defaults\n",
+      "#\n",
+      "export BPMS=${BPMS-/Users/plewis/librat}\n",
+      "lib=${lib-\"$BPMS/src\"}\n",
+      "bin=${bin-\"$BPMS/src\"}\n",
+      "VERBOSE=${VERBOSE-0}\n",
+      "export TEMP=${TEMP-/tmp}\n",
+      "\n",
+      "# set up required environment variables for bash\n",
+      "export LD_LIBRARY_PATH=\"${lib}:${LD_LIBRARY_PATH}\"\n",
+      "export DYLD_LIBRARY_PATH=\"${lib}:${DYLD_LIBRARY_PATH}\"\n",
+      "export PATH=\"${bin}:${PATH}\"\n",
+      "\n",
+      "export MATLIB=$BPMSROOT\n",
+      "export RSRLIB=$BPMSROOT\n",
+      "export ARARAT_OBJECT=$BPMSROOT\n",
+      "export DIRECT_ILLUMINATION=$BPMSROOT\n",
+      "export BPMS_FILES=$BPMSROOT\n",
+      "if [ \"$(which RATstart)\" == \"${bin}/RATstart\" ]\n",
+      "then\n",
+      "  if [ \"$VERBOSE\" == 1 ]; then\n",
+      "      echo \"RATstart found ok\"\n",
+      "  fi\n",
+      "else\n",
+      "  # we should create them\n",
+      "  make clean all \n",
+      "fi\n"
+     ]
+    }
+   ],
+   "source": [
+    "%%bash\n",
+    "source ./local_init.sh\n",
+    "cat $INIT"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "\n",
+    "We might notice that `examples_init.sh` sets a number of environment variables, namely `MATLIB`, `RSRLIB` etc. \n",
     "\n",
     "If you are interested, the meaning of these is given in the table below. \n",
     "\n",
@@ -101,9 +240,17 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 3,
+   "execution_count": 58,
    "metadata": {},
-   "outputs": [],
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "MATLIB is set to \n"
+     ]
+    }
+   ],
    "source": [
     "%%bash\n",
     "\n",
@@ -159,7 +306,7 @@
      "name": "stdout",
      "output_type": "stream",
      "text": [
-      "ratstart found ok\n"
+      "RATstart found ok\n"
      ]
     }
    ],
@@ -200,7 +347,7 @@
      "output_type": "stream",
      "text": [
       "----set VERBOSE 1---\n",
-      "ratstart found ok\n",
+      "RATstart found ok\n",
       "----set VERBOSE 0---\n",
       "----get BPMSROOT---\n",
       "BPMSROOT is /Users/plewis/librat/test/test_examples\n",
@@ -223,7 +370,7 @@
     "\n",
     "# ANSWER\n",
     "# this sets verbose mode and prints a message\n",
-    "# 'ratstart found ok' if it finds the librat ratstart\n",
+    "# 'RATstart found ok' if it finds the librat RATstart\n",
     "# executable\n",
     "echo  \"----set VERBOSE 1---\"\n",
     "export VERBOSE=1\n",
@@ -389,7 +536,7 @@
     "export BPMS=$(pwd)\n",
     "source $BPMS/test/test_examples/init.sh\n",
     "\n",
-    "echo 11 | ratstart -RATsensor_wavebands $BPMS/test/test_examples/wavebands.dat \\\n",
+    "echo 11 | RATstart -RATsensor_wavebands $BPMS/test/test_examples/wavebands.dat \\\n",
     "                -RATsun_position 0 1 1 $BPMS/test/test_examples/first.obj"
    ]
   },
@@ -402,7 +549,7 @@
      "name": "stderr",
      "output_type": "stream",
      "text": [
-      "ratstart:\n",
+      "RATstart:\n",
       "\tVERBOSE flag on (-v option)\n",
       "read_spectral_file:\t3 data entries read in file /Users/plewis/librat/test/test_examples/wavebands.dat\n",
       "\r",
@@ -40417,7 +40564,7 @@
     "source $BPMS/test/test_examples/init.sh\n",
     "\n",
     "\n",
-    "echo \"16 0 0 400 400 400  200 200 1 $BPMS/test/test_examples/out.hips\" | ratstart \\\n",
+    "echo \"16 0 0 400 400 400  200 200 1 $BPMS/test/test_examples/out.hips\" | RATstart \\\n",
     "    -RATsensor_wavebands $BPMS/test/test_examples/wavebands.dat  \\\n",
     "    -RATv  -RATsun_position 0 1 1 $BPMS/test/test_examples/first.obj"
    ]
@@ -41075,7 +41222,7 @@
     "export BPMS=$(pwd)\n",
     "source $BPMS/test/test_examples/init.sh\n",
     "\n",
-    "echo 6 0 0 110 0 0 -1 | ratstart -RATsensor_wavebands $BPMS/test/test_examples/wavebands.dat -RATsun_position 0 1 1 $BPMS/test/test_examples/first.obj"
+    "echo 6 0 0 110 0 0 -1 | RATstart -RATsensor_wavebands $BPMS/test/test_examples/wavebands.dat -RATsun_position 0 1 1 $BPMS/test/test_examples/first.obj"
    ]
   },
   {
@@ -41123,7 +41270,7 @@
     "\n",
     "for i in $(seq 1 2 40)\n",
     "do\n",
-    "cat <<EOF | ratstart -RATr $i $BPMS/test/test_examples/first.obj\n",
+    "cat <<EOF | RATstart -RATr $i $BPMS/test/test_examples/first.obj\n",
     "3 3 200 20 300 20 400 20\n",
     "4\n",
     "EOF\n",
@@ -41169,7 +41316,7 @@
     "%%bash\n",
     "export BPMS=../..\n",
     "source $BPMS/test/test_examples/init.sh\n",
-    "echo 10000 | ratstart $BPMS/test/test_examples/first.obj"
+    "echo 10000 | RATstart $BPMS/test/test_examples/first.obj"
    ]
   },
   {

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>1. Initialisation &mdash; librat  documentation</title>
+  <title>1. librat &mdash; librat  documentation</title>
   
 
   
@@ -34,7 +34,7 @@
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
     <link rel="top" title="librat  documentation" href="index.html"/>
-        <link rel="next" title="2. Basic librat / ratstart operation" href="Chapter2.html"/>
+        <link rel="next" title="2. Basic librat / RATstart operation" href="Chapter2.html"/>
         <link rel="prev" title="Welcome to librat" href="index.html"/> 
 
   
@@ -83,12 +83,17 @@
             
                 <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">1. Initialisation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#Environment-variables">1.1. Environment variables</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#Making-files">1.2. Making files</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">1. librat</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#libratlib">1.1. <code class="docutils literal notranslate"><span class="pre">libratlib</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#RATstart-(formerly-start)">1.2. <code class="docutils literal notranslate"><span class="pre">RATstart</span></code> (formerly <code class="docutils literal notranslate"><span class="pre">start</span></code>)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Initialisation-shells">1.2.1. Initialisation shells</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="Chapter2.html">2. Basic librat / ratstart operation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Environment-variables">1.3. Environment variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Making-files">1.4. Making files</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Chapter2.html">2. Basic librat / RATstart operation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Appendix1.html">3. Appendix 1: <code class="docutils literal notranslate"><span class="pre">bash</span></code> help</a></li>
 </ul>
 
@@ -134,7 +139,7 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li><span class="section-number">1. </span>Initialisation</li>
+      <li><span class="section-number">1. </span>librat</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -373,84 +378,214 @@ div.rendered_html tbody tr:hover {
   background: rgba(66, 165, 245, 0.2);
 }
 </style>
-<div class="section" id="Initialisation">
-<h1><span class="section-number">1. </span>Initialisation<a class="headerlink" href="#Initialisation" title="Permalink to this headline">¶</a></h1>
-<p>Before proceeding, we make sure that an appropriate initialisation (‘init’) file has been generated. We also want to test that the software runs ok. We generate a <code class="docutils literal notranslate"><span class="pre">bash</span></code> shell to achieve this here, and use to his in subsequent notes.</p>
-<p>You can modify any of this as a user, but be careful not to break it! 🙄. In an emergency, you can always just re-download this set of notes and software from <a class="reference external" href="https://github.com/profLewis/librat">github</a> and start again.</p>
-<p>If you want to know more about setting up this sort of file, and what it all means, see <a class="reference external" href="Appendix1">Appendix 1</a>. At the moment, you just need to be aware of it, not understand all of the intricacies.</p>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+<div class="section" id="librat">
+<h1><span class="section-number">1. </span>librat<a class="headerlink" href="#librat" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="libratlib">
+<h2><span class="section-number">1.1. </span><code class="docutils literal notranslate"><span class="pre">libratlib</span></code><a class="headerlink" href="#libratlib" title="Permalink to this headline">¶</a></h2>
+<p>Its a shared object library … explain.</p>
+</div>
+<div class="section" id="RATstart-(formerly-start)">
+<h2><span class="section-number">1.2. </span><code class="docutils literal notranslate"><span class="pre">RATstart</span></code> (formerly <code class="docutils literal notranslate"><span class="pre">start</span></code>)<a class="headerlink" href="#RATstart-(formerly-start)" title="Permalink to this headline">¶</a></h2>
+<p>Although we could access <code class="docutils literal notranslate"><span class="pre">librat</span></code> functionality directly from the shared object library, its often easier to do this via a simple (<code class="docutils literal notranslate"><span class="pre">C</span></code> code) interface program called <code class="docutils literal notranslate"><span class="pre">RATstart</span></code> (formerly <code class="docutils literal notranslate"><span class="pre">start</span></code>).</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[111]:
 </pre></div>
 </div>
 <div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
 <span></span>%%bash
+<span class="nv">BPMS</span><span class="o">=</span><span class="s2">&quot;../..&quot;</span>
+<span class="nv">TEMP</span><span class="o">=</span>/tmp
+<span class="nb">cd</span> <span class="nv">$BPMS</span><span class="p">;</span><span class="nv">BPMS</span><span class="o">=</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>
+cat <span class="s">&lt;&lt;EOF &gt; $TEMP/tmp.$$.obj</span>
+<span class="s">!{</span>
+<span class="s">usemtl WHITE</span>
+<span class="s">v 0 0 0</span>
+<span class="s">sph -1 100</span>
+<span class="s">!}</span>
+<span class="s">EOF</span>
+<span class="nv">lib</span><span class="o">=</span><span class="si">${</span><span class="nv">lib</span><span class="p">-</span><span class="s2">&quot;src&quot;</span><span class="si">}</span>
+<span class="nb">export</span> <span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">lib</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">LD_LIBRARY_PATH</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="nb">export</span> <span class="nv">DYLD_LIBRARY_PATH</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">lib</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">DYLD_LIBRARY_PATH</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="nb">echo</span> <span class="m">1000</span><span class="p">|</span> src/RATstart <span class="nv">$TEMP</span>/tmp.<span class="nv">$$</span>.obj<span class="p">;</span> rm -f <span class="nv">$TEMP</span>/tmp.<span class="nv">$$</span>.obj
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+options:
+        -2                   : print PID
+        -1                   : print memory use
+         0                   : quit
+         1 n s1x s1y s1z ... : set sun vectors
+         2                   : print sun vectors
+         3 n b1 w1 ...i bn wn: set wavebands
+         4                   : print wavebands
+         5 file.obj          : read object file
+         6 fx fy fz dx dy dz : trace ray from f in direction d
+         7                   : get and print materials
+         8                   : print object information
+         9                   : print info on materials used
+         10                  : get and set verbosity level (0-1)
+         11                  : get and print object bbox information
+         12                    :
+         13                  : same as 14 assuming filenames camera.dat light.dat
+         14 camera.dat light.dat                : ray tracing using defined camera &amp; illumination
+         15                    : dont go there
+         16 cx cy cz sx sy nrows ncols rpp name : produce a height map in name
+</pre></div></div>
+</div>
+<div class="section" id="Initialisation-shells">
+<h3><span class="section-number">1.2.1. </span>Initialisation shells<a class="headerlink" href="#Initialisation-shells" title="Permalink to this headline">¶</a></h3>
+<p>Before proceeding, we make sure we set appropriate environment variables to run a set of examples with RATstart.</p>
+<p>initialisation (‘init’) file has been generated. We also want to test that the software runs ok. We generate a <code class="docutils literal notranslate"><span class="pre">bash</span></code> shell to achieve this here, and use to his in subsequent notes.</p>
+<p>You can modify any of this as a user, but be careful not to break it! 🙄. In an emergency, you can always just re-download this set of notes and software from <a class="reference external" href="https://github.com/profLewis/librat">github</a> and start again.</p>
+<p>If you want to know more about setting up this sort of file, and what it all means, see <a class="reference external" href="Appendix1">Appendix 1</a>. At the moment, you just need to be aware of it, not understand all of the intricacies.</p>
+<p>We set up two configuration files <code class="docutils literal notranslate"><span class="pre">examples_init.sh</span></code> and <code class="docutils literal notranslate"><span class="pre">local_init.sh</span></code>:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[82]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
+<span></span>%%bash
+<span class="c1">#</span>
+<span class="c1"># create local_init.sh</span>
+<span class="c1"># for local initialisation</span>
+<span class="c1">#</span>
 
-<span class="c1"># change directory from docs/source up to root</span>
-<span class="nb">cd</span> ../..
-<span class="nv">BPMS</span><span class="o">=</span><span class="si">${</span><span class="nv">BPMS</span><span class="p">-</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span><span class="si">}</span>
-<span class="c1"># create the init.sh file we want</span>
-<span class="nv">INIT</span><span class="o">=</span><span class="nv">$BPMS</span>/test/test_examples/init.sh
+cat <span class="s">&lt;&lt;EOF &gt; local_init.sh</span>
+<span class="s">#!/bin/bash</span>
+<span class="s">export HERE=$(pwd)</span>
+<span class="s">export BPMS=\${BPMS-\${HERE%librat*}librat}</span>
+<span class="s">export BPMSROOT=\$BPMS/test/test_examples</span>
+<span class="s">mkdir -p \$BPMSROOT</span>
+<span class="s">export INIT=\$BPMSROOT/examples_init.sh</span>
+<span class="s">EOF</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[83]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
+<span></span>%%bash
+<span class="c1">#</span>
+<span class="c1"># create examples_init.sh</span>
+<span class="c1"># for examples initialisation</span>
+<span class="c1">#</span>
 
+<span class="nb">source</span> ./local_init.sh
+<span class="c1"># create the init shell</span>
 cat <span class="s">&lt;&lt;EOF &gt; $INIT</span>
 <span class="s">#!/bin/bash</span>
 <span class="s">#</span>
-<span class="s"># preamble</span>
+<span class="s"># defaults</span>
 <span class="s">#</span>
-<span class="s">export BPMS=$BPMS</span>
-<span class="s"># set shell variables lib, bin, verbose</span>
-<span class="s"># with defaults in case not set</span>
+<span class="s">export BPMS=\${BPMS-$BPMS}</span>
 <span class="s">lib=\${lib-&quot;\$BPMS/src&quot;}</span>
 <span class="s">bin=\${bin-&quot;\$BPMS/src&quot;}</span>
 <span class="s">VERBOSE=\${VERBOSE-0}</span>
+<span class="s">export TEMP=\${TEMP-/tmp}</span>
 
 <span class="s"># set up required environment variables for bash</span>
 <span class="s">export LD_LIBRARY_PATH=&quot;\${lib}:\${LD_LIBRARY_PATH}&quot;</span>
 <span class="s">export DYLD_LIBRARY_PATH=&quot;\${lib}:\${DYLD_LIBRARY_PATH}&quot;</span>
 <span class="s">export PATH=&quot;\${bin}:\${PATH}&quot;</span>
 
-<span class="s"># set up required environment variables for librat</span>
-<span class="s">export BPMSROOT=\${BPMSROOT-\$BPMS/test/test_examples}</span>
-
 <span class="s">export MATLIB=\$BPMSROOT</span>
 <span class="s">export RSRLIB=\$BPMSROOT</span>
 <span class="s">export ARARAT_OBJECT=\$BPMSROOT</span>
 <span class="s">export DIRECT_ILLUMINATION=\$BPMSROOT</span>
 <span class="s">export BPMS_FILES=\$BPMSROOT</span>
-<span class="s">if [ &quot;\$(which ratstart)&quot; == &quot;\${bin}/ratstart&quot; ]</span>
+<span class="s">if [ &quot;\$(which RATstart)&quot; == &quot;\${bin}/RATstart&quot; ]</span>
 <span class="s">then</span>
 <span class="s">  if [ &quot;\$VERBOSE&quot; == 1 ]; then</span>
-<span class="s">      echo &quot;ratstart found ok&quot;</span>
+<span class="s">      echo &quot;RATstart found ok&quot;</span>
 <span class="s">  fi</span>
 <span class="s">else</span>
 <span class="s">  # we should create them</span>
 <span class="s">  make clean all</span>
 <span class="s">fi</span>
 <span class="s">EOF</span>
-<span class="c1"># set executable mode</span>
+
+<span class="c1"># set executable mode and run</span>
+<span class="c1"># with VERBOSE=1 should print</span>
+<span class="c1"># &#39;RATstart found ok&#39;</span>
 chmod +x <span class="nv">$INIT</span>
+<span class="nb">export</span> <span class="nv">VERBOSE</span><span class="o">=</span><span class="m">1</span>
+<span class="nv">$INIT</span>
 </pre></div>
 </div>
 </div>
-<p>Let’s look at the file we generated:</p>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+RATstart found ok
+</pre></div></div>
+</div>
+</div>
+</div>
+<div class="section" id="Environment-variables">
+<h2><span class="section-number">1.3. </span>Environment variables<a class="headerlink" href="#Environment-variables" title="Permalink to this headline">¶</a></h2>
+<p>Let’s look at the <code class="docutils literal notranslate"><span class="pre">examples_init.sh</span></code> file we generated:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[84]:
 </pre></div>
 </div>
 <div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
 <span></span>%%bash
-
-cat ../../test/test_examples/init.sh
+<span class="nb">source</span> ./local_init.sh
+cat <span class="nv">$INIT</span>
 </pre></div>
 </div>
 </div>
-<div class="section" id="Environment-variables">
-<h2><span class="section-number">1.1. </span>Environment variables<a class="headerlink" href="#Environment-variables" title="Permalink to this headline">¶</a></h2>
-<p>We might notice that the init shell sets a number of environment variables, namely <code class="docutils literal notranslate"><span class="pre">MATLIB</span></code>, <code class="docutils literal notranslate"><span class="pre">RSRLIB</span></code> etc.</p>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+#!/bin/bash
+#
+# defaults
+#
+export BPMS=${BPMS-/Users/plewis/librat}
+lib=${lib-&#34;$BPMS/src&#34;}
+bin=${bin-&#34;$BPMS/src&#34;}
+VERBOSE=${VERBOSE-0}
+export TEMP=${TEMP-/tmp}
+
+# set up required environment variables for bash
+export LD_LIBRARY_PATH=&#34;${lib}:${LD_LIBRARY_PATH}&#34;
+export DYLD_LIBRARY_PATH=&#34;${lib}:${DYLD_LIBRARY_PATH}&#34;
+export PATH=&#34;${bin}:${PATH}&#34;
+
+export MATLIB=$BPMSROOT
+export RSRLIB=$BPMSROOT
+export ARARAT_OBJECT=$BPMSROOT
+export DIRECT_ILLUMINATION=$BPMSROOT
+export BPMS_FILES=$BPMSROOT
+if [ &#34;$(which RATstart)&#34; == &#34;${bin}/RATstart&#34; ]
+then
+  if [ &#34;$VERBOSE&#34; == 1 ]; then
+      echo &#34;RATstart found ok&#34;
+  fi
+else
+  # we should create them
+  make clean all
+fi
+</pre></div></div>
+</div>
+<p>We might notice that <code class="docutils literal notranslate"><span class="pre">examples_init.sh</span></code> sets a number of environment variables, namely <code class="docutils literal notranslate"><span class="pre">MATLIB</span></code>, <code class="docutils literal notranslate"><span class="pre">RSRLIB</span></code> etc.</p>
 <p>If you are interested, the meaning of these is given in the table below.</p>
 <p>Alternatively, just notice that in the init shell, all of these variables are set to <code class="docutils literal notranslate"><span class="pre">BPMSROOT</span></code>, so if we want to point to the location of an object and material database for librat, we need only set the environment variable <code class="docutils literal notranslate"><span class="pre">BPMSROOT</span></code> appropriately. In this case it defaults to <code class="docutils literal notranslate"><span class="pre">$BPMS/test/test_example</span></code>.</p>
 <p>If you want to run a shell that uses the <code class="docutils literal notranslate"><span class="pre">init.sh</span></code> setup, you will need to use the command <code class="docutils literal notranslate"><span class="pre">source</span></code> to export the variables to your shell.</p>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[58]:
 </pre></div>
 </div>
 <div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
@@ -461,6 +596,14 @@ cat ../../test/test_examples/init.sh
 <span class="nb">echo</span> <span class="s2">&quot;MATLIB is set to </span><span class="nv">$MATLIB</span><span class="s2">&quot;</span>
 </pre></div>
 </div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+MATLIB is set to
+</pre></div></div>
 </div>
 <p><strong>Table explaining librat object environment variables:</strong></p>
 <table class="docutils align-default">
@@ -535,7 +678,7 @@ cat ../../test/test_examples/init.sh
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-ratstart found ok
+RATstart found ok
 </pre></div></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">EXERCISE</span> <span class="mf">1.1</span>
@@ -564,7 +707,7 @@ ratstart found ok
 
 <span class="c1"># ANSWER</span>
 <span class="c1"># this sets verbose mode and prints a message</span>
-<span class="c1"># &#39;ratstart found ok&#39; if it finds the librat ratstart</span>
+<span class="c1"># &#39;RATstart found ok&#39; if it finds the librat RATstart</span>
 <span class="c1"># executable</span>
 <span class="nb">echo</span>  <span class="s2">&quot;----set VERBOSE 1---&quot;</span>
 <span class="nb">export</span> <span class="nv">VERBOSE</span><span class="o">=</span><span class="m">1</span>
@@ -604,7 +747,7 @@ ratstart found ok
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 ----set VERBOSE 1---
-ratstart found ok
+RATstart found ok
 ----set VERBOSE 0---
 ----get BPMSROOT---
 BPMSROOT is /Users/plewis/librat/test/test_examples
@@ -614,7 +757,7 @@ BPMSROOT is /tmp
 </div>
 </div>
 <div class="section" id="Making-files">
-<h2><span class="section-number">1.2. </span>Making files<a class="headerlink" href="#Making-files" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">1.4. </span>Making files<a class="headerlink" href="#Making-files" title="Permalink to this headline">¶</a></h2>
 <p>We will create the files we need as we go along, using <code class="docutils literal notranslate"><span class="pre">bash</span></code> shell <code class="docutils literal notranslate"><span class="pre">cat</span> <span class="pre">&lt;&lt;EOF</span> <span class="pre">&gt;</span> <span class="pre">filename</span></code> syntax. You may have noticed that we did this above in creating the <code class="docutils literal notranslate"><span class="pre">init</span></code> file.</p>
 <p>If we type:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cat</span> <span class="o">&lt;&lt;</span><span class="n">EOF</span> <span class="o">&gt;</span> <span class="n">filename</span>
@@ -713,7 +856,7 @@ cat <span class="s">&lt;&lt;EOF &gt; $BPMS/test/test_examples/plants.matlib</spa
 <span class="nb">export</span> <span class="nv">BPMS</span><span class="o">=</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>
 <span class="nb">source</span> <span class="nv">$BPMS</span>/test/test_examples/init.sh
 
-<span class="nb">echo</span> <span class="m">11</span> <span class="p">|</span> ratstart -RATsensor_wavebands <span class="nv">$BPMS</span>/test/test_examples/wavebands.dat <span class="se">\</span>
+<span class="nb">echo</span> <span class="m">11</span> <span class="p">|</span> RATstart -RATsensor_wavebands <span class="nv">$BPMS</span>/test/test_examples/wavebands.dat <span class="se">\</span>
                 -RATsun_position <span class="m">0</span> <span class="m">1</span> <span class="m">1</span> <span class="nv">$BPMS</span>/test/test_examples/first.obj
 </pre></div>
 </div>
@@ -741,7 +884,7 @@ bbox centre @ 0.020000 0.020000 0.020000
 <span class="nb">source</span> <span class="nv">$BPMS</span>/test/test_examples/init.sh
 
 
-<span class="nb">echo</span> <span class="s2">&quot;16 0 0 400 400 400  200 200 1 </span><span class="nv">$BPMS</span><span class="s2">/test/test_examples/out.hips&quot;</span> <span class="p">|</span> ratstart <span class="se">\</span>
+<span class="nb">echo</span> <span class="s2">&quot;16 0 0 400 400 400  200 200 1 </span><span class="nv">$BPMS</span><span class="s2">/test/test_examples/out.hips&quot;</span> <span class="p">|</span> RATstart <span class="se">\</span>
     -RATsensor_wavebands <span class="nv">$BPMS</span>/test/test_examples/wavebands.dat  <span class="se">\</span>
     -RATv  -RATsun_position <span class="m">0</span> <span class="m">1</span> <span class="m">1</span> <span class="nv">$BPMS</span>/test/test_examples/first.obj
 </pre></div>
@@ -752,7 +895,7 @@ bbox centre @ 0.020000 0.020000 0.020000
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-ratstart:
+RATstart:
         VERBOSE flag on (-v option)
 read_spectral_file:     3 data entries read in file /Users/plewis/librat/test/test_examples/wavebands.dat
 ( 99.9975)
@@ -786,7 +929,7 @@ read_spectral_file:     3 data entries read in file /Users/plewis/librat/test/te
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/Chapter1_18_1.svg" src="_images/Chapter1_18_1.svg" /></div>
+<img alt="_images/Chapter1_21_1.svg" src="_images/Chapter1_21_1.svg" /></div>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[65]:
@@ -799,7 +942,7 @@ read_spectral_file:     3 data entries read in file /Users/plewis/librat/test/te
 <span class="nb">export</span> <span class="nv">BPMS</span><span class="o">=</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>
 <span class="nb">source</span> <span class="nv">$BPMS</span>/test/test_examples/init.sh
 
-<span class="nb">echo</span> <span class="m">6</span> <span class="m">0</span> <span class="m">0</span> <span class="m">110</span> <span class="m">0</span> <span class="m">0</span> -1 <span class="p">|</span> ratstart -RATsensor_wavebands <span class="nv">$BPMS</span>/test/test_examples/wavebands.dat -RATsun_position <span class="m">0</span> <span class="m">1</span> <span class="m">1</span> <span class="nv">$BPMS</span>/test/test_examples/first.obj
+<span class="nb">echo</span> <span class="m">6</span> <span class="m">0</span> <span class="m">0</span> <span class="m">110</span> <span class="m">0</span> <span class="m">0</span> -1 <span class="p">|</span> RATstart -RATsensor_wavebands <span class="nv">$BPMS</span>/test/test_examples/wavebands.dat -RATsun_position <span class="m">0</span> <span class="m">1</span> <span class="m">1</span> <span class="nv">$BPMS</span>/test/test_examples/first.obj
 </pre></div>
 </div>
 </div>
@@ -832,7 +975,7 @@ order: 0        intersection point:     0.000000 0.000000 100.000010
 
 <span class="k">for</span> i in <span class="k">$(</span>seq <span class="m">1</span> <span class="m">2</span> <span class="m">40</span><span class="k">)</span>
 <span class="k">do</span>
-cat <span class="s">&lt;&lt;EOF | ratstart -RATr $i $BPMS/test/test_examples/first.obj</span>
+cat <span class="s">&lt;&lt;EOF | RATstart -RATr $i $BPMS/test/test_examples/first.obj</span>
 <span class="s">3 3 200 20 300 20 400 20</span>
 <span class="s">4</span>
 <span class="s">EOF</span>
@@ -879,7 +1022,7 @@ wavebands: 202.599475 309.372151 417.747103
 <span></span>%%bash
 <span class="nb">export</span> <span class="nv">BPMS</span><span class="o">=</span>../..
 <span class="nb">source</span> <span class="nv">$BPMS</span>/test/test_examples/init.sh
-<span class="nb">echo</span> <span class="m">10000</span> <span class="p">|</span> ratstart <span class="nv">$BPMS</span>/test/test_examples/first.obj
+<span class="nb">echo</span> <span class="m">10000</span> <span class="p">|</span> RATstart <span class="nv">$BPMS</span>/test/test_examples/first.obj
 </pre></div>
 </div>
 </div>
@@ -938,7 +1081,7 @@ options:
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="Chapter2.html" class="btn btn-neutral float-right" title="2. Basic librat / ratstart operation" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="Chapter2.html" class="btn btn-neutral float-right" title="2. Basic librat / RATstart operation" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="index.html" class="btn btn-neutral" title="Welcome to librat" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>

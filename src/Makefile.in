@@ -63,7 +63,7 @@ all:		${LIBRAT}.${LIBEXT}
 		$(CC) ${OPT} -I. -DDOUBLEDEF  -D${ARCH} ${CFLAGS} -o $@ -c $<
 
 clean:
-		rm -f *% *.o ratstart ratstart.o ${PRATOBJ} ${ANCOBJS} ${LIBRAT}.$(LIBEXT)
+		rm -f *% *.o RATstart RATstart.o ${PRATOBJ} ${ANCOBJS} ${LIBRAT}.$(LIBEXT)
 
 
 
@@ -80,17 +80,17 @@ clean:
 # -undefined dynamic_lookup
 ifeq ($(LIBEXT),dll)
   CMD=$(CC) --shared -o ${LIBRAT}.${LIBEXT} ${PRATOBJ} ${ANCOBJS} -lmsvcrt -lm
-  EXE=$(CC) -o ratstart ratstart.o -L. -L${HERE} -lratlib -lmsvcrt -lm
+  EXE=$(CC) -o RATstart RATstart.o -L. -L${HERE} -lratlib -lmsvcrt -lm
 else
   CMD=$(CC) ${UND} -o ${LIBRAT}.${LIBEXT} ${PRATOBJ} ${ANCOBJS} -lc -lm
-  EXE=$(CC) -o ratstart ratstart.o -L. -L${HERE} -lratlib -lc -lm
+  EXE=$(CC) -o RATstart RATstart.o -L. -L${HERE} -lratlib -lc -lm
 endif
 
 
 ${LIBRAT}.${LIBEXT}:	${PRATOBJ} ${ANCOBJS}
 		$(CMD)
 
-ratstart:		ratstart.o
+RATstart:		RATstart.o
 		${EXE}
 		# use 'test/test_start -v' for more verbose output
 		cd ..;test/test_start

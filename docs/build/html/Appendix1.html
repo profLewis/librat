@@ -34,7 +34,7 @@
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
     <link rel="top" title="librat  documentation" href="index.html"/>
-        <link rel="prev" title="2. Basic librat / start operation" href="Chapter2.html"/> 
+        <link rel="prev" title="2. Basic librat / ratstart operation" href="Chapter2.html"/> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -83,7 +83,7 @@
                 <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="Chapter1.html">1. Initialisation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Chapter2.html">2. Basic librat / start operation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Chapter2.html">2. Basic librat / ratstart operation</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">3. Appendix 1: <code class="docutils literal notranslate"><span class="pre">bash</span></code> help</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#Introduction-to-shell-and-environment-variables">3.1. Introduction to shell and environment variables</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#export">3.1.1. <code class="docutils literal notranslate"><span class="pre">export</span></code></a></li>
@@ -1534,10 +1534,10 @@ cat <span class="s">&lt;&lt;EOF &gt; $INIT</span>
 <span class="s">export DIRECT_ILLUMINATION=\$BPMSROOT</span>
 <span class="s">export BPMS_FILES=\$BPMSROOT</span>
 <span class="s">echo $BPMS</span>
-<span class="s">if [ &quot;\$(which start)&quot; == &quot;\${bin}/start&quot; ]</span>
+<span class="s">if [ &quot;\$(which ratstart)&quot; == &quot;\${bin}/ratstart&quot; ]</span>
 <span class="s">then</span>
 <span class="s">  if [ &quot;\$VERBOSE&quot; == 1 ]; then</span>
-<span class="s">      echo &quot;start found ok&quot;</span>
+<span class="s">      echo &quot;ratstart found ok&quot;</span>
 <span class="s">  fi</span>
 <span class="s">else</span>
 <span class="s">  # we should create them</span>
@@ -1558,7 +1558,7 @@ chmod +x <span class="nv">$INIT</span>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 /Users/plewis/librat
-start found ok
+ratstart found ok
 </pre></div></div>
 </div>
 </div>
@@ -1589,7 +1589,7 @@ what files are where, reading on the internet or help pages what they do, and so
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
       
-        <a href="Chapter2.html" class="btn btn-neutral" title="2. Basic librat / start operation" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="Chapter2.html" class="btn btn-neutral" title="2. Basic librat / ratstart operation" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

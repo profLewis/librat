@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>2. Basic librat / start operation &mdash; librat  documentation</title>
+  <title>2. Basic librat / ratstart operation &mdash; librat  documentation</title>
   
 
   
@@ -84,7 +84,7 @@
                 <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="Chapter1.html">1. Initialisation</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">2. Basic librat / start operation</a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">2. Basic librat / ratstart operation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#Object-example-1:-planes-and-ellipsoids">2.1. Object example 1: planes and ellipsoids</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#Environment-variables">2.2. Environment variables</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#Object-example-2:-clones">2.3. Object example 2: clones</a></li>
@@ -135,7 +135,7 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li><span class="section-number">2. </span>Basic librat / start operation</li>
+      <li><span class="section-number">2. </span>Basic librat / ratstart operation</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -374,20 +374,19 @@ div.rendered_html tbody tr:hover {
   background: rgba(66, 165, 245, 0.2);
 }
 </style>
-<div class="section" id="Basic-librat-/-start-operation">
-<h1><span class="section-number">2. </span>Basic librat / start operation<a class="headerlink" href="#Basic-librat-/-start-operation" title="Permalink to this headline">¶</a></h1>
-<p>Librat is the library of function calls around which you can write your own code to do things such as read in and parse an object file, read in and parse camera, illumination files, waveband files and so on. However, start is a wrapper code around these commands which gives you access to all the basic operations, and so is the de facto tool for doing simulations. The key things required to carry out a simulation are:</p>
+<div class="section" id="Basic-librat-/-ratstart-operation">
+<h1><span class="section-number">2. </span>Basic librat / ratstart operation<a class="headerlink" href="#Basic-librat-/-ratstart-operation" title="Permalink to this headline">¶</a></h1>
+<p>Librat is the library of function calls around which you can write your own code to do things such as read in and parse an object file, read in and parse camera, illumination files, waveband files and so on. However, ratstart (forerly start) is a wrapper code around these commands which gives you access to all the basic operations, and so is the de facto tool for doing simulations. The key things required to carry out a simulation are:</p>
 <ul class="simple">
 <li><p>A camera file</p></li>
 <li><p>An illumination file</p></li>
 <li><p>A waveband file</p></li>
-<li><p>An object file - this is always assumed to be the last file on the start command line</p></li>
+<li><p>An object file - this is always assumed to be the last file on the ratstart command line</p></li>
 </ul>
 <p>Anything specific you want to do in any of these parts of the process is specified in these files. There are a limited number of additional command line options which either allow you to override a few key things in these files (the waveband file for example), or more usually are external to these things. Each of these can be passed through via the <code class="docutils literal notranslate"><span class="pre">-RAT</span></code> keyword. Examples are the ray tree depth (<code class="docutils literal notranslate"><span class="pre">-RATm</span></code>) , verbose level (<code class="docutils literal notranslate"><span class="pre">-RATv</span></code>), waveband file (<code class="docutils literal notranslate"><span class="pre">-RATsensor_wavebands</span></code>) etc.</p>
 <hr class="docutils" />
 <div class="section" id="Object-example-1:-planes-and-ellipsoids">
 <h2><span class="section-number">2.1. </span>Object example 1: planes and ellipsoids<a class="headerlink" href="#Object-example-1:-planes-and-ellipsoids" title="Permalink to this headline">¶</a></h2>
-<hr class="docutils" />
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
@@ -572,10 +571,10 @@ cat <span class="s">&lt;&lt;EOF &gt; $outfile</span>
 <span class="s">export DIRECT_ILLUMINATION=\$TEST</span>
 <span class="s">export BPMS_FILES=\$TEST</span>
 
-<span class="s">if [ &quot;\$(which start)&quot; == &quot;\${bin}/start&quot; ]</span>
+<span class="s">if [ &quot;\$(which ratstart)&quot; == &quot;\${bin}/ratstart&quot; ]</span>
 <span class="s">then</span>
 <span class="s">  if [ &quot;\$VERBOSE&quot; ]; then</span>
-<span class="s">      echo &quot;start found ok&quot;</span>
+<span class="s">      echo &quot;ratstart found ok&quot;</span>
 <span class="s">  fi</span>
 <span class="s">else</span>
 <span class="s">  # we should create them</span>
@@ -606,7 +605,7 @@ make: *** No rule to make target `clean&#39;.  Stop.
 <span class="ansi-red-fg">---------------------------------------------------------------------------</span>
 <span class="ansi-red-fg">CalledProcessError</span>                        Traceback (most recent call last)
 <span class="ansi-green-fg">&lt;ipython-input-6-d988add8e183&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
-<span class="ansi-green-fg">----&gt; 1</span><span class="ansi-red-fg"> </span>get_ipython<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">.</span>run_cell_magic<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">&#39;bash&#39;</span><span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">&#39;&#39;</span><span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">&#39;\n# create the init.sh file we want\noutfile=test/test_examples/init.sh\n\ncat &lt;&lt;EOF &gt; $outfile\n#!/bin/bash\n#\n# preamble \n#\nBPMS=\\${BPMS-\\$(pwd)}\n# set shell variables lib, bin, verbose\n# with defaults in case not set \nlib=\\${lib-&#34;\\$BPMS/src&#34;}\nbin=\\${bin-&#34;\\$BPMS/src&#34;}\nVERBOSE=\\${VERBOSE-1}\n\n# set up required environment variables for bash\nexport LD_LIBRARY_PATH=&#34;\\${lib}:\\${LD_LIBRARY_PATH}&#34;\nexport DYLD_LIBRARY_PATH=&#34;\\${lib}:\\${DYLD_LIBRARY_PATH}&#34;\nexport PATH=&#34;\\${bin}:\\${PATH}&#34;\n\n# set up required environment variables for librat\nexport TEST=\\${BPMS}/test/test_example\nexport MATLIB=\\$TEST\nexport RSRLIB=\\$TEST\nexport ARARAT_OBJECT=\\$TEST\nexport DIRECT_ILLUMINATION=\\$TEST\nexport BPMS_FILES=\\$TEST\n\nif [ &#34;\\$(which start)&#34; == &#34;\\${bin}/start&#34; ]\nthen\n  if [ &#34;\\$VERBOSE&#34; ]; then\n      echo &#34;start found ok&#34;\n  fi\nelse\n  # we should create them\n  make clean all \nfi\nEOF\n\n# set executable mode\nchmod +x $outfile\n# test run\n$outfile\n&#39;</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-fg">----&gt; 1</span><span class="ansi-red-fg"> </span>get_ipython<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">.</span>run_cell_magic<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">&#39;bash&#39;</span><span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">&#39;&#39;</span><span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">&#39;\n# create the init.sh file we want\noutfile=test/test_examples/init.sh\n\ncat &lt;&lt;EOF &gt; $outfile\n#!/bin/bash\n#\n# preamble \n#\nBPMS=\\${BPMS-\\$(pwd)}\n# set shell variables lib, bin, verbose\n# with defaults in case not set \nlib=\\${lib-&#34;\\$BPMS/src&#34;}\nbin=\\${bin-&#34;\\$BPMS/src&#34;}\nVERBOSE=\\${VERBOSE-1}\n\n# set up required environment variables for bash\nexport LD_LIBRARY_PATH=&#34;\\${lib}:\\${LD_LIBRARY_PATH}&#34;\nexport DYLD_LIBRARY_PATH=&#34;\\${lib}:\\${DYLD_LIBRARY_PATH}&#34;\nexport PATH=&#34;\\${bin}:\\${PATH}&#34;\n\n# set up required environment variables for librat\nexport TEST=\\${BPMS}/test/test_example\nexport MATLIB=\\$TEST\nexport RSRLIB=\\$TEST\nexport ARARAT_OBJECT=\\$TEST\nexport DIRECT_ILLUMINATION=\\$TEST\nexport BPMS_FILES=\\$TEST\n\nif [ &#34;\\$(which ratstart)&#34; == &#34;\\${bin}/ratstart&#34; ]\nthen\n  if [ &#34;\\$VERBOSE&#34; ]; then\n      echo &#34;ratstart found ok&#34;\n  fi\nelse\n  # we should create them\n  make clean all \nfi\nEOF\n\n# set executable mode\nchmod +x $outfile\n# test run\n$outfile\n&#39;</span><span class="ansi-blue-fg">)</span>
 
 <span class="ansi-green-fg">~/opt/anaconda3/envs/librat/lib/python3.8/site-packages/IPython/core/interactiveshell.py</span> in <span class="ansi-cyan-fg">run_cell_magic</span><span class="ansi-blue-fg">(self, magic_name, line, cell)</span>
 <span class="ansi-green-intense-fg ansi-bold">   2360</span>             <span class="ansi-green-fg">with</span> self<span class="ansi-blue-fg">.</span>builtin_trap<span class="ansi-blue-fg">:</span>
@@ -638,7 +637,7 @@ make: *** No rule to make target `clean&#39;.  Stop.
 <span class="ansi-green-intense-fg ansi-bold">    246</span>
 <span class="ansi-green-intense-fg ansi-bold">    247</span>     <span class="ansi-green-fg">def</span> _run_script<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">,</span> p<span class="ansi-blue-fg">,</span> cell<span class="ansi-blue-fg">,</span> to_close<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
 
-<span class="ansi-red-fg">CalledProcessError</span>: Command &#39;b&#39;\n# create the init.sh file we want\noutfile=test/test_examples/init.sh\n\ncat &lt;&lt;EOF &gt; $outfile\n#!/bin/bash\n#\n# preamble \n#\nBPMS=\\${BPMS-\\$(pwd)}\n# set shell variables lib, bin, verbose\n# with defaults in case not set \nlib=\\${lib-&#34;\\$BPMS/src&#34;}\nbin=\\${bin-&#34;\\$BPMS/src&#34;}\nVERBOSE=\\${VERBOSE-1}\n\n# set up required environment variables for bash\nexport LD_LIBRARY_PATH=&#34;\\${lib}:\\${LD_LIBRARY_PATH}&#34;\nexport DYLD_LIBRARY_PATH=&#34;\\${lib}:\\${DYLD_LIBRARY_PATH}&#34;\nexport PATH=&#34;\\${bin}:\\${PATH}&#34;\n\n# set up required environment variables for librat\nexport TEST=\\${BPMS}/test/test_example\nexport MATLIB=\\$TEST\nexport RSRLIB=\\$TEST\nexport ARARAT_OBJECT=\\$TEST\nexport DIRECT_ILLUMINATION=\\$TEST\nexport BPMS_FILES=\\$TEST\n\nif [ &#34;\\$(which start)&#34; == &#34;\\${bin}/start&#34; ]\nthen\n  if [ &#34;\\$VERBOSE&#34; ]; then\n      echo &#34;start found ok&#34;\n  fi\nelse\n  # we should create them\n  make clean all \nfi\nEOF\n\n# set executable mode\nchmod +x $outfile\n# test run\n$outfile\n&#39;&#39; returned non-zero exit status 2.
+<span class="ansi-red-fg">CalledProcessError</span>: Command &#39;b&#39;\n# create the init.sh file we want\noutfile=test/test_examples/init.sh\n\ncat &lt;&lt;EOF &gt; $outfile\n#!/bin/bash\n#\n# preamble \n#\nBPMS=\\${BPMS-\\$(pwd)}\n# set shell variables lib, bin, verbose\n# with defaults in case not set \nlib=\\${lib-&#34;\\$BPMS/src&#34;}\nbin=\\${bin-&#34;\\$BPMS/src&#34;}\nVERBOSE=\\${VERBOSE-1}\n\n# set up required environment variables for bash\nexport LD_LIBRARY_PATH=&#34;\\${lib}:\\${LD_LIBRARY_PATH}&#34;\nexport DYLD_LIBRARY_PATH=&#34;\\${lib}:\\${DYLD_LIBRARY_PATH}&#34;\nexport PATH=&#34;\\${bin}:\\${PATH}&#34;\n\n# set up required environment variables for librat\nexport TEST=\\${BPMS}/test/test_example\nexport MATLIB=\\$TEST\nexport RSRLIB=\\$TEST\nexport ARARAT_OBJECT=\\$TEST\nexport DIRECT_ILLUMINATION=\\$TEST\nexport BPMS_FILES=\\$TEST\n\nif [ &#34;\\$(which ratstart)&#34; == &#34;\\${bin}/ratstart&#34; ]\nthen\n  if [ &#34;\\$VERBOSE&#34; ]; then\n      echo &#34;ratstart found ok&#34;\n  fi\nelse\n  # we should create them\n  make clean all \nfi\nEOF\n\n# set executable mode\nchmod +x $outfile\n# test run\n$outfile\n&#39;&#39; returned non-zero exit status 2.
 </pre></div></div>
 </div>
 <div class="nbinput nblast docutils container">
@@ -698,9 +697,9 @@ ell -1 30000 30000 1000
 </div>
 <p>is in fact a spheroid of x-y semi-axis length 30000 units (arbitrary linear units) and z-semi-axis length 1000 units: a <em>prolate</em> spheroid that extends from <code class="docutils literal notranslate"><span class="pre">-30000</span></code> to <code class="docutils literal notranslate"><span class="pre">30000</span></code> in the x- and y-directions and from <code class="docutils literal notranslate"><span class="pre">1000</span></code> to <code class="docutils literal notranslate"><span class="pre">3000</span></code> in the z-direction. Not that the physical unit for these dimensions is arbitrary, but must be consistent throughout.</p>
 <p>The fields <code class="docutils literal notranslate"><span class="pre">!{</span></code> and <code class="docutils literal notranslate"><span class="pre">!}</span></code> in <code class="docutils literal notranslate"><span class="pre">`test/test_examples/first.obj</span></code> &lt;test/test_examples/first.obj&gt;`__ specify that a bounding box should be placed around objects contained within the brackets. This allows for efficient intersection tests in the ray tracing.</p>
-<p>We now want to use the code <code class="docutils literal notranslate"><span class="pre">start</span></code> to run <code class="docutils literal notranslate"><span class="pre">librat</span></code> functionality.</p>
+<p>We now want to use the code <code class="docutils literal notranslate"><span class="pre">ratstart</span></code> to run <code class="docutils literal notranslate"><span class="pre">librat</span></code> functionality.</p>
 <p>If you have compiled the code, the executable and library should be in the directory <code class="docutils literal notranslate"><span class="pre">`src</span></code> &lt;src&gt;`__ as</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">src</span><span class="o">/</span><span class="n">start</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">src</span><span class="o">/</span><span class="n">ratstart</span>
 <span class="n">src</span><span class="o">/</span><span class="n">libratlib</span><span class="o">.</span><span class="p">[</span><span class="n">dll</span><span class="p">,</span><span class="n">so</span><span class="p">]</span>
 </pre></div>
 </div>
@@ -715,7 +714,7 @@ ell -1 30000 30000 1000
 <span class="nv">lib</span><span class="o">=</span><span class="s1">&#39;./src&#39;</span>
 <span class="nv">bin</span><span class="o">=</span><span class="s1">&#39;./src&#39;</span>
 
-ls -l <span class="si">${</span><span class="nv">lib</span><span class="si">}</span>/start <span class="si">${</span><span class="nv">bin</span><span class="si">}</span>/libratlib.*
+ls -l <span class="si">${</span><span class="nv">lib</span><span class="si">}</span>/ratstart <span class="si">${</span><span class="nv">bin</span><span class="si">}</span>/libratlib.*
 </pre></div>
 </div>
 </div>
@@ -750,10 +749,10 @@ ls -l <span class="si">${</span><span class="nv">lib</span><span class="si">}</s
 <span class="nb">export</span> <span class="nv">DIRECT_ILLUMINATION</span><span class="o">=</span><span class="nv">$TEST</span>
 <span class="nb">export</span> <span class="nv">BPMS_FILES</span><span class="o">=</span><span class="nv">$TEST</span>
 
-<span class="k">if</span> <span class="o">[</span> <span class="k">$(</span>which start<span class="k">)</span> <span class="o">==</span> <span class="s1">&#39;./src/start&#39;</span> <span class="o">]</span>
+<span class="k">if</span> <span class="o">[</span> <span class="k">$(</span>which ratstart<span class="k">)</span> <span class="o">==</span> <span class="s1">&#39;./src/ratstart&#39;</span> <span class="o">]</span>
 <span class="k">then</span>
   <span class="k">if</span> <span class="o">[</span> <span class="nv">$verbose</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
-      <span class="nb">echo</span> <span class="s2">&quot;start found ok&quot;</span>
+      <span class="nb">echo</span> <span class="s2">&quot;ratstart found ok&quot;</span>
   <span class="k">fi</span>
 <span class="k">else</span>
   <span class="c1"># we should create them</span>

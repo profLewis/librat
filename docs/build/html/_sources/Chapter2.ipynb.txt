@@ -5,15 +5,15 @@
    "metadata": {},
    "source": [
     "\n",
-    "# Basic librat / start operation\n",
+    "# Basic librat / ratstart operation\n",
     "\n",
     "\n",
-    "Librat is the library of function calls around which you can write your own code to do things such as read in and parse an object file, read in and parse camera, illumination files, waveband files and so on. However, start is a wrapper code around these commands which gives you access to all the basic operations, and so is the de facto tool for doing simulations. The key things required to carry out a simulation are:\n",
+    "Librat is the library of function calls around which you can write your own code to do things such as read in and parse an object file, read in and parse camera, illumination files, waveband files and so on. However, ratstart (forerly start) is a wrapper code around these commands which gives you access to all the basic operations, and so is the de facto tool for doing simulations. The key things required to carry out a simulation are:\n",
     "\n",
     "- A camera file\n",
     "- An illumination file\n",
     "- A waveband file\n",
-    "- An object file - this is always assumed to be the last file on the start command line\n",
+    "- An object file - this is always assumed to be the last file on the ratstart command line\n",
     "\n",
     "Anything specific you want to do in any of these parts of the process is specified in these files. There are a limited number of additional command line options which either allow you to override a few key things in these files (the waveband file for example), or more usually are external to these things. Each of these can be passed through via the `-RAT` keyword. Examples are the ray tree depth (`-RATm`) , verbose level (`-RATv`), waveband file (`-RATsensor_wavebands`) etc.\n",
     "\n",
@@ -27,7 +27,6 @@
    "source": [
     "## Object example 1: planes and ellipsoids\n",
     "\n",
-    "---------------------------------\n",
     "\n"
    ]
   },
@@ -205,18 +204,18 @@
     },
     {
      "ename": "CalledProcessError",
-     "evalue": "Command 'b'\\n# create the init.sh file we want\\noutfile=test/test_examples/init.sh\\n\\ncat <<EOF > $outfile\\n#!/bin/bash\\n#\\n# preamble \\n#\\nBPMS=\\\\${BPMS-\\\\$(pwd)}\\n# set shell variables lib, bin, verbose\\n# with defaults in case not set \\nlib=\\\\${lib-\"\\\\$BPMS/src\"}\\nbin=\\\\${bin-\"\\\\$BPMS/src\"}\\nVERBOSE=\\\\${VERBOSE-1}\\n\\n# set up required environment variables for bash\\nexport LD_LIBRARY_PATH=\"\\\\${lib}:\\\\${LD_LIBRARY_PATH}\"\\nexport DYLD_LIBRARY_PATH=\"\\\\${lib}:\\\\${DYLD_LIBRARY_PATH}\"\\nexport PATH=\"\\\\${bin}:\\\\${PATH}\"\\n\\n# set up required environment variables for librat\\nexport TEST=\\\\${BPMS}/test/test_example\\nexport MATLIB=\\\\$TEST\\nexport RSRLIB=\\\\$TEST\\nexport ARARAT_OBJECT=\\\\$TEST\\nexport DIRECT_ILLUMINATION=\\\\$TEST\\nexport BPMS_FILES=\\\\$TEST\\n\\nif [ \"\\\\$(which start)\" == \"\\\\${bin}/start\" ]\\nthen\\n  if [ \"\\\\$VERBOSE\" ]; then\\n      echo \"start found ok\"\\n  fi\\nelse\\n  # we should create them\\n  make clean all \\nfi\\nEOF\\n\\n# set executable mode\\nchmod +x $outfile\\n# test run\\n$outfile\\n'' returned non-zero exit status 2.",
+     "evalue": "Command 'b'\\n# create the init.sh file we want\\noutfile=test/test_examples/init.sh\\n\\ncat <<EOF > $outfile\\n#!/bin/bash\\n#\\n# preamble \\n#\\nBPMS=\\\\${BPMS-\\\\$(pwd)}\\n# set shell variables lib, bin, verbose\\n# with defaults in case not set \\nlib=\\\\${lib-\"\\\\$BPMS/src\"}\\nbin=\\\\${bin-\"\\\\$BPMS/src\"}\\nVERBOSE=\\\\${VERBOSE-1}\\n\\n# set up required environment variables for bash\\nexport LD_LIBRARY_PATH=\"\\\\${lib}:\\\\${LD_LIBRARY_PATH}\"\\nexport DYLD_LIBRARY_PATH=\"\\\\${lib}:\\\\${DYLD_LIBRARY_PATH}\"\\nexport PATH=\"\\\\${bin}:\\\\${PATH}\"\\n\\n# set up required environment variables for librat\\nexport TEST=\\\\${BPMS}/test/test_example\\nexport MATLIB=\\\\$TEST\\nexport RSRLIB=\\\\$TEST\\nexport ARARAT_OBJECT=\\\\$TEST\\nexport DIRECT_ILLUMINATION=\\\\$TEST\\nexport BPMS_FILES=\\\\$TEST\\n\\nif [ \"\\\\$(which ratstart)\" == \"\\\\${bin}/ratstart\" ]\\nthen\\n  if [ \"\\\\$VERBOSE\" ]; then\\n      echo \"ratstart found ok\"\\n  fi\\nelse\\n  # we should create them\\n  make clean all \\nfi\\nEOF\\n\\n# set executable mode\\nchmod +x $outfile\\n# test run\\n$outfile\\n'' returned non-zero exit status 2.",
      "output_type": "error",
      "traceback": [
       "\u001b[0;31m---------------------------------------------------------------------------\u001b[0m",
       "\u001b[0;31mCalledProcessError\u001b[0m                        Traceback (most recent call last)",
-      "\u001b[0;32m<ipython-input-6-d988add8e183>\u001b[0m in \u001b[0;36m<module>\u001b[0;34m\u001b[0m\n\u001b[0;32m----> 1\u001b[0;31m \u001b[0mget_ipython\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mrun_cell_magic\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m'bash'\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0;34m''\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0;34m'\\n# create the init.sh file we want\\noutfile=test/test_examples/init.sh\\n\\ncat <<EOF > $outfile\\n#!/bin/bash\\n#\\n# preamble \\n#\\nBPMS=\\\\${BPMS-\\\\$(pwd)}\\n# set shell variables lib, bin, verbose\\n# with defaults in case not set \\nlib=\\\\${lib-\"\\\\$BPMS/src\"}\\nbin=\\\\${bin-\"\\\\$BPMS/src\"}\\nVERBOSE=\\\\${VERBOSE-1}\\n\\n# set up required environment variables for bash\\nexport LD_LIBRARY_PATH=\"\\\\${lib}:\\\\${LD_LIBRARY_PATH}\"\\nexport DYLD_LIBRARY_PATH=\"\\\\${lib}:\\\\${DYLD_LIBRARY_PATH}\"\\nexport PATH=\"\\\\${bin}:\\\\${PATH}\"\\n\\n# set up required environment variables for librat\\nexport TEST=\\\\${BPMS}/test/test_example\\nexport MATLIB=\\\\$TEST\\nexport RSRLIB=\\\\$TEST\\nexport ARARAT_OBJECT=\\\\$TEST\\nexport DIRECT_ILLUMINATION=\\\\$TEST\\nexport BPMS_FILES=\\\\$TEST\\n\\nif [ \"\\\\$(which start)\" == \"\\\\${bin}/start\" ]\\nthen\\n  if [ \"\\\\$VERBOSE\" ]; then\\n      echo \"start found ok\"\\n  fi\\nelse\\n  # we should create them\\n  make clean all \\nfi\\nEOF\\n\\n# set executable mode\\nchmod +x $outfile\\n# test run\\n$outfile\\n'\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m",
+      "\u001b[0;32m<ipython-input-6-d988add8e183>\u001b[0m in \u001b[0;36m<module>\u001b[0;34m\u001b[0m\n\u001b[0;32m----> 1\u001b[0;31m \u001b[0mget_ipython\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mrun_cell_magic\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m'bash'\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0;34m''\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0;34m'\\n# create the init.sh file we want\\noutfile=test/test_examples/init.sh\\n\\ncat <<EOF > $outfile\\n#!/bin/bash\\n#\\n# preamble \\n#\\nBPMS=\\\\${BPMS-\\\\$(pwd)}\\n# set shell variables lib, bin, verbose\\n# with defaults in case not set \\nlib=\\\\${lib-\"\\\\$BPMS/src\"}\\nbin=\\\\${bin-\"\\\\$BPMS/src\"}\\nVERBOSE=\\\\${VERBOSE-1}\\n\\n# set up required environment variables for bash\\nexport LD_LIBRARY_PATH=\"\\\\${lib}:\\\\${LD_LIBRARY_PATH}\"\\nexport DYLD_LIBRARY_PATH=\"\\\\${lib}:\\\\${DYLD_LIBRARY_PATH}\"\\nexport PATH=\"\\\\${bin}:\\\\${PATH}\"\\n\\n# set up required environment variables for librat\\nexport TEST=\\\\${BPMS}/test/test_example\\nexport MATLIB=\\\\$TEST\\nexport RSRLIB=\\\\$TEST\\nexport ARARAT_OBJECT=\\\\$TEST\\nexport DIRECT_ILLUMINATION=\\\\$TEST\\nexport BPMS_FILES=\\\\$TEST\\n\\nif [ \"\\\\$(which ratstart)\" == \"\\\\${bin}/ratstart\" ]\\nthen\\n  if [ \"\\\\$VERBOSE\" ]; then\\n      echo \"ratstart found ok\"\\n  fi\\nelse\\n  # we should create them\\n  make clean all \\nfi\\nEOF\\n\\n# set executable mode\\nchmod +x $outfile\\n# test run\\n$outfile\\n'\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m",
       "\u001b[0;32m~/opt/anaconda3/envs/librat/lib/python3.8/site-packages/IPython/core/interactiveshell.py\u001b[0m in \u001b[0;36mrun_cell_magic\u001b[0;34m(self, magic_name, line, cell)\u001b[0m\n\u001b[1;32m   2360\u001b[0m             \u001b[0;32mwith\u001b[0m \u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mbuiltin_trap\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m   2361\u001b[0m                 \u001b[0margs\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0;34m(\u001b[0m\u001b[0mmagic_arg_s\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mcell\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m-> 2362\u001b[0;31m                 \u001b[0mresult\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mfn\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m*\u001b[0m\u001b[0margs\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0;34m**\u001b[0m\u001b[0mkwargs\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m   2363\u001b[0m             \u001b[0;32mreturn\u001b[0m \u001b[0mresult\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m   2364\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n",
       "\u001b[0;32m~/opt/anaconda3/envs/librat/lib/python3.8/site-packages/IPython/core/magics/script.py\u001b[0m in \u001b[0;36mnamed_script_magic\u001b[0;34m(line, cell)\u001b[0m\n\u001b[1;32m    140\u001b[0m             \u001b[0;32melse\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    141\u001b[0m                 \u001b[0mline\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mscript\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m--> 142\u001b[0;31m             \u001b[0;32mreturn\u001b[0m \u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mshebang\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mline\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mcell\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m    143\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    144\u001b[0m         \u001b[0;31m# write a basic docstring:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
       "\u001b[0;32m<decorator-gen-110>\u001b[0m in \u001b[0;36mshebang\u001b[0;34m(self, line, cell)\u001b[0m\n",
       "\u001b[0;32m~/opt/anaconda3/envs/librat/lib/python3.8/site-packages/IPython/core/magic.py\u001b[0m in \u001b[0;36m<lambda>\u001b[0;34m(f, *a, **k)\u001b[0m\n\u001b[1;32m    185\u001b[0m     \u001b[0;31m# but it's overkill for just that one bit of state.\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    186\u001b[0m     \u001b[0;32mdef\u001b[0m \u001b[0mmagic_deco\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0marg\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m--> 187\u001b[0;31m         \u001b[0mcall\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0;32mlambda\u001b[0m \u001b[0mf\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0;34m*\u001b[0m\u001b[0ma\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0;34m**\u001b[0m\u001b[0mk\u001b[0m\u001b[0;34m:\u001b[0m \u001b[0mf\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m*\u001b[0m\u001b[0ma\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0;34m**\u001b[0m\u001b[0mk\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m    188\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    189\u001b[0m         \u001b[0;32mif\u001b[0m \u001b[0mcallable\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0marg\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
       "\u001b[0;32m~/opt/anaconda3/envs/librat/lib/python3.8/site-packages/IPython/core/magics/script.py\u001b[0m in \u001b[0;36mshebang\u001b[0;34m(self, line, cell)\u001b[0m\n\u001b[1;32m    243\u001b[0m             \u001b[0msys\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mstderr\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mflush\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    244\u001b[0m         \u001b[0;32mif\u001b[0m \u001b[0margs\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mraise_error\u001b[0m \u001b[0;32mand\u001b[0m \u001b[0mp\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mreturncode\u001b[0m\u001b[0;34m!=\u001b[0m\u001b[0;36m0\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m--> 245\u001b[0;31m             \u001b[0;32mraise\u001b[0m \u001b[0mCalledProcessError\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mp\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mreturncode\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mcell\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0moutput\u001b[0m\u001b[0;34m=\u001b[0m\u001b[0mout\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mstderr\u001b[0m\u001b[0;34m=\u001b[0m\u001b[0merr\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m    246\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    247\u001b[0m     \u001b[0;32mdef\u001b[0m \u001b[0m_run_script\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mself\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mp\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mcell\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mto_close\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
-      "\u001b[0;31mCalledProcessError\u001b[0m: Command 'b'\\n# create the init.sh file we want\\noutfile=test/test_examples/init.sh\\n\\ncat <<EOF > $outfile\\n#!/bin/bash\\n#\\n# preamble \\n#\\nBPMS=\\\\${BPMS-\\\\$(pwd)}\\n# set shell variables lib, bin, verbose\\n# with defaults in case not set \\nlib=\\\\${lib-\"\\\\$BPMS/src\"}\\nbin=\\\\${bin-\"\\\\$BPMS/src\"}\\nVERBOSE=\\\\${VERBOSE-1}\\n\\n# set up required environment variables for bash\\nexport LD_LIBRARY_PATH=\"\\\\${lib}:\\\\${LD_LIBRARY_PATH}\"\\nexport DYLD_LIBRARY_PATH=\"\\\\${lib}:\\\\${DYLD_LIBRARY_PATH}\"\\nexport PATH=\"\\\\${bin}:\\\\${PATH}\"\\n\\n# set up required environment variables for librat\\nexport TEST=\\\\${BPMS}/test/test_example\\nexport MATLIB=\\\\$TEST\\nexport RSRLIB=\\\\$TEST\\nexport ARARAT_OBJECT=\\\\$TEST\\nexport DIRECT_ILLUMINATION=\\\\$TEST\\nexport BPMS_FILES=\\\\$TEST\\n\\nif [ \"\\\\$(which start)\" == \"\\\\${bin}/start\" ]\\nthen\\n  if [ \"\\\\$VERBOSE\" ]; then\\n      echo \"start found ok\"\\n  fi\\nelse\\n  # we should create them\\n  make clean all \\nfi\\nEOF\\n\\n# set executable mode\\nchmod +x $outfile\\n# test run\\n$outfile\\n'' returned non-zero exit status 2."
+      "\u001b[0;31mCalledProcessError\u001b[0m: Command 'b'\\n# create the init.sh file we want\\noutfile=test/test_examples/init.sh\\n\\ncat <<EOF > $outfile\\n#!/bin/bash\\n#\\n# preamble \\n#\\nBPMS=\\\\${BPMS-\\\\$(pwd)}\\n# set shell variables lib, bin, verbose\\n# with defaults in case not set \\nlib=\\\\${lib-\"\\\\$BPMS/src\"}\\nbin=\\\\${bin-\"\\\\$BPMS/src\"}\\nVERBOSE=\\\\${VERBOSE-1}\\n\\n# set up required environment variables for bash\\nexport LD_LIBRARY_PATH=\"\\\\${lib}:\\\\${LD_LIBRARY_PATH}\"\\nexport DYLD_LIBRARY_PATH=\"\\\\${lib}:\\\\${DYLD_LIBRARY_PATH}\"\\nexport PATH=\"\\\\${bin}:\\\\${PATH}\"\\n\\n# set up required environment variables for librat\\nexport TEST=\\\\${BPMS}/test/test_example\\nexport MATLIB=\\\\$TEST\\nexport RSRLIB=\\\\$TEST\\nexport ARARAT_OBJECT=\\\\$TEST\\nexport DIRECT_ILLUMINATION=\\\\$TEST\\nexport BPMS_FILES=\\\\$TEST\\n\\nif [ \"\\\\$(which ratstart)\" == \"\\\\${bin}/ratstart\" ]\\nthen\\n  if [ \"\\\\$VERBOSE\" ]; then\\n      echo \"ratstart found ok\"\\n  fi\\nelse\\n  # we should create them\\n  make clean all \\nfi\\nEOF\\n\\n# set executable mode\\nchmod +x $outfile\\n# test run\\n$outfile\\n'' returned non-zero exit status 2."
      ]
     }
    ],
@@ -251,10 +250,10 @@
     "export DIRECT_ILLUMINATION=\\$TEST\n",
     "export BPMS_FILES=\\$TEST\n",
     "\n",
-    "if [ \"\\$(which start)\" == \"\\${bin}/start\" ]\n",
+    "if [ \"\\$(which ratstart)\" == \"\\${bin}/ratstart\" ]\n",
     "then\n",
     "  if [ \"\\$VERBOSE\" ]; then\n",
-    "      echo \"start found ok\"\n",
+    "      echo \"ratstart found ok\"\n",
     "  fi\n",
     "else\n",
     "  # we should create them\n",
@@ -344,11 +343,11 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "We now want to use the code `start` to run `librat` functionality.\n",
+    "We now want to use the code `ratstart` to run `librat` functionality.\n",
     "\n",
     "If you have compiled the code, the executable and library should be in the directory [`src`](src) as\n",
     "\n",
-    "    src/start\n",
+    "    src/ratstart\n",
     "    src/libratlib.[dll,so]\n",
     "    \n",
     "The suffix for the library will be `dll` on windows, and `so` on other operating systems. Lets just check they are there:"
@@ -365,7 +364,7 @@
     "lib='./src'\n",
     "bin='./src'\n",
     "\n",
-    "ls -l ${lib}/start ${bin}/libratlib.*"
+    "ls -l ${lib}/ratstart ${bin}/libratlib.*"
    ]
   },
   {
@@ -406,10 +405,10 @@
     "export DIRECT_ILLUMINATION=$TEST\n",
     "export BPMS_FILES=$TEST\n",
     "\n",
-    "if [ $(which start) == './src/start' ]\n",
+    "if [ $(which ratstart) == './src/ratstart' ]\n",
     "then\n",
     "  if [ $verbose ]; then\n",
-    "      echo \"start found ok\"\n",
+    "      echo \"ratstart found ok\"\n",
     "  fi\n",
     "else\n",
     "  # we should create them\n",
@@ -485,3 +484,4 @@
  "nbformat": 4,
  "nbformat_minor": 2
 }
+

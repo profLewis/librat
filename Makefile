@@ -11,3 +11,10 @@ clean:	src/makefile
 
 python:
 	@cd src;$(MAKE) python
+
+up:
+	bin/csh/pushMe
+
+down:
+	bin/csh/pullYou
+

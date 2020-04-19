@@ -18,10 +18,14 @@ python:
 	@cd src;$(MAKE) python
 
 push:
+	bin/csh/pushMe
+
 up:
 	bin/csh/pushMe
 
 pull:
+	bin/csh/pullYou
+
 down:
 	bin/csh/pullYou
 

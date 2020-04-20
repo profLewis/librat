@@ -1,0 +1,29 @@
+There are 4 materials:
+
+***** Material 0 *****
+	name: WHITE	is used? 0
+	type: (0) = srm with reflectance
+	Number in used material list = -1 
+	nBands: 2:
+0.000000 1.000000 
+100000000000000000000.000000 1.000000 
+***** Material 1 *****
+	name: TRANSPARENT	is used? 0
+	type: (10) = transparent
+	Number in used material list = -1 
+***** Material 2 *****
+	name: green	is used? 1
+	type: (0) = srm with reflectance
+	Number in used material list = 0 	name: green
+	nBands: 3:
+450.000000 1.000000 
+550.000000 1.000000 
+650.000000 1.000000 
+***** Material 3 *****
+	name: white	is used? 1
+	type: (0) = srm with reflectance
+	Number in used material list = 1 	name: white
+	nBands: 3:
+450.000000 1.000000 
+550.000000 1.000000 
+650.000000 1.000000 

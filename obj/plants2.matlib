@@ -1,0 +1,4 @@
+srm soil refl/price_soil.dat
+srm Branch refl/LOPEX_bark.dat
+srm leaf refl/leaf.dat
+matmap Leaf1 refl/leaf.matmap

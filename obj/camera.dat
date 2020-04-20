@@ -1,0 +1,57 @@
+camera {
+  camera.name  = "A-scope camera";
+
+# assumes 30 m footprint
+# from 400000000 mm
+# so fov = 30000/400000000 = 0.000075 radians
+# = 0.0042 degrees
+  geometry.fieldOfView = 0.0042;
+  geometry.azimuth = 0.0;
+  geometry.zenith = 0.0;
+  geometry.twist = 0.0;
+  geometry.location = 0, 0, 400000000;
+
+
+  samplingPattern.form = "flat";
+  samplingPattern.size = 378, 378;
+#  samplingPattern.read = "TRUE";
+
+#
+# these are all output images
+# so you can see how the sampling is arrived at
+#
+# map of number of samples per sampling pattern grid cell
+  samplingPattern.sampleCountImage = "cameraPsfSamplesCount.hips";
+# op the PSF image used here
+  samplingPattern.OPImage = "cameraPsf.hips";
+# mapping to grid coordinates
+  samplingPattern.gridMap = "cameraPsfMap.hips";
+# map accounting for non-ideal sampling
+  samplingPattern.modulationMap = "cameraPsfModulationMap.hips";
+
+  lidar.nBins = 100;
+  lidar.binStart = 799996000;
+  lidar.binStep = 500;
+  
+  samplingCharacteristics.nPixels = 142884;
+  samplingCharacteristics.rpp = 1;
+  geometry.imagingPlaneDimensions = 378, 378;
+
+#  recordMode.encode = 0 0 0 ;
+#  recordMode.memorySave  = 0 0 ;
+#  result.image = "cameraPsfImage.hips"
+
+  result.samplingImage = "cameraImage.hips"
+
+# ascii mode output
+# result.integral.mode = "scattering order"
+# result.integral.mode = "distance"
+#  result.integral.format = "ascii"
+  result.integral.format = "ascii"
+
+#  result.integral.mode = "waveband"
+#  result.integral.mode = "scattering order"
+  result.integral.mode = "distance"
+
+  result.integral = "results.dat"
+} 

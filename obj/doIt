@@ -1,0 +1,4 @@
+#!/bin/csh -f
+# hello this does something
+echo 13 | start -v 1 -m 5 -sensor_wavebands wavebands.dat test.obj
+

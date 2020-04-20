@@ -1,0 +1,203 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title> Lidar simulation - case 1 </title>
+<style type="text/css">
+    <!--
+     body {color: #000000; background: #ffffff;
+           font-family: verdana, arial, helvetica, times new roman;
+           font-size: small;}
+     h1 {font-family: courier new, courier;}
+     h2 {font-family: courier new, courier;}
+     tt {font-family: courier new, courier;}
+    -->
+</style>
+</head>
+
+<body>
+[<a href="lidar0.html">previous</a>] [<a href="lidar2.html">next</a>]
+<br>
+
+<h1 align="center">Simple object lidar test</h1>
+<p>
+<hr>
+<h2>Object file</h2>
+
+To run a simple lidar test, we consider a simple scene object <a href="test.obj"><tt>test.obj</tt></a>.
+
+<tt>
+<span>
+<br><p>
+mtllib plants.matlib<br>
+usemtl white<br>
+v 0 0 0<br>
+v 0 0 1<br>
+plane -1 -2<br>
+<br>
+!{<br>
+&nbsp;usemtl white<br>
+&nbsp;!{<br>
+&nbsp;&nbsp;v 0 0 1000<br>
+&nbsp;&nbsp;ell -1 30000 30000 1000<br>
+&nbsp;!}<br>
+!}<br>
+<br>
+</span>
+</tt>
+
+This defines a material library <a href="plants.matlib"><tt>plants.matlib</tt></a> that specifies the reflectance and transmittance properties of the scene materials.<p>
+
+<tt>
+srm white white.dat<br>
+</tt>
+<p>
+
+In this case, there is only a single material of type <tt>srm</tt> (standard reflectance material - Lambertian reflectance (and/or transmittance). The material name is <tt>white</tt> and the (ASCII) file giving the spectral reflectance function is <a href="white.dat"><tt>white.dat</tt></a>. The file  <a href="white.dat"><tt>white.dat</tt></a> contains 2 columns: column 1 is wavelength, column 2 is reflectance for that wavelength (wavelength units are arbitrary, but we usually use nm). In this case, the file specifies:<p>
+
+<tt>
+<span>
+<br>
+0 1<br>
+10000 1<br>
+<br>
+</span>
+</tt>
+<p>
+
+which is a reflectance of 1.0 for any wavelength (less than or equal to an arbitrary upper limit 10000). If the file specifies transmittance as well, this is given as a third column.<p>
+
+
+The lines:
+
+<tt>
+<span>
+<br><p>
+mtllib plants.matlib<br>
+usemtl white<br>
+<br>
+</span>
+</tt>
+
+specify that the material library <tt>plants.matlib</tt> is to be loaded (only one library can be loaded in current versions), and that metarial <tt>white</tt> is to be used for subsequent objects.<p>
+
+The fields <tt>!{</tt> and <tt>!}</tt> specifiy that a bounding box should be placed around objects contained within the brackets. This allows for efficient intersection tests in the ray tracing.<p>
+
+The fields <tt>v</tt> denote a vertex (vector) (as in the standard wavefront format). This requires 3 numbers to be given after the <tt>v</tt> giving the {x,y,z} coordinates of the vector.<p> Note that <tt>v</tt> fields can specify a location or direction vector.<p>
+
+
+The fields <tt>plane</tt> and <tt>ell</tt> specify scene objects. We will look at a fuller range of such objects later, but these two allow for a simple scene specification.<p>
+
+<tt>plane</tt> is an infinite planar object. It is defined by an intersection point (location vector) <tt><b>I</b></tt> and a direction vector <tt><b>N</b></tt>. These vectors need to be defined before a call is made to the object, so in this case, we define <tt><b>I</b></tt> as <tt>0 0 0</tt> and  <tt><b>N</b></tt> as <tt>0 0 1</tt>, i.e. an x-y plane at z=0.<p>
+
+Thus <tt>plane -1 -2</tt> means 'define a plane with  <tt><b>N</b></tt> given by the previous (-1) specified vector that goes through  <tt><b>I</b></tt>  given by the second to last specified vector.'<p>
+
+
+<tt>ell</tt> is an ellipsoid object. Its description requires definition of: (i) the <b>base</b> (N.B. not the centre) of the ellipsoid (<tt>-1</tt> here, meaning the previously-defined vector - <tt>0 0 1000</tt> in this case); (ii) the semi-axis lengths in x,y,z directions (<tt>30000 30000 1000</tt> here).<p>
+
+so:<p>
+
+<tt>v 0 0 1000<br>
+ell -1 30000 30000 1000<br></tt>
+
+<p>
+is in fact a spheroid of x-y semi-axis length 30000 units (arbitrary linear units) and z-semi-axis length 1000 units: a prolate spheroid that extends from -30000 to 30000 in the x- and y-directions and from 1000 to 3000 in the z-direction.<p>
+<hr>
+<p>
+<h2>Visualising the object: height map generation
+</h2>
+One useful way of simulating a view of this scene (e.g. to check it is set up as we intended) is to produce a height map. 
+<p>
+This can be done using option 16 in the software <tt>start</tt>.<p>
+
+The syntax of this option is:<p>
+
+<tt>
+echo 16 Cx Cy Cz Sx Sy Ix Iy RPP opName | start -v scene.obj
+<br></tt><br>
+
+where we wish to simulate a z-height field centred around <tt>Cx Cy Cz</tt> of extent <tt>Sx Sy</tt>. The resultant height field 'image' will have <tt>Ix Iy</tt> columns are rows and will be put into the file <tt>opName</tt>. The field <tt>RPP</tt> controls the number of samples 'per pixel'. The flag <tt>-v</tt> switches on verbose mode (level 0 by default) to provide some user feedback. The scene object is in the file <tt>scene.obj</tt>.<br>
+<br>
+So, an example here would be:<br><br>
+
+<tt>
+echo 16 0 0 3000 60000 60000 512 512 1 heightmap1.hips | start -v test.obj
+<br></tt><br>
+
+This should take less than a minute to run on a reasonably fast computer.
+<br><br>
+
+The resultant image can be visualised with <tt>xvc</tt>, a shell wrapped around the software <tt>xv</tt> (found in $BPMS/bin/csh):<br><br>
+
+<tt>xvc  heightmap1.hips</tt><br><br>
+
+<center>
+<img src="heightmap1.gif">
+</center>
+
+The resultant image should have the following statistics:<br>
+<br>
+<tt>
+hipstats < heightmap1.hips<br>
+</tt>
+<tt>
+Frame	0 : n=262144 mean=2094.509 SD=1114.431 Min=0.000 Max=3000.000
+</tt><br>
+
+<br>
+where <tt>hipstats</tt> is in <tt>$BPMS/bin/$ARCH</tt>.
+<br>
+<br>
+
+<hr>
+
+
+<h2>Object on slope</h2>
+
+Following from this, we might define a simple scene object as above, on a slope <a href="testslope.obj"><tt>testslope.obj</tt></a>.
+
+<tt>
+<span>
+<br><p>mtllib plants.matlib<br>usemtl white<br>
+v 0 0 0<br>
+v 0 1 1<br>
+plane -1 -2<br>
+<br>
+!{<br>
+&nbsp;usemtl white<br>
+&nbsp;!{<br>
+&nbsp;&nbsp;v 0 0 1000<br>
+&nbsp;&nbsp;ell -1 30000 30000 1000<br>
+&nbsp;!}<br>
+!}<br>
+<br>
+</span>
+</tt>
+
+
+<br>
+All we have changed here is the definition of <tt><b>N</b></tt> on the planar object.<br><br>
+
+Now if we run:<br><br>
+<tt>
+echo 16 0 0 100000 200000 200000 512 512 1 heightmap2.hips | start -v testslope.obj
+<br></tt><br>
+
+<br>
+we get:
+<br>
+<center>
+<img src="heightmap2.gif">
+</center>
+<br>
+<br>
+with statistics:
+<br>
+<br>
+<tt>
+hipstats < heightmap2.hips
+<br>
+Frame   0 : n=262144 mean=549.504 SD=57666.326 Min=-99999.219 Max=99998.898
+<br>
+</tt>
+<br>
+[<a href="lidar0.html">previous</a>] [<a href="lidar2.html">next</a>]

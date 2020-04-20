@@ -1,0 +1,40 @@
+camera {
+  camera.name  = "lidar camera";
+
+  samplingPattern.form = "gaussian";
+  samplingPattern.size = 1200, 1200;
+  samplingPattern.sd = 3,3;
+  samplingPattern.centre = 600, 600;
+# a threshold can be applied
+# everything below this is set to zero
+# the gaussian function used is:
+# G = exp(-X^2/(2 sdx^2)) * exp(-Y^2/(2*sdy^2))
+# where X = x - cx
+# so eg to threshold at 3 sd:
+# X/sdx = 3
+  samplingPattern.threshold = .01111;
+ 
+  geometry.perspective = TRUE; 
+# geometry
+  geometry.idealArea = 100000
+  geometry.azimuth = 0.0;
+  geometry.zenith = 0.0;
+  geometry.twist = 0.0;
+  geometry.lookAt = 0, 0, 0;
+  geometry.boomLength = 10000.;
+
+  samplingCharacteristics.nPixels = 262144;
+  samplingCharacteristics.rpp = 1;
+
+#  result.samplingImage = "testop.hips"
+
+  result.integral.mode = "distance"
+
+  result.integral = "results_lidar2.dat"
+
+  lidar.nBins = 250
+  lidar.binStart = 0
+  lidar.binStep = 1000
+
+
+} 

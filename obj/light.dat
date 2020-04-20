@@ -1,0 +1,61 @@
+camera {
+  camera.name  = "A-scope illumination";
+
+# assumes 30 m footprint
+# from 400000000 mm
+# so fov = 30000/400000000 = 0.000075 radians
+# = 0.0042 degrees
+  geometry.fieldOfView = 0.0042;
+  geometry.azimuth = 0.0;
+  geometry.zenith = 0.0;
+  geometry.twist = 0.0;
+  geometry.location = 0, 0, 400000000; 
+
+  samplingPattern.form = "gaussian";
+  samplingPattern.size = 378, 378;
+  samplingPattern.sd = 4.2,4.2;
+  samplingPattern.centre = 0,0;
+# a threshold can be applied
+# everything below this is set to zero
+# the gaussian function used is:
+# G = exp(-X^2/(2 sdx^2)) * exp(-Y^2/(2*sdy^2))
+# thresh = exp(-(sd^2)/2)
+# where sd = 4.2 here
+   samplingPattern.threshold = 0.000147748;
+
+# pulse information
+
+  lidar.pulseStart = 0;
+  lidar.pulseForm = "gaussian";
+  lidar.pulseSD = 4.5;
+#  lidar.pulseLength = 29979.2458;
+  lidar.pulseSamples = 420;
+  lidar.pulseOPFile = "pulse.dat";
+
+
+#
+# these are all output images
+# so you can see how the sampling is arrived at
+#
+# map of number of samples per sampling pattern grid cell
+  samplingPattern.sampleCountImage = "lightPsfSamplesCount.hips";
+# op the PSF image used here
+  samplingPattern.OPImage = "lightPsf.hips";
+# mapping to grid coordinates
+  samplingPattern.gridMap = "lightPsfMap.hips";
+# map accounting for non-ideal sampling
+  samplingPattern.modulationMap = "lightPsfModulationMap.hips";
+# read the pattern if it exists
+#  samplingPattern.read = "TRUE";
+
+  lidar.pulseStart = 0; 
+  lidar.pulseForm = "gaussian";
+  lidar.pulseSD = 4.5;
+  lidar.pulseLength = 29979.2458;
+  lidar.pulseSamples = 420;
+  lidar.pulseOPFile = "pulse.dat";
+# or lidar.pulseIPFile = "pulse.dat"
+# or lidar.pulseType = "square" (default)
+
+  samplingCharacteristics.nPixels = 142884;
+} 

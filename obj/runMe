@@ -1,0 +1,31 @@
+#!/bin/csh -f
+set here = $cwd
+
+# this is a fix for os x only
+set os = "`uname -s`"
+if ( "$os" == "Darwin") then
+    echo "OS: $os"
+    cd ..
+    set arch = `uname -m`
+    foreach i (../../lib/*_${arch}.so)
+      set this = `echo $i | sed 's/lib\///' | sed 's/\///g' | sed 's/..//'| sed 's/..//'`
+      if ( ! -e $this ) then
+        ln -s $i $this
+      endif
+    end
+    cd $here
+endif
+set ARCH = `uname -m`
+if (! $?LD_LIBRARY_PATH ) then
+setenv LD_LIBRARY_PATH "../../../lib"
+else
+setenv LD_LIBRARY_PATH "../../../lib:${LD_LIBRARY_PATH}"
+endif
+if ( -e ../../../../bin/$ARCH/start ) then
+echo 13 | ../../../../bin/$ARCH/start -v 1 -sensor_wavebands wavebands.dat -m 5 test.obj
+else
+echo 13 | start -v 1 -m 5 -sensor_wavebands wavebands.dat test.obj
+endif
+
+
+

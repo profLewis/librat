@@ -9,3 +9,4 @@ sphinx-copybutton
 sphinx-gallery
 jupytext
 stanford_theme
+ipympl

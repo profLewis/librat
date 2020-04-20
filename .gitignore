@@ -10,6 +10,9 @@ start
 makefile
 *checkpoint*
 .DS_Store
+*.AngleHistogram.*.dat
+*.NumberDensity.*.dat
+*.SizeHistogram.*.dat
 
 # Object files
 *.o

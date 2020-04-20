@@ -173,8 +173,11 @@ void	read_material_map_file(material_table,filename,no_of_materials_Ptr,material
   char	buf[1064];
   FILE	*fp,*open_file_for_read();
   int	no_of_materials;
-  
-  fp=open_file_for_read(filename);
+
+  if(!(fp=openFile(filename,TRUE,"MATLIB"))){
+     error2("Error opening material map",filename);
+     exit(1);
+  }
   /*
   **	read HIPL-format material map
   */

@@ -1,0 +1,5 @@
+r  -v 1 shrubs.obj
+settings set target.input-path x
+b /Users/plewis/librat/src/mtllib.c:616
+env BPMS_FILES=/Users/plewis/librat/obj
+env MATLIB=/Users/plewis/librat/obj

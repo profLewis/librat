@@ -398,7 +398,6 @@ void doStuff(RATobj *ratObj,void *info){
 						fprintf(stderr,"\t 5 file.obj          : read object file\n");
 						fprintf(stderr,"\t 6 fx fy fz dx dy dz : trace ray from f in direction d\n");
 						fprintf(stderr,"\t 7                   : get and print materials\n");
-						fprintf(stderr,"\t 8                   : print object information\n");
 						fprintf(stderr,"\t 9                   : print info on materials used\n");
 						fprintf(stderr,"\t 10                  : get and set verbosity level (0-1)\n");
 						fprintf(stderr,"\t 11                  : get and print object bbox information\n");

@@ -19,6 +19,8 @@ export RSRLIB=$BPMSROOT
 export ARARAT_OBJECT=$BPMSROOT
 export DIRECT_ILLUMINATION=$BPMSROOT
 export BPMS_FILES=$BPMSROOT
+export SKY_ILLUMINATION==$BPMSROOT
+
 if [ "$(which RATstart)" == "${bin}/RATstart" ]
 then
   if [ "$VERBOSE" == 1 ]; then

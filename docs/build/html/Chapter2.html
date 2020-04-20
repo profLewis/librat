@@ -34,7 +34,7 @@
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
     <link rel="top" title="librat  documentation" href="index.html"/>
-        <link rel="next" title="3. Appendix 1: bash help" href="Appendix1.html"/>
+        <link rel="next" title="3. RATstart" href="RATstart.html"/>
         <link rel="prev" title="1. librat" href="Chapter1.html"/> 
 
   
@@ -90,7 +90,8 @@
 <li class="toctree-l2"><a class="reference internal" href="#Object-example-2:-clones">2.3. Object example 2: clones</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="Appendix1.html">3. Appendix 1: <code class="docutils literal notranslate"><span class="pre">bash</span></code> help</a></li>
+<li class="toctree-l1"><a class="reference internal" href="RATstart.html">3. <code class="docutils literal notranslate"><span class="pre">RATstart</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="Appendix1.html">4. Appendix 1: <code class="docutils literal notranslate"><span class="pre">bash</span></code> help</a></li>
 </ul>
 
             
@@ -486,19 +487,22 @@ cat <span class="s">&lt;&lt;EOF &gt; test/test_examples/refl/white.dat</span>
 </thead>
 <tbody>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">MATLIB</span></code></p></td>
-<td><p>material library e.g. <code class="docutils literal notranslate"><span class="pre">`plants.matlib</span></code> &lt;test/test_examples/plants.matlib&gt;`__, all materials defined in a material library e.g. <code class="docutils literal notranslate"><span class="pre">`refl/white.dat</span></code> &lt;test/test_examples/refl/white.dat&gt;`__</p></td>
+<td><p>material library e.g. <code class="docutils literal notranslate"><span class="pre">plants.matlib</span></code>, all materials defined in a material library e.g. <code class="docutils literal notranslate"><span class="pre">white.dat</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ARARAT_OBJECT</span></code></p></td>
-<td><p>(extended) wavefront object files e.g. <code class="docutils literal notranslate"><span class="pre">`first.obj</span></code> &lt;test/test_examples/first.obj&gt;`__</p></td>
+<td><p>(extended) wavefront object files e.g. <code class="docutils literal notranslate"><span class="pre">first.obj</span></code></p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">DIRECT_ILLUMINATION</span></code></p></td>
-<td><p>spectral files for direct illumination: those defined in -RATdirect command line option</p></td>
+<td><p>spectral files for direct illumination: those defined in <code class="docutils literal notranslate"><span class="pre">-RATdirect</span></code> command line option</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">RSRLIB</span></code></p></td>
-<td><p>sensor waveband files: those defined in -RATsensor_wavebands command line option</p></td>
+<td><p>sensor waveband files: those defined in <code class="docutils literal notranslate"><span class="pre">-RATsensor_wavebands</span></code> command line option</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">BPMS_FILES</span></code></p></td>
 <td><p>Not used</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">SKY_ILLUMINATION</span></code></p></td>
+<td><p>location of sky map image files: defined in <code class="docutils literal notranslate"><span class="pre">-RATskymap</span></code> command line option</p></td>
 </tr>
 </tbody>
 </table>
@@ -520,6 +524,12 @@ cat <span class="s">&lt;&lt;EOF &gt; test/test_examples/refl/white.dat</span>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">PRAT_MAX_MATERIALS</span></code></p></td>
 <td><p>Maximum number of materials allowed (DEFAULT_PRAT_MAX_MATERIALS=1024 in <code class="docutils literal notranslate"><span class="pre">mtllib.h</span></code>)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">MAX_SUNS</span></code></p></td>
+<td><p>Maximum number of suns (180 in <code class="docutils literal notranslate"><span class="pre">rat.h</span></code>)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">MAX_OBJECT_TYPES</span></code></p></td>
+<td><p>Maximum number of types of object used (<code class="docutils literal notranslate"><span class="pre">sph</span></code>, <code class="docutils literal notranslate"><span class="pre">f</span></code>, etc): hardwired in <code class="docutils literal notranslate"><span class="pre">intersect_objects.h</span></code> at 16. Only used in <code class="docutils literal notranslate"><span class="pre">RATstart</span></code> option 8</p></td>
 </tr>
 </tbody>
 </table>
@@ -810,7 +820,7 @@ cat <span class="s">&lt;&lt;EOF &gt; test/test_examples/second.obj</span>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="Appendix1.html" class="btn btn-neutral float-right" title="3. Appendix 1: bash help" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="RATstart.html" class="btn btn-neutral float-right" title="3. RATstart" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="Chapter1.html" class="btn btn-neutral" title="1. librat" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>

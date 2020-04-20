@@ -390,8 +390,6 @@ void doStuff(RATobj *ratObj,void *info){
  					break;
 					default:
 						fprintf(stderr,"options:\n");
-						fprintf(stderr,"\t-2                   : print PID\n");
-						fprintf(stderr,"\t-1                   : print memory use\n");
 						fprintf(stderr,"\t 0                   : quit\n");
 						fprintf(stderr,"\t 1 n s1x s1y s1z ... : set sun vectors\n");
 						fprintf(stderr,"\t 2                   : print sun vectors\n");
@@ -404,10 +402,8 @@ void doStuff(RATobj *ratObj,void *info){
 						fprintf(stderr,"\t 9                   : print info on materials used\n");
 						fprintf(stderr,"\t 10                  : get and set verbosity level (0-1)\n");
 						fprintf(stderr,"\t 11                  : get and print object bbox information\n");
-						fprintf(stderr,"\t 12		       :\n");
 						fprintf(stderr,"\t 13                  : same as 14 assuming filenames camera.dat light.dat\n");
 						fprintf(stderr,"\t 14 camera.dat light.dat                : ray tracing using defined camera & illumination\n");
-						fprintf(stderr,"\t 15 		       : dont go there\n");
 						fprintf(stderr,"\t 16 cx cy cz sx sy nrows ncols rpp name : produce a height map in name\n");				
 						break;
 		}

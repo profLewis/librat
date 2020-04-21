@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>4. RATstart options &mdash; librat  documentation</title>
+  <title>2. RATstart options &mdash; librat  documentation</title>
   
 
   
@@ -34,8 +34,8 @@
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
     <link rel="top" title="librat  documentation" href="index.html"/>
-        <link rel="next" title="5. Appendix 1: bash help" href="Appendix1.html"/>
-        <link rel="prev" title="3. RATstart" href="RATstart.html"/> 
+        <link rel="next" title="3. librat" href="Chapter1.html"/>
+        <link rel="prev" title="1. RATstart" href="RATstart.html"/> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -83,20 +83,23 @@
             
                 <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="Chapter1.html">1. librat</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Chapter2.html">2. Basic librat / RATstart operation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="RATstart.html">3. <code class="docutils literal notranslate"><span class="pre">RATstart</span></code></a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">4. <code class="docutils literal notranslate"><span class="pre">RATstart</span></code> options</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#Option-1:-set-sun-vectors">4.1. Option 1: set sun vectors</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#Option-2:-print-sun-vectors">4.2. Option 2: print sun vectors</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#Option-6:-trace-ray-from-f-in-direction-d">4.3. Option 6: trace ray from f in direction d</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#Option-7:-query-materials">4.4. Option 7: query materials</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#Option-9:-print-info-on-materials-used">4.5. Option 9: print info on materials used</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#Option-10:-get-and-set-verbosity-level-(0-1)">4.6. Option 10: get and set verbosity level (0-1)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#Option-11:-get-and-print-object-bbox-information">4.7. Option 11: get and print object bbox information</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#Option-16:-produce-a-height-map">4.8. Option 16: produce a height map</a></li>
+<li class="toctree-l1"><a class="reference internal" href="RATstart.html">1. <code class="docutils literal notranslate"><span class="pre">RATstart</span></code></a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">2. <code class="docutils literal notranslate"><span class="pre">RATstart</span></code> options</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#Option-1:-set-sun-vectors">2.1. Option 1: set sun vectors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Option-2:-print-sun-vectors">2.2. Option 2: print sun vectors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Option-6:-trace-ray-from-f-in-direction-d">2.3. Option 6: trace ray from f in direction d</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Option-7:-query-materials">2.4. Option 7: query materials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Option-9:-print-info-on-materials-used">2.5. Option 9: print info on materials used</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Option-10:-get-and-set-verbosity-level-(0-1)">2.6. Option 10: get and set verbosity level (0-1)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Option-11:-get-and-print-object-bbox-information">2.7. Option 11: get and print object bbox information</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Option-16:-produce-a-height-map">2.8. Option 16: produce a height map</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Summary">2.8.1. Summary</a></li>
 </ul>
 </li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Chapter1.html">3. librat</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Chapter2.html">4. Basic librat / RATstart operation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Appendix1.html">5. Appendix 1: <code class="docutils literal notranslate"><span class="pre">bash</span></code> help</a></li>
 </ul>
 
@@ -142,7 +145,7 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li><span class="section-number">4. </span><code class="docutils literal notranslate"><span class="pre">RATstart</span></code> options</li>
+      <li><span class="section-number">2. </span><code class="docutils literal notranslate"><span class="pre">RATstart</span></code> options</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -382,17 +385,43 @@ div.rendered_html tbody tr:hover {
 }
 </style>
 <div class="section" id="RATstart-options">
-<h1><span class="section-number">4. </span><code class="docutils literal notranslate"><span class="pre">RATstart</span></code> options<a class="headerlink" href="#RATstart-options" title="Permalink to this headline">¶</a></h1>
-<p>This section explores the input options for <code class="docutils literal notranslate"><span class="pre">librat</span></code>. Recall that we can access them in. e.g.:</p>
+<h1><span class="section-number">2. </span><code class="docutils literal notranslate"><span class="pre">RATstart</span></code> options<a class="headerlink" href="#RATstart-options" title="Permalink to this headline">¶</a></h1>
+<p>This section explores the input options for <code class="docutils literal notranslate"><span class="pre">librat</span></code>.</p>
+<p>Recall that we can access them in. e.g.:</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">prelim</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="o">%</span><span class="k">set_env</span> BPMS=$BPMS
+<span class="o">%</span><span class="k">set_env</span> PATH=$BPMS/bin:$BPMS/src:$BPMS/bin/csh:$PATH_
+<span class="o">%</span><span class="k">set_env</span> MATLIB=$BPMS/obj
+<span class="o">%</span><span class="k">set_env</span> BPMSROOT=$BPMS/obj
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+env: BPMS=/Users/plewis/librat
+env: PATH=/Users/plewis/librat/bin:/Users/plewis/librat/src:/Users/plewis/librat/bin/csh:/Users/plewis/opt/anaconda3/bin:/Users/plewis/opt/anaconda3/condabin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/VMware Fusion.app/Contents/Public:/Library/TeX/texbin:/opt/X11/bin:/Library/Apple/usr/bin
+env: MATLIB=/Users/plewis/librat/obj
+env: BPMSROOT=/Users/plewis/librat/obj
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
 <span></span>%%bash
 
-<span class="nb">source</span> ./local_init.sh<span class="p">;</span><span class="nb">source</span> <span class="nv">$INIT</span>
-
+<span class="nb">source</span> examples_init.sh
 RATstart first.obj <span class="o">&lt;&lt;&lt;</span> <span class="m">1000</span>
 </pre></div>
 </div>
@@ -419,7 +448,7 @@ options:
 </pre></div></div>
 </div>
 <div class="section" id="Option-1:-set-sun-vectors">
-<h2><span class="section-number">4.1. </span>Option 1: set sun vectors<a class="headerlink" href="#Option-1:-set-sun-vectors" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">2.1. </span>Option 1: set sun vectors<a class="headerlink" href="#Option-1:-set-sun-vectors" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">1</span> <span class="n">n</span> <span class="n">s1x</span> <span class="n">s1y</span> <span class="n">s1z</span> <span class="o">...</span> <span class="p">:</span> <span class="nb">set</span> <span class="n">sun</span> <span class="n">vectors</span>
 </pre></div>
 </div>
@@ -433,9 +462,9 @@ options:
 </div>
 <div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
 <span></span>%%bash
-<span class="nb">source</span> ./local_init.sh<span class="p">;</span> <span class="nb">source</span> <span class="nv">$INIT</span>
+<span class="nb">source</span> examples_init.sh
 <span class="c1"># option 0</span>
-RATstart <span class="nv">$BPMS</span>/test/test_examples/first.obj <span class="s">&lt;&lt; EOF</span>
+RATstart first.obj <span class="s">&lt;&lt; EOF</span>
 <span class="s">1 1 0 0 1</span>
 <span class="s">EOF</span>
 </pre></div>
@@ -451,7 +480,7 @@ how many sun vectors? (&gt;0): enter sun vector number 1 (3 floats):
 </div>
 </div>
 <div class="section" id="Option-2:-print-sun-vectors">
-<h2><span class="section-number">4.2. </span>Option 2: print sun vectors<a class="headerlink" href="#Option-2:-print-sun-vectors" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">2.2. </span>Option 2: print sun vectors<a class="headerlink" href="#Option-2:-print-sun-vectors" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">2</span>                   <span class="p">:</span> <span class="nb">print</span> <span class="n">sun</span> <span class="n">vectors</span>
 </pre></div>
 </div>
@@ -461,14 +490,14 @@ how many sun vectors? (&gt;0): enter sun vector number 1 (3 floats):
 </div>
 <p>We then print the sun vectors, noticing that the outputs are normalised (unit direction vectors).</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
 <div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
 <span></span>%%bash
-<span class="nb">source</span> ./local_init.sh<span class="p">;</span> <span class="nb">source</span> <span class="nv">$INIT</span>
+<span class="nb">source</span> examples_init.sh
 <span class="c1"># option 0</span>
-RATstart <span class="nv">$BPMS</span>/test/test_examples/first.obj <span class="s">&lt;&lt; EOF</span>
+RATstart first.obj <span class="s">&lt;&lt; EOF</span>
 <span class="s">1 2 0 0 1 0 1 1</span>
 <span class="s">2</span>
 <span class="s">EOF</span>
@@ -494,14 +523,14 @@ how many sun vectors? (&gt;0): enter sun vector number 1 (3 floats): enter sun v
 </div>
 <p>We could use option <code class="docutils literal notranslate"><span class="pre">2</span></code> to check what the default sun vector is:</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
 <div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
 <span></span>%%bash
-<span class="nb">source</span> ./local_init.sh<span class="p">;</span> <span class="nb">source</span> <span class="nv">$INIT</span>
+<span class="nb">source</span> examples_init.sh
 <span class="c1"># option 0</span>
-RATstart <span class="nv">$BPMS</span>/test/test_examples/first.obj <span class="s">&lt;&lt; EOF</span>
+RATstart first.obj <span class="s">&lt;&lt; EOF</span>
 <span class="s">2</span>
 <span class="s">EOF</span>
 </pre></div>
@@ -517,7 +546,7 @@ Sun vector 1: 0.000000 0.000000 1.000000
 </div>
 </div>
 <div class="section" id="Option-6:-trace-ray-from-f-in-direction-d">
-<h2><span class="section-number">4.3. </span>Option 6: trace ray from f in direction d<a class="headerlink" href="#Option-6:-trace-ray-from-f-in-direction-d" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">2.3. </span>Option 6: trace ray from f in direction d<a class="headerlink" href="#Option-6:-trace-ray-from-f-in-direction-d" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">6</span> <span class="n">fx</span> <span class="n">fy</span> <span class="n">fz</span> <span class="n">dx</span> <span class="n">dy</span> <span class="n">dz</span> <span class="p">:</span> <span class="n">trace</span> <span class="n">ray</span> <span class="kn">from</span> <span class="nn">f</span> <span class="ow">in</span> <span class="n">direction</span> <span class="n">d</span>
 </pre></div>
 </div>
@@ -525,14 +554,12 @@ Sun vector 1: 0.000000 0.000000 1.000000
 <code class="docutils literal notranslate"><span class="pre">-RATtolerance</span> <span class="pre">0.0000000001</span></code> sets a tolerance for ray intersections, and should be appropriate to the scale of the world scene. It should be a small number, relative to typical object sizes.</p>
 <p>In this example, we fire a ray from <code class="docutils literal notranslate"><span class="pre">(0,</span> <span class="pre">0,</span> <span class="pre">50)</span></code> in the direction <code class="docutils literal notranslate"><span class="pre">(0,</span> <span class="pre">0,</span> <span class="pre">-1)</span></code> (straight down) into the scene <code class="docutils literal notranslate"><span class="pre">HET01_DIS_ERE.obj</span></code> (one of the RAMI test scenes).</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[177]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
 <div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
 <span></span>%%bash
-<span class="nb">source</span> ./local_init.sh
-<span class="nv">BPMSROOT</span><span class="o">=</span><span class="nv">$BPMS</span>/obj
-<span class="nb">source</span> <span class="nv">$INIT</span>
+<span class="nb">source</span> examples_init.sh
 
 <span class="c1"># option 6</span>
 <span class="c1"># store the result in the file $BPMSROOT/tmp.dat</span>
@@ -540,7 +567,7 @@ RATstart -RATr <span class="m">1</span> <span class="se">\</span>
          -RATsensor_wavebands wavebands.dat <span class="se">\</span>
          -RATtolerance <span class="m">0</span>.00000000001 <span class="se">\</span>
          -RATm <span class="m">1000</span> <span class="se">\</span>
-         <span class="nv">$BPMSROOT</span>/HET01_DIS_ERE.obj <span class="s">&lt;&lt; EOF &gt; $BPMSROOT/tmp.dat</span>
+         HET01_DIS_ERE.obj <span class="s">&lt;&lt; EOF &gt; $BPMSROOT/RATstart.out.dat</span>
 <span class="s">11</span>
 <span class="s">6 0 0 50 0 0 -1</span>
 <span class="s">EOF</span>
@@ -551,7 +578,7 @@ RATstart -RATr <span class="m">1</span> <span class="se">\</span>
 <span class="c1">#    locations of clone objects</span>
 awk <span class="s1">&#39;($1==&quot;clone&quot;){print $2,$3,$4}&#39;</span> <span class="se">\</span>
      &lt; <span class="nv">$BPMSROOT</span>/HET01_DIS_ERE.obj <span class="se">\</span>
-     &gt; <span class="nv">$BPMSROOT</span>/tmp.obj.dat
+     &gt; <span class="nv">$BPMSROOT</span>/RATstart.obj.dat
 
 <span class="c1"># 2. $BPMSROOT/tmp.int.dat</span>
 <span class="c1">#   filter ray intersections from file</span>
@@ -560,11 +587,11 @@ awk <span class="s1">&#39;($1==&quot;clone&quot;){print $2,$3,$4}&#39;</span> <s
 <span class="c1">#   add Nan to indicate new primary ray</span>
 awk <span class="s1">&#39;($4 == &quot;point:&quot;){print $5,$6,$7} \</span>
 <span class="s1">     ($1 == &quot;RTD&quot;){print &quot;Nan Nan Nan&quot;}&#39;</span> <span class="se">\</span>
-     &lt; <span class="nv">$BPMSROOT</span>/tmp.dat  <span class="se">\</span>
-     &gt; <span class="nv">$BPMSROOT</span>/tmp.int.dat
+     &lt; <span class="nv">$BPMSROOT</span>/RATstart.out.dat  <span class="se">\</span>
+     &gt; <span class="nv">$BPMSROOT</span>/RATstart.ray.dat
 
 <span class="c1"># output the file</span>
-cat <span class="nv">$BPMSROOT</span>/tmp.dat
+cat <span class="nv">$BPMSROOT</span>/RATstart.out.dat
 </pre></div>
 </div>
 </div>
@@ -585,7 +612,7 @@ order: 0        intersection point:     -0.000000 -0.000000 15.236980
                 direct:                 0.030690 0.044679 0.035031
 order: 1        intersection point:     -1.512808 6.032760 0.000000
                 ray length:             16.457470
-                intersection material:  3
+                intersection material:  5
                 sun 0:                  1 reflectance
                 direct:                 0.003918 0.016226 0.000350
 order: 2        intersection point:     3.805090 18.256928 16.902007
@@ -605,7 +632,7 @@ order: 4        intersection point:     -0.565249 22.253311 11.564100
                 direct:                 0.000000 0.000013 0.000000
 order: 5        intersection point:     -26.101692 51.431591 0.000000
                 ray length:             40.462457
-                intersection material:  3
+                intersection material:  5
                 sun 0:                  1 reflectance
                 direct:                 0.000000 0.000007 0.000000
                 sky  :                  reflectance
@@ -614,52 +641,17 @@ order: 5        intersection point:     -26.101692 51.431591 0.000000
 </div>
 <p>We see a number of orders of interaction orders in the ray tracing. We can visualise this:</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[178]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="o">%</span><span class="k">matplotlib</span> inline
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-
-<span class="c1"># build some utility functions</span>
-<span class="k">def</span> <span class="nf">split_intersections</span><span class="p">(</span><span class="n">intersections</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">     split 2-D array intersections</span>
-<span class="sd">     into list on NaN</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">split</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">intersections</span><span class="p">[</span><span class="mi">0</span><span class="p">]))[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">xy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array_split</span><span class="p">(</span><span class="n">intersections</span><span class="o">.</span><span class="n">T</span><span class="p">,</span><span class="n">split</span><span class="p">)</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">xy</span><span class="p">)):</span>
-        <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">xy</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
-    <span class="k">return</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-
-<span class="k">def</span> <span class="nf">plotter6</span><span class="p">(</span><span class="n">file</span><span class="p">,</span><span class="n">file1</span><span class="p">):</span>
-    <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
-    <span class="n">data</span><span class="o">=</span><span class="n">split_intersections</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">file</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
-    <span class="c1"># split the data on nan</span>
-    <span class="c1"># this is a bit of a faff ...</span>
-
-    <span class="n">objs</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">file1</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
-
-    <span class="c1"># plot circles</span>
-    <span class="n">radius</span> <span class="o">=</span> <span class="mi">10</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">objs</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
-        <span class="n">circle1</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">Circle</span><span class="p">((</span><span class="n">objs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="n">i</span><span class="p">],</span> <span class="n">objs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="n">i</span><span class="p">]),</span> <span class="n">radius</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">add_artist</span><span class="p">(</span><span class="n">circle1</span><span class="p">)</span>
-
-    <span class="c1"># plot x, y coordinates</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)):</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span><span class="s1">&#39;+-&#39;</span><span class="p">)</span>
-    <span class="n">o</span><span class="o">=</span><span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="s1">&#39;ro&#39;</span><span class="p">)</span>
-
+<span class="kn">from</span> <span class="nn">RATlibUtils.plotters</span> <span class="kn">import</span> <span class="n">plotter6</span>
 <span class="c1"># these are the data files</span>
 <span class="c1"># interactions</span>
-<span class="n">file</span><span class="o">=</span><span class="s2">&quot;../../obj/tmp.int.dat&quot;</span>
+<span class="n">file</span><span class="o">=</span><span class="n">BPMS</span><span class="o">+</span><span class="s2">&quot;/obj/RATstart.ray.dat&quot;</span>
 <span class="c1"># object locations</span>
-<span class="n">file1</span><span class="o">=</span><span class="s2">&quot;../../obj/tmp.obj.dat&quot;</span>
+<span class="n">file1</span><span class="o">=</span><span class="n">BPMS</span><span class="o">+</span><span class="s2">&quot;/obj/RATstart.obj.dat&quot;</span>
 <span class="n">plotter6</span><span class="p">(</span><span class="n">file</span><span class="p">,</span><span class="n">file1</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -668,22 +660,20 @@ order: 5        intersection point:     -26.101692 51.431591 0.000000
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/RATstartOptions_11_0.svg" src="_images/RATstartOptions_11_0.svg" /></div>
+<img alt="_images/RATstartOptions_13_0.svg" src="_images/RATstartOptions_13_0.svg" /></div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[179]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
 <div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
 <span></span>%%bash
-
-<span class="nb">source</span> ./local_init.sh
-<span class="nv">BPMSROOT</span><span class="o">=</span><span class="nv">$BPMS</span>/obj
+<span class="nb">source</span> examples_init.sh
 
 <span class="c1"># tidy up the files we created</span>
-rm -f <span class="nv">$BPMSROOT</span>/tmp.dat <span class="se">\</span>
-      <span class="nv">$BPMSROOT</span>/tmp.int.dat <span class="se">\</span>
-      <span class="nv">$BPMSROOT</span>/tmp.obj.dat
+rm -f <span class="nv">$BPMSROOT</span>/RATstart.obj.dat <span class="se">\</span>
+      <span class="nv">$BPMSROOT</span>/RATstart.out.dat <span class="se">\</span>
+      <span class="nv">$BPMSROOT</span>/RATstart.ray.dat
 </pre></div>
 </div>
 </div>
@@ -702,23 +692,21 @@ escapes, passes through the space of another sphere without interaction, then hi
 </div>
 <p><strong>Answers below</strong></p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[180]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
 <div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
 <span></span>%%bash
-<span class="nb">source</span> ./local_init.sh
-<span class="nv">BPMSROOT</span><span class="o">=</span><span class="nv">$BPMS</span>/obj
-<span class="nb">source</span> <span class="nv">$INIT</span>
+<span class="nb">source</span> examples_init.sh
 
 <span class="c1"># option 6</span>
 <span class="c1"># store the result in the file $BPMSROOT/tmp.dat</span>
 <span class="c1"># just repeat the primary ray call to fire a new ray</span>
-RATstart -RATr <span class="m">10</span> <span class="se">\</span>
+RATstart -RATr <span class="m">100</span> <span class="se">\</span>
          -RATsensor_wavebands wavebands.dat <span class="se">\</span>
          -RATtolerance <span class="m">0</span>.00000000001 <span class="se">\</span>
          -RATm <span class="m">1000</span> <span class="se">\</span>
-         <span class="nv">$BPMSROOT</span>/HET01_DIS_ERE.obj <span class="s">&lt;&lt; EOF &gt; $BPMSROOT/tmp.dat</span>
+         HET01_DIS_ERE.obj <span class="s">&lt;&lt; EOF &gt; $BPMSROOT/RATstart.out.dat</span>
 <span class="s">6 0 0 50 0 0 -1</span>
 <span class="s">6 0 0 50 0 0 -1</span>
 <span class="s">6 0 0 50 0 0 -1</span>
@@ -731,7 +719,7 @@ RATstart -RATr <span class="m">10</span> <span class="se">\</span>
 <span class="c1"># 1. $BPMSROOT/tmp.obj.dat</span>
 <span class="c1">#    locations of clone objects</span>
 awk &lt; <span class="nv">$BPMSROOT</span>/HET01_DIS_ERE.obj <span class="se">\</span>
-    <span class="s1">&#39;($1==&quot;clone&quot;){print $2,$3,$4}&#39;</span> &gt; <span class="nv">$BPMSROOT</span>/tmp.obj.dat
+    <span class="s1">&#39;($1==&quot;clone&quot;){print $2,$3,$4}&#39;</span> &gt; <span class="nv">$BPMSROOT</span>/RATstart.obj.dat
 <span class="c1"># 2. $BPMSROOT/tmp.int.dat</span>
 <span class="c1">#   filter ray intersections from file</span>
 <span class="c1">#   $BPMSROOT/tmp.dat</span>
@@ -739,23 +727,23 @@ awk &lt; <span class="nv">$BPMSROOT</span>/HET01_DIS_ERE.obj <span class="se">\<
 <span class="c1">#   encode Nan to separate the primary rays</span>
 awk <span class="s1">&#39;($4 == &quot;point:&quot;){print $5,$6,$7} \</span>
 <span class="s1">     ($1 == &quot;RTD&quot;){print &quot;Nan Nan Nan&quot;}&#39;</span> <span class="se">\</span>
-     &lt; <span class="nv">$BPMSROOT</span>/tmp.dat  <span class="se">\</span>
-     &gt; <span class="nv">$BPMSROOT</span>/tmp.int.dat
+     &lt; <span class="nv">$BPMSROOT</span>/RATstart.out.dat  <span class="se">\</span>
+     &gt; <span class="nv">$BPMSROOT</span>/RATstart.ray.dat
 </pre></div>
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[181]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="o">%</span><span class="k">matplotlib</span> inline
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">RATlibUtils.plotters</span> <span class="kn">import</span> <span class="n">plotter6</span>
 <span class="c1"># these are the data files</span>
 <span class="c1"># interactions</span>
-<span class="n">file</span><span class="o">=</span><span class="s2">&quot;../../obj/tmp.int.dat&quot;</span>
+<span class="n">file</span><span class="o">=</span><span class="n">BPMS</span><span class="o">+</span><span class="s2">&quot;/obj/RATstart.ray.dat&quot;</span>
 <span class="c1"># object locations</span>
-<span class="n">file1</span><span class="o">=</span><span class="s2">&quot;../../obj/tmp.obj.dat&quot;</span>
+<span class="n">file1</span><span class="o">=</span><span class="n">BPMS</span><span class="o">+</span><span class="s2">&quot;/obj/RATstart.obj.dat&quot;</span>
 <span class="n">plotter6</span><span class="p">(</span><span class="n">file</span><span class="p">,</span><span class="n">file1</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -764,37 +752,37 @@ awk <span class="s1">&#39;($4 == &quot;point:&quot;){print $5,$6,$7} \</span>
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/RATstartOptions_16_0.svg" src="_images/RATstartOptions_16_0.svg" /></div>
+<img alt="_images/RATstartOptions_18_0.svg" src="_images/RATstartOptions_18_0.svg" /></div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[182]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
 <div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
 <span></span>%%bash
 <span class="c1"># tidy up the files we created</span>
 
-<span class="nb">source</span> ./local_init.sh
+<span class="nb">source</span> examples_init.sh
 <span class="nv">BPMSROOT</span><span class="o">=</span><span class="nv">$BPMS</span>/obj
-rm -f <span class="nv">$BPMSROOT</span>/tmp.dat <span class="se">\</span>
-      <span class="nv">$BPMSROOT</span>/tmp.int.dat <span class="se">\</span>
-      <span class="nv">$BPMSROOT</span>/tmp.obj.dat
+rm -f <span class="nv">$BPMSROOT</span>/RATstart.obj.dat <span class="se">\</span>
+      <span class="nv">$BPMSROOT</span>/RATstart.out.dat <span class="se">\</span>
+      <span class="nv">$BPMSROOT</span>/RATstart.ray.dat
 </pre></div>
 </div>
 </div>
 </div>
 <div class="section" id="Option-7:-query-materials">
-<h2><span class="section-number">4.4. </span>Option 7: query materials<a class="headerlink" href="#Option-7:-query-materials" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">2.4. </span>Option 7: query materials<a class="headerlink" href="#Option-7:-query-materials" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">7</span>                   <span class="p">:</span> <span class="n">get</span> <span class="ow">and</span> <span class="nb">print</span> <span class="n">materials</span>
 </pre></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
 <div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
 <span></span>%%bash
-<span class="nb">source</span> ./local_init.sh<span class="p">;</span><span class="nb">source</span> <span class="nv">$INIT</span>
+<span class="nb">source</span> examples_init.sh
 
 <span class="c1"># Query materials</span>
 <span class="c1"># option 7</span>
@@ -840,17 +828,17 @@ There are 4 materials:
 </div>
 </div>
 <div class="section" id="Option-9:-print-info-on-materials-used">
-<h2><span class="section-number">4.5. </span>Option 9: print info on materials used<a class="headerlink" href="#Option-9:-print-info-on-materials-used" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">2.5. </span>Option 9: print info on materials used<a class="headerlink" href="#Option-9:-print-info-on-materials-used" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">9</span>                   <span class="p">:</span> <span class="nb">print</span> <span class="n">info</span> <span class="n">on</span> <span class="n">materials</span> <span class="n">used</span>
 </pre></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[97]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
 <div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
 <span></span>%%bash
-<span class="nb">source</span> ./local_init.sh<span class="p">;</span> <span class="nb">source</span> <span class="nv">$INIT</span>
+<span class="nb">source</span> examples_init.sh
 <span class="c1"># option 9</span>
 RATstart <span class="nv">$BPMSROOT</span>/first.obj <span class="o">&lt;&lt;&lt;</span> <span class="m">9</span>
 </pre></div>
@@ -882,114 +870,91 @@ There are 2 materials used:
 </div>
 </div>
 <div class="section" id="Option-10:-get-and-set-verbosity-level-(0-1)">
-<h2><span class="section-number">4.6. </span>Option 10: get and set verbosity level (0-1)<a class="headerlink" href="#Option-10:-get-and-set-verbosity-level-(0-1)" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">2.6. </span>Option 10: get and set verbosity level (0-1)<a class="headerlink" href="#Option-10:-get-and-set-verbosity-level-(0-1)" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">10</span>                  <span class="p">:</span> <span class="n">get</span> <span class="ow">and</span> <span class="nb">set</span> <span class="n">verbosity</span> <span class="n">level</span> <span class="p">(</span><span class="mi">0</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[107]:
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
 <span></span>%%bash
-<span class="nb">source</span> ./local_init.sh<span class="p">;</span><span class="nb">source</span> <span class="nv">$INIT</span>
+<span class="nb">source</span> examples_init.sh
 
 <span class="c1"># interactions to set verbosity to 1</span>
-RATstart <span class="nv">$BPMS</span>/test/test_examples/first.obj <span class="s">&lt;&lt; EOF</span>
+RATstart first.obj <span class="s">&lt;&lt; EOF</span>
 <span class="s">10</span>
 <span class="s">y</span>
-
+<span class="s">1</span>
 <span class="s">EOF</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
+<span></span>%%bash
+<span class="nb">source</span> examples_init.sh
 
 <span class="c1"># interactions to set verbosity to 0</span>
-RATstart <span class="nv">$BPMS</span>/test/test_examples/first.obj <span class="s">&lt;&lt; EOF</span>
+RATstart first.obj <span class="s">&lt;&lt; EOF</span>
 <span class="s">10</span>
 <span class="s">y</span>
 <span class="s">0</span>
 <span class="s">EOF</span>
 </pre></div>
 </div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area stderr docutils container">
-<div class="highlight"><pre>
-Verbose level is currently 0
-        Change it? (y/n):
-set verbosity level (0-1): Verbose level is now 1
-Verbose level is currently 0
-        Change it? (y/n):
-set verbosity level (0-1): Verbose level is now 0
-</pre></div></div>
 </div>
 <p>But normally, we would just use the command line to set this:</p>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[113]:
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
 <span></span>%%bash
-<span class="nb">source</span> ./local_init.sh<span class="p">;</span><span class="nb">source</span> <span class="nv">$INIT</span>
+<span class="nb">source</span> examples_init.sh
 
 <span class="c1"># interactions to set verbosity to 1</span>
-RATstart -RATv <span class="m">1</span> <span class="nv">$BPMS</span>/test/test_examples/first.obj <span class="s">&lt;&lt; EOF</span>
-<span class="s">0</span>
-<span class="s">EOF</span>
-
-<span class="c1"># interactions to set verbosity to 0</span>
-RATstart -RATv <span class="m">0</span> <span class="nv">$BPMS</span>/test/test_examples/first.obj <span class="s">&lt;&lt; EOF</span>
+RATstart -RATv <span class="m">1</span> first.obj <span class="s">&lt;&lt; EOF</span>
 <span class="s">0</span>
 <span class="s">EOF</span>
 </pre></div>
 </div>
 </div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
 </div>
-<div class="output_area stderr docutils container">
-<div class="highlight"><pre>
-testing object file for material library /Users/plewis/librat/test/test_examples/first.obj
-testing material library plants.matlib
-Found up to 4 materials in /Users/plewis/librat/test/test_examples/first.obj and preceding files
-RATstart:
-        VERBOSE flag on (-v option)
-{GLOBAL
-        (default) diffuse (reflectance) material        WHITE...
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
+<span></span>%%bash
+<span class="nb">source</span> examples_init.sh
 
-        (default) transparent material  TRANSPARENT...
-reading material library plants.matlib
-
-        diffuse material        green...
-3 lines   read in file /Users/plewis/librat/test/test_examples/green.dat
-2 columns read in file /Users/plewis/librat/test/test_examples/green.dat
-
-                        ...read
-        diffuse material        white...
-3 lines   read in file /Users/plewis/librat/test/test_examples/white.dat
-2 columns read in file /Users/plewis/librat/test/test_examples/white.dat
-
-                        ...read
-&lt;green&gt;PLANE{0&lt;white&gt;{1s[BBox: (-100.00,-100.00,-100.00) (100.00,100.00,100.00)]1}[BBox: (-99.99,-99.99,-99.99) (100.01,100.01,100.01)]0}RATstart:
-        VERBOSE flag on (-v option)
-</pre></div></div>
+<span class="c1"># interactions to set verbosity to 0</span>
+RATstart -RATv <span class="m">0</span> first.obj <span class="s">&lt;&lt; EOF</span>
+<span class="s">0</span>
+<span class="s">EOF</span>
+</pre></div>
+</div>
 </div>
 </div>
 <div class="section" id="Option-11:-get-and-print-object-bbox-information">
-<h2><span class="section-number">4.7. </span>Option 11: get and print object bbox information<a class="headerlink" href="#Option-11:-get-and-print-object-bbox-information" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">2.7. </span>Option 11: get and print object bbox information<a class="headerlink" href="#Option-11:-get-and-print-object-bbox-information" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">11</span>                  <span class="p">:</span> <span class="n">get</span> <span class="ow">and</span> <span class="nb">print</span> <span class="nb">object</span> <span class="n">bbox</span> <span class="n">information</span>
 </pre></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[116]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
 </pre></div>
 </div>
 <div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
 <span></span>%%bash
-<span class="nb">source</span> ./local_init.sh<span class="p">;</span><span class="nb">source</span> <span class="nv">$INIT</span>
+<span class="nb">source</span> examples_init.sh
 
 <span class="c1"># interactions to set verbosity to 1</span>
-RATstart <span class="nv">$BPMS</span>/test/test_examples/first.obj <span class="o">&lt;&lt;&lt;</span> <span class="m">11</span>
+RATstart first.obj <span class="o">&lt;&lt;&lt;</span> <span class="m">11</span>
 </pre></div>
 </div>
 </div>
@@ -998,15 +963,15 @@ RATstart <span class="nv">$BPMS</span>/test/test_examples/first.obj <span class=
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-x: -99.980001 100.020001
-y: -99.980001 100.020001
-z: -99.980001 100.020001
-bbox centre @ 0.020000 0.020000 0.020000
+x: -0.999800 1.000200
+y: -0.999800 1.000200
+z: -0.999800 1.000200
+bbox centre @ 0.000200 0.000200 0.000200
 </pre></div></div>
 </div>
 </div>
 <div class="section" id="Option-16:-produce-a-height-map">
-<h2><span class="section-number">4.8. </span>Option 16: produce a height map<a class="headerlink" href="#Option-16:-produce-a-height-map" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">2.8. </span>Option 16: produce a height map<a class="headerlink" href="#Option-16:-produce-a-height-map" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">16</span> <span class="n">cx</span> <span class="n">cy</span> <span class="n">cz</span> <span class="n">sx</span> <span class="n">sy</span> <span class="n">nrows</span> <span class="n">ncols</span> <span class="n">rpp</span> <span class="n">name</span> <span class="p">:</span> <span class="n">produce</span> <span class="n">a</span> <span class="n">height</span> <span class="nb">map</span> <span class="ow">in</span> <span class="n">name</span>
 </pre></div>
 </div>
@@ -1014,18 +979,16 @@ bbox centre @ 0.020000 0.020000 0.020000
 <code class="docutils literal notranslate"><span class="pre">name</span></code>.</p>
 <p>A simple use of this option, illustrated below, is to give a scene height map. In this case, we want <code class="docutils literal notranslate"><span class="pre">(cx,</span> <span class="pre">cy,</span> <span class="pre">cz)</span></code> to be above the <code class="docutils literal notranslate"><span class="pre">z-dimension</span></code> of the scene bounding box. Lets first re-familase ourselves with the object file, and look at its bounding box (option <code class="docutils literal notranslate"><span class="pre">11</span></code>):</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
 </pre></div>
 </div>
 <div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
 <span></span>%%bash
-<span class="nb">source</span> ./local_init.sh<span class="p">;</span><span class="nb">source</span> <span class="nv">$INIT</span>
+<span class="nb">source</span> examples_init.sh
 
-<span class="c1"># input object file</span>
-<span class="nv">obj</span><span class="o">=</span><span class="nv">$BPMS</span>/test/test_examples/first.obj
 <span class="c1"># lets look at it</span>
-cat <span class="nv">$obj</span>
-<span class="nb">echo</span> <span class="s2">&quot;11&quot;</span> <span class="p">|</span> RATstart <span class="nv">$obj</span>
+cat <span class="nv">$BPMS</span>/obj/first.obj
+<span class="nb">echo</span> <span class="s2">&quot;11&quot;</span> <span class="p">|</span> RATstart first.obj
 </pre></div>
 </div>
 </div>
@@ -1035,7 +998,7 @@ cat <span class="nv">$obj</span>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 # My first object file
-mtllib plants.matlib
+mtllib plants.matlib.new
 usemtl green
 v 0 0 0
 v 0 0 1
@@ -1060,16 +1023,14 @@ bbox centre @ 0.000200 0.000200 0.000200
 </div>
 <div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
 <span></span>%%bash
-<span class="nb">source</span> ./local_init.sh<span class="p">;</span><span class="nb">source</span> <span class="nv">$INIT</span>
+<span class="nb">source</span> examples_init.sh
 
-<span class="c1"># input object file</span>
-<span class="nv">obj</span><span class="o">=</span><span class="nv">$BPMS</span>/test/test_examples/first.obj
 <span class="c1"># output image name</span>
-<span class="nv">op</span><span class="o">=</span><span class="nv">$BPMS</span>/test/test_examples/out.hips
+<span class="nv">op</span><span class="o">=</span><span class="nv">$BPMS</span>/obj/out1.hips
 
 <span class="nb">echo</span> <span class="s2">&quot;16 0 0 2 4 4  200 200 1 </span><span class="nv">$op</span><span class="s2">&quot;</span> <span class="p">|</span> RATstart <span class="se">\</span>
-    -RATsensor_wavebands <span class="nv">$BPMS</span>/test/test_examples/wavebands.dat  <span class="se">\</span>
-    -RATv  -RATsun_position <span class="m">0</span> <span class="m">1</span> <span class="m">1</span> <span class="nv">$obj</span>
+    -RATsensor_wavebands wavebands.dat  <span class="se">\</span>
+    -RATv first.obj
 </pre></div>
 </div>
 </div>
@@ -1080,20 +1041,20 @@ bbox centre @ 0.000200 0.000200 0.000200
 <div class="highlight"><pre>
 RATstart:
         VERBOSE flag on (-v option)
-read_spectral_file:     3 data entries read in file /Users/plewis/librat/test/test_examples/wavebands.dat
+read_spectral_file:     3 data entries read in file /Users/plewis/librat/obj/wavebands.dat
 ( 99.9975)
 </pre></div></div>
 </div>
 <p>We use the python library <code class="docutils literal notranslate"><span class="pre">libhipl</span></code> (locally installed) to read the image, then display it using matplotlib:</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[33]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">libhipl</span> <span class="kn">import</span> <span class="n">Hipl</span>
+<span></span><span class="kn">from</span> <span class="nn">RATlibUtils.libhipl</span> <span class="kn">import</span> <span class="n">Hipl</span>
 <span class="kn">import</span> <span class="nn">pylab</span> <span class="k">as</span> <span class="nn">plt</span>
 
-<span class="n">f</span> <span class="o">=</span> <span class="s1">&#39;../../test/test_examples/out.hips&#39;</span>
+<span class="n">f</span> <span class="o">=</span> <span class="n">BPMS</span><span class="o">+</span><span class="s1">&#39;/obj/out1.hips&#39;</span>
 <span class="n">rabbit</span><span class="o">=</span><span class="n">Hipl</span><span class="p">()</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">rabbit</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
@@ -1101,34 +1062,32 @@ read_spectral_file:     3 data entries read in file /Users/plewis/librat/test/te
 </div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[33]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-&lt;matplotlib.colorbar.Colorbar at 0x11d3a0a30&gt;
+&lt;matplotlib.colorbar.Colorbar at 0x10fe25790&gt;
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/RATstartOptions_33_1.svg" src="_images/RATstartOptions_33_1.svg" /></div>
+<img alt="_images/RATstartOptions_37_1.svg" src="_images/RATstartOptions_37_1.svg" /></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[37]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
 </pre></div>
 </div>
 <div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
 <span></span>%%bash
-<span class="nb">source</span> ./local_init.sh<span class="p">;</span><span class="nv">BPMSROOT</span><span class="o">=</span><span class="nv">$BPMS</span>/obj<span class="p">;</span><span class="nb">source</span> <span class="nv">$INIT</span>
+<span class="nb">source</span> examples_init.sh
 
-<span class="c1"># input object file</span>
-<span class="nv">obj</span><span class="o">=</span><span class="nv">$BPMSROOT</span>/HET01_DIS_ERE.obj
 <span class="c1"># output image name</span>
-<span class="nv">op</span><span class="o">=</span><span class="nv">$BPMS</span>/test/test_examples/out.hips
+<span class="nv">op</span><span class="o">=</span><span class="nv">$BPMS</span>/obj/out2.hips
 
-RATstart <span class="nv">$obj</span> <span class="s">&lt;&lt;EOF</span>
+RATstart HET01_DIS_ERE.obj <span class="s">&lt;&lt;EOF</span>
 <span class="s">11</span>
 <span class="s">16 0 0 30 200 200  200 200 1 $op</span>
 <span class="s">EOF</span>
@@ -1155,14 +1114,14 @@ bbox centre @ 1.212094 3.841432 14.551330
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[38]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">libhipl</span> <span class="kn">import</span> <span class="n">Hipl</span>
+<span></span><span class="kn">from</span> <span class="nn">RATlibUtils.libhipl</span> <span class="kn">import</span> <span class="n">Hipl</span>
 <span class="kn">import</span> <span class="nn">pylab</span> <span class="k">as</span> <span class="nn">plt</span>
 
-<span class="n">f</span> <span class="o">=</span> <span class="s1">&#39;../../test/test_examples/out.hips&#39;</span>
+<span class="n">f</span> <span class="o">=</span> <span class="n">BPMS</span><span class="o">+</span><span class="s1">&#39;/obj/out2.hips&#39;</span>
 <span class="n">rabbit</span><span class="o">=</span><span class="n">Hipl</span><span class="p">()</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">rabbit</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
@@ -1170,37 +1129,23 @@ bbox centre @ 1.212094 3.841432 14.551330
 </div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[38]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-&lt;matplotlib.colorbar.Colorbar at 0x11ea2a700&gt;
+&lt;matplotlib.colorbar.Colorbar at 0x1219bab90&gt;
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/RATstartOptions_35_1.svg" src="_images/RATstartOptions_35_1.svg" /></div>
+<img alt="_images/RATstartOptions_39_1.svg" src="_images/RATstartOptions_39_1.svg" /></div>
 </div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>
-</pre></div>
-</div>
-</div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>
-</pre></div>
-</div>
+<div class="section" id="Summary">
+<h3><span class="section-number">2.8.1. </span>Summary<a class="headerlink" href="#Summary" title="Permalink to this headline">¶</a></h3>
+<p>In this section, we have explored the input options for <code class="docutils literal notranslate"><span class="pre">librat</span></code>. These consist of a numeric code on on command line input, followed by some (possibly interactive) set of parameters. We have explored all of those listed, other than <code class="docutils literal notranslate"><span class="pre">13</span></code> and <code class="docutils literal notranslate"><span class="pre">14</span></code> which refer to camera and light files.</p>
 </div>
 </div>
 </div>
@@ -1212,10 +1157,10 @@ bbox centre @ 1.212094 3.841432 14.551330
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="Appendix1.html" class="btn btn-neutral float-right" title="5. Appendix 1: bash help" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="Chapter1.html" class="btn btn-neutral float-right" title="3. librat" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="RATstart.html" class="btn btn-neutral" title="3. RATstart" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="RATstart.html" class="btn btn-neutral" title="1. RATstart" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

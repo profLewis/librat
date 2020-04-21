@@ -16,10 +16,10 @@ UCL Geography/NCEO librat software
    :maxdepth: 3
    :caption: Contents:
 
-   Chapter1
-   Chapter2
    RATstart
    RATstartOptions
+   Chapter1
+   Chapter2
    Appendix1
 
 .. _Chapter1: https://mybinder.org/v2/gh/profLewis/librat.git/master?filepath=Chapter1.ipynb

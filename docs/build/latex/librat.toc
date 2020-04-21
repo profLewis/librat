@@ -1,39 +1,59 @@
 \babel@toc {english}{}
-\contentsline {chapter}{\numberline {1}Initialisation}{3}{chapter.1}%
-\contentsline {section}{\numberline {1.1}Environment variables}{4}{section.1.1}%
-\contentsline {section}{\numberline {1.2}Making files}{6}{section.1.2}%
-\contentsline {chapter}{\numberline {2}Basic librat / start operation}{11}{chapter.2}%
-\contentsline {section}{\numberline {2.1}Object example 1: planes and ellipsoids}{11}{section.2.1}%
-\contentsline {section}{\numberline {2.2}Environment variables}{13}{section.2.2}%
-\contentsline {section}{\numberline {2.3}Object example 2: clones}{17}{section.2.3}%
-\contentsline {chapter}{\numberline {3}Appendix 1: \sphinxstyleliteralintitle {\sphinxupquote {bash}} help}{19}{chapter.3}%
-\contentsline {section}{\numberline {3.1}Introduction to shell and environment variables}{19}{section.3.1}%
-\contentsline {subsection}{\numberline {3.1.1}\sphinxstyleliteralintitle {\sphinxupquote {export}}}{19}{subsection.3.1.1}%
-\contentsline {subsection}{\numberline {3.1.2}White space and single quotes \sphinxstyleliteralintitle {\sphinxupquote {\textquotesingle {}}}}{20}{subsection.3.1.2}%
-\contentsline {subsection}{\numberline {3.1.3}\sphinxstyleliteralintitle {\sphinxupquote {echo}}}{20}{subsection.3.1.3}%
-\contentsline {subsection}{\numberline {3.1.4}Double quotes \sphinxstyleliteralintitle {\sphinxupquote {"}} and backslash escape \sphinxstyleliteralintitle {\sphinxupquote {/}}}{20}{subsection.3.1.4}%
-\contentsline {subsection}{\numberline {3.1.5}\sphinxstyleliteralintitle {\sphinxupquote {env}}, \sphinxstyleliteralintitle {\sphinxupquote {grep}}, pipe \sphinxstyleliteralintitle {\sphinxupquote {|}}}{20}{subsection.3.1.5}%
-\contentsline {subsection}{\numberline {3.1.6}Shell variable}{21}{subsection.3.1.6}%
-\contentsline {subsection}{\numberline {3.1.7}\sphinxstyleliteralintitle {\sphinxupquote {set}}, \sphinxstyleliteralintitle {\sphinxupquote {head}} , \sphinxstyleliteralintitle {\sphinxupquote {tail}}}{22}{subsection.3.1.7}%
-\contentsline {section}{\numberline {3.2}Some important environment variables and related}{22}{section.3.2}%
-\contentsline {subsection}{\numberline {3.2.1}\sphinxstyleliteralintitle {\sphinxupquote {PATH}}}{23}{subsection.3.2.1}%
-\contentsline {subsection}{\numberline {3.2.2}\sphinxstyleliteralintitle {\sphinxupquote {which}}}{23}{subsection.3.2.2}%
-\contentsline {subsection}{\numberline {3.2.3}\sphinxstyleliteralintitle {\sphinxupquote {ls}}}{23}{subsection.3.2.3}%
-\contentsline {subsection}{\numberline {3.2.4}\sphinxstyleliteralintitle {\sphinxupquote {.bash\_profile}}, \sphinxstyleliteralintitle {\sphinxupquote {.bashrc}}, wildcard \sphinxstyleliteralintitle {\sphinxupquote {*}}}{23}{subsection.3.2.4}%
-\contentsline {subsection}{\numberline {3.2.5}\sphinxstyleliteralintitle {\sphinxupquote {ls \sphinxhyphen {}l}}}{24}{subsection.3.2.5}%
-\contentsline {subsection}{\numberline {3.2.6}\sphinxstyleliteralintitle {\sphinxupquote {chmod}}, \sphinxstyleliteralintitle {\sphinxupquote {\textgreater {}}}, \sphinxstyleliteralintitle {\sphinxupquote {rm \sphinxhyphen {}f}}, \sphinxstyleliteralintitle {\sphinxupquote {mkdir \sphinxhyphen {}p}}}{25}{subsection.3.2.6}%
-\contentsline {subsection}{\numberline {3.2.7}\sphinxstyleliteralintitle {\sphinxupquote {cat}}}{26}{subsection.3.2.7}%
-\contentsline {subsection}{\numberline {3.2.8}\sphinxstyleliteralintitle {\sphinxupquote {pwd}}, \sphinxstyleliteralintitle {\sphinxupquote {cd}}}{26}{subsection.3.2.8}%
-\contentsline {subsection}{\numberline {3.2.9}\sphinxstyleliteralintitle {\sphinxupquote {\$(pwd)}}}{27}{subsection.3.2.9}%
-\contentsline {subsection}{\numberline {3.2.10}\sphinxstyleliteralintitle {\sphinxupquote {\$\{BPMS\sphinxhyphen {}\$(pwd)\}}}}{27}{subsection.3.2.10}%
-\contentsline {subsection}{\numberline {3.2.11}edit}{28}{subsection.3.2.11}%
-\contentsline {subsection}{\numberline {3.2.12}Update \sphinxstyleliteralintitle {\sphinxupquote {PATH}}}{29}{subsection.3.2.12}%
-\contentsline {subsection}{\numberline {3.2.13}\sphinxstyleliteralintitle {\sphinxupquote {LD\_LIBRARY\_PATH}}, \sphinxstyleliteralintitle {\sphinxupquote {DYLD\_LIBRARY\_PATH}}}{30}{subsection.3.2.13}%
-\contentsline {subsection}{\numberline {3.2.14}Update \sphinxstyleliteralintitle {\sphinxupquote {LD\_LIBRARY\_PATH}}, \sphinxstyleliteralintitle {\sphinxupquote {DYLD\_LIBRARY\_PATH}}}{30}{subsection.3.2.14}%
-\contentsline {subsection}{\numberline {3.2.15}Which operating system? \sphinxstyleliteralintitle {\sphinxupquote {uname}}, \sphinxstyleliteralintitle {\sphinxupquote {if}}}{32}{subsection.3.2.15}%
-\contentsline {subsection}{\numberline {3.2.16}Contents of libraries: \sphinxstyleliteralintitle {\sphinxupquote {nm}} or \sphinxstyleliteralintitle {\sphinxupquote {ar}}}{32}{subsection.3.2.16}%
-\contentsline {section}{\numberline {3.3}Important environment variables for \sphinxstyleliteralintitle {\sphinxupquote {librat}}}{33}{section.3.3}%
-\contentsline {subsection}{\numberline {3.3.1}\sphinxstyleliteralintitle {\sphinxupquote {cat \textless {}\textless {}EOF \textgreater {} output ... EOF}}}{33}{subsection.3.3.1}%
-\contentsline {subsection}{\numberline {3.3.2}\sphinxstyleliteralintitle {\sphinxupquote {MATLIB}}, \sphinxstyleliteralintitle {\sphinxupquote {RSRLIB}} etc.}{35}{subsection.3.3.2}%
-\contentsline {section}{\numberline {3.4}Summary}{36}{section.3.4}%
-\contentsline {chapter}{\numberline {4}Indices and tables}{39}{chapter.4}%
+\contentsline {chapter}{\numberline {1}\sphinxstyleliteralintitle {\sphinxupquote {RATstart}}}{3}{chapter.1}%
+\contentsline {section}{\numberline {1.1}\sphinxstyleliteralintitle {\sphinxupquote {RATstart}} (formerly \sphinxstyleliteralintitle {\sphinxupquote {start}})}{3}{section.1.1}%
+\contentsline {subsection}{\numberline {1.1.1}Getting started}{3}{subsection.1.1.1}%
+\contentsline {subsection}{\numberline {1.1.2}Initialisation shells}{5}{subsection.1.1.2}%
+\contentsline {section}{\numberline {1.2}Environment variables}{7}{section.1.2}%
+\contentsline {section}{\numberline {1.3}Making some basic files}{10}{section.1.3}%
+\contentsline {subsection}{\numberline {1.3.1}\sphinxstyleliteralintitle {\sphinxupquote {bash}} constructs}{10}{subsection.1.3.1}%
+\contentsline {subsection}{\numberline {1.3.2}\sphinxstyleliteralintitle {\sphinxupquote {first.obj}} and associated files}{12}{subsection.1.3.2}%
+\contentsline {subsection}{\numberline {1.3.3}height map visualisation}{13}{subsection.1.3.3}%
+\contentsline {subsection}{\numberline {1.3.4}Ray tracing}{13}{subsection.1.3.4}%
+\contentsline {subsection}{\numberline {1.3.5}Summary}{16}{subsection.1.3.5}%
+\contentsline {chapter}{\numberline {2}\sphinxstyleliteralintitle {\sphinxupquote {RATstart}} options}{17}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Option 1: set sun vectors}{18}{section.2.1}%
+\contentsline {section}{\numberline {2.2}Option 2: print sun vectors}{18}{section.2.2}%
+\contentsline {section}{\numberline {2.3}Option 6: trace ray from f in direction d}{19}{section.2.3}%
+\contentsline {section}{\numberline {2.4}Option 7: query materials}{22}{section.2.4}%
+\contentsline {section}{\numberline {2.5}Option 9: print info on materials used}{23}{section.2.5}%
+\contentsline {section}{\numberline {2.6}Option 10: get and set verbosity level (0\sphinxhyphen {}1)}{23}{section.2.6}%
+\contentsline {section}{\numberline {2.7}Option 11: get and print object bbox information}{24}{section.2.7}%
+\contentsline {section}{\numberline {2.8}Option 16: produce a height map}{24}{section.2.8}%
+\contentsline {subsection}{\numberline {2.8.1}Summary}{26}{subsection.2.8.1}%
+\contentsline {chapter}{\numberline {3}librat}{27}{chapter.3}%
+\contentsline {section}{\numberline {3.1}\sphinxstyleliteralintitle {\sphinxupquote {libratlib}}}{27}{section.3.1}%
+\contentsline {chapter}{\numberline {4}Basic librat / RATstart operation}{29}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Object example 1: planes and ellipsoids}{29}{section.4.1}%
+\contentsline {section}{\numberline {4.2}Environment variables}{31}{section.4.2}%
+\contentsline {section}{\numberline {4.3}Object example 2: clones}{35}{section.4.3}%
+\contentsline {chapter}{\numberline {5}Appendix 1: \sphinxstyleliteralintitle {\sphinxupquote {bash}} help}{37}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Introduction to shell and environment variables}{37}{section.5.1}%
+\contentsline {subsection}{\numberline {5.1.1}\sphinxstyleliteralintitle {\sphinxupquote {export}}}{37}{subsection.5.1.1}%
+\contentsline {subsection}{\numberline {5.1.2}White space and single quotes \sphinxstyleliteralintitle {\sphinxupquote {\textquotesingle {}}}}{38}{subsection.5.1.2}%
+\contentsline {subsection}{\numberline {5.1.3}\sphinxstyleliteralintitle {\sphinxupquote {echo}}}{38}{subsection.5.1.3}%
+\contentsline {subsection}{\numberline {5.1.4}Double quotes \sphinxstyleliteralintitle {\sphinxupquote {"}} and backslash escape \sphinxstyleliteralintitle {\sphinxupquote {/}}}{38}{subsection.5.1.4}%
+\contentsline {subsection}{\numberline {5.1.5}\sphinxstyleliteralintitle {\sphinxupquote {env}}, \sphinxstyleliteralintitle {\sphinxupquote {grep}}, pipe \sphinxstyleliteralintitle {\sphinxupquote {|}}}{39}{subsection.5.1.5}%
+\contentsline {subsection}{\numberline {5.1.6}Shell variable}{39}{subsection.5.1.6}%
+\contentsline {subsection}{\numberline {5.1.7}\sphinxstyleliteralintitle {\sphinxupquote {set}}, \sphinxstyleliteralintitle {\sphinxupquote {head}} , \sphinxstyleliteralintitle {\sphinxupquote {tail}}}{40}{subsection.5.1.7}%
+\contentsline {section}{\numberline {5.2}Some important environment variables and related}{41}{section.5.2}%
+\contentsline {subsection}{\numberline {5.2.1}\sphinxstyleliteralintitle {\sphinxupquote {PATH}}}{41}{subsection.5.2.1}%
+\contentsline {subsection}{\numberline {5.2.2}\sphinxstyleliteralintitle {\sphinxupquote {which}}}{41}{subsection.5.2.2}%
+\contentsline {subsection}{\numberline {5.2.3}\sphinxstyleliteralintitle {\sphinxupquote {ls}}}{41}{subsection.5.2.3}%
+\contentsline {subsection}{\numberline {5.2.4}\sphinxstyleliteralintitle {\sphinxupquote {.bash\_profile}}, \sphinxstyleliteralintitle {\sphinxupquote {.bashrc}}, wildcard \sphinxstyleliteralintitle {\sphinxupquote {*}}}{42}{subsection.5.2.4}%
+\contentsline {subsection}{\numberline {5.2.5}\sphinxstyleliteralintitle {\sphinxupquote {ls \sphinxhyphen {}l}}}{42}{subsection.5.2.5}%
+\contentsline {subsection}{\numberline {5.2.6}\sphinxstyleliteralintitle {\sphinxupquote {chmod}}, \sphinxstyleliteralintitle {\sphinxupquote {\textgreater {}}}, \sphinxstyleliteralintitle {\sphinxupquote {rm \sphinxhyphen {}f}}, \sphinxstyleliteralintitle {\sphinxupquote {mkdir \sphinxhyphen {}p}}}{43}{subsection.5.2.6}%
+\contentsline {subsection}{\numberline {5.2.7}\sphinxstyleliteralintitle {\sphinxupquote {cat}}}{44}{subsection.5.2.7}%
+\contentsline {subsection}{\numberline {5.2.8}\sphinxstyleliteralintitle {\sphinxupquote {pwd}}, \sphinxstyleliteralintitle {\sphinxupquote {cd}}}{44}{subsection.5.2.8}%
+\contentsline {subsection}{\numberline {5.2.9}\sphinxstyleliteralintitle {\sphinxupquote {\$(pwd)}}}{45}{subsection.5.2.9}%
+\contentsline {subsection}{\numberline {5.2.10}\sphinxstyleliteralintitle {\sphinxupquote {\$\{BPMS\sphinxhyphen {}\$(pwd)\}}}}{46}{subsection.5.2.10}%
+\contentsline {subsection}{\numberline {5.2.11}edit}{46}{subsection.5.2.11}%
+\contentsline {subsection}{\numberline {5.2.12}Update \sphinxstyleliteralintitle {\sphinxupquote {PATH}}}{47}{subsection.5.2.12}%
+\contentsline {subsection}{\numberline {5.2.13}\sphinxstyleliteralintitle {\sphinxupquote {LD\_LIBRARY\_PATH}}, \sphinxstyleliteralintitle {\sphinxupquote {DYLD\_LIBRARY\_PATH}}}{48}{subsection.5.2.13}%
+\contentsline {subsection}{\numberline {5.2.14}Update \sphinxstyleliteralintitle {\sphinxupquote {LD\_LIBRARY\_PATH}}, \sphinxstyleliteralintitle {\sphinxupquote {DYLD\_LIBRARY\_PATH}}}{49}{subsection.5.2.14}%
+\contentsline {subsection}{\numberline {5.2.15}Which operating system? \sphinxstyleliteralintitle {\sphinxupquote {uname}}, \sphinxstyleliteralintitle {\sphinxupquote {if}}}{50}{subsection.5.2.15}%
+\contentsline {subsection}{\numberline {5.2.16}Contents of libraries: \sphinxstyleliteralintitle {\sphinxupquote {nm}} or \sphinxstyleliteralintitle {\sphinxupquote {ar}}}{51}{subsection.5.2.16}%
+\contentsline {section}{\numberline {5.3}Important environment variables for \sphinxstyleliteralintitle {\sphinxupquote {librat}}}{52}{section.5.3}%
+\contentsline {subsection}{\numberline {5.3.1}\sphinxstyleliteralintitle {\sphinxupquote {cat \textless {}\textless {}EOF \textgreater {} output ... EOF}}}{52}{subsection.5.3.1}%
+\contentsline {subsection}{\numberline {5.3.2}\sphinxstyleliteralintitle {\sphinxupquote {MATLIB}}, \sphinxstyleliteralintitle {\sphinxupquote {RSRLIB}} etc.}{53}{subsection.5.3.2}%
+\contentsline {section}{\numberline {5.4}Summary}{54}{section.5.4}%
+\contentsline {chapter}{\numberline {6}Indices and tables}{55}{chapter.6}%

@@ -6,7 +6,39 @@
    "source": [
     "# Appendix 1:  `bash` help\n",
     "\n",
-    "To use `librat`, we need to have a passing awareness of some computer system settings called [environment variables](https://en.wikipedia.org/wiki/Environment_variable). We do this in this chapter, alongside a few other basic linux/unix commands that may be useful to know. \n",
+    "To use `librat`, we need to have a passing awareness of some computer system settings called [environment variables](https://en.wikipedia.org/wiki/Environment_variable). We do this in this chapter, alongside a few other basic linux/unix commands that may be useful to know. "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "env: BPMS=/Users/plewis/librat\n",
+      "env: PATH=/Users/plewis/librat/bin:/Users/plewis/librat/src:/Users/plewis/librat/bin/csh:/Users/plewis/opt/anaconda3/bin:/Users/plewis/opt/anaconda3/condabin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/VMware Fusion.app/Contents/Public:/Library/TeX/texbin:/opt/X11/bin:/Library/Apple/usr/bin\n",
+      "env: MATLIB=/Users/plewis/librat/obj\n",
+      "env: BPMSROOT=/Users/plewis/librat/obj\n"
+     ]
+    }
+   ],
+   "source": [
+    "import sys\n",
+    "from prelim import *\n",
+    "%set_env BPMS=$BPMS \n",
+    "%set_env PATH=$BPMS/bin:$BPMS/src:$BPMS/bin/csh:$PATH_\n",
+    "%set_env MATLIB=$BPMS/obj\n",
+    "%set_env BPMSROOT=$BPMS/obj"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "\n",
     "\n",
     "In practical terms, the important thing here is that you can generate the file `test/test_examples/init.sh` and modify it to your needs. The rest you can skip for now, if you really want to. But you may well find yourself returning to this chapter when you want to ask more of your computer and of this tool.\n",
     "\n",
@@ -54,21 +86,22 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 1,
+   "execution_count": 2,
    "metadata": {},
    "outputs": [
     {
      "name": "stdout",
      "output_type": "stream",
      "text": [
-      "MATLIB is set to test/test_examples\n"
+      "MATLIB is set to /Users/plewis/librat/obj\n"
      ]
     }
    ],
    "source": [
     "%%bash\n",
+    "source examples_init.sh\n",
     "\n",
-    "export MATLIB=test/test_examples\n",
+    "export MATLIB=$BPMS/obj\n",
     "echo \"MATLIB is set to $MATLIB\""
    ]
   },
@@ -85,7 +118,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 2,
+   "execution_count": 3,
    "metadata": {},
    "outputs": [
     {
@@ -93,15 +126,16 @@
      "output_type": "stream",
      "text": [
       "1. MATLIB is set to $MATLIB in single quotes\n",
-      "2. MATLIB is set to test/test_examples in double quotes\n",
+      "2. MATLIB is set to /Users/plewis/librat/obj in double quotes\n",
       "2. MATLIB is set to $MATLIB in double quotes but with \\ escaping the $\n"
      ]
     }
    ],
    "source": [
     "%%bash\n",
+    "source examples_init.sh\n",
     "\n",
-    "export MATLIB=test/test_examples\n",
+    "export MATLIB=$BPMS/obj\n",
     "\n",
     "echo '1. MATLIB is set to $MATLIB in single quotes'\n",
     "echo \"2. MATLIB is set to $MATLIB in double quotes\"\n",
@@ -121,7 +155,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 3,
+   "execution_count": 4,
    "metadata": {},
    "outputs": [
     {
@@ -131,26 +165,30 @@
       "TERM_PROGRAM=Apple_Terminal\n",
       "TERM=xterm-color\n",
       "TMPDIR=/var/folders/mp/9cxd5s793bjd4q3zng6dv_cw0000gn/T/\n",
-      "CONDA_PROMPT_MODIFIER=(librat) \n",
       "TERM_PROGRAM_VERSION=433\n",
-      "GSETTINGS_SCHEMA_DIR_CONDA_BACKUP=\n",
-      "TERM_SESSION_ID=7FC61198-BCF5-4CED-8B68-076E150723FD\n",
+      "CONDA_PROMPT_MODIFIER=(base) \n",
+      "SKY_ILLUMINATION==/Users/plewis/librat/obj\n",
+      "TERM_SESSION_ID=D1A31568-329D-434C-986B-E84F76B8FCB3\n",
+      "BPMS=/Users/plewis/librat\n",
+      "TEMP=/tmp\n",
+      "DIRECT_ILLUMINATION=/Users/plewis/librat/obj\n",
       "KERNEL_LAUNCH_TIMEOUT=40\n",
-      "MATLIB=test/test_examples\n",
-      "PATH=/Users/plewis/opt/anaconda3/envs/librat/bin:/Users/plewis/opt/anaconda3/condabin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/VMware Fusion.app/Contents/Public:/opt/X11/bin:/Library/Apple/usr/bin\n",
-      "GSETTINGS_SCHEMA_DIR=/Users/plewis/opt/anaconda3/envs/librat/share/glib-2.0/schemas\n",
+      "MATLIB=/Users/plewis/librat/obj\n",
+      "PATH=/Users/plewis/librat/src:/Users/plewis/librat/bin:/Users/plewis/librat/src:/Users/plewis/librat/bin/csh:/Users/plewis/opt/anaconda3/bin:/Users/plewis/opt/anaconda3/condabin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/VMware Fusion.app/Contents/Public:/Library/TeX/texbin:/opt/X11/bin:/Library/Apple/usr/bin\n",
       "MPLBACKEND=module://ipykernel.pylab.backend_inline\n",
-      "_CE_M=\n",
+      "BPMSROOT=/Users/plewis/librat/obj\n",
       "XPC_SERVICE_NAME=0\n",
+      "_CE_M=\n",
       "HOME=/Users/plewis\n",
+      "BPMS_FILES=/Users/plewis/librat/obj\n",
       "LOGNAME=plewis\n"
      ]
     }
    ],
    "source": [
     "%%bash\n",
-    "\n",
-    "export MATLIB=test/test_examples\n",
+    "source examples_init.sh\n",
+    "export MATLIB=$BPMS/obj\n",
     "\n",
     "env | grep M"
    ]
@@ -186,7 +224,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 4,
+   "execution_count": 5,
    "metadata": {},
    "outputs": [
     {
@@ -220,7 +258,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 5,
+   "execution_count": 6,
    "metadata": {},
    "outputs": [
     {
@@ -299,7 +337,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 6,
+   "execution_count": 7,
    "metadata": {},
    "outputs": [
     {
@@ -327,19 +365,21 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 7,
+   "execution_count": 8,
    "metadata": {},
    "outputs": [
     {
      "name": "stdout",
      "output_type": "stream",
      "text": [
-      "Appendix1.ipynb\t\t\tdefault.profraw\n",
-      "Chapter1.ipynb\t\t\tindex.rst\n",
-      "Chapter2.ipynb\t\t\tipython_kernel_config.py\n",
-      "_static\t\t\t\treferences.bib\n",
-      "_templates\t\t\trequirements.txt\n",
-      "conf.py\t\t\t\ttest\n"
+      "Appendix1.ipynb\t\t\tconf.py\n",
+      "Chapter1.ipynb\t\t\tdefault.profraw\n",
+      "Chapter2.ipynb\t\t\tindex.rst\n",
+      "RATstart.ipynb\t\t\tipython_kernel_config.py\n",
+      "RATstartOptions.ipynb\t\tprelim.py\n",
+      "__pycache__\t\t\treferences.bib\n",
+      "_static\t\t\t\trequirements.txt\n",
+      "_templates\t\t\ttest\n"
      ]
     }
    ],
@@ -361,7 +401,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 8,
+   "execution_count": 9,
    "metadata": {},
    "outputs": [
     {
@@ -399,18 +439,18 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 9,
+   "execution_count": 10,
    "metadata": {},
    "outputs": [
     {
      "name": "stdout",
      "output_type": "stream",
      "text": [
-      "-rw-------    1 plewis  staff    27K 17 Apr 18:32 /Users/plewis/.bash_history\n",
+      "-rw-------    1 plewis  staff   1.5K 21 Apr 10:26 /Users/plewis/.bash_history\n",
       "-rw-r--r--    1 plewis  staff   3.0K 17 Apr 17:00 /Users/plewis/.bash_profile\n",
       "-rw-r--r--    1 plewis  staff   1.1K 15 Jul  2019 /Users/plewis/.bash_profile-anaconda3.bak\n",
       "-rw-r--r--    1 plewis  staff   727B 15 Jul  2019 /Users/plewis/.bash_profile.backup\n",
-      "drwx------  108 plewis  staff   3.4K  2 Feb 14:42 /Users/plewis/.bash_sessions\n"
+      "drwx------  111 plewis  staff   3.5K 21 Apr 10:26 /Users/plewis/.bash_sessions\n"
      ]
     }
    ],
@@ -462,16 +502,16 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 10,
+   "execution_count": 11,
    "metadata": {},
    "outputs": [
     {
      "name": "stdout",
      "output_type": "stream",
      "text": [
-      "-rw-r--r--  1 plewis  wheel    12B 18 Apr 20:41 /tmp/files.88512/hello.dat\n",
-      "-rw-------  1 plewis  wheel    12B 18 Apr 20:41 /tmp/files.88512/hello.dat\n",
-      "-rwx------  1 plewis  wheel    12B 18 Apr 20:41 /tmp/files.88512/hello.dat\n"
+      "-rw-r--r--  1 plewis  wheel    12B 21 Apr 18:47 /tmp/files.29478/hello.dat\n",
+      "-rw-------  1 plewis  wheel    12B 21 Apr 18:47 /tmp/files.29478/hello.dat\n",
+      "-rwx------  1 plewis  wheel    12B 21 Apr 18:47 /tmp/files.29478/hello.dat\n"
      ]
     }
    ],
@@ -527,7 +567,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 11,
+   "execution_count": 12,
    "metadata": {},
    "outputs": [
     {
@@ -569,7 +609,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 12,
+   "execution_count": 13,
    "metadata": {},
    "outputs": [
     {
@@ -580,15 +620,13 @@
       "go home (~): \n",
       "where am I now?: /Users/plewis\n",
       "go to librat: \n",
-      "where am I now?: /Users/plewis/librat\n",
-      "go to ~/librat: \n",
       "where am I now?: /Users/plewis/librat\n"
      ]
     }
    ],
    "source": [
     "%%bash\n",
-    "\n",
+    "source examples_init.sh\n",
     "\n",
     "echo -n \"where am I now?: \"\n",
     "pwd\n",
@@ -601,13 +639,7 @@
     "\n",
     "# go to directory librat 'cd librat'\n",
     "echo \"go to librat: \"\n",
-    "cd librat\n",
-    "echo -n \"where am I now?: \"\n",
-    "pwd\n",
-    "\n",
-    "# go to directory librat 'cd ~/librat'\n",
-    "echo \"go to ~/librat: \"\n",
-    "cd ~/librat\n",
+    "cd $BPMS\n",
     "echo -n \"where am I now?: \"\n",
     "pwd"
    ]
@@ -627,7 +659,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 13,
+   "execution_count": 14,
    "metadata": {},
    "outputs": [
     {
@@ -675,27 +707,27 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 14,
+   "execution_count": 15,
    "metadata": {},
    "outputs": [
     {
      "name": "stdout",
      "output_type": "stream",
      "text": [
-      "1. BPMS set to Previous Value because BPMS is set\n",
+      "1. BPMS set to /Users/plewis/librat because BPMS is set\n",
       "2. BPMS set to /Users/plewis/librat/docs/source, from running pwd, because BPMS is not set\n"
      ]
     }
    ],
    "source": [
     "%%bash\n",
+    "source examples_init.sh\n",
     "\n",
     "#\n",
     "# example using ${BPMS-$(pwd)}\n",
     "#\n",
     "\n",
     "# set BPMS variable to result of pwd, unless its already set\n",
-    "BPMS=\"Previous Value\"\n",
     "BPMS=${BPMS-$(pwd)}\n",
     "echo \"1. BPMS set to $BPMS because BPMS is set\"\n",
     "\n",
@@ -788,7 +820,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 15,
+   "execution_count": 16,
    "metadata": {},
    "outputs": [
     {
@@ -802,6 +834,7 @@
    ],
    "source": [
     "%%bash\n",
+    "source examples_init.sh\n",
     "\n",
     "# example initial setting of PATH\n",
     "# NB Only an example, your shell will set something\n",
@@ -811,8 +844,7 @@
     "echo \"1. PATH is $PATH\"\n",
     "\n",
     "# change directory from docs/source up to root\n",
-    "HERE=$(pwd);cd ../..\n",
-    "BPMS=${BPMS-$(pwd)};cd $HERE\n",
+    "BPMS=${BPMS-$(pwd)};\n",
     "\n",
     "bin=$BPMS/src\n",
     "\n",
@@ -881,7 +913,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 16,
+   "execution_count": 17,
    "metadata": {},
    "outputs": [
     {
@@ -895,6 +927,7 @@
    ],
    "source": [
     "%%bash\n",
+    "source examples_init.sh\n",
     "\n",
     "# example initial setting of LD_LIBRARY_PATH\n",
     "# NB Only an example, your shell will set something\n",
@@ -904,9 +937,6 @@
     "echo \"1. LD_LIBRARY_PATH is $LD_LIBRARY_PATH\"\n",
     "\n",
     "# change directory from docs/source up to root\n",
-    "HERE=$(pwd);cd ../..\n",
-    "BPMS=${BPMS-$(pwd)};cd $HERE\n",
-    "\n",
     "lib=$BPMS/src\n",
     "\n",
     "# put $bin on the front of PATH\n",
@@ -917,7 +947,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 17,
+   "execution_count": 18,
    "metadata": {},
    "outputs": [
     {
@@ -931,6 +961,7 @@
    ],
    "source": [
     "%%bash\n",
+    "source examples_init.sh\n",
     "\n",
     "# example initial setting of DYLD_LIBRARY_PATH\n",
     "# NB Only an example, your shell will set something\n",
@@ -938,11 +969,6 @@
     "DYLD_LIBRARY_PATH=\"/usr/local/lib:/usr/lib\"\n",
     "\n",
     "echo \"1. DYLD_LIBRARY_PATH is $DYLD_LIBRARY_PATH\"\n",
-    "\n",
-    "\n",
-    "# change directory from docs/source up to root\n",
-    "HERE=$(pwd);cd ../..\n",
-    "BPMS=${BPMS-$(pwd)};cd $HERE\n",
     "\n",
     "lib=$BPMS/src\n",
     "\n",
@@ -1019,7 +1045,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 18,
+   "execution_count": 19,
    "metadata": {},
    "outputs": [
     {
@@ -1032,6 +1058,7 @@
    ],
    "source": [
     "%%bash\n",
+    "source examples_init.sh\n",
     "\n",
     "# these to see what sort of computer we are running on\n",
     "OS=$(uname -s)\n",
@@ -1069,7 +1096,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 19,
+   "execution_count": 20,
    "metadata": {},
    "outputs": [
     {
@@ -1077,24 +1104,21 @@
      "output_type": "stream",
      "text": [
       "Darwin\n",
-      "0000000000047500 T _Add_2D\n",
-      "00000000000477c0 T _Affine_transform\n",
-      "0000000000049090 T _B_allocate\n",
-      "00000000000477f0 T _Backwards_affine_transform\n",
-      "00000000000470b0 T _Bbox\n"
+      "00000000000475f0 T _Add_2D\n",
+      "00000000000478b0 T _Affine_transform\n",
+      "0000000000049180 T _B_allocate\n",
+      "00000000000478e0 T _Backwards_affine_transform\n",
+      "00000000000471a0 T _Bbox\n"
      ]
     }
    ],
    "source": [
     "%%bash\n",
+    "source examples_init.sh\n",
     "\n",
     "# these to see what sort of computer we are running on\n",
     "OS=$(uname -s)\n",
     "echo $OS\n",
-    "\n",
-    "# change directory from docs/source up to root\n",
-    "HERE=$(pwd);cd ../..\n",
-    "BPMS=${BPMS-$(pwd)};cd $HERE\n",
     "\n",
     "lib=$BPMS/src\n",
     "\n",
@@ -1142,17 +1166,16 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 20,
+   "execution_count": 21,
    "metadata": {},
    "outputs": [],
    "source": [
     "%%bash\n",
+    "source examples_init.sh\n",
     "\n",
     "# change directory from docs/source up to root\n",
-    "cd ../..\n",
-    "BPMS=${BPMS-$(pwd)}\n",
     "\n",
-    "cat <<EOF > $BPMS/test/test_examples/first.obj\n",
+    "cat <<EOF > $BPMS/obj/second.obj\n",
     "# My first object file\n",
     "mtllib plants.matlib \n",
     "usemtl white \n",
@@ -1178,7 +1201,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 21,
+   "execution_count": 22,
    "metadata": {},
    "outputs": [
     {
@@ -1203,12 +1226,9 @@
    ],
    "source": [
     "%%bash\n",
+    "source examples_init.sh\n",
     "\n",
-    "# change directory from docs/source up to root\n",
-    "cd ../..\n",
-    "BPMS=${BPMS-$(pwd)}\n",
-    "\n",
-    "cat $BPMS/test/test_examples/first.obj"
+    "cat $BPMS/obj/second.obj"
    ]
   },
   {
@@ -1269,54 +1289,40 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 1,
+   "execution_count": 23,
    "metadata": {},
-   "outputs": [
-    {
-     "name": "stdout",
-     "output_type": "stream",
-     "text": [
-      "/Users/plewis/librat\n",
-      "RATstart found ok\n"
-     ]
-    }
-   ],
+   "outputs": [],
    "source": [
     "%%bash\n",
-    "\n",
-    "# change directory from docs/source up to root\n",
-    "cd ../..\n",
-    "BPMS=${BPMS-$(pwd)}\n",
-    "# create the init.sh file we want\n",
-    "INIT=$BPMS/test/test_examples/init.sh\n",
-    "\n",
-    "cat <<EOF > $INIT\n",
+    "#\n",
+    "# create examples_init.sh\n",
+    "# for examples initialisation\n",
+    "#\n",
+    "# create the init shell\n",
+    "cat <<EOF > $BPMS/bin/examples_init_test.sh\n",
     "#!/bin/bash\n",
     "#\n",
-    "# preamble \n",
+    "# defaults\n",
     "#\n",
-    "export BPMS=$BPMS\n",
-    "\n",
-    "# set shell variables lib, bin, verbose\n",
-    "# with defaults in case not set \n",
-    "lib=\\${lib-\"\\$BPMS/src\"}\n",
-    "bin=\\${bin-\"\\$BPMS/src\"}\n",
-    "VERBOSE=\\${VERBOSE-1}\n",
+    "export BPMS=\\${BPMS-$BPMS}\n",
+    "export BPMSROOT=\\${BPMSROOT-\\$BPMSROOT}\n",
+    "lib=\\${lib-\\$BPMS/src}\n",
+    "bin=\\${bin-\\$BPMS/src}\n",
+    "VERBOSE=\\${VERBOSE-0}\n",
+    "export TEMP=\\${TEMP-/tmp}\n",
     "\n",
     "# set up required environment variables for bash\n",
     "export LD_LIBRARY_PATH=\"\\${lib}:\\${LD_LIBRARY_PATH}\"\n",
     "export DYLD_LIBRARY_PATH=\"\\${lib}:\\${DYLD_LIBRARY_PATH}\"\n",
     "export PATH=\"\\${bin}:\\${PATH}\"\n",
     "\n",
-    "# set up required environment variables for librat\n",
-    "export BPMSROOT=\\${BPMSROOT-\"\\$BPMS/test/test_examples\"}\n",
     "export MATLIB=\\$BPMSROOT\n",
     "export RSRLIB=\\$BPMSROOT\n",
     "export ARARAT_OBJECT=\\$BPMSROOT\n",
     "export DIRECT_ILLUMINATION=\\$BPMSROOT\n",
     "export BPMS_FILES=\\$BPMSROOT\n",
     "export SKY_ILLUMINATION==\\$BPMSROOT\n",
-    "echo $BPMS\n",
+    "\n",
     "if [ \"\\$(which RATstart)\" == \"\\${bin}/RATstart\" ]\n",
     "then\n",
     "  if [ \"\\$VERBOSE\" == 1 ]; then\n",
@@ -1327,11 +1333,8 @@
     "  make clean all \n",
     "fi\n",
     "EOF\n",
-    "# set executable mode\n",
-    "chmod +x $INIT\n",
-    "# test run\n",
-    "export VERBOSE=1\n",
-    "$INIT"
+    "chmod +x $BPMS/bin/examples_init_test.sh\n",
+    "examples_init_test.sh"
    ]
   },
   {
@@ -1344,15 +1347,8 @@
     "\n",
     "Maybe thats wishful thinking on my part though. You may not feel you have time for basic unix at the moment ... and we did say at the top of this chapter that it was not compulsory ... I'd reccomend you *do* spend some time on *unix* ... you'll develop skills that willlast you a lifetime! ;-)\n",
     "\n",
-    "In practical terms, as we have said, the important thing here is that you can generate the file `test/test_examples/init.sh` and modify it to your needs."
+    "In practical terms, as we have said, the important thing here is that you can generate the file `examples_init_test.sh` and modify it to your needs."
    ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {},
-   "outputs": [],
-   "source": []
   }
  ],
  "metadata": {
@@ -1371,7 +1367,7 @@
    "name": "python",
    "nbconvert_exporter": "python",
    "pygments_lexer": "ipython3",
-   "version": "3.8.2"
+   "version": "3.7.4"
   }
  },
  "nbformat": 4,

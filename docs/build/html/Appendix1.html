@@ -34,7 +34,7 @@
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
     <link rel="top" title="librat  documentation" href="index.html"/>
-        <link rel="prev" title="4. RATstart options" href="RATstartOptions.html"/> 
+        <link rel="prev" title="4. Basic librat / RATstart operation" href="Chapter2.html"/> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -82,10 +82,10 @@
             
                 <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="Chapter1.html">1. librat</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Chapter2.html">2. Basic librat / RATstart operation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="RATstart.html">3. <code class="docutils literal notranslate"><span class="pre">RATstart</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="RATstartOptions.html">4. <code class="docutils literal notranslate"><span class="pre">RATstart</span></code> options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="RATstart.html">1. <code class="docutils literal notranslate"><span class="pre">RATstart</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="RATstartOptions.html">2. <code class="docutils literal notranslate"><span class="pre">RATstart</span></code> options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Chapter1.html">3. librat</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Chapter2.html">4. Basic librat / RATstart operation</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">5. Appendix 1: <code class="docutils literal notranslate"><span class="pre">bash</span></code> help</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#Introduction-to-shell-and-environment-variables">5.1. Introduction to shell and environment variables</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#export">5.1.1. <code class="docutils literal notranslate"><span class="pre">export</span></code></a></li>
@@ -410,6 +410,31 @@ div.rendered_html tbody tr:hover {
 <div class="section" id="Appendix-1:-bash-help">
 <h1><span class="section-number">5. </span>Appendix 1: <code class="docutils literal notranslate"><span class="pre">bash</span></code> help<a class="headerlink" href="#Appendix-1:-bash-help" title="Permalink to this headline">¶</a></h1>
 <p>To use <code class="docutils literal notranslate"><span class="pre">librat</span></code>, we need to have a passing awareness of some computer system settings called <a class="reference external" href="https://en.wikipedia.org/wiki/Environment_variable">environment variables</a>. We do this in this chapter, alongside a few other basic linux/unix commands that may be useful to know.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">prelim</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="o">%</span><span class="k">set_env</span> BPMS=$BPMS
+<span class="o">%</span><span class="k">set_env</span> PATH=$BPMS/bin:$BPMS/src:$BPMS/bin/csh:$PATH_
+<span class="o">%</span><span class="k">set_env</span> MATLIB=$BPMS/obj
+<span class="o">%</span><span class="k">set_env</span> BPMSROOT=$BPMS/obj
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+env: BPMS=/Users/plewis/librat
+env: PATH=/Users/plewis/librat/bin:/Users/plewis/librat/src:/Users/plewis/librat/bin/csh:/Users/plewis/opt/anaconda3/bin:/Users/plewis/opt/anaconda3/condabin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/VMware Fusion.app/Contents/Public:/Library/TeX/texbin:/opt/X11/bin:/Library/Apple/usr/bin
+env: MATLIB=/Users/plewis/librat/obj
+env: BPMSROOT=/Users/plewis/librat/obj
+</pre></div></div>
+</div>
 <p>In practical terms, the important thing here is that you can generate the file <code class="docutils literal notranslate"><span class="pre">test/test_examples/init.sh</span></code> and modify it to your needs. The rest you can skip for now, if you really want to. But you may well find yourself returning to this chapter when you want to ask more of your computer and of this tool.</p>
 <p>Our focus will be on <a class="reference external" href="https://opensource.com/article/19/8/what-are-environment-variables">bash</a> environment variables.</p>
 <p>This chapter is not generally critical for understanding <code class="docutils literal notranslate"><span class="pre">librat</span></code> but may help if you go into any details on your setup, or have problems.</p>
@@ -445,13 +470,14 @@ div.rendered_html tbody tr:hover {
 <h3><span class="section-number">5.1.3. </span><code class="docutils literal notranslate"><span class="pre">echo</span></code><a class="headerlink" href="#echo" title="Permalink to this headline">¶</a></h3>
 <p>We can see the value a variable is set to with the command <code class="docutils literal notranslate"><span class="pre">echo</span></code>, and refer to the <em>value</em> of a variable with a <code class="docutils literal notranslate"><span class="pre">$</span></code> symbol e.g.:</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
 <div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
 <span></span>%%bash
+<span class="nb">source</span> examples_init.sh
 
-<span class="nb">export</span> <span class="nv">MATLIB</span><span class="o">=</span>test/test_examples
+<span class="nb">export</span> <span class="nv">MATLIB</span><span class="o">=</span><span class="nv">$BPMS</span>/obj
 <span class="nb">echo</span> <span class="s2">&quot;MATLIB is set to </span><span class="nv">$MATLIB</span><span class="s2">&quot;</span>
 </pre></div>
 </div>
@@ -461,7 +487,7 @@ div.rendered_html tbody tr:hover {
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-MATLIB is set to test/test_examples
+MATLIB is set to /Users/plewis/librat/obj
 </pre></div></div>
 </div>
 <p>Note that there must be no gaps in <code class="docutils literal notranslate"><span class="pre">NAME=value</span></code> part of the statement. That is a typical thing for new users to get wrong and which can cause problems.</p>
@@ -470,13 +496,14 @@ MATLIB is set to test/test_examples
 <h3><span class="section-number">5.1.4. </span>Double quotes <code class="docutils literal notranslate"><span class="pre">&quot;</span></code> and backslash escape <code class="docutils literal notranslate"><span class="pre">/</span></code><a class="headerlink" href="#Double-quotes-"-and-backslash-escape-/" title="Permalink to this headline">¶</a></h3>
 <p>If you want to replace the value of a variable in a string, then you should generally use double quotes (<code class="docutils literal notranslate"><span class="pre">&quot;</span></code>) instead of single quotes <code class="docutils literal notranslate"><span class="pre">'</span></code> as above:</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
 <span></span>%%bash
+<span class="nb">source</span> examples_init.sh
 
-<span class="nb">export</span> <span class="nv">MATLIB</span><span class="o">=</span>test/test_examples
+<span class="nb">export</span> <span class="nv">MATLIB</span><span class="o">=</span><span class="nv">$BPMS</span>/obj
 
 <span class="nb">echo</span> <span class="s1">&#39;1. MATLIB is set to $MATLIB in single quotes&#39;</span>
 <span class="nb">echo</span> <span class="s2">&quot;2. MATLIB is set to </span><span class="nv">$MATLIB</span><span class="s2"> in double quotes&quot;</span>
@@ -490,7 +517,7 @@ MATLIB is set to test/test_examples
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 1. MATLIB is set to $MATLIB in single quotes
-2. MATLIB is set to test/test_examples in double quotes
+2. MATLIB is set to /Users/plewis/librat/obj in double quotes
 2. MATLIB is set to $MATLIB in double quotes but with \ escaping the $
 </pre></div></div>
 </div>
@@ -500,13 +527,13 @@ MATLIB is set to test/test_examples
 <h3><span class="section-number">5.1.5. </span><code class="docutils literal notranslate"><span class="pre">env</span></code>, <code class="docutils literal notranslate"><span class="pre">grep</span></code>, pipe <code class="docutils literal notranslate"><span class="pre">|</span></code><a class="headerlink" href="#env,-grep,-pipe-|" title="Permalink to this headline">¶</a></h3>
 <p>To see the values of all environment variables, type <code class="docutils literal notranslate"><span class="pre">env</span></code> (or <code class="docutils literal notranslate"><span class="pre">printenv</span></code>). Because this list can be quite long, we might want to select only certain lines from the list. One way to do this is to use the command <a class="reference external" href="https://en.wikipedia.org/wiki/Grep">grep</a>, which searches for patterns in the each line:</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
 <div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
 <span></span>%%bash
-
-<span class="nb">export</span> <span class="nv">MATLIB</span><span class="o">=</span>test/test_examples
+<span class="nb">source</span> examples_init.sh
+<span class="nb">export</span> <span class="nv">MATLIB</span><span class="o">=</span><span class="nv">$BPMS</span>/obj
 
 env <span class="p">|</span> grep M
 </pre></div>
@@ -520,18 +547,22 @@ env <span class="p">|</span> grep M
 TERM_PROGRAM=Apple_Terminal
 TERM=xterm-color
 TMPDIR=/var/folders/mp/9cxd5s793bjd4q3zng6dv_cw0000gn/T/
-CONDA_PROMPT_MODIFIER=(librat)
 TERM_PROGRAM_VERSION=433
-GSETTINGS_SCHEMA_DIR_CONDA_BACKUP=
-TERM_SESSION_ID=7FC61198-BCF5-4CED-8B68-076E150723FD
+CONDA_PROMPT_MODIFIER=(base)
+SKY_ILLUMINATION==/Users/plewis/librat/obj
+TERM_SESSION_ID=D1A31568-329D-434C-986B-E84F76B8FCB3
+BPMS=/Users/plewis/librat
+TEMP=/tmp
+DIRECT_ILLUMINATION=/Users/plewis/librat/obj
 KERNEL_LAUNCH_TIMEOUT=40
-MATLIB=test/test_examples
-PATH=/Users/plewis/opt/anaconda3/envs/librat/bin:/Users/plewis/opt/anaconda3/condabin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/VMware Fusion.app/Contents/Public:/opt/X11/bin:/Library/Apple/usr/bin
-GSETTINGS_SCHEMA_DIR=/Users/plewis/opt/anaconda3/envs/librat/share/glib-2.0/schemas
+MATLIB=/Users/plewis/librat/obj
+PATH=/Users/plewis/librat/src:/Users/plewis/librat/bin:/Users/plewis/librat/src:/Users/plewis/librat/bin/csh:/Users/plewis/opt/anaconda3/bin:/Users/plewis/opt/anaconda3/condabin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/VMware Fusion.app/Contents/Public:/Library/TeX/texbin:/opt/X11/bin:/Library/Apple/usr/bin
 MPLBACKEND=module://ipykernel.pylab.backend_inline
-_CE_M=
+BPMSROOT=/Users/plewis/librat/obj
 XPC_SERVICE_NAME=0
+_CE_M=
 HOME=/Users/plewis
+BPMS_FILES=/Users/plewis/librat/obj
 LOGNAME=plewis
 </pre></div></div>
 </div>
@@ -552,7 +583,7 @@ LOGNAME=plewis
 </div>
 <p>for example:</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
 <div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
@@ -581,7 +612,7 @@ hello world plewis
 </pre></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
 <div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
@@ -647,7 +678,7 @@ __CF_USER_TEXT_ENCODING=0x1F5:0:2
 <h3><span class="section-number">5.2.2. </span><code class="docutils literal notranslate"><span class="pre">which</span></code><a class="headerlink" href="#which" title="Permalink to this headline">¶</a></h3>
 <p>We can see which one it finds with the command <a class="reference external" href="https://en.wikipedia.org/wiki/Which_(command)">which</a>:</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
 <div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
@@ -670,7 +701,7 @@ which ls
 <h3><span class="section-number">5.2.3. </span><code class="docutils literal notranslate"><span class="pre">ls</span></code><a class="headerlink" href="#ls" title="Permalink to this headline">¶</a></h3>
 <p>As we saw above, <a class="reference external" href="https://en.wikipedia.org/wiki/Ls">ls</a> gives a listing of files and directories. If we use the <code class="docutils literal notranslate"><span class="pre">-C</span></code> option, it outputs multiple columns of information, which is handy if there are lots of entries.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
 <div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
@@ -686,12 +717,14 @@ ls -C
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Appendix1.ipynb                 default.profraw
-Chapter1.ipynb                  index.rst
-Chapter2.ipynb                  ipython_kernel_config.py
-_static                         references.bib
-_templates                      requirements.txt
-conf.py                         test
+Appendix1.ipynb                 conf.py
+Chapter1.ipynb                  default.profraw
+Chapter2.ipynb                  index.rst
+RATstart.ipynb                  ipython_kernel_config.py
+RATstartOptions.ipynb           prelim.py
+__pycache__                     references.bib
+_static                         requirements.txt
+_templates                      test
 </pre></div></div>
 </div>
 </div>
@@ -699,7 +732,7 @@ conf.py                         test
 <h3><span class="section-number">5.2.4. </span><code class="docutils literal notranslate"><span class="pre">.bash_profile</span></code>, <code class="docutils literal notranslate"><span class="pre">.bashrc</span></code>, wildcard <code class="docutils literal notranslate"><span class="pre">*</span></code><a class="headerlink" href="#.bash_profile,-.bashrc,-wildcard-*" title="Permalink to this headline">¶</a></h3>
 <p>These core environment variables are usually set with default values appropriate to your system. This may be done in <a class="reference external" href="https://www.gnu.org/software/bash/manual/html_node/Bash-Startup-Files.html">system-wide files such as /etc/profile, or personal files</a> such as <code class="docutils literal notranslate"><span class="pre">~/.bashrc</span></code> or <code class="docutils literal notranslate"><span class="pre">~/.bash_profile</span></code>, where <code class="docutils literal notranslate"><span class="pre">~</span></code> is the symbol for your home directory. This will almost certainly set <code class="docutils literal notranslate"><span class="pre">$PATH</span></code>.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
 <div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
@@ -729,7 +762,7 @@ ls -Cd  ~/.bash*
 <h3><span class="section-number">5.2.5. </span><code class="docutils literal notranslate"><span class="pre">ls</span> <span class="pre">-l</span></code><a class="headerlink" href="#ls--l" title="Permalink to this headline">¶</a></h3>
 <p>One useful option to <code class="docutils literal notranslate"><span class="pre">ls</span></code> is <code class="docutils literal notranslate"><span class="pre">-l</span></code>, that gives ‘long listing’:</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
 <div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
@@ -745,11 +778,11 @@ ls -lhd  ~/.bash*
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
--rw-------    1 plewis  staff    27K 17 Apr 18:32 /Users/plewis/.bash_history
+-rw-------    1 plewis  staff   1.5K 21 Apr 10:26 /Users/plewis/.bash_history
 -rw-r--r--    1 plewis  staff   3.0K 17 Apr 17:00 /Users/plewis/.bash_profile
 -rw-r--r--    1 plewis  staff   1.1K 15 Jul  2019 /Users/plewis/.bash_profile-anaconda3.bak
 -rw-r--r--    1 plewis  staff   727B 15 Jul  2019 /Users/plewis/.bash_profile.backup
-drwx------  108 plewis  staff   3.4K  2 Feb 14:42 /Users/plewis/.bash_sessions
+drwx------  111 plewis  staff   3.5K 21 Apr 10:26 /Users/plewis/.bash_sessions
 </pre></div></div>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">-l</span></code> option gives the file sizes and other useful information in this ‘long’ listing. The file sizes here are given in <code class="docutils literal notranslate"><span class="pre">K</span></code> or other human-readable (^3) units, as we have set the <code class="docutils literal notranslate"><span class="pre">-h</span></code> option. Many unix commands that involve file sizes will have a similar <code class="docutils literal notranslate"><span class="pre">-h</span></code> option.</p>
@@ -780,7 +813,7 @@ drwx------  108 plewis  staff   3.4K  2 Feb 14:42 /Users/plewis/.bash_sessions
 <p>The file is called <code class="docutils literal notranslate"><span class="pre">files/hello.dat</span></code> and is created by <a class="reference external" href="https://en.wikipedia.org/wiki/Redirection_(computing)">redirecting the standard output</a> (<code class="docutils literal notranslate"><span class="pre">stdout</span></code>) of a command to a file, i.e. sending the text coming from <code class="docutils literal notranslate"><span class="pre">echo</span> <span class="pre">&quot;hello</span> <span class="pre">world&quot;</span></code> into the file. The symbol for redirection of <code class="docutils literal notranslate"><span class="pre">stdout</span></code> is <code class="docutils literal notranslate"><span class="pre">&gt;</span></code>. This redirection is the same process used above when we redirected output to a pipe.</p>
 <p>Just in case the file already exists, and we have previously messed around with the file permissions, we first run the command <code class="docutils literal notranslate"><span class="pre">rm</span> <span class="pre">-f</span></code> to delete (remove) the file. The <code class="docutils literal notranslate"><span class="pre">-f</span></code> option tells us to ‘force’ this, regardless of the file’s permissions or whether the file already exists. At the end of the shell, we use <code class="docutils literal notranslate"><span class="pre">rm</span> <span class="pre">-rf</span></code> to delete the directory and anythinbg in it (a recursice delete).</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
 <div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
@@ -824,9 +857,9 @@ rm -rf <span class="nv">$dir</span>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
--rw-r--r--  1 plewis  wheel    12B 18 Apr 20:41 /tmp/files.88512/hello.dat
--rw-------  1 plewis  wheel    12B 18 Apr 20:41 /tmp/files.88512/hello.dat
--rwx------  1 plewis  wheel    12B 18 Apr 20:41 /tmp/files.88512/hello.dat
+-rw-r--r--  1 plewis  wheel    12B 21 Apr 18:47 /tmp/files.29478/hello.dat
+-rw-------  1 plewis  wheel    12B 21 Apr 18:47 /tmp/files.29478/hello.dat
+-rwx------  1 plewis  wheel    12B 21 Apr 18:47 /tmp/files.29478/hello.dat
 </pre></div></div>
 </div>
 </div>
@@ -839,7 +872,7 @@ rm -rf <span class="nv">$dir</span>
 <p>would ‘print’ (send to the terminal, rather) the contents of the file <code class="docutils literal notranslate"><span class="pre">~/.bash_profile</span></code>.</p>
 <p>Since this may be quite long, we will use <code class="docutils literal notranslate"><span class="pre">head</span></code> just to see the first <code class="docutils literal notranslate"><span class="pre">N</span></code> lines:</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
 <div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
@@ -875,12 +908,12 @@ if [ $? -eq 0 ]; then
 </div>
 <p>where <code class="docutils literal notranslate"><span class="pre">location</span></code> is somewhere on the file system.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
 <div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
 <span></span>%%bash
-
+<span class="nb">source</span> examples_init.sh
 
 <span class="nb">echo</span> -n <span class="s2">&quot;where am I now?: &quot;</span>
 <span class="nb">pwd</span>
@@ -893,13 +926,7 @@ if [ $? -eq 0 ]; then
 
 <span class="c1"># go to directory librat &#39;cd librat&#39;</span>
 <span class="nb">echo</span> <span class="s2">&quot;go to librat: &quot;</span>
-<span class="nb">cd</span> librat
-<span class="nb">echo</span> -n <span class="s2">&quot;where am I now?: &quot;</span>
-<span class="nb">pwd</span>
-
-<span class="c1"># go to directory librat &#39;cd ~/librat&#39;</span>
-<span class="nb">echo</span> <span class="s2">&quot;go to ~/librat: &quot;</span>
-<span class="nb">cd</span> ~/librat
+<span class="nb">cd</span> <span class="nv">$BPMS</span>
 <span class="nb">echo</span> -n <span class="s2">&quot;where am I now?: &quot;</span>
 <span class="nb">pwd</span>
 </pre></div>
@@ -915,8 +942,6 @@ go home (~):
 where am I now?: /Users/plewis
 go to librat:
 where am I now?: /Users/plewis/librat
-go to ~/librat:
-where am I now?: /Users/plewis/librat
 </pre></div></div>
 </div>
 </div>
@@ -928,7 +953,7 @@ where am I now?: /Users/plewis/librat
 </div>
 <p>Note the round brackets <code class="docutils literal notranslate"><span class="pre">$()</span></code> enclosing the command (<code class="docutils literal notranslate"><span class="pre">pwd</span></code> here).</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
 <div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
@@ -969,18 +994,18 @@ where am I now?: /Users/plewis/librat
 <p>Note the curley brackets in <code class="docutils literal notranslate"><span class="pre">${}</span></code>.</p>
 <p>Note that the environment <code class="docutils literal notranslate"><span class="pre">BPMS</span></code> is generally used to define the top level directory of <code class="docutils literal notranslate"><span class="pre">librat</span></code> codes.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
 <div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
 <span></span>%%bash
+<span class="nb">source</span> examples_init.sh
 
 <span class="c1">#</span>
 <span class="c1"># example using ${BPMS-$(pwd)}</span>
 <span class="c1">#</span>
 
 <span class="c1"># set BPMS variable to result of pwd, unless its already set</span>
-<span class="nv">BPMS</span><span class="o">=</span><span class="s2">&quot;Previous Value&quot;</span>
 <span class="nv">BPMS</span><span class="o">=</span><span class="si">${</span><span class="nv">BPMS</span><span class="p">-</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span><span class="si">}</span>
 <span class="nb">echo</span> <span class="s2">&quot;1. BPMS set to </span><span class="nv">$BPMS</span><span class="s2"> because BPMS is set&quot;</span>
 
@@ -996,7 +1021,7 @@ where am I now?: /Users/plewis/librat
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-1. BPMS set to Previous Value because BPMS is set
+1. BPMS set to /Users/plewis/librat because BPMS is set
 2. BPMS set to /Users/plewis/librat/docs/source, from running pwd, because BPMS is not set
 </pre></div></div>
 </div>
@@ -1075,11 +1100,12 @@ where am I now?: /Users/plewis/librat
 </div>
 <p>Then, if we want to put a <code class="docutils literal notranslate"><span class="pre">librat</span></code> directory at the front of this path (so we look there first), we follow the following example syntax:</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
 <div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
 <span></span>%%bash
+<span class="nb">source</span> examples_init.sh
 
 <span class="c1"># example initial setting of PATH</span>
 <span class="c1"># NB Only an example, your shell will set something</span>
@@ -1089,8 +1115,7 @@ where am I now?: /Users/plewis/librat
 <span class="nb">echo</span> <span class="s2">&quot;1. PATH is </span><span class="nv">$PATH</span><span class="s2">&quot;</span>
 
 <span class="c1"># change directory from docs/source up to root</span>
-<span class="nv">HERE</span><span class="o">=</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span><span class="p">;</span><span class="nb">cd</span> ../..
-<span class="nv">BPMS</span><span class="o">=</span><span class="si">${</span><span class="nv">BPMS</span><span class="p">-</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span><span class="si">}</span><span class="p">;</span><span class="nb">cd</span> <span class="nv">$HERE</span>
+<span class="nv">BPMS</span><span class="o">=</span><span class="si">${</span><span class="nv">BPMS</span><span class="p">-</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span><span class="si">}</span><span class="p">;</span>
 
 <span class="nv">bin</span><span class="o">=</span><span class="nv">$BPMS</span>/src
 
@@ -1150,11 +1175,12 @@ where am I now?: /Users/plewis/librat
 <h3><span class="section-number">5.2.14. </span>Update <code class="docutils literal notranslate"><span class="pre">LD_LIBRARY_PATH</span></code>, <code class="docutils literal notranslate"><span class="pre">DYLD_LIBRARY_PATH</span></code><a class="headerlink" href="#Update-LD_LIBRARY_PATH,-DYLD_LIBRARY_PATH" title="Permalink to this headline">¶</a></h3>
 <p>We can again add search directories to the front of the library paths:</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
 </pre></div>
 </div>
 <div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
 <span></span>%%bash
+<span class="nb">source</span> examples_init.sh
 
 <span class="c1"># example initial setting of LD_LIBRARY_PATH</span>
 <span class="c1"># NB Only an example, your shell will set something</span>
@@ -1164,9 +1190,6 @@ where am I now?: /Users/plewis/librat
 <span class="nb">echo</span> <span class="s2">&quot;1. LD_LIBRARY_PATH is </span><span class="nv">$LD_LIBRARY_PATH</span><span class="s2">&quot;</span>
 
 <span class="c1"># change directory from docs/source up to root</span>
-<span class="nv">HERE</span><span class="o">=</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span><span class="p">;</span><span class="nb">cd</span> ../..
-<span class="nv">BPMS</span><span class="o">=</span><span class="si">${</span><span class="nv">BPMS</span><span class="p">-</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span><span class="si">}</span><span class="p">;</span><span class="nb">cd</span> <span class="nv">$HERE</span>
-
 <span class="nv">lib</span><span class="o">=</span><span class="nv">$BPMS</span>/src
 
 <span class="c1"># put $bin on the front of PATH</span>
@@ -1186,11 +1209,12 @@ where am I now?: /Users/plewis/librat
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
 </pre></div>
 </div>
 <div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
 <span></span>%%bash
+<span class="nb">source</span> examples_init.sh
 
 <span class="c1"># example initial setting of DYLD_LIBRARY_PATH</span>
 <span class="c1"># NB Only an example, your shell will set something</span>
@@ -1198,11 +1222,6 @@ where am I now?: /Users/plewis/librat
 <span class="nv">DYLD_LIBRARY_PATH</span><span class="o">=</span><span class="s2">&quot;/usr/local/lib:/usr/lib&quot;</span>
 
 <span class="nb">echo</span> <span class="s2">&quot;1. DYLD_LIBRARY_PATH is </span><span class="nv">$DYLD_LIBRARY_PATH</span><span class="s2">&quot;</span>
-
-
-<span class="c1"># change directory from docs/source up to root</span>
-<span class="nv">HERE</span><span class="o">=</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span><span class="p">;</span><span class="nb">cd</span> ../..
-<span class="nv">BPMS</span><span class="o">=</span><span class="si">${</span><span class="nv">BPMS</span><span class="p">-</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span><span class="si">}</span><span class="p">;</span><span class="nb">cd</span> <span class="nv">$HERE</span>
 
 <span class="nv">lib</span><span class="o">=</span><span class="nv">$BPMS</span>/src
 
@@ -1269,11 +1288,12 @@ fi
 <p>to test the options we consider. The syntax is a little fiddly.</p>
 <p>Note that the spaces in <code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">[</span> <span class="pre">$VAR</span> <span class="pre">=</span> <span class="pre">value1</span> <span class="pre">]</span></code> are critical. Note that the <code class="docutils literal notranslate"><span class="pre">then</span></code> statements are also critical.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
 </pre></div>
 </div>
 <div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
 <span></span>%%bash
+<span class="nb">source</span> examples_init.sh
 
 <span class="c1"># these to see what sort of computer we are running on</span>
 <span class="nv">OS</span><span class="o">=</span><span class="k">$(</span>uname -s<span class="k">)</span>
@@ -1314,19 +1334,16 @@ cases. If you want to see which functions are contained in a particular library 
 </div>
 <p>where <code class="docutils literal notranslate"><span class="pre">${ext}</span></code> is <code class="docutils literal notranslate"><span class="pre">so</span></code> or <code class="docutils literal notranslate"><span class="pre">dll</span></code> or <code class="docutils literal notranslate"><span class="pre">dylib</span></code> as appropriate. We use the construct above for determining the operating system and for using <code class="docutils literal notranslate"><span class="pre">ar</span></code> or <code class="docutils literal notranslate"><span class="pre">nm</span></code> as appropriate.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
 </pre></div>
 </div>
 <div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
 <span></span>%%bash
+<span class="nb">source</span> examples_init.sh
 
 <span class="c1"># these to see what sort of computer we are running on</span>
 <span class="nv">OS</span><span class="o">=</span><span class="k">$(</span>uname -s<span class="k">)</span>
 <span class="nb">echo</span> <span class="nv">$OS</span>
-
-<span class="c1"># change directory from docs/source up to root</span>
-<span class="nv">HERE</span><span class="o">=</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span><span class="p">;</span><span class="nb">cd</span> ../..
-<span class="nv">BPMS</span><span class="o">=</span><span class="si">${</span><span class="nv">BPMS</span><span class="p">-</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span><span class="si">}</span><span class="p">;</span><span class="nb">cd</span> <span class="nv">$HERE</span>
 
 <span class="nv">lib</span><span class="o">=</span><span class="nv">$BPMS</span>/src
 
@@ -1353,11 +1370,11 @@ cases. If you want to see which functions are contained in a particular library 
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 Darwin
-0000000000047500 T _Add_2D
-00000000000477c0 T _Affine_transform
-0000000000049090 T _B_allocate
-00000000000477f0 T _Backwards_affine_transform
-00000000000470b0 T _Bbox
+00000000000475f0 T _Add_2D
+00000000000478b0 T _Affine_transform
+0000000000049180 T _B_allocate
+00000000000478e0 T _Backwards_affine_transform
+00000000000471a0 T _Bbox
 </pre></div></div>
 </div>
 <p>where we see that the shared object library for <code class="docutils literal notranslate"><span class="pre">librat</span></code> (in a file called <code class="docutils literal notranslate"><span class="pre">libratlib.${ext}</span></code>) contains some functions <code class="docutils literal notranslate"><span class="pre">_Add_2D()</span></code>, <code class="docutils literal notranslate"><span class="pre">_Affine_transform()</span></code> etc. which are part of the library we use.</p>
@@ -1370,17 +1387,16 @@ Darwin
 <h3><span class="section-number">5.3.1. </span><code class="docutils literal notranslate"><span class="pre">cat</span> <span class="pre">&lt;&lt;EOF</span> <span class="pre">&gt;</span> <span class="pre">output</span> <span class="pre">...</span> <span class="pre">EOF</span></code><a class="headerlink" href="#cat-<<EOF->-output-...-EOF" title="Permalink to this headline">¶</a></h3>
 <p>We can conveniently create files in <code class="docutils literal notranslate"><span class="pre">bash</span></code> from text in the bash shell. This is done using <code class="docutils literal notranslate"><span class="pre">cat</span></code> and defining a marker (often <code class="docutils literal notranslate"><span class="pre">EOF</span></code>, meaning End Of File), such as:</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
 </pre></div>
 </div>
 <div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
 <span></span>%%bash
+<span class="nb">source</span> examples_init.sh
 
 <span class="c1"># change directory from docs/source up to root</span>
-<span class="nb">cd</span> ../..
-<span class="nv">BPMS</span><span class="o">=</span><span class="si">${</span><span class="nv">BPMS</span><span class="p">-</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span><span class="si">}</span>
 
-cat <span class="s">&lt;&lt;EOF &gt; $BPMS/test/test_examples/first.obj</span>
+cat <span class="s">&lt;&lt;EOF &gt; $BPMS/obj/second.obj</span>
 <span class="s"># My first object file</span>
 <span class="s">mtllib plants.matlib</span>
 <span class="s">usemtl white</span>
@@ -1400,17 +1416,14 @@ cat <span class="s">&lt;&lt;EOF &gt; $BPMS/test/test_examples/first.obj</span>
 </div>
 <p>Let’s look at the file we have just created:</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
 </pre></div>
 </div>
 <div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
 <span></span>%%bash
+<span class="nb">source</span> examples_init.sh
 
-<span class="c1"># change directory from docs/source up to root</span>
-<span class="nb">cd</span> ../..
-<span class="nv">BPMS</span><span class="o">=</span><span class="si">${</span><span class="nv">BPMS</span><span class="p">-</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span><span class="si">}</span>
-
-cat <span class="nv">$BPMS</span>/test/test_examples/first.obj
+cat <span class="nv">$BPMS</span>/obj/second.obj
 </pre></div>
 </div>
 </div>
@@ -1503,46 +1516,41 @@ Use the approach above (`cat &lt;&lt;EOF &gt; output ... EOF`) to create your ow
 </tr>
 </tbody>
 </table>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
 </pre></div>
 </div>
 <div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
 <span></span>%%bash
-
-<span class="c1"># change directory from docs/source up to root</span>
-<span class="nb">cd</span> ../..
-<span class="nv">BPMS</span><span class="o">=</span><span class="si">${</span><span class="nv">BPMS</span><span class="p">-</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span><span class="si">}</span>
-<span class="c1"># create the init.sh file we want</span>
-<span class="nv">INIT</span><span class="o">=</span><span class="nv">$BPMS</span>/test/test_examples/init.sh
-
-cat <span class="s">&lt;&lt;EOF &gt; $INIT</span>
+<span class="c1">#</span>
+<span class="c1"># create examples_init.sh</span>
+<span class="c1"># for examples initialisation</span>
+<span class="c1">#</span>
+<span class="c1"># create the init shell</span>
+cat <span class="s">&lt;&lt;EOF &gt; $BPMS/bin/examples_init_test.sh</span>
 <span class="s">#!/bin/bash</span>
 <span class="s">#</span>
-<span class="s"># preamble</span>
+<span class="s"># defaults</span>
 <span class="s">#</span>
-<span class="s">export BPMS=$BPMS</span>
-
-<span class="s"># set shell variables lib, bin, verbose</span>
-<span class="s"># with defaults in case not set</span>
-<span class="s">lib=\${lib-&quot;\$BPMS/src&quot;}</span>
-<span class="s">bin=\${bin-&quot;\$BPMS/src&quot;}</span>
-<span class="s">VERBOSE=\${VERBOSE-1}</span>
+<span class="s">export BPMS=\${BPMS-$BPMS}</span>
+<span class="s">export BPMSROOT=\${BPMSROOT-\$BPMSROOT}</span>
+<span class="s">lib=\${lib-\$BPMS/src}</span>
+<span class="s">bin=\${bin-\$BPMS/src}</span>
+<span class="s">VERBOSE=\${VERBOSE-0}</span>
+<span class="s">export TEMP=\${TEMP-/tmp}</span>
 
 <span class="s"># set up required environment variables for bash</span>
 <span class="s">export LD_LIBRARY_PATH=&quot;\${lib}:\${LD_LIBRARY_PATH}&quot;</span>
 <span class="s">export DYLD_LIBRARY_PATH=&quot;\${lib}:\${DYLD_LIBRARY_PATH}&quot;</span>
 <span class="s">export PATH=&quot;\${bin}:\${PATH}&quot;</span>
 
-<span class="s"># set up required environment variables for librat</span>
-<span class="s">export BPMSROOT=\${BPMSROOT-&quot;\$BPMS/test/test_examples&quot;}</span>
 <span class="s">export MATLIB=\$BPMSROOT</span>
 <span class="s">export RSRLIB=\$BPMSROOT</span>
 <span class="s">export ARARAT_OBJECT=\$BPMSROOT</span>
 <span class="s">export DIRECT_ILLUMINATION=\$BPMSROOT</span>
 <span class="s">export BPMS_FILES=\$BPMSROOT</span>
 <span class="s">export SKY_ILLUMINATION==\$BPMSROOT</span>
-<span class="s">echo $BPMS</span>
+
 <span class="s">if [ &quot;\$(which RATstart)&quot; == &quot;\${bin}/RATstart&quot; ]</span>
 <span class="s">then</span>
 <span class="s">  if [ &quot;\$VERBOSE&quot; == 1 ]; then</span>
@@ -1553,22 +1561,10 @@ cat <span class="s">&lt;&lt;EOF &gt; $INIT</span>
 <span class="s">  make clean all</span>
 <span class="s">fi</span>
 <span class="s">EOF</span>
-<span class="c1"># set executable mode</span>
-chmod +x <span class="nv">$INIT</span>
-<span class="c1"># test run</span>
-<span class="nb">export</span> <span class="nv">VERBOSE</span><span class="o">=</span><span class="m">1</span>
-<span class="nv">$INIT</span>
+chmod +x <span class="nv">$BPMS</span>/bin/examples_init_test.sh
+examples_init_test.sh
 </pre></div>
 </div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-/Users/plewis/librat
-RATstart found ok
-</pre></div></div>
 </div>
 </div>
 </div>
@@ -1577,16 +1573,7 @@ RATstart found ok
 <p>In this chapter, we have covered a range of basic unix/linux and <code class="docutils literal notranslate"><span class="pre">bash</span></code> commands, so you should be able to navigate you way around a unix file system, and find your way back safely. Being familiar with these tools takes somne time of course, so you might now want to go on and take <a class="reference external" href="https://www.unixtutorial.org/basic-unix-commands">some other unix/linux course</a> to see if you can deepen your understanding in that way. Alternatively, just spend some time exploring your system, looking to see
 what files are where, reading on the internet or help pages what they do, and so on.</p>
 <p>Maybe thats wishful thinking on my part though. You may not feel you have time for basic unix at the moment … and we did say at the top of this chapter that it was not compulsory … I’d reccomend you <em>do</em> spend some time on <em>unix</em> … you’ll develop skills that willlast you a lifetime! ;-)</p>
-<p>In practical terms, as we have said, the important thing here is that you can generate the file <code class="docutils literal notranslate"><span class="pre">test/test_examples/init.sh</span></code> and modify it to your needs.</p>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>
-</pre></div>
-</div>
-</div>
+<p>In practical terms, as we have said, the important thing here is that you can generate the file <code class="docutils literal notranslate"><span class="pre">examples_init_test.sh</span></code> and modify it to your needs.</p>
 </div>
 </div>
 
@@ -1598,7 +1585,7 @@ what files are where, reading on the internet or help pages what they do, and so
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
       
-        <a href="RATstartOptions.html" class="btn btn-neutral" title="4. RATstart options" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="Chapter2.html" class="btn btn-neutral" title="4. Basic librat / RATstart operation" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

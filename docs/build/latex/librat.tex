@@ -214,7 +214,7 @@
 
 
 \title{librat}
-\date{Apr 19, 2020}
+\date{Apr 21, 2020}
 \release{}
 \author{Prof.\@{} P.\@{} Lewis}
 \newcommand{\sphinxlogo}{\vbox{}}
@@ -235,67 +235,67 @@ UCL Geography/NCEO librat software
 \sphinxincludegraphics[width=262\sphinxpxdimen,height=85\sphinxpxdimen]{{ucl_logo}.png}
 
 
-\chapter{Initialisation}
-\label{\detokenize{Chapter1:Initialisation}}\label{\detokenize{Chapter1::doc}}
-Before proceeding, we make sure that an appropriate initialisation (‘init’) file has been generated. We also want to test that the software runs ok. We generate a \sphinxcode{\sphinxupquote{bash}} shell to achieve this here, and use to his in subsequent notes.
+\chapter{\sphinxstyleliteralintitle{\sphinxupquote{RATstart}}}
+\label{\detokenize{RATstart:RATstart}}\label{\detokenize{RATstart::doc}}
+This section deals with using the direct interface to the \sphinxcode{\sphinxupquote{librat}} code at a high level, through the \sphinxcode{\sphinxupquote{RATstart}} software. This is a short piece of \sphinxcode{\sphinxupquote{C}} code, the main role of with is to present a set of simple functions controlled by text input on the command line. One of these ‘options’ (option 14) gives an extremely fexible interface for defining viewing and illumination conditions for radiative transfer simulations, and it is this part of the interface that is most widely used.
 
-You can modify any of this as a user, but be careful not to break it! 🙄. In an emergency, you can always just re\sphinxhyphen{}download this set of notes and software from \sphinxhref{https://github.com/profLewis/librat}{github} and start again.
+In this section, we introduce some of the functionality of \sphinxcode{\sphinxupquote{RATstart}}. We use a \sphinxcode{\sphinxupquote{bash}} environment here around \sphinxcode{\sphinxupquote{RATstart}} to emphasise skills and code in running this from a standard \sphinxcode{\sphinxupquote{*nix}} command lines. We use a python3 environment for plotting and related codes.
 
-If you want to know more about setting up this sort of file, and what it all means, see \sphinxhref{Appendix1}{Appendix 1}. At the moment, you just need to be aware of it, not understand all of the intricacies.
+We first set some local variables.
 
 {
 \sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
 \sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
-\llap{\color{nbsphinxin}[1]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
-
-\PYG{c+c1}{\PYGZsh{} change directory from docs/source up to root}
-\PYG{n+nb}{cd} ../..
-\PYG{n+nv}{BPMS}\PYG{o}{=}\PYG{l+s+si}{\PYGZdl{}\PYGZob{}}\PYG{n+nv}{BPMS}\PYG{p}{\PYGZhy{}}\PYG{k}{\PYGZdl{}(}\PYG{n+nb}{pwd}\PYG{k}{)}\PYG{l+s+si}{\PYGZcb{}}
-\PYG{c+c1}{\PYGZsh{} create the init.sh file we want}
-\PYG{n+nv}{INIT}\PYG{o}{=}\PYG{n+nv}{\PYGZdl{}BPMS}/test/test\PYGZus{}examples/init.sh
-
-cat \PYG{l+s}{\PYGZlt{}\PYGZlt{}EOF \PYGZgt{} \PYGZdl{}INIT}
-\PYG{l+s}{\PYGZsh{}!/bin/bash}
-\PYG{l+s}{\PYGZsh{}}
-\PYG{l+s}{\PYGZsh{} preamble}
-\PYG{l+s}{\PYGZsh{}}
-\PYG{l+s}{export BPMS=\PYGZdl{}BPMS}
-\PYG{l+s}{\PYGZsh{} set shell variables lib, bin, verbose}
-\PYG{l+s}{\PYGZsh{} with defaults in case not set}
-\PYG{l+s}{lib=\PYGZbs{}\PYGZdl{}\PYGZob{}lib\PYGZhy{}\PYGZdq{}\PYGZbs{}\PYGZdl{}BPMS/src\PYGZdq{}\PYGZcb{}}
-\PYG{l+s}{bin=\PYGZbs{}\PYGZdl{}\PYGZob{}bin\PYGZhy{}\PYGZdq{}\PYGZbs{}\PYGZdl{}BPMS/src\PYGZdq{}\PYGZcb{}}
-\PYG{l+s}{VERBOSE=\PYGZbs{}\PYGZdl{}\PYGZob{}VERBOSE\PYGZhy{}0\PYGZcb{}}
-
-\PYG{l+s}{\PYGZsh{} set up required environment variables for bash}
-\PYG{l+s}{export LD\PYGZus{}LIBRARY\PYGZus{}PATH=\PYGZdq{}\PYGZbs{}\PYGZdl{}\PYGZob{}lib\PYGZcb{}:\PYGZbs{}\PYGZdl{}\PYGZob{}LD\PYGZus{}LIBRARY\PYGZus{}PATH\PYGZcb{}\PYGZdq{}}
-\PYG{l+s}{export DYLD\PYGZus{}LIBRARY\PYGZus{}PATH=\PYGZdq{}\PYGZbs{}\PYGZdl{}\PYGZob{}lib\PYGZcb{}:\PYGZbs{}\PYGZdl{}\PYGZob{}DYLD\PYGZus{}LIBRARY\PYGZus{}PATH\PYGZcb{}\PYGZdq{}}
-\PYG{l+s}{export PATH=\PYGZdq{}\PYGZbs{}\PYGZdl{}\PYGZob{}bin\PYGZcb{}:\PYGZbs{}\PYGZdl{}\PYGZob{}PATH\PYGZcb{}\PYGZdq{}}
-
-\PYG{l+s}{\PYGZsh{} set up required environment variables for librat}
-\PYG{l+s}{export BPMSROOT=\PYGZbs{}\PYGZdl{}\PYGZob{}BPMSROOT\PYGZhy{}\PYGZbs{}\PYGZdl{}BPMS/test/test\PYGZus{}examples\PYGZcb{}}
-
-\PYG{l+s}{export MATLIB=\PYGZbs{}\PYGZdl{}BPMSROOT}
-\PYG{l+s}{export RSRLIB=\PYGZbs{}\PYGZdl{}BPMSROOT}
-\PYG{l+s}{export ARARAT\PYGZus{}OBJECT=\PYGZbs{}\PYGZdl{}BPMSROOT}
-\PYG{l+s}{export DIRECT\PYGZus{}ILLUMINATION=\PYGZbs{}\PYGZdl{}BPMSROOT}
-\PYG{l+s}{export BPMS\PYGZus{}FILES=\PYGZbs{}\PYGZdl{}BPMSROOT}
-\PYG{l+s}{if [ \PYGZdq{}\PYGZbs{}\PYGZdl{}(which start)\PYGZdq{} == \PYGZdq{}\PYGZbs{}\PYGZdl{}\PYGZob{}bin\PYGZcb{}/start\PYGZdq{} ]}
-\PYG{l+s}{then}
-\PYG{l+s}{  if [ \PYGZdq{}\PYGZbs{}\PYGZdl{}VERBOSE\PYGZdq{} == 1 ]; then}
-\PYG{l+s}{      echo \PYGZdq{}start found ok\PYGZdq{}}
-\PYG{l+s}{  fi}
-\PYG{l+s}{else}
-\PYG{l+s}{  \PYGZsh{} we should create them}
-\PYG{l+s}{  make clean all}
-\PYG{l+s}{fi}
-\PYG{l+s}{EOF}
-\PYG{c+c1}{\PYGZsh{} set executable mode}
-chmod +x \PYG{n+nv}{\PYGZdl{}INIT}
+\llap{\color{nbsphinxin}[1]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYG{k+kn}{import} \PYG{n+nn}{sys}
+\PYG{n}{sys}\PYG{o}{.}\PYG{n}{path}\PYG{o}{.}\PYG{n}{insert}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{.}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{)}
+\PYG{k+kn}{from} \PYG{n+nn}{prelim} \PYG{k+kn}{import} \PYG{o}{*}
+\PYG{o}{\PYGZpc{}}\PYG{k}{set\PYGZus{}env} BPMS=\PYGZdl{}BPMS
+\PYG{o}{\PYGZpc{}}\PYG{k}{set\PYGZus{}env} PATH=\PYGZdl{}BPMS/bin:\PYGZdl{}BPMS/src:\PYGZdl{}BPMS/bin/csh:\PYGZdl{}PATH\PYGZus{}
+\PYG{o}{\PYGZpc{}}\PYG{k}{set\PYGZus{}env} MATLIB=\PYGZdl{}BPMS/obj
+\PYG{o}{\PYGZpc{}}\PYG{k}{set\PYGZus{}env} BPMSROOT=\PYGZdl{}BPMS/obj
 \end{sphinxVerbatim}
 }
 
-Let’s look at the file we generated:
+{
+
+\kern-\sphinxverbatimsmallskipamount\kern-\baselineskip
+\kern+\FrameHeightAdjust\kern-\fboxrule
+\vspace{\nbsphinxcodecellspacing}
+
+\sphinxsetup{VerbatimColor={named}{white}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+env: BPMS=/Users/plewis/librat
+env: PATH=/Users/plewis/librat/bin:/Users/plewis/librat/src:/Users/plewis/librat/bin/csh:/Users/plewis/opt/anaconda3/bin:/Users/plewis/opt/anaconda3/condabin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/VMware Fusion.app/Contents/Public:/Library/TeX/texbin:/opt/X11/bin:/Library/Apple/usr/bin
+env: MATLIB=/Users/plewis/librat/obj
+env: BPMSROOT=/Users/plewis/librat/obj
+\end{sphinxVerbatim}
+}
+
+
+\section{\sphinxstyleliteralintitle{\sphinxupquote{RATstart}} (formerly \sphinxstyleliteralintitle{\sphinxupquote{start}})}
+\label{\detokenize{RATstart:RATstart-(formerly-start)}}
+\sphinxcode{\sphinxupquote{RATstart}} used to be called \sphinxcode{\sphinxupquote{start}}, but that causes conflicts sometimes, so its now changed to \sphinxcode{\sphinxupquote{RATstart}}.
+
+
+\subsection{Getting started}
+\label{\detokenize{RATstart:Getting-started}}
+The minimum requirement for the \sphinxcode{\sphinxupquote{RATstart}} command line is the declaration of some object file to use in the simulation. An object file describes the real world geometry and scattering properties of the objects we are using in the simulation, such as some representation of a vegetation canopy. We generate a very simple object file for demonstrating \sphinxcode{\sphinxupquote{RATstart}}:
+
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+!\PYGZob{}
+usemtl WHITE
+v 0 0 0
+sph \PYGZhy{}1 100
+!\PYGZcb{}
+\end{sphinxVerbatim}
+
+Other than that, its functionality is mainly controlled though a series of option codes read on the input.
+
+Valid options are (currently) between 0 and 16, inclusive, with some missing. You shouldn’t use the ones not listed as they tend to be experimental and may not work as expected.
+
+If we give a non\sphinxhyphen{}valid option code, we get the help message:
 
 {
 \sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
@@ -303,32 +303,305 @@ Let’s look at the file we generated:
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
 \llap{\color{nbsphinxin}[2]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
 
-cat ../../test/test\PYGZus{}examples/init.sh
+\PYG{c+c1}{\PYGZsh{} a simple object file}
+\PYG{c+c1}{\PYGZsh{} and invalid code: 1000}
+\PYG{c+c1}{\PYGZsh{} to see the options}
+\PYG{c+c1}{\PYGZsh{} a very simple object file}
+cat \PYG{l+s}{\PYGZlt{}\PYGZlt{}EOF \PYGZgt{} \PYGZdl{}BPMSROOT/tmp.\PYGZdl{}\PYGZdl{}.obj}
+\PYG{l+s}{!\PYGZob{}}
+\PYG{l+s}{usemtl WHITE}
+\PYG{l+s}{v 0 0 0}
+\PYG{l+s}{sph \PYGZhy{}1 100}
+\PYG{l+s}{!\PYGZcb{}}
+\PYG{l+s}{EOF}
+
+\PYG{n+nb}{export} \PYG{n+nv}{LD\PYGZus{}LIBRARY\PYGZus{}PATH}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+si}{\PYGZdl{}\PYGZob{}}\PYG{n+nv}{BPMS}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{/src:}\PYG{l+s+si}{\PYGZdl{}\PYGZob{}}\PYG{n+nv}{LD\PYGZus{}LIBRARY\PYGZus{}PATH}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{\PYGZdq{}}
+\PYG{n+nb}{export} \PYG{n+nv}{DYLD\PYGZus{}LIBRARY\PYGZus{}PATH}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+si}{\PYGZdl{}\PYGZob{}}\PYG{n+nv}{BPMS}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{/src:}\PYG{l+s+si}{\PYGZdl{}\PYGZob{}}\PYG{n+nv}{DYLD\PYGZus{}LIBRARY\PYGZus{}PATH}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{\PYGZdq{}}
+RATstart tmp.\PYG{n+nv}{\PYGZdl{}\PYGZdl{}}.obj \PYG{o}{\PYGZlt{}\PYGZlt{}\PYGZlt{}} \PYG{l+m}{1000}\PYG{p}{;}
+
+\PYG{c+c1}{\PYGZsh{} tidy up, removing file}
+rm \PYGZhy{}f \PYG{n+nv}{\PYGZdl{}BPMSROOT}/tmp.\PYG{n+nv}{\PYGZdl{}\PYGZdl{}}.obj
 \end{sphinxVerbatim}
 }
 
+{
 
-\section{Environment variables}
-\label{\detokenize{Chapter1:Environment-variables}}
-We might notice that the init shell sets a number of environment variables, namely \sphinxcode{\sphinxupquote{MATLIB}}, \sphinxcode{\sphinxupquote{RSRLIB}} etc.
+\kern-\sphinxverbatimsmallskipamount\kern-\baselineskip
+\kern+\FrameHeightAdjust\kern-\fboxrule
+\vspace{\nbsphinxcodecellspacing}
 
-If you are interested, the meaning of these is given in the table below.
+\sphinxsetup{VerbatimColor={named}{nbsphinx-stderr}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+options:
+         0                   : quit
+         1 n s1x s1y s1z {\ldots} : set sun vectors
+         2                   : print sun vectors
+         6 fx fy fz dx dy dz : trace ray from f in direction d
+         7                   : get and print materials
+         9                   : print info on materials used
+         10                  : get and set verbosity level (0-1)
+         11                  : get and print object bbox information
+         13                  : same as 14 assuming filenames camera.dat light.dat
+         14 camera.dat light.dat
+                             : ray tracing using defined camera \& illumination
+         16 cx cy cz sx sy nrows ncols rpp name
+                             : produce a height map in name
+\end{sphinxVerbatim}
+}
 
-Alternatively, just notice that in the init shell, all of these variables are set to \sphinxcode{\sphinxupquote{BPMSROOT}}, so if we want to point to the location of an object and material database for librat, we need only set the environment variable \sphinxcode{\sphinxupquote{BPMSROOT}} appropriately. In this case it defaults to \sphinxcode{\sphinxupquote{\$BPMS/test/test\_example}}.
+As noted above, we most commonly use option \sphinxcode{\sphinxupquote{14}}. This allows the definition of a ‘camera’ and ‘light source’ defined in the files \sphinxcode{\sphinxupquote{camera.dat}} and \sphinxcode{\sphinxupquote{light.dat}} here, respectively and gives a very general interface for radiative transfer simulations. Using the code then amounts to setting up camera and illumination files for the scenarious you are interested in, which greatly simplifies the interface.
 
-If you want to run a shell that uses the \sphinxcode{\sphinxupquote{init.sh}} setup, you will need to use the command \sphinxcode{\sphinxupquote{source}} to export the variables to your shell.
+The command line option \sphinxcode{\sphinxupquote{\sphinxhyphen{}RAThelp}} will provide the list of command line options:
 
 {
 \sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
 \sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
 \llap{\color{nbsphinxin}[3]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
+\PYG{c+c1}{\PYGZsh{} a simple object file}
+\PYG{c+c1}{\PYGZsh{} \PYGZhy{}\PYGZhy{}help to see command line options}
+\PYG{c+c1}{\PYGZsh{} a very simple object file}
+cat \PYG{l+s}{\PYGZlt{}\PYGZlt{}EOF \PYGZgt{} \PYGZdl{}BPMSROOT/tmp.\PYGZdl{}\PYGZdl{}.obj}
+\PYG{l+s}{!\PYGZob{}}
+\PYG{l+s}{usemtl WHITE}
+\PYG{l+s}{v 0 0 0}
+\PYG{l+s}{sph \PYGZhy{}1 100}
+\PYG{l+s}{!\PYGZcb{}}
+\PYG{l+s}{EOF}
 
-\PYG{n+nb}{source} ../../test/test\PYGZus{}examples/init.sh
+\PYG{n+nb}{export} \PYG{n+nv}{LD\PYGZus{}LIBRARY\PYGZus{}PATH}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}}\PYG{n+nv}{\PYGZdl{}BPMS}\PYG{l+s+s2}{/src:}\PYG{l+s+si}{\PYGZdl{}\PYGZob{}}\PYG{n+nv}{LD\PYGZus{}LIBRARY\PYGZus{}PATH}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{\PYGZdq{}}
+\PYG{n+nb}{export} \PYG{n+nv}{DYLD\PYGZus{}LIBRARY\PYGZus{}PATH}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}}\PYG{n+nv}{\PYGZdl{}BPMS}\PYG{l+s+s2}{/src:}\PYG{l+s+si}{\PYGZdl{}\PYGZob{}}\PYG{n+nv}{DYLD\PYGZus{}LIBRARY\PYGZus{}PATH}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{\PYGZdq{}}
+RATstart \PYGZhy{}RAThelp tmp.\PYG{n+nv}{\PYGZdl{}\PYGZdl{}}.obj \PYG{o}{\PYGZlt{}\PYGZlt{}\PYGZlt{}} \PYG{l+m}{1000}\PYG{p}{;}
 
-\PYG{n+nb}{echo} \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{MATLIB is set to }\PYG{n+nv}{\PYGZdl{}MATLIB}\PYG{l+s+s2}{\PYGZdq{}}
+\PYG{c+c1}{\PYGZsh{} tidy up, removing file}
+rm \PYGZhy{}f \PYG{n+nv}{\PYGZdl{}BPMSROOT}/tmp.\PYG{n+nv}{\PYGZdl{}\PYGZdl{}}.obj
 \end{sphinxVerbatim}
 }
+
+{
+
+\kern-\sphinxverbatimsmallskipamount\kern-\baselineskip
+\kern+\FrameHeightAdjust\kern-\fboxrule
+\vspace{\nbsphinxcodecellspacing}
+
+\sphinxsetup{VerbatimColor={named}{nbsphinx-stderr}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+RATstart: [-RATm 1] [-RATl] [-RATsun\_position x y z] [-RATr randomSeed] [-RATblack] [-RATblockSize blocksize] [-RATstoreVertex N] [-RATsensor\_wavebands wavebands.dat] [-RATsun\_fov 0 (degrees)] [-RATskymap skymap.hips] [-RATtolerance 0.00001] [-RATdirect directIllumination.dat] [-help | -RAThelp] [-RATv 0|1] [-RATn] [-Useless] [-UsetSun x y z] data\_filename.obj
+\end{sphinxVerbatim}
+}
+
+In the rest of this section, we will learn how to make a call to \sphinxcode{\sphinxupquote{RATstart}} and how to use the various command line options and input options.
+
+
+\subsection{Initialisation shells}
+\label{\detokenize{RATstart:Initialisation-shells}}
+Before proceeding, we make sure we set appropriate environment variables to run a set of examples with RATstart. We also want to test that the software runs ok. We generate a \sphinxcode{\sphinxupquote{bash}} shell to achieve this here, and use this in subsequent notes.
+
+You can modify any of this as a user, but be careful not to break it! 🙄. In an emergency, you can always just re\sphinxhyphen{}download this set of notes and software from \sphinxhref{https://github.com/profLewis/librat}{github} and start again.
+
+If you want to know more about setting up this sort of file, and what it all means, see \sphinxhref{Appendix1}{Appendix 1}. At the moment, you just need to be aware of the need to set environment variables, but not to understand all of the intricacies.
+
+We simplify the interface for the environment variables by setting up the configuration file \sphinxcode{\sphinxupquote{examples\_init.sh}}. We then run it, to test the code.
+
+{
+\sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\llap{\color{nbsphinxin}[4]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
+\PYG{c+c1}{\PYGZsh{}}
+\PYG{c+c1}{\PYGZsh{} create examples\PYGZus{}init.sh}
+\PYG{c+c1}{\PYGZsh{} for examples initialisation}
+\PYG{c+c1}{\PYGZsh{}}
+\PYG{c+c1}{\PYGZsh{} create the init shell}
+cat \PYG{l+s}{\PYGZlt{}\PYGZlt{}EOF \PYGZgt{} \PYGZdl{}BPMS/bin/examples\PYGZus{}init.sh}
+\PYG{l+s}{\PYGZsh{}!/bin/bash}
+\PYG{l+s}{\PYGZsh{}}
+\PYG{l+s}{\PYGZsh{} defaults}
+\PYG{l+s}{\PYGZsh{}}
+\PYG{l+s}{export BPMS=\PYGZbs{}\PYGZdl{}\PYGZob{}BPMS\PYGZhy{}\PYGZdl{}BPMS\PYGZcb{}}
+\PYG{l+s}{export BPMSROOT=\PYGZbs{}\PYGZdl{}\PYGZob{}BPMSROOT\PYGZhy{}\PYGZbs{}\PYGZdl{}BPMSROOT\PYGZcb{}}
+\PYG{l+s}{lib=\PYGZbs{}\PYGZdl{}\PYGZob{}lib\PYGZhy{}\PYGZbs{}\PYGZdl{}BPMS/src\PYGZcb{}}
+\PYG{l+s}{bin=\PYGZbs{}\PYGZdl{}\PYGZob{}bin\PYGZhy{}\PYGZbs{}\PYGZdl{}BPMS/src\PYGZcb{}}
+\PYG{l+s}{VERBOSE=\PYGZbs{}\PYGZdl{}\PYGZob{}VERBOSE\PYGZhy{}0\PYGZcb{}}
+\PYG{l+s}{export TEMP=\PYGZbs{}\PYGZdl{}\PYGZob{}TEMP\PYGZhy{}/tmp\PYGZcb{}}
+
+\PYG{l+s}{\PYGZsh{} set up required environment variables for bash}
+\PYG{l+s}{export LD\PYGZus{}LIBRARY\PYGZus{}PATH=\PYGZdq{}\PYGZbs{}\PYGZdl{}\PYGZob{}lib\PYGZcb{}:\PYGZbs{}\PYGZdl{}\PYGZob{}LD\PYGZus{}LIBRARY\PYGZus{}PATH\PYGZcb{}\PYGZdq{}}
+\PYG{l+s}{export DYLD\PYGZus{}LIBRARY\PYGZus{}PATH=\PYGZdq{}\PYGZbs{}\PYGZdl{}\PYGZob{}lib\PYGZcb{}:\PYGZbs{}\PYGZdl{}\PYGZob{}DYLD\PYGZus{}LIBRARY\PYGZus{}PATH\PYGZcb{}\PYGZdq{}}
+\PYG{l+s}{export PATH=\PYGZdq{}\PYGZbs{}\PYGZdl{}\PYGZob{}bin\PYGZcb{}:\PYGZbs{}\PYGZdl{}\PYGZob{}PATH\PYGZcb{}\PYGZdq{}}
+
+\PYG{l+s}{export MATLIB=\PYGZbs{}\PYGZdl{}BPMSROOT}
+\PYG{l+s}{export RSRLIB=\PYGZbs{}\PYGZdl{}BPMSROOT}
+\PYG{l+s}{export ARARAT\PYGZus{}OBJECT=\PYGZbs{}\PYGZdl{}BPMSROOT}
+\PYG{l+s}{export DIRECT\PYGZus{}ILLUMINATION=\PYGZbs{}\PYGZdl{}BPMSROOT}
+\PYG{l+s}{export BPMS\PYGZus{}FILES=\PYGZbs{}\PYGZdl{}BPMSROOT}
+\PYG{l+s}{export SKY\PYGZus{}ILLUMINATION==\PYGZbs{}\PYGZdl{}BPMSROOT}
+
+\PYG{l+s}{if [ \PYGZdq{}\PYGZbs{}\PYGZdl{}(which RATstart)\PYGZdq{} == \PYGZdq{}\PYGZbs{}\PYGZdl{}\PYGZob{}bin\PYGZcb{}/RATstart\PYGZdq{} ]}
+\PYG{l+s}{then}
+\PYG{l+s}{  if [ \PYGZdq{}\PYGZbs{}\PYGZdl{}VERBOSE\PYGZdq{} == 1 ]; then}
+\PYG{l+s}{      echo \PYGZdq{}RATstart found ok\PYGZdq{}}
+\PYG{l+s}{  fi}
+\PYG{l+s}{else}
+\PYG{l+s}{  \PYGZsh{} we should create them}
+\PYG{l+s}{  make clean all}
+\PYG{l+s}{fi}
+\PYG{l+s}{EOF}
+chmod +x \PYG{n+nv}{\PYGZdl{}BPMS}/bin/examples\PYGZus{}init.sh
+\end{sphinxVerbatim}
+}
+
+Let us set the \sphinxcode{\sphinxupquote{VERBOSE}} flag on, by setting:
+
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{n}{export} \PYG{n}{VERBOSE}\PYG{o}{=}\PYG{l+m+mi}{1}
+\end{sphinxVerbatim}
+
+before running \sphinxcode{\sphinxupquote{\$INIT}}. This will cause the shell to print \sphinxcode{\sphinxupquote{RATstart found ok}} is the executable \sphinxcode{\sphinxupquote{RATstart}} is where it is expected.
+
+{
+\sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\llap{\color{nbsphinxin}[5]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
+\PYG{c+c1}{\PYGZsh{} run test}
+\PYG{n+nb}{export} \PYG{n+nv}{VERBOSE}\PYG{o}{=}\PYG{l+m}{1}
+\PYG{n+nb}{source} examples\PYGZus{}init.sh
+\end{sphinxVerbatim}
+}
+
+{
+
+\kern-\sphinxverbatimsmallskipamount\kern-\baselineskip
+\kern+\FrameHeightAdjust\kern-\fboxrule
+\vspace{\nbsphinxcodecellspacing}
+
+\sphinxsetup{VerbatimColor={named}{white}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+RATstart found ok
+\end{sphinxVerbatim}
+}
+
+The shell sets \sphinxcode{\sphinxupquote{BPMSROOT}} to be \sphinxcode{\sphinxupquote{\$BPMS/obj}} by default. This causes other variables such as \sphinxcode{\sphinxupquote{MATLIB}} to be set to the same value, so \sphinxcode{\sphinxupquote{RATstart}} will look for materials in \sphinxcode{\sphinxupquote{\$BPMS/obj}} (see below):
+
+{
+\sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\llap{\color{nbsphinxin}[6]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
+
+\PYG{c+c1}{\PYGZsh{} run test}
+\PYG{n+nb}{source} examples\PYGZus{}init.sh
+\PYG{n+nb}{echo} \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{MATLIB is }\PYG{n+nv}{\PYGZdl{}MATLIB}\PYG{l+s+s2}{\PYGZdq{}}
+\end{sphinxVerbatim}
+}
+
+{
+
+\kern-\sphinxverbatimsmallskipamount\kern-\baselineskip
+\kern+\FrameHeightAdjust\kern-\fboxrule
+\vspace{\nbsphinxcodecellspacing}
+
+\sphinxsetup{VerbatimColor={named}{white}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+MATLIB is /Users/plewis/librat/obj
+\end{sphinxVerbatim}
+}
+
+If we want to use this shell for \sphinxcode{\sphinxupquote{BPMSROOT}} elsewhere, such as \sphinxcode{\sphinxupquote{/home/me/mydata/somewhere}}, we just need to make sure \sphinxcode{\sphinxupquote{BPMSROOT}} is set to this before running \sphinxcode{\sphinxupquote{\$INIT}}:
+
+{
+\sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\llap{\color{nbsphinxin}[7]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
+
+\PYG{c+c1}{\PYGZsh{} run test}
+\PYG{n+nb}{export} \PYG{n+nv}{BPMSROOT}\PYG{o}{=}/home/me/mydata/somewhere
+\PYG{n+nb}{source} examples\PYGZus{}init.sh
+\PYG{n+nb}{echo} \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{MATLIB is }\PYG{n+nv}{\PYGZdl{}MATLIB}\PYG{l+s+s2}{\PYGZdq{}}
+\end{sphinxVerbatim}
+}
+
+{
+
+\kern-\sphinxverbatimsmallskipamount\kern-\baselineskip
+\kern+\FrameHeightAdjust\kern-\fboxrule
+\vspace{\nbsphinxcodecellspacing}
+
+\sphinxsetup{VerbatimColor={named}{white}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+MATLIB is /home/me/mydata/somewhere
+\end{sphinxVerbatim}
+}
+
+
+\section{Environment variables}
+\label{\detokenize{RATstart:Environment-variables}}
+If we take a quick look at the \sphinxcode{\sphinxupquote{examples\_init.sh}} file we generated, we see:
+
+{
+\sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\llap{\color{nbsphinxin}[8]:\,\hspace{\fboxrule}\hspace{\fboxsep}}cat \PYGZdl{}BPMS/bin/examples\PYGZus{}init.sh
+\end{sphinxVerbatim}
+}
+
+{
+
+\kern-\sphinxverbatimsmallskipamount\kern-\baselineskip
+\kern+\FrameHeightAdjust\kern-\fboxrule
+\vspace{\nbsphinxcodecellspacing}
+
+\sphinxsetup{VerbatimColor={named}{white}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\#!/bin/bash
+\#
+\# defaults
+\#
+export BPMS=\$\{BPMS-/Users/plewis/librat\}
+export BPMSROOT=\$\{BPMSROOT-\$BPMSROOT\}
+lib=\$\{lib-\$BPMS/src\}
+bin=\$\{bin-\$BPMS/src\}
+VERBOSE=\$\{VERBOSE-0\}
+export TEMP=\$\{TEMP-/tmp\}
+
+\# set up required environment variables for bash
+export LD\_LIBRARY\_PATH="\$\{lib\}:\$\{LD\_LIBRARY\_PATH\}"
+export DYLD\_LIBRARY\_PATH="\$\{lib\}:\$\{DYLD\_LIBRARY\_PATH\}"
+export PATH="\$\{bin\}:\$\{PATH\}"
+
+export MATLIB=\$BPMSROOT
+export RSRLIB=\$BPMSROOT
+export ARARAT\_OBJECT=\$BPMSROOT
+export DIRECT\_ILLUMINATION=\$BPMSROOT
+export BPMS\_FILES=\$BPMSROOT
+export SKY\_ILLUMINATION==\$BPMSROOT
+
+if [ "\$(which RATstart)" == "\$\{bin\}/RATstart" ]
+then
+  if [ "\$VERBOSE" == 1 ]; then
+      echo "RATstart found ok"
+  fi
+else
+  \# we should create them
+  make clean all
+fi
+\end{sphinxVerbatim}
+}
+
+We might notice that \sphinxcode{\sphinxupquote{examples\_init.sh}} sets a number of environment variables, namely \sphinxcode{\sphinxupquote{MATLIB}}, \sphinxcode{\sphinxupquote{RSRLIB}} etc.
+
+If you are interested in the details, the meaning of these is given in the table below.
+
+Alternatively, just notice that in the init shell, all of these variables are set to \sphinxcode{\sphinxupquote{BPMSROOT}}, so if we want to point to the location of an object and material database for librat, we need only set the environment variable \sphinxcode{\sphinxupquote{BPMSROOT}} appropriately. In this case it defaults to \sphinxcode{\sphinxupquote{\$BPMS/obj}}.
 
 \sphinxstylestrong{Table explaining librat object environment variables:}
 
@@ -345,22 +618,22 @@ File types
 \hline
 \sphinxcode{\sphinxupquote{MATLIB}}
 &
-material library e.g. \sphinxcode{\sphinxupquote{\textasciigrave{}plants.matlib}} \textless{}test/test\_examples/plants.matlib\textgreater{}\textasciigrave{}\_\_, all materials defined in a material library e.g. \sphinxcode{\sphinxupquote{\textasciigrave{}refl/white.dat}} \textless{}test/test\_examples/refl/white.dat\textgreater{}\textasciigrave{}\_\_
+material library e.g. \sphinxcode{\sphinxupquote{plants.matlib}}, all materials defined in a material library e.g. \sphinxcode{\sphinxupquote{white.dat}}
 \\
 \hline
 \sphinxcode{\sphinxupquote{ARARAT\_OBJECT}}
 &
-(extended) wavefront object files e.g. \sphinxcode{\sphinxupquote{\textasciigrave{}first.obj}} \textless{}test/test\_examples/first.obj\textgreater{}\textasciigrave{}\_\_
+(extended) wavefront object files e.g. \sphinxcode{\sphinxupquote{first.obj}}
 \\
 \hline
 \sphinxcode{\sphinxupquote{DIRECT\_ILLUMINATION}}
 &
-spectral files for direct illumination: those defined in \sphinxhyphen{}RATdirect command line option
+spectral files for direct illumination: those defined in \sphinxcode{\sphinxupquote{\sphinxhyphen{}RATdirect}} command line option
 \\
 \hline
 \sphinxcode{\sphinxupquote{RSRLIB}}
 &
-sensor waveband files: those defined in \sphinxhyphen{}RATsensor\_wavebands command line option
+sensor waveband files: those defined in \sphinxcode{\sphinxupquote{\sphinxhyphen{}RATsensor\_wavebands}} command line option
 \\
 \hline
 \sphinxcode{\sphinxupquote{BPMS\_FILES}}
@@ -368,13 +641,18 @@ sensor waveband files: those defined in \sphinxhyphen{}RATsensor\_wavebands comm
 Not used
 \\
 \hline
+\sphinxcode{\sphinxupquote{SKY\_ILLUMINATION}}
+&
+location of sky map image files: defined in \sphinxcode{\sphinxupquote{\sphinxhyphen{}RATskymap}} command line option
+\\
+\hline
 \end{tabulary}
 \par
 \sphinxattableend\end{savenotes}
 
-You can set all of these to the same value, in which case the database of files is all defined relative to that point. This is the most typical use of \sphinxcode{\sphinxupquote{librat}}. We illustrate this setup below for the \sphinxcode{\sphinxupquote{librat}} distribution, where a set of examples use files from the directory \sphinxcode{\sphinxupquote{test/test\_example}}.
+You can set all of these to the same value as above (\sphinxcode{\sphinxupquote{\$BPMSROOT}}), in which case the database of files is all defined relative to that location in the file system. This is the most typical use of \sphinxcode{\sphinxupquote{librat}}. We illustrate this setup below for the \sphinxcode{\sphinxupquote{librat}} distribution, where a set of examples use files from the directory \sphinxcode{\sphinxupquote{test/test\_example}}.
 
-Additionally, the following environment variables can be set to extend the size of some aspects of the model. You would only need to use these in some extreme case.
+Additionally in \sphinxcode{\sphinxupquote{librat}}, the following environment variables can be set to extend the size of some aspects of the model. You would only need to use these in some extreme case.
 
 \sphinxstylestrong{Table explaining additional librat environment variables:}
 
@@ -399,9 +677,16 @@ Maximum number of groups allowed (100000)
 Maximum number of materials allowed (DEFAULT\_PRAT\_MAX\_MATERIALS=1024 in \sphinxcode{\sphinxupquote{mtllib.h}})
 \\
 \hline
+\sphinxcode{\sphinxupquote{MAX\_SUNS}}
+&
+Maximum number of suns (180 in \sphinxcode{\sphinxupquote{rat.h}})
+\\
+\hline
 \end{tabulary}
 \par
 \sphinxattableend\end{savenotes}
+
+If you want to run a shell that uses the setup, you will need to use the command \sphinxcode{\sphinxupquote{source}} to export the variables to your shell.
 
 You can test the init file by running the cell (shell) below.
 
@@ -409,14 +694,13 @@ You can test the init file by running the cell (shell) below.
 \sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
 \sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
-\llap{\color{nbsphinxin}[4]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
-\PYG{c+c1}{\PYGZsh{} test the init file}
+\llap{\color{nbsphinxin}[9]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
 
-\PYG{c+c1}{\PYGZsh{} change directory from docs/source up to root}
-\PYG{n+nv}{INIT}\PYG{o}{=}../../test/test\PYGZus{}examples/init.sh
+\PYG{c+c1}{\PYGZsh{} source if we want the info in this shell}
+\PYG{n+nb}{source} examples\PYGZus{}init.sh
 
-\PYG{n+nb}{export} \PYG{n+nv}{VERBOSE}\PYG{o}{=}\PYG{l+m}{1}
-\PYG{n+nv}{\PYGZdl{}INIT}
+\PYG{n+nb}{echo} \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{MATLIB is set to }\PYG{n+nv}{\PYGZdl{}MATLIB}\PYG{l+s+s2}{\PYGZdq{}}
+\PYG{n+nb}{echo} \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{RSRLIB is set to }\PYG{n+nv}{\PYGZdl{}RSRLIB}\PYG{l+s+s2}{\PYGZdq{}}
 \end{sphinxVerbatim}
 }
 
@@ -429,12 +713,13 @@ You can test the init file by running the cell (shell) below.
 \sphinxsetup{VerbatimColor={named}{white}}
 \sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
-start found ok
+MATLIB is set to /Users/plewis/librat/obj
+RSRLIB is set to /Users/plewis/librat/obj
 \end{sphinxVerbatim}
 }
 
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
-\PYG{n}{EXERCISE} \PYG{l+m+mf}{1.1}
+\PYG{n}{EXERCISE} \PYG{l+m+mi}{1}
 
     \PYG{l+m+mf}{1.} \PYG{n}{Try} \PYG{n}{changing} \PYG{n}{the} \PYG{n}{environment} \PYG{n}{variable} \PYG{n}{VERBOSE} \PYG{n}{to} \PYG{l+m+mi}{1} \PYG{p}{(}\PYG{k+kc}{True}\PYG{p}{)} \PYG{o+ow}{or} \PYG{l+m+mi}{0} \PYG{p}{(}\PYG{k+kc}{False}\PYG{p}{)} \PYG{n}{to} \PYG{n}{see} \PYG{n}{the} \PYG{n}{effect}\PYG{o}{.}
 
@@ -447,32 +732,47 @@ start found ok
 \sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
 \sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
-\llap{\color{nbsphinxin}[5]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
+\llap{\color{nbsphinxin}[10]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
+\PYG{c+c1}{\PYGZsh{} Answers to Exercise 1}
+
 \PYG{c+c1}{\PYGZsh{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}}
 \PYG{c+c1}{\PYGZsh{} this part same as above}
-\PYG{c+c1}{\PYGZsh{}}
 \PYG{c+c1}{\PYGZsh{} test the init file}
-\PYG{n+nv}{INIT}\PYG{o}{=}../../test/test\PYGZus{}examples/init.sh
+\PYG{c+c1}{\PYGZsh{} set INIT script}
+\PYG{n+nb}{source} \PYG{n+nv}{\PYGZdl{}BPMS}/bin/local\PYGZus{}init.sh
+\PYG{n+nb}{source} \PYG{n+nv}{\PYGZdl{}INIT}
 \PYG{c+c1}{\PYGZsh{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}}
 
-\PYG{c+c1}{\PYGZsh{} 1.1.1: Try changing the environment variable VERBOSE to 1}
+\PYG{c+c1}{\PYGZsh{} 1.1: Try changing the environment variable VERBOSE to 1}
 \PYG{c+c1}{\PYGZsh{} (True) and 0 (False) to see the effect.}
 
 \PYG{c+c1}{\PYGZsh{} ANSWER}
 \PYG{c+c1}{\PYGZsh{} this sets verbose mode and prints a message}
-\PYG{c+c1}{\PYGZsh{} \PYGZsq{}start found ok\PYGZsq{} if it finds the librat start}
+\PYG{c+c1}{\PYGZsh{} \PYGZsq{}RATstart found ok\PYGZsq{} if it finds the librat RATstart}
 \PYG{c+c1}{\PYGZsh{} executable}
 \PYG{n+nb}{echo}  \PYG{l+s+s2}{\PYGZdq{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}set VERBOSE 1\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZdq{}}
 \PYG{n+nb}{export} \PYG{n+nv}{VERBOSE}\PYG{o}{=}\PYG{l+m}{1}
-\PYG{n+nv}{\PYGZdl{}INIT}
+\PYG{n+nb}{source} examples\PYGZus{}init.sh
+\PYG{c+c1}{\PYGZsh{} it would be correct, in this instance to use}
+\PYG{c+c1}{\PYGZsh{} export VERBOSE=1}
+\PYG{c+c1}{\PYGZsh{} \PYGZdl{}INIT}
+\PYG{c+c1}{\PYGZsh{} as there is no real need to source the file}
+\PYG{c+c1}{\PYGZsh{} Above, the export in \PYGZsq{}export VERBOSE=1\PYGZsq{} is not}
+\PYG{c+c1}{\PYGZsh{} strictly needed if we source \PYGZdl{}INIT, but it is otherwise}
 
 \PYG{c+c1}{\PYGZsh{} this turns off the verbose mode}
 \PYG{c+c1}{\PYGZsh{} so no message is printed}
 \PYG{n+nb}{echo} \PYG{l+s+s2}{\PYGZdq{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}set VERBOSE 0\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZdq{}}
 \PYG{n+nb}{export} \PYG{n+nv}{VERBOSE}\PYG{o}{=}\PYG{l+m}{0}
-\PYG{n+nv}{\PYGZdl{}INIT}
+\PYG{n+nb}{source} examples\PYGZus{}init.sh
+\PYG{c+c1}{\PYGZsh{} it would be correct, in this instance to use}
+\PYG{c+c1}{\PYGZsh{} export VERBOSE=0}
+\PYG{c+c1}{\PYGZsh{} \PYGZdl{}INIT}
+\PYG{c+c1}{\PYGZsh{} as there is no real need to source the file}
+\PYG{c+c1}{\PYGZsh{} Above, the export in \PYGZsq{}export VERBOSE=1\PYGZsq{} is not}
+\PYG{c+c1}{\PYGZsh{} strictly needed if we source \PYGZdl{}INIT, but it is otherwise}
 
-\PYG{c+c1}{\PYGZsh{} 1.1.2: You can change the name of the directory where the}
+\PYG{c+c1}{\PYGZsh{} 1.2: You can change the name of the directory where the}
 \PYG{c+c1}{\PYGZsh{} object and material files are through the}
 \PYG{c+c1}{\PYGZsh{} environment variable BPMSROOT.}
 \PYG{c+c1}{\PYGZsh{} See if you can find what BPMSROOT is set to,}
@@ -484,12 +784,12 @@ start found ok
 \PYG{c+c1}{\PYGZsh{} in this shell. So we *source* the file}
 \PYG{c+c1}{\PYGZsh{} rather than running it.}
 \PYG{n+nb}{echo} \PYG{l+s+s2}{\PYGZdq{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}get BPMSROOT\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZdq{}}
-\PYG{n+nb}{source} \PYG{n+nv}{\PYGZdl{}INIT}
+\PYG{n+nb}{source} examples\PYGZus{}init.sh
 \PYG{n+nb}{echo} \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{BPMSROOT is }\PYG{n+nv}{\PYGZdl{}BPMSROOT}\PYG{l+s+s2}{\PYGZdq{}}
 \PYG{n+nb}{echo} \PYG{l+s+s2}{\PYGZdq{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}set BPMSROOT\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZdq{}}
 \PYG{c+c1}{\PYGZsh{} To change it, just set it before sourcing}
 \PYG{n+nb}{export} \PYG{n+nv}{BPMSROOT}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}/tmp\PYGZdq{}}
-\PYG{n+nb}{source} \PYG{n+nv}{\PYGZdl{}INIT}
+\PYG{n+nb}{source} examples\PYGZus{}init.sh
 \PYG{n+nb}{echo} \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{BPMSROOT is }\PYG{n+nv}{\PYGZdl{}BPMSROOT}\PYG{l+s+s2}{\PYGZdq{}}
 \end{sphinxVerbatim}
 }
@@ -504,19 +804,22 @@ start found ok
 \sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
 ----set VERBOSE 1---
-start found ok
+RATstart found ok
 ----set VERBOSE 0---
 ----get BPMSROOT---
-BPMSROOT is /Users/plewis/librat/test/test\_examples
+BPMSROOT is /Users/plewis/librat/obj
 ----set BPMSROOT---
 BPMSROOT is /tmp
 \end{sphinxVerbatim}
 }
 
 
-\section{Making files}
-\label{\detokenize{Chapter1:Making-files}}
-We will create the files we need as we go along, using \sphinxcode{\sphinxupquote{bash}} shell \sphinxcode{\sphinxupquote{cat \textless{}\textless{}EOF \textgreater{} filename}} syntax. You may have noticed that we did this above in creating the \sphinxcode{\sphinxupquote{init}} file.
+\section{Making some basic files}
+\label{\detokenize{RATstart:Making-some-basic-files}}
+
+\subsection{\sphinxstyleliteralintitle{\sphinxupquote{bash}} constructs}
+\label{\detokenize{RATstart:bash-constructs}}
+We will create the files we need as we go along, using \sphinxcode{\sphinxupquote{bash}} shell \sphinxcode{\sphinxupquote{cat \textless{}\textless{}EOF \textgreater{} filename}} syntax for multi\sphinxhyphen{}line data input. You may have noticed that we did this above in creating the \sphinxcode{\sphinxupquote{init}} file.
 
 If we type:
 
@@ -534,94 +837,31 @@ then a file called \sphinxcode{\sphinxupquote{filename}} will be generated, cont
 \PYG{n}{this} \PYG{o+ow}{is} \PYG{n}{line} \PYG{l+m+mi}{2}
 \end{sphinxVerbatim}
 
-Wew can try that now:
+In a similar fashion, if we type:
 
-We first create a directory to do our work (using the \sphinxcode{\sphinxupquote{linux}} command \sphinxcode{\sphinxupquote{mkdir}} in a \sphinxcode{\sphinxupquote{bash}} shell):
-
-{
-\sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
-\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
-\llap{\color{nbsphinxin}[18]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
-\PYG{n+nb}{export} \PYG{n+nv}{BPMS}\PYG{o}{=}../..
-mkdir \PYGZhy{}p \PYG{n+nv}{\PYGZdl{}BPMS}/test/test\PYGZus{}examples
+\PYG{n}{cat} \PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{o}{\PYGZlt{}}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{this is line 1}\PYG{l+s+s2}{\PYGZdq{}} \PYG{o}{\PYGZgt{}} \PYG{n}{filename}
 \end{sphinxVerbatim}
-}
 
-Now we will put some text some files in that directory. We will be creating files that we need to run a radiative transfer simulation. We will look into what these mean and their formats later in the notes.
+(note the quotes!) then we can create a single line file with the contents:
 
-{
-\sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
-\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
-\llap{\color{nbsphinxin}[67]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
-\PYG{n+nb}{export} \PYG{n+nv}{BPMS}\PYG{o}{=}../..
-\PYG{n+nb}{cd} \PYG{n+nv}{\PYGZdl{}BPMS}
-\PYG{n+nb}{export} \PYG{n+nv}{BPMS}\PYG{o}{=}\PYG{k}{\PYGZdl{}(}\PYG{n+nb}{pwd}\PYG{k}{)}
-
-\PYG{c+c1}{\PYGZsh{} simple object file}
-\PYG{c+c1}{\PYGZsh{} with green plane}
-\PYG{c+c1}{\PYGZsh{} and sphere of radius 100 mm}
-\PYG{c+c1}{\PYGZsh{} centred at (0,0,0)}
-cat \PYG{l+s}{\PYGZlt{}\PYGZlt{}EOF \PYGZgt{} \PYGZdl{}BPMS/test/test\PYGZus{}examples/first.obj}
-\PYG{l+s}{\PYGZsh{} My first object file}
-\PYG{l+s}{mtllib plants.matlib}
-\PYG{l+s}{usemtl green}
-\PYG{l+s}{v 0 0 0}
-\PYG{l+s}{v 0 0 1}
-\PYG{l+s}{plane \PYGZhy{}1 \PYGZhy{}2}
-\PYG{l+s}{!\PYGZob{}}
-\PYG{l+s}{usemtl white}
-\PYG{l+s}{!\PYGZob{}}
-\PYG{l+s}{v 0 0 0}
-\PYG{l+s}{sph \PYGZhy{}1 100}
-\PYG{l+s}{!\PYGZcb{}}
-\PYG{l+s}{!\PYGZcb{}}
-\PYG{l+s}{EOF}
-
-\PYG{c+c1}{\PYGZsh{} wavelengths (nm)}
-cat \PYG{l+s}{\PYGZlt{}\PYGZlt{}EOF \PYGZgt{} \PYGZdl{}BPMS/test/test\PYGZus{}examples/wavebands.dat}
-\PYG{l+s}{1 650}
-\PYG{l+s}{2 550}
-\PYG{l+s}{3 450}
-\PYG{l+s}{EOF}
-
-\PYG{c+c1}{\PYGZsh{} spectrum for white}
-cat \PYG{l+s}{\PYGZlt{}\PYGZlt{}EOF \PYGZgt{} \PYGZdl{}BPMS/test/test\PYGZus{}examples/white.dat}
-\PYG{l+s}{450 1}
-\PYG{l+s}{550 1}
-\PYG{l+s}{650 1}
-\PYG{l+s}{EOF}
-
-\PYG{c+c1}{\PYGZsh{} spectrum for green}
-cat \PYG{l+s}{\PYGZlt{}\PYGZlt{}EOF \PYGZgt{} \PYGZdl{}BPMS/test/test\PYGZus{}examples/green.dat}
-\PYG{l+s}{450 0.1}
-\PYG{l+s}{550 0.5}
-\PYG{l+s}{650 0.1}
-\PYG{l+s}{EOF}
-
-\PYG{c+c1}{\PYGZsh{} library listing materials}
-cat \PYG{l+s}{\PYGZlt{}\PYGZlt{}EOF \PYGZgt{} \PYGZdl{}BPMS/test/test\PYGZus{}examples/plants.matlib}
-\PYG{l+s}{srm green green.dat}
-\PYG{l+s}{srm white white.dat}
-\PYG{l+s}{EOF}
+\PYG{n}{this} \PYG{o+ow}{is} \PYG{n}{line} \PYG{l+m+mi}{1}
 \end{sphinxVerbatim}
-}
 
-And now run a simple example:
+This is equivalent to:
+
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{n}{echo} \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{this is line 1}\PYG{l+s+s2}{\PYGZdq{}} \PYG{o}{|} \PYG{n}{cat} \PYG{o}{\PYGZgt{}} \PYG{n}{filename}
+\end{sphinxVerbatim}
 
 {
 \sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
 \sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
-\llap{\color{nbsphinxin}[68]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
-\PYG{n+nb}{export} \PYG{n+nv}{BPMS}\PYG{o}{=}../..
-\PYG{n+nb}{cd} \PYG{n+nv}{\PYGZdl{}BPMS}
-\PYG{n+nb}{export} \PYG{n+nv}{BPMS}\PYG{o}{=}\PYG{k}{\PYGZdl{}(}\PYG{n+nb}{pwd}\PYG{k}{)}
-\PYG{n+nb}{source} \PYG{n+nv}{\PYGZdl{}BPMS}/test/test\PYGZus{}examples/init.sh
+\llap{\color{nbsphinxin}[11]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
 
-\PYG{n+nb}{echo} \PYG{l+m}{11} \PYG{p}{|} start \PYGZhy{}RATsensor\PYGZus{}wavebands \PYG{n+nv}{\PYGZdl{}BPMS}/test/test\PYGZus{}examples/wavebands.dat \PYG{l+s+se}{\PYGZbs{}}
-                \PYGZhy{}RATsun\PYGZus{}position \PYG{l+m}{0} \PYG{l+m}{1} \PYG{l+m}{1} \PYG{n+nv}{\PYGZdl{}BPMS}/test/test\PYGZus{}examples/first.obj
+cat \PYG{o}{\PYGZlt{}\PYGZlt{}\PYGZlt{}}\PYG{l+s+s2}{\PYGZdq{}hello world\PYGZdq{}}
 \end{sphinxVerbatim}
 }
 
@@ -634,10 +874,7 @@ And now run a simple example:
 \sphinxsetup{VerbatimColor={named}{white}}
 \sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
-x: -99.980001 100.020001
-y: -99.980001 100.020001
-z: -99.980001 100.020001
-bbox centre @ 0.020000 0.020000 0.020000
+hello world
 \end{sphinxVerbatim}
 }
 
@@ -645,16 +882,185 @@ bbox centre @ 0.020000 0.020000 0.020000
 \sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
 \sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
-\llap{\color{nbsphinxin}[69]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
-\PYG{n+nb}{export} \PYG{n+nv}{BPMS}\PYG{o}{=}../..
-\PYG{n+nb}{cd} \PYG{n+nv}{\PYGZdl{}BPMS}
-\PYG{n+nb}{export} \PYG{n+nv}{BPMS}\PYG{o}{=}\PYG{k}{\PYGZdl{}(}\PYG{n+nb}{pwd}\PYG{k}{)}
-\PYG{n+nb}{source} \PYG{n+nv}{\PYGZdl{}BPMS}/test/test\PYGZus{}examples/init.sh
+\llap{\color{nbsphinxin}[12]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
+
+cat \PYG{l+s}{\PYGZlt{}\PYGZlt{} EOF}
+\PYG{l+s}{hello world}
+\PYG{l+s}{EOF}
+\end{sphinxVerbatim}
+}
+
+{
+
+\kern-\sphinxverbatimsmallskipamount\kern-\baselineskip
+\kern+\FrameHeightAdjust\kern-\fboxrule
+\vspace{\nbsphinxcodecellspacing}
+
+\sphinxsetup{VerbatimColor={named}{white}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+hello world
+\end{sphinxVerbatim}
+}
+
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{n}{EXERCISE} \PYG{l+m+mi}{2}
+
+    \PYG{l+m+mf}{1.} \PYG{n}{Use} \PYG{n}{these} \PYG{n}{shell} \PYG{n}{constructs} \PYG{k}{as} \PYG{n}{appropriate} \PYG{n}{to} \PYG{n}{create} \PYG{n}{a} \PYG{n}{file} \PYG{n}{called} \PYG{n}{green}\PYG{o}{.}\PYG{n}{dat}\PYG{p}{,} \PYG{k}{with} \PYG{l+m+mi}{2} \PYG{n}{columns} \PYG{n}{of} \PYG{n}{data}\PYG{p}{,} \PYG{n}{the} \PYG{n}{first} \PYG{n}{being} \PYG{n}{wavelength} \PYG{o+ow}{in} \PYG{n}{nm}\PYG{p}{,} \PYG{n}{the} \PYG{n}{second} \PYG{n}{being} \PYG{n}{reflectance}\PYG{p}{,} \PYG{n}{representing} \PYG{n}{a} \PYG{n}{typical} \PYG{n}{green} \PYG{n}{spectrum}\PYG{p}{,} \PYG{k}{for} \PYG{n}{samples} \PYG{n}{at} \PYG{l+m+mi}{450} \PYG{n}{nm}\PYG{p}{,} \PYG{l+m+mi}{550} \PYG{n}{nm} \PYG{o+ow}{and} \PYG{l+m+mi}{650} \PYG{n}{nm}\PYG{o}{.}
+
+    \PYG{l+m+mf}{2.} \PYG{n}{Use} \PYG{n}{these} \PYG{n}{shell} \PYG{n}{constructs} \PYG{k}{as} \PYG{n}{appropriate} \PYG{n}{to} \PYG{n}{create} \PYG{n}{a} \PYG{n}{file} \PYG{n}{called} \PYG{n}{white}\PYG{o}{.}\PYG{n}{dat}\PYG{p}{,} \PYG{k}{with} \PYG{l+m+mi}{2} \PYG{n}{columns} \PYG{n}{of} \PYG{n}{data}\PYG{p}{,} \PYG{n}{the} \PYG{n}{first} \PYG{n}{being} \PYG{n}{wavelength} \PYG{o+ow}{in} \PYG{n}{nm}\PYG{p}{,} \PYG{n}{the} \PYG{n}{second} \PYG{n}{being} \PYG{n}{reflectance}\PYG{p}{,} \PYG{n}{representing} \PYG{n}{a} \PYG{n}{white} \PYG{n}{spectrum}\PYG{p}{,} \PYG{k}{for} \PYG{n}{samples} \PYG{n}{at} \PYG{l+m+mi}{450} \PYG{n}{nm}\PYG{p}{,} \PYG{l+m+mi}{550} \PYG{n}{nm} \PYG{o+ow}{and} \PYG{l+m+mi}{650} \PYG{n}{nm}\PYG{o}{.}
+\end{sphinxVerbatim}
+
+\sphinxstylestrong{Answers below:}
+
+{
+\sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\llap{\color{nbsphinxin}[13]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
+
+\PYG{c+c1}{\PYGZsh{} Answers to Exercise 2}
+
+\PYG{c+c1}{\PYGZsh{} 2.1 green: high at 550 nm, low at 450 and 650 nm}
+\PYG{c+c1}{\PYGZsh{} Its a multi\PYGZhy{}line file that we need, so}
+cat \PYG{l+s}{\PYGZlt{}\PYGZlt{} EOF \PYGZgt{} \PYGZdl{}BPMS/obj/green\PYGZus{}.dat}
+\PYG{l+s}{450 0.1}
+\PYG{l+s}{550 0.9}
+\PYG{l+s}{650 0.1}
+\PYG{l+s}{EOF}
+
+\PYG{c+c1}{\PYGZsh{} 2.2 white: high at all}
+\PYG{c+c1}{\PYGZsh{} Its a multi\PYGZhy{}line file that we need, so}
+cat \PYG{l+s}{\PYGZlt{}\PYGZlt{} EOF \PYGZgt{} \PYGZdl{}BPMS/obj/white\PYGZus{}.dat}
+\PYG{l+s}{450 0.1}
+\PYG{l+s}{550 0.9}
+\PYG{l+s}{650 0.1}
+\PYG{l+s}{EOF}
+
+\PYG{c+c1}{\PYGZsh{} show results:}
+\PYG{n+nb}{echo} \PYG{l+s+s2}{\PYGZdq{}========\PYGZdq{}}
+\PYG{n+nb}{echo} \PYG{l+s+s2}{\PYGZdq{}green\PYGZdq{}}
+\PYG{n+nb}{echo} \PYG{l+s+s2}{\PYGZdq{}========\PYGZdq{}}
+cat \PYG{n+nv}{\PYGZdl{}BPMS}/obj/green\PYGZus{}.dat
+
+\PYG{n+nb}{echo} \PYG{l+s+s2}{\PYGZdq{}========\PYGZdq{}}
+\PYG{n+nb}{echo} \PYG{l+s+s2}{\PYGZdq{}white\PYGZdq{}}
+\PYG{n+nb}{echo} \PYG{l+s+s2}{\PYGZdq{}========\PYGZdq{}}
+cat \PYG{n+nv}{\PYGZdl{}BPMS}/obj/white\PYGZus{}.dat
+
+\PYG{c+c1}{\PYGZsh{} be polite and tidy up}
+rm \PYGZhy{}f \PYG{n+nv}{\PYGZdl{}BPMS}/obj/green\PYGZus{}.dat \PYG{n+nv}{\PYGZdl{}BPMS}/obj/white\PYGZus{}.dat
+\end{sphinxVerbatim}
+}
+
+{
+
+\kern-\sphinxverbatimsmallskipamount\kern-\baselineskip
+\kern+\FrameHeightAdjust\kern-\fboxrule
+\vspace{\nbsphinxcodecellspacing}
+
+\sphinxsetup{VerbatimColor={named}{white}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+========
+green
+========
+450 0.1
+550 0.9
+650 0.1
+========
+white
+========
+450 0.1
+550 0.9
+650 0.1
+\end{sphinxVerbatim}
+}
 
 
-\PYG{n+nb}{echo} \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{16 0 0 400 400 400  200 200 1 }\PYG{n+nv}{\PYGZdl{}BPMS}\PYG{l+s+s2}{/test/test\PYGZus{}examples/out.hips}\PYG{l+s+s2}{\PYGZdq{}} \PYG{p}{|} start \PYG{l+s+se}{\PYGZbs{}}
-    \PYGZhy{}RATsensor\PYGZus{}wavebands \PYG{n+nv}{\PYGZdl{}BPMS}/test/test\PYGZus{}examples/wavebands.dat  \PYG{l+s+se}{\PYGZbs{}}
-    \PYGZhy{}RATv  \PYGZhy{}RATsun\PYGZus{}position \PYG{l+m}{0} \PYG{l+m}{1} \PYG{l+m}{1} \PYG{n+nv}{\PYGZdl{}BPMS}/test/test\PYGZus{}examples/first.obj
+\subsection{\sphinxstyleliteralintitle{\sphinxupquote{first.obj}} and associated files}
+\label{\detokenize{RATstart:first.obj-and-associated-files}}
+Now we will use these constructs to put some text some files in that directory. We will be creating files that we need to run a radiative transfer simulation. We will look into what these mean and their formats later in the notes.
+
+{
+\sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\llap{\color{nbsphinxin}[14]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
+
+\PYG{n+nb}{source} examples\PYGZus{}init.sh
+\PYG{c+c1}{\PYGZsh{} simple object file}
+\PYG{c+c1}{\PYGZsh{} with green plane}
+\PYG{c+c1}{\PYGZsh{} and sphere of radius 100 mm}
+\PYG{c+c1}{\PYGZsh{} centred at (0,0,0)}
+cat \PYG{l+s}{\PYGZlt{}\PYGZlt{}EOF \PYGZgt{} \PYGZdl{}BPMSROOT/first.obj}
+\PYG{l+s}{\PYGZsh{} My first object file}
+\PYG{l+s}{mtllib plants.matlib.new}
+\PYG{l+s}{usemtl green}
+\PYG{l+s}{v 0 0 0}
+\PYG{l+s}{v 0 0 1}
+\PYG{l+s}{plane \PYGZhy{}1 \PYGZhy{}2}
+\PYG{l+s}{!\PYGZob{}}
+\PYG{l+s}{usemtl white}
+\PYG{l+s}{!\PYGZob{}}
+\PYG{l+s}{v 0 0 0}
+\PYG{l+s}{sph \PYGZhy{}1 1}
+\PYG{l+s}{!\PYGZcb{}}
+\PYG{l+s}{!\PYGZcb{}}
+\PYG{l+s}{EOF}
+
+\PYG{c+c1}{\PYGZsh{} wavelengths (nm)}
+cat \PYG{l+s}{\PYGZlt{}\PYGZlt{}EOF \PYGZgt{} \PYGZdl{}BPMSROOT/wavebands.dat}
+\PYG{l+s}{1 650}
+\PYG{l+s}{2 550}
+\PYG{l+s}{3 450}
+\PYG{l+s}{EOF}
+
+\PYG{c+c1}{\PYGZsh{} spectrum for white}
+cat \PYG{l+s}{\PYGZlt{}\PYGZlt{}EOF \PYGZgt{} \PYGZdl{}BPMSROOT/white.dat}
+\PYG{l+s}{450 1}
+\PYG{l+s}{550 1}
+\PYG{l+s}{650 1}
+\PYG{l+s}{EOF}
+
+\PYG{c+c1}{\PYGZsh{} spectrum for green}
+cat \PYG{l+s}{\PYGZlt{}\PYGZlt{}EOF \PYGZgt{} \PYGZdl{}BPMSROOT/green.dat}
+\PYG{l+s}{450 0.1}
+\PYG{l+s}{550 0.5}
+\PYG{l+s}{650 0.1}
+\PYG{l+s}{EOF}
+
+\PYG{c+c1}{\PYGZsh{} library listing materials}
+cat \PYG{l+s}{\PYGZlt{}\PYGZlt{}EOF \PYGZgt{} \PYGZdl{}BPMSROOT/plants.matlib.new}
+\PYG{l+s}{srm green green.dat}
+\PYG{l+s}{srm white white.dat}
+\PYG{l+s}{EOF}
+\end{sphinxVerbatim}
+}
+
+The scene object described in \sphinxcode{\sphinxupquote{first.obj}} is a sphere of radius 1, centred at location \sphinxcode{\sphinxupquote{(0, 0, 0)}}, as well as a plane with normal \sphinxcode{\sphinxupquote{(0, 0, 1)}} passing through location \sphinxcode{\sphinxupquote{(0, 0, 0)}}. The sphere is \sphinxcode{\sphinxupquote{white}} and the plane is \sphinxcode{\sphinxupquote{green}}.
+
+
+\subsection{height map visualisation}
+\label{\detokenize{RATstart:height-map-visualisation}}
+In the first example, we produce a visualisation of the object using option \sphinxcode{\sphinxupquote{16}}.
+
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{l+m+mi}{16} \PYG{n}{cx} \PYG{n}{cy} \PYG{n}{cz} \PYG{n}{sx} \PYG{n}{sy} \PYG{n}{nrows} \PYG{n}{ncols} \PYG{n}{rpp} \PYG{n}{name} \PYG{p}{:} \PYG{n}{produce} \PYG{n}{a} \PYG{n}{height} \PYG{n+nb}{map} \PYG{o+ow}{in} \PYG{n}{name}
+\end{sphinxVerbatim}
+
+Option 16 produces an image dataset (in a rather old ‘hips’ format) that is a height map of the scene, produced by ray casting. Imagine a rectangle on an x\sphinxhyphen{}y plane of physical dimensions (sx, sy), centred at (cx, cy, cz).
+
+{
+\sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\llap{\color{nbsphinxin}[15]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
+\PYG{n+nb}{source} examples\PYGZus{}init.sh
+\PYG{c+c1}{\PYGZsh{} option 8}
+RATstart first.obj \PYG{l+s}{\PYGZlt{}\PYGZlt{} EOF}
+\PYG{l+s}{16 0 0 4 4 4 200 200 1 \PYGZdl{}BPMS/obj/out.tmp.hips}
+\PYG{l+s}{EOF}
 \end{sphinxVerbatim}
 }
 
@@ -667,10 +1073,229 @@ bbox centre @ 0.020000 0.020000 0.020000
 \sphinxsetup{VerbatimColor={named}{nbsphinx-stderr}}
 \sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
-start:
-        VERBOSE flag on (-v option)
-read\_spectral\_file:   3 data entries read in file /Users/plewis/librat/test/test\_examples/wavebands.dat
 ( 99.9975)
+\end{sphinxVerbatim}
+}
+
+We can use the python library \sphinxcode{\sphinxupquote{libhipl}} from \sphinxcode{\sphinxupquote{RATlibUtils}} to read (and write) hips format images:
+
+{
+\sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\llap{\color{nbsphinxin}[16]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYG{k+kn}{from} \PYG{n+nn}{RATlibUtils}\PYG{n+nn}{.}\PYG{n+nn}{libhipl} \PYG{k+kn}{import} \PYG{n}{Hipl}
+\PYG{k+kn}{import} \PYG{n+nn}{pylab} \PYG{k}{as} \PYG{n+nn}{plt}
+
+\PYG{n}{f} \PYG{o}{=} \PYG{n}{BPMS}\PYG{o}{+}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{/obj/out.tmp.hips}\PYG{l+s+s1}{\PYGZsq{}}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{imshow}\PYG{p}{(}\PYG{n}{Hipl}\PYG{p}{(}\PYG{p}{)}\PYG{o}{.}\PYG{n}{read}\PYG{p}{(}\PYG{n}{f}\PYG{p}{)}\PYG{p}{,}\PYG{n}{cmap}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{gray}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{colorbar}\PYG{p}{(}\PYG{p}{)}
+\end{sphinxVerbatim}
+}
+
+{
+
+\kern-\sphinxverbatimsmallskipamount\kern-\baselineskip
+\kern+\FrameHeightAdjust\kern-\fboxrule
+\vspace{\nbsphinxcodecellspacing}
+
+\sphinxsetup{VerbatimColor={named}{white}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\llap{\color{nbsphinxout}[16]:\,\hspace{\fboxrule}\hspace{\fboxsep}}<matplotlib.colorbar.Colorbar at 0x118bd3790>
+\end{sphinxVerbatim}
+}
+
+\hrule height -\fboxrule\relax
+\vspace{\nbsphinxcodecellspacing}
+
+\makeatletter\setbox\nbsphinxpromptbox\box\voidb@x\makeatother
+
+\begin{nbsphinxfancyoutput}
+
+\noindent\sphinxincludegraphics{{RATstart_34_1}.svg}
+
+\end{nbsphinxfancyoutput}
+
+In the visualisation we can see the shere and plane as a height map. The height varies from 0 (the plane) to 1 (at the top of the sphere). The extent of the scene is \sphinxcode{\sphinxupquote{4 x 4}} units, so we can confirm that the radius of the sphere is 1 unit by inspection.
+
+
+\subsection{Ray tracing}
+\label{\detokenize{RATstart:Ray-tracing}}
+And now another example.
+
+We run this with the verbose flag set on running \sphinxcode{\sphinxupquote{RATstart}}.
+
+The input:
+
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{l+m+mi}{1} \PYG{l+m+mi}{3} \PYG{l+m+mi}{0} \PYG{l+m+mi}{1} \PYG{l+m+mi}{1} \PYG{l+m+mi}{1} \PYG{l+m+mi}{1} \PYG{l+m+mi}{1} \PYG{l+m+mi}{1} \PYG{l+m+mi}{0} \PYG{l+m+mi}{1}
+\end{sphinxVerbatim}
+
+(option \sphinxcode{\sphinxupquote{1}}) sets the number of suns (3) followed by the sun direction vectors \sphinxcode{\sphinxupquote{(0, 1, 1)}} \sphinxcode{\sphinxupquote{(1, 1, 1)}} and \sphinxcode{\sphinxupquote{(1, 0, 1)}} here. In practice, we tend to run simulations with a single illumination (sun) vector, but we illustrate using 3 here to encourage the use of this option.
+
+The input:
+
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{l+m+mi}{6} \PYG{l+m+mi}{0} \PYG{l+m+mi}{0} \PYG{l+m+mi}{10} \PYG{l+m+mi}{0} \PYG{l+m+mi}{0} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}
+\end{sphinxVerbatim}
+
+(option \sphinxcode{\sphinxupquote{6}}) sets up a ray tracing case, for a ray \sphinxstyleemphasis{from} location \sphinxcode{\sphinxupquote{(0 0 10)}}, in direction \sphinxcode{\sphinxupquote{(0 0 \sphinxhyphen{}1)}} (straight down).
+
+We set the \sphinxcode{\sphinxupquote{\sphinxhyphen{}RATtolerance}} command line option to a small number, relative to scene size objects: \sphinxcode{\sphinxupquote{0.0000001}} is sufficient in this case.
+
+We should be able to visualise this situation, and see that the ray will hit the sphere at \sphinxcode{\sphinxupquote{(0 0 1)}}, so be of length 9 units.
+
+{
+\sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\llap{\color{nbsphinxin}[17]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
+\PYG{n+nb}{source} examples\PYGZus{}init.sh
+
+RATstart \PYGZhy{}RATtolerance \PYG{l+m}{0}.0000001 \PYGZhy{}RATsensor\PYGZus{}wavebands wavebands.dat first.obj \PYG{l+s}{\PYGZlt{}\PYGZlt{}EOF}
+\PYG{l+s}{1 3 0 1 1 1 1 1 1 0 1}
+\PYG{l+s}{6 0 0 10 0 0 \PYGZhy{}1}
+\PYG{l+s}{EOF}
+
+\end{sphinxVerbatim}
+}
+
+{
+
+\kern-\sphinxverbatimsmallskipamount\kern-\baselineskip
+\kern+\FrameHeightAdjust\kern-\fboxrule
+\vspace{\nbsphinxcodecellspacing}
+
+\sphinxsetup{VerbatimColor={named}{white}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+RTD 0
+order: 0        intersection point:     0.000000 0.000000 1.000000
+                ray length:             9.000000
+                intersection material:  3
+                sun 0:                  1 reflectance
+                direct:                 0.707107 0.707107 0.707107
+                sun 1:                  1 reflectance
+                direct:                 0.577350 0.577350 0.577350
+                sun 2:                  1 reflectance
+                direct:                 0.707107 0.707107 0.707107
+                sky  :                  reflectance
+                diffuse:                1.000000 1.000000 1.000000
+\end{sphinxVerbatim}
+}
+
+{
+
+\kern-\sphinxverbatimsmallskipamount\kern-\baselineskip
+\kern+\FrameHeightAdjust\kern-\fboxrule
+\vspace{\nbsphinxcodecellspacing}
+
+\sphinxsetup{VerbatimColor={named}{nbsphinx-stderr}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+how many sun vectors? (>0): enter sun vector number 1 (3 floats): enter sun vector number 2 (3 floats): enter sun vector number 3 (3 floats):
+\end{sphinxVerbatim}
+}
+
+In the example above, we hit the sphere at its apex. The normal vector of the sphere at that point is \sphinxcode{\sphinxupquote{(0,0,1)}} and the material reflectance (\sphinxcode{\sphinxupquote{white}}) is 1.0 at all wavelengths. So we might notice that the \sphinxcode{\sphinxupquote{direct}} reflectance above is always the cosine of the angle between the normal vector \sphinxcode{\sphinxupquote{(0,0,1)}} and the solar vector.
+
+We explore this in the code below by calculating the \sphinxhref{https://mathworld.wolfram.com/DotProduct.html}{vector dot product} of the sun and normal unit vectors. Note that the unit vectors have unit (1) length, so if we define them as vectors of arbitrary length (e.g. \sphinxcode{\sphinxupquote{(1, 1, 1)}}) we need to normalise them (divide by the length, to give the unit length):
+
+{
+\sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\llap{\color{nbsphinxin}[18]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYG{k+kn}{import} \PYG{n+nn}{numpy} \PYG{k}{as} \PYG{n+nn}{np}
+\PYG{k+kn}{from} \PYG{n+nn}{numpy} \PYG{k+kn}{import} \PYG{n}{linalg} \PYG{k}{as} \PYG{n}{LA}
+
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{} dot product for angle \PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}}
+
+\PYG{n}{sun} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{array}\PYG{p}{(}\PYG{p}{[}\PYG{l+m+mf}{1.}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mf}{1.}\PYG{p}{]}\PYG{p}{)}
+\PYG{c+c1}{\PYGZsh{} normalise vector}
+\PYG{n}{length} \PYG{o}{=} \PYG{n}{LA}\PYG{o}{.}\PYG{n}{norm}\PYG{p}{(}\PYG{n}{sun}\PYG{p}{)}
+\PYG{n}{sunHat} \PYG{o}{=} \PYG{n}{sun}\PYG{o}{/}\PYG{n}{length}
+
+\PYG{n}{normal} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{array}\PYG{p}{(}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mf}{1.}\PYG{p}{]}\PYG{p}{)}
+\PYG{c+c1}{\PYGZsh{} normalise vector}
+\PYG{n}{length} \PYG{o}{=} \PYG{n}{LA}\PYG{o}{.}\PYG{n}{norm}\PYG{p}{(}\PYG{n}{normal}\PYG{p}{)}
+\PYG{n}{normalHat} \PYG{o}{=} \PYG{n}{normal}\PYG{o}{/}\PYG{n}{length}
+
+\PYG{n}{cosine} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{dot}\PYG{p}{(}\PYG{n}{sunHat}\PYG{p}{,}\PYG{n}{normalHat}\PYG{p}{)}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{cosine of}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,}\PYG{n}{sun}\PYG{p}{,}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{=}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,}\PYG{n}{cosine}\PYG{p}{)}
+\end{sphinxVerbatim}
+}
+
+{
+
+\kern-\sphinxverbatimsmallskipamount\kern-\baselineskip
+\kern+\FrameHeightAdjust\kern-\fboxrule
+\vspace{\nbsphinxcodecellspacing}
+
+\sphinxsetup{VerbatimColor={named}{white}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+cosine of [1. 1. 1.] = 0.5773502691896258
+\end{sphinxVerbatim}
+}
+
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{n}{EXERCISE} \PYG{l+m+mi}{3}
+
+\PYG{n}{Adapt} \PYG{n}{the} \PYG{n}{RATstart} \PYG{n}{example} \PYG{n}{above} \PYG{n}{to} \PYG{n}{have} \PYG{n}{just} \PYG{n}{a} \PYG{n}{single} \PYG{n}{sun} \PYG{n}{vector}\PYG{o}{.}
+
+\PYG{n}{Change} \PYG{n}{the} \PYG{n}{sun} \PYG{n}{vector} \PYG{o+ow}{in} \PYG{n}{the} \PYG{n}{RATstart} \PYG{n}{example}\PYG{p}{,} \PYG{o+ow}{and} \PYG{n}{use} \PYG{n}{the} \PYG{n}{python} \PYG{n}{code} \PYG{n}{above} \PYG{n}{to} \PYG{n}{predict} \PYG{n}{what} \PYG{n}{the} \PYG{n}{direct} \PYG{n}{reflectance} \PYG{n}{will} \PYG{n}{be}\PYG{o}{.} \PYG{n}{Do} \PYG{n}{this} \PYG{k}{for} \PYG{n}{several} \PYG{n}{examples}\PYG{o}{.}
+\end{sphinxVerbatim}
+
+\sphinxstylestrong{Answers below:}
+
+{
+\sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\llap{\color{nbsphinxin}[19]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
+\PYG{c+c1}{\PYGZsh{}}
+\PYG{c+c1}{\PYGZsh{} set a single sun vector, here (0,0,1)}
+\PYG{c+c1}{\PYGZsh{} so dot product = 1.0 and direct refl = 1}
+\PYG{c+c1}{\PYGZsh{}}
+\PYG{n+nb}{source} examples\PYGZus{}init.sh
+
+RATstart \PYGZhy{}RATtolerance \PYG{l+m}{0}.0000001 \PYGZhy{}RATsensor\PYGZus{}wavebands wavebands.dat first.obj \PYG{l+s}{\PYGZlt{}\PYGZlt{}EOF}
+\PYG{l+s}{1 1 0 0 1}
+\PYG{l+s}{6 0 0 10 0 0 \PYGZhy{}1}
+\PYG{l+s}{EOF}
+\end{sphinxVerbatim}
+}
+
+{
+
+\kern-\sphinxverbatimsmallskipamount\kern-\baselineskip
+\kern+\FrameHeightAdjust\kern-\fboxrule
+\vspace{\nbsphinxcodecellspacing}
+
+\sphinxsetup{VerbatimColor={named}{white}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+RTD 0
+order: 0        intersection point:     0.000000 0.000000 1.000000
+                ray length:             9.000000
+                intersection material:  3
+                sun 0:                  1 reflectance
+                direct:                 1.000000 1.000000 1.000000
+                sky  :                  reflectance
+                diffuse:                1.000000 1.000000 1.000000
+\end{sphinxVerbatim}
+}
+
+{
+
+\kern-\sphinxverbatimsmallskipamount\kern-\baselineskip
+\kern+\FrameHeightAdjust\kern-\fboxrule
+\vspace{\nbsphinxcodecellspacing}
+
+\sphinxsetup{VerbatimColor={named}{nbsphinx-stderr}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+how many sun vectors? (>0): enter sun vector number 1 (3 floats):
 \end{sphinxVerbatim}
 }
 
@@ -678,10 +1303,884 @@ read\_spectral\_file:   3 data entries read in file /Users/plewis/librat/test/te
 \sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
 \sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
-\llap{\color{nbsphinxin}[70]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYG{k+kn}{from} \PYG{n+nn}{libhipl} \PYG{k+kn}{import} \PYG{n}{Hipl}
+\llap{\color{nbsphinxin}[20]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYG{k+kn}{import} \PYG{n+nn}{numpy} \PYG{k}{as} \PYG{n+nn}{np}
+\PYG{k+kn}{from} \PYG{n+nn}{numpy} \PYG{k+kn}{import} \PYG{n}{linalg} \PYG{k}{as} \PYG{n}{LA}
+
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{} dot product for angle \PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}}
+
+\PYG{n}{sun} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{array}\PYG{p}{(}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mf}{1.}\PYG{p}{]}\PYG{p}{)}
+\PYG{c+c1}{\PYGZsh{} normalise vector}
+\PYG{n}{length} \PYG{o}{=} \PYG{n}{LA}\PYG{o}{.}\PYG{n}{norm}\PYG{p}{(}\PYG{n}{sun}\PYG{p}{)}
+\PYG{n}{sunHat} \PYG{o}{=} \PYG{n}{sun}\PYG{o}{/}\PYG{n}{length}
+
+\PYG{n}{normal} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{array}\PYG{p}{(}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mf}{1.}\PYG{p}{]}\PYG{p}{)}
+\PYG{c+c1}{\PYGZsh{} normalise vector}
+\PYG{n}{length} \PYG{o}{=} \PYG{n}{LA}\PYG{o}{.}\PYG{n}{norm}\PYG{p}{(}\PYG{n}{normal}\PYG{p}{)}
+\PYG{n}{normalHat} \PYG{o}{=} \PYG{n}{normal}\PYG{o}{/}\PYG{n}{length}
+
+\PYG{n}{cosine} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{dot}\PYG{p}{(}\PYG{n}{sunHat}\PYG{p}{,}\PYG{n}{normalHat}\PYG{p}{)}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{cosine of}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,}\PYG{n}{sun}\PYG{p}{,}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{=}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,}\PYG{n}{cosine}\PYG{p}{)}
+\end{sphinxVerbatim}
+}
+
+{
+
+\kern-\sphinxverbatimsmallskipamount\kern-\baselineskip
+\kern+\FrameHeightAdjust\kern-\fboxrule
+\vspace{\nbsphinxcodecellspacing}
+
+\sphinxsetup{VerbatimColor={named}{white}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+cosine of [0. 0. 1.] = 1.0
+\end{sphinxVerbatim}
+}
+
+{
+\sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\llap{\color{nbsphinxin}[21]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
+\PYG{c+c1}{\PYGZsh{}}
+\PYG{c+c1}{\PYGZsh{} set a single sun vector, here (0,1,1)}
+\PYG{c+c1}{\PYGZsh{} so dot product = 0.707 (sqrt(2))}
+\PYG{c+c1}{\PYGZsh{} and so direct refl = 0.707}
+\PYG{c+c1}{\PYGZsh{}}
+\PYG{n+nb}{source} examples\PYGZus{}init.sh
+
+RATstart \PYGZhy{}RATtolerance \PYG{l+m}{0}.0000001 \PYGZhy{}RATsensor\PYGZus{}wavebands wavebands.dat first.obj \PYG{l+s}{\PYGZlt{}\PYGZlt{}EOF}
+\PYG{l+s}{1 1 0 1 1}
+\PYG{l+s}{6 0 0 10 0 0 \PYGZhy{}1}
+\PYG{l+s}{EOF}
+\end{sphinxVerbatim}
+}
+
+{
+
+\kern-\sphinxverbatimsmallskipamount\kern-\baselineskip
+\kern+\FrameHeightAdjust\kern-\fboxrule
+\vspace{\nbsphinxcodecellspacing}
+
+\sphinxsetup{VerbatimColor={named}{white}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+RTD 0
+order: 0        intersection point:     0.000000 0.000000 1.000000
+                ray length:             9.000000
+                intersection material:  3
+                sun 0:                  1 reflectance
+                direct:                 0.707107 0.707107 0.707107
+                sky  :                  reflectance
+                diffuse:                1.000000 1.000000 1.000000
+\end{sphinxVerbatim}
+}
+
+{
+
+\kern-\sphinxverbatimsmallskipamount\kern-\baselineskip
+\kern+\FrameHeightAdjust\kern-\fboxrule
+\vspace{\nbsphinxcodecellspacing}
+
+\sphinxsetup{VerbatimColor={named}{nbsphinx-stderr}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+how many sun vectors? (>0): enter sun vector number 1 (3 floats):
+\end{sphinxVerbatim}
+}
+
+{
+\sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\llap{\color{nbsphinxin}[22]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYG{k+kn}{import} \PYG{n+nn}{numpy} \PYG{k}{as} \PYG{n+nn}{np}
+\PYG{k+kn}{from} \PYG{n+nn}{numpy} \PYG{k+kn}{import} \PYG{n}{linalg} \PYG{k}{as} \PYG{n}{LA}
+
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{} dot product for angle \PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{}}
+
+\PYG{n}{sun} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{array}\PYG{p}{(}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mf}{1.}\PYG{p}{]}\PYG{p}{)}
+\PYG{c+c1}{\PYGZsh{} normalise vector}
+\PYG{n}{length} \PYG{o}{=} \PYG{n}{LA}\PYG{o}{.}\PYG{n}{norm}\PYG{p}{(}\PYG{n}{sun}\PYG{p}{)}
+\PYG{n}{sunHat} \PYG{o}{=} \PYG{n}{sun}\PYG{o}{/}\PYG{n}{length}
+
+\PYG{n}{normal} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{array}\PYG{p}{(}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mf}{1.}\PYG{p}{]}\PYG{p}{)}
+\PYG{c+c1}{\PYGZsh{} normalise vector}
+\PYG{n}{length} \PYG{o}{=} \PYG{n}{LA}\PYG{o}{.}\PYG{n}{norm}\PYG{p}{(}\PYG{n}{normal}\PYG{p}{)}
+\PYG{n}{normalHat} \PYG{o}{=} \PYG{n}{normal}\PYG{o}{/}\PYG{n}{length}
+
+\PYG{n}{cosine} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{dot}\PYG{p}{(}\PYG{n}{sunHat}\PYG{p}{,}\PYG{n}{normalHat}\PYG{p}{)}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{cosine of}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,}\PYG{n}{sun}\PYG{p}{,}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{=}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,}\PYG{n}{cosine}\PYG{p}{)}
+\end{sphinxVerbatim}
+}
+
+{
+
+\kern-\sphinxverbatimsmallskipamount\kern-\baselineskip
+\kern+\FrameHeightAdjust\kern-\fboxrule
+\vspace{\nbsphinxcodecellspacing}
+
+\sphinxsetup{VerbatimColor={named}{white}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+cosine of [0. 1. 1.] = 0.7071067811865475
+\end{sphinxVerbatim}
+}
+
+
+\subsection{Summary}
+\label{\detokenize{RATstart:Summary}}
+In this section, we have introduced the \sphinxcode{\sphinxupquote{RATstart}} code, some information about the requirements for running the code. We generated some initialisation scripts to simplify setting up environment variables, generated a simple world object (sphere on a plane) and visualised this.
+
+
+\chapter{\sphinxstyleliteralintitle{\sphinxupquote{RATstart}} options}
+\label{\detokenize{RATstartOptions:RATstart-options}}\label{\detokenize{RATstartOptions::doc}}
+This section explores the input options for \sphinxcode{\sphinxupquote{librat}}.
+
+Recall that we can access them in. e.g.:
+
+{
+\sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\llap{\color{nbsphinxin}[2]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYG{k+kn}{import} \PYG{n+nn}{sys}
+\PYG{n}{sys}\PYG{o}{.}\PYG{n}{path}\PYG{o}{.}\PYG{n}{insert}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{.}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{)}
+\PYG{k+kn}{from} \PYG{n+nn}{prelim} \PYG{k+kn}{import} \PYG{o}{*}
+\PYG{o}{\PYGZpc{}}\PYG{k}{set\PYGZus{}env} BPMS=\PYGZdl{}BPMS
+\PYG{o}{\PYGZpc{}}\PYG{k}{set\PYGZus{}env} PATH=\PYGZdl{}BPMS/bin:\PYGZdl{}BPMS/src:\PYGZdl{}BPMS/bin/csh:\PYGZdl{}PATH\PYGZus{}
+\PYG{o}{\PYGZpc{}}\PYG{k}{set\PYGZus{}env} MATLIB=\PYGZdl{}BPMS/obj
+\PYG{o}{\PYGZpc{}}\PYG{k}{set\PYGZus{}env} BPMSROOT=\PYGZdl{}BPMS/obj
+\end{sphinxVerbatim}
+}
+
+{
+
+\kern-\sphinxverbatimsmallskipamount\kern-\baselineskip
+\kern+\FrameHeightAdjust\kern-\fboxrule
+\vspace{\nbsphinxcodecellspacing}
+
+\sphinxsetup{VerbatimColor={named}{white}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+env: BPMS=/Users/plewis/librat
+env: PATH=/Users/plewis/librat/bin:/Users/plewis/librat/src:/Users/plewis/librat/bin/csh:/Users/plewis/opt/anaconda3/bin:/Users/plewis/opt/anaconda3/condabin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/VMware Fusion.app/Contents/Public:/Library/TeX/texbin:/opt/X11/bin:/Library/Apple/usr/bin
+env: MATLIB=/Users/plewis/librat/obj
+env: BPMSROOT=/Users/plewis/librat/obj
+\end{sphinxVerbatim}
+}
+
+{
+\sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\llap{\color{nbsphinxin}[3]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
+
+\PYG{n+nb}{source} examples\PYGZus{}init.sh
+RATstart first.obj \PYG{o}{\PYGZlt{}\PYGZlt{}\PYGZlt{}} \PYG{l+m}{1000}
+\end{sphinxVerbatim}
+}
+
+{
+
+\kern-\sphinxverbatimsmallskipamount\kern-\baselineskip
+\kern+\FrameHeightAdjust\kern-\fboxrule
+\vspace{\nbsphinxcodecellspacing}
+
+\sphinxsetup{VerbatimColor={named}{nbsphinx-stderr}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+options:
+         0                   : quit
+         1 n s1x s1y s1z {\ldots} : set sun vectors
+         2                   : print sun vectors
+         6 fx fy fz dx dy dz : trace ray from f in direction d
+         7                   : get and print materials
+         9                   : print info on materials used
+         10                  : get and set verbosity level (0-1)
+         11                  : get and print object bbox information
+         13                  : same as 14 assuming filenames camera.dat light.dat
+         14 camera.dat light.dat
+                             : ray tracing using defined camera \& illumination
+         16 cx cy cz sx sy nrows ncols rpp name
+                             : produce a height map in name
+\end{sphinxVerbatim}
+}
+
+
+\section{Option 1: set sun vectors}
+\label{\detokenize{RATstartOptions:Option-1:-set-sun-vectors}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{l+m+mi}{1} \PYG{n}{n} \PYG{n}{s1x} \PYG{n}{s1y} \PYG{n}{s1z} \PYG{o}{.}\PYG{o}{.}\PYG{o}{.} \PYG{p}{:} \PYG{n+nb}{set} \PYG{n}{sun} \PYG{n}{vectors}
+\end{sphinxVerbatim}
+
+We will set a single sun vector, in direction \sphinxcode{\sphinxupquote{(0, 0, 0)}}, so the command is:
+
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{l+m+mi}{1} \PYG{l+m+mi}{1} \PYG{l+m+mi}{0} \PYG{l+m+mi}{0} \PYG{l+m+mi}{1}
+\end{sphinxVerbatim}
+
+{
+\sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\llap{\color{nbsphinxin}[4]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
+\PYG{n+nb}{source} examples\PYGZus{}init.sh
+\PYG{c+c1}{\PYGZsh{} option 0}
+RATstart first.obj \PYG{l+s}{\PYGZlt{}\PYGZlt{} EOF}
+\PYG{l+s}{1 1 0 0 1}
+\PYG{l+s}{EOF}
+\end{sphinxVerbatim}
+}
+
+{
+
+\kern-\sphinxverbatimsmallskipamount\kern-\baselineskip
+\kern+\FrameHeightAdjust\kern-\fboxrule
+\vspace{\nbsphinxcodecellspacing}
+
+\sphinxsetup{VerbatimColor={named}{nbsphinx-stderr}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+how many sun vectors? (>0): enter sun vector number 1 (3 floats):
+\end{sphinxVerbatim}
+}
+
+
+\section{Option 2: print sun vectors}
+\label{\detokenize{RATstartOptions:Option-2:-print-sun-vectors}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{l+m+mi}{2}                   \PYG{p}{:} \PYG{n+nb}{print} \PYG{n}{sun} \PYG{n}{vectors}
+\end{sphinxVerbatim}
+
+Now we will describe 2 suns (2 direct illumination sources), the first in direction \sphinxcode{\sphinxupquote{(0, 0, 1)}} and the second in direction \sphinxcode{\sphinxupquote{(0, 1, 1)}}. The input for that is:
+
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{l+m+mi}{1} \PYG{l+m+mi}{2} \PYG{l+m+mi}{0} \PYG{l+m+mi}{0} \PYG{l+m+mi}{1} \PYG{l+m+mi}{0} \PYG{l+m+mi}{1} \PYG{l+m+mi}{1}
+\end{sphinxVerbatim}
+
+We then print the sun vectors, noticing that the outputs are normalised (unit direction vectors).
+
+{
+\sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\llap{\color{nbsphinxin}[5]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
+\PYG{n+nb}{source} examples\PYGZus{}init.sh
+\PYG{c+c1}{\PYGZsh{} option 0}
+RATstart first.obj \PYG{l+s}{\PYGZlt{}\PYGZlt{} EOF}
+\PYG{l+s}{1 2 0 0 1 0 1 1}
+\PYG{l+s}{2}
+\PYG{l+s}{EOF}
+\end{sphinxVerbatim}
+}
+
+{
+
+\kern-\sphinxverbatimsmallskipamount\kern-\baselineskip
+\kern+\FrameHeightAdjust\kern-\fboxrule
+\vspace{\nbsphinxcodecellspacing}
+
+\sphinxsetup{VerbatimColor={named}{white}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+Sun vector 1: 0.000000 0.000000 1.000000
+Sun vector 2: 0.000000 0.707107 0.707107
+\end{sphinxVerbatim}
+}
+
+{
+
+\kern-\sphinxverbatimsmallskipamount\kern-\baselineskip
+\kern+\FrameHeightAdjust\kern-\fboxrule
+\vspace{\nbsphinxcodecellspacing}
+
+\sphinxsetup{VerbatimColor={named}{nbsphinx-stderr}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+how many sun vectors? (>0): enter sun vector number 1 (3 floats): enter sun vector number 2 (3 floats):
+\end{sphinxVerbatim}
+}
+
+We could use option \sphinxcode{\sphinxupquote{2}} to check what the default sun vector is:
+
+{
+\sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\llap{\color{nbsphinxin}[6]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
+\PYG{n+nb}{source} examples\PYGZus{}init.sh
+\PYG{c+c1}{\PYGZsh{} option 0}
+RATstart first.obj \PYG{l+s}{\PYGZlt{}\PYGZlt{} EOF}
+\PYG{l+s}{2}
+\PYG{l+s}{EOF}
+\end{sphinxVerbatim}
+}
+
+{
+
+\kern-\sphinxverbatimsmallskipamount\kern-\baselineskip
+\kern+\FrameHeightAdjust\kern-\fboxrule
+\vspace{\nbsphinxcodecellspacing}
+
+\sphinxsetup{VerbatimColor={named}{white}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+Sun vector 1: 0.000000 0.000000 1.000000
+\end{sphinxVerbatim}
+}
+
+
+\section{Option 6: trace ray from f in direction d}
+\label{\detokenize{RATstartOptions:Option-6:-trace-ray-from-f-in-direction-d}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{l+m+mi}{6} \PYG{n}{fx} \PYG{n}{fy} \PYG{n}{fz} \PYG{n}{dx} \PYG{n}{dy} \PYG{n}{dz} \PYG{p}{:} \PYG{n}{trace} \PYG{n}{ray} \PYG{k+kn}{from} \PYG{n+nn}{f} \PYG{o+ow}{in} \PYG{n}{direction} \PYG{n}{d}
+\end{sphinxVerbatim}
+
+Option \sphinxcode{\sphinxupquote{6}} is a useful generic interface that allows us to probe intersections with the world object by sending a sample ray from some given location \sphinxcode{\sphinxupquote{(fx, fy, fz)}}, in a particular direction \sphinxcode{\sphinxupquote{(dx, dy, dz)}}. We return information on what the ray interacts with, tracing sample direct and diffuse rays, to a maximum ray tree depth set by the command line option \sphinxcode{\sphinxupquote{\sphinxhyphen{}RATm N}}. Normally, we should set \sphinxcode{\sphinxupquote{N}} to a high number (e.g. 1000 or higher). The command line option
+\sphinxcode{\sphinxupquote{\sphinxhyphen{}RATtolerance 0.0000000001}} sets a tolerance for ray intersections, and should be appropriate to the scale of the world scene. It should be a small number, relative to typical object sizes.
+
+In this example, we fire a ray from \sphinxcode{\sphinxupquote{(0, 0, 50)}} in the direction \sphinxcode{\sphinxupquote{(0, 0, \sphinxhyphen{}1)}} (straight down) into the scene \sphinxcode{\sphinxupquote{HET01\_DIS\_ERE.obj}} (one of the RAMI test scenes).
+
+{
+\sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\llap{\color{nbsphinxin}[7]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
+\PYG{n+nb}{source} examples\PYGZus{}init.sh
+
+\PYG{c+c1}{\PYGZsh{} option 6}
+\PYG{c+c1}{\PYGZsh{} store the result in the file \PYGZdl{}BPMSROOT/tmp.dat}
+RATstart \PYGZhy{}RATr \PYG{l+m}{1} \PYG{l+s+se}{\PYGZbs{}}
+         \PYGZhy{}RATsensor\PYGZus{}wavebands wavebands.dat \PYG{l+s+se}{\PYGZbs{}}
+         \PYGZhy{}RATtolerance \PYG{l+m}{0}.00000000001 \PYG{l+s+se}{\PYGZbs{}}
+         \PYGZhy{}RATm \PYG{l+m}{1000} \PYG{l+s+se}{\PYGZbs{}}
+         HET01\PYGZus{}DIS\PYGZus{}ERE.obj \PYG{l+s}{\PYGZlt{}\PYGZlt{} EOF \PYGZgt{} \PYGZdl{}BPMSROOT/RATstart.out.dat}
+\PYG{l+s}{11}
+\PYG{l+s}{6 0 0 50 0 0 \PYGZhy{}1}
+\PYG{l+s}{EOF}
+
+\PYG{c+c1}{\PYGZsh{} filter some information out of the object file}
+\PYG{c+c1}{\PYGZsh{} for visualisation}
+\PYG{c+c1}{\PYGZsh{} 1. \PYGZdl{}BPMSROOT/tmp.obj.dat}
+\PYG{c+c1}{\PYGZsh{}    locations of clone objects}
+awk \PYG{l+s+s1}{\PYGZsq{}(\PYGZdl{}1==\PYGZdq{}clone\PYGZdq{})\PYGZob{}print \PYGZdl{}2,\PYGZdl{}3,\PYGZdl{}4\PYGZcb{}\PYGZsq{}} \PYG{l+s+se}{\PYGZbs{}}
+     \PYGZlt{} \PYG{n+nv}{\PYGZdl{}BPMSROOT}/HET01\PYGZus{}DIS\PYGZus{}ERE.obj \PYG{l+s+se}{\PYGZbs{}}
+     \PYGZgt{} \PYG{n+nv}{\PYGZdl{}BPMSROOT}/RATstart.obj.dat
+
+\PYG{c+c1}{\PYGZsh{} 2. \PYGZdl{}BPMSROOT/tmp.int.dat}
+\PYG{c+c1}{\PYGZsh{}   filter ray intersections from file}
+\PYG{c+c1}{\PYGZsh{}   \PYGZdl{}BPMSROOT/tmp.dat}
+\PYG{c+c1}{\PYGZsh{}   Add the simulation interactions}
+\PYG{c+c1}{\PYGZsh{}   add Nan to indicate new primary ray}
+awk \PYG{l+s+s1}{\PYGZsq{}(\PYGZdl{}4 == \PYGZdq{}point:\PYGZdq{})\PYGZob{}print \PYGZdl{}5,\PYGZdl{}6,\PYGZdl{}7\PYGZcb{} \PYGZbs{}}
+\PYG{l+s+s1}{     (\PYGZdl{}1 == \PYGZdq{}RTD\PYGZdq{})\PYGZob{}print \PYGZdq{}Nan Nan Nan\PYGZdq{}\PYGZcb{}\PYGZsq{}} \PYG{l+s+se}{\PYGZbs{}}
+     \PYGZlt{} \PYG{n+nv}{\PYGZdl{}BPMSROOT}/RATstart.out.dat  \PYG{l+s+se}{\PYGZbs{}}
+     \PYGZgt{} \PYG{n+nv}{\PYGZdl{}BPMSROOT}/RATstart.ray.dat
+
+\PYG{c+c1}{\PYGZsh{} output the file}
+cat \PYG{n+nv}{\PYGZdl{}BPMSROOT}/RATstart.out.dat
+\end{sphinxVerbatim}
+}
+
+{
+
+\kern-\sphinxverbatimsmallskipamount\kern-\baselineskip
+\kern+\FrameHeightAdjust\kern-\fboxrule
+\vspace{\nbsphinxcodecellspacing}
+
+\sphinxsetup{VerbatimColor={named}{white}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+x: -51.199330 53.623519
+y: -43.571414 51.254278
+z: 1.493505 27.609156
+bbox centre @ 1.212094 3.841432 14.551330
+RTD 5
+order: 0        intersection point:     -0.000000 -0.000000 15.236980
+                ray length:             34.763020
+                intersection material:  4
+                sun 0:                  1 reflectance
+                direct:                 0.030690 0.044679 0.035031
+order: 1        intersection point:     -1.512808 6.032760 0.000000
+                ray length:             16.457470
+                intersection material:  5
+                sun 0:                  1 reflectance
+                direct:                 0.003918 0.016226 0.000350
+order: 2        intersection point:     3.805090 18.256928 16.902007
+                ray length:             21.526453
+                intersection material:  4
+                sun 0:                  1 transmittance
+                direct:                 0.000057 0.001247 0.000001
+order: 3        intersection point:     2.156740 18.892552 14.457133
+                ray length:             3.016370
+                intersection material:  4
+                sun 0:                  1 reflectance
+                direct:                 0.000012 0.000106 0.000001
+order: 4        intersection point:     -0.565249 22.253311 11.564100
+                ray length:             5.203226
+                intersection material:  4
+                sun 0:                  1 reflectance
+                direct:                 0.000000 0.000013 0.000000
+order: 5        intersection point:     -26.101692 51.431591 0.000000
+                ray length:             40.462457
+                intersection material:  5
+                sun 0:                  1 reflectance
+                direct:                 0.000000 0.000007 0.000000
+                sky  :                  reflectance
+                diffuse:                0.000000 0.000007 0.000000
+\end{sphinxVerbatim}
+}
+
+We see a number of orders of interaction orders in the ray tracing. We can visualise this:
+
+{
+\sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\llap{\color{nbsphinxin}[8]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYG{o}{\PYGZpc{}}\PYG{k}{matplotlib} inline
+\PYG{k+kn}{from} \PYG{n+nn}{RATlibUtils}\PYG{n+nn}{.}\PYG{n+nn}{plotters} \PYG{k+kn}{import} \PYG{n}{plotter6}
+\PYG{c+c1}{\PYGZsh{} these are the data files}
+\PYG{c+c1}{\PYGZsh{} interactions}
+\PYG{n}{file}\PYG{o}{=}\PYG{n}{BPMS}\PYG{o}{+}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{/obj/RATstart.ray.dat}\PYG{l+s+s2}{\PYGZdq{}}
+\PYG{c+c1}{\PYGZsh{} object locations}
+\PYG{n}{file1}\PYG{o}{=}\PYG{n}{BPMS}\PYG{o}{+}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{/obj/RATstart.obj.dat}\PYG{l+s+s2}{\PYGZdq{}}
+\PYG{n}{plotter6}\PYG{p}{(}\PYG{n}{file}\PYG{p}{,}\PYG{n}{file1}\PYG{p}{)}
+\end{sphinxVerbatim}
+}
+
+\hrule height -\fboxrule\relax
+\vspace{\nbsphinxcodecellspacing}
+
+\makeatletter\setbox\nbsphinxpromptbox\box\voidb@x\makeatother
+
+\begin{nbsphinxfancyoutput}
+
+\noindent\sphinxincludegraphics{{RATstartOptions_13_0}.svg}
+
+\end{nbsphinxfancyoutput}
+
+{
+\sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\llap{\color{nbsphinxin}[9]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
+\PYG{n+nb}{source} examples\PYGZus{}init.sh
+
+\PYG{c+c1}{\PYGZsh{} tidy up the files we created}
+rm \PYGZhy{}f \PYG{n+nv}{\PYGZdl{}BPMSROOT}/RATstart.obj.dat \PYG{l+s+se}{\PYGZbs{}}
+      \PYG{n+nv}{\PYGZdl{}BPMSROOT}/RATstart.out.dat \PYG{l+s+se}{\PYGZbs{}}
+      \PYG{n+nv}{\PYGZdl{}BPMSROOT}/RATstart.ray.dat
+\end{sphinxVerbatim}
+}
+
+We can relate the path of the ray in the x\sphinxhyphen{}y plane (the red line, starting at the red circle) to the information on ray intersections above.
+
+For example, looking at \sphinxcode{\sphinxupquote{intersection material}} we see that most intersections are with material \sphinxcode{\sphinxupquote{4}} \textendash{} this is the Leaf material, within the spheres, and others are material \sphinxcode{\sphinxupquote{3}}, the soil material. Looking at the figure above, we can see that the first intersection (at \sphinxcode{\sphinxupquote{\sphinxhyphen{}0.000000 \sphinxhyphen{}0.000000 15.236980}}) is on a sphere, so material 4. The next interaction is with the ground (so material 3). Then the ray path enters another sphere, bounces around within that for several interactions, then
+escapes, passes through the space of another sphere without interaction, then hits the ground and finally escapes.
+
+This sort of visualisation is useful in learning how the ray tracing works.
+
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+EXERCISE
+
+1. Use the bash script above to generate paths for 5 (or more!) primary rays.
+
+2. Visualise the paths, using the python script above (no change needed).
+
+3. Vary the integer after the \PYGZhy{}RATr flag to use a different random number seed. What is the effect?
+\end{sphinxVerbatim}
+
+\sphinxstylestrong{Answers below}
+
+{
+\sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\llap{\color{nbsphinxin}[10]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
+\PYG{n+nb}{source} examples\PYGZus{}init.sh
+
+\PYG{c+c1}{\PYGZsh{} option 6}
+\PYG{c+c1}{\PYGZsh{} store the result in the file \PYGZdl{}BPMSROOT/tmp.dat}
+\PYG{c+c1}{\PYGZsh{} just repeat the primary ray call to fire a new ray}
+RATstart \PYGZhy{}RATr \PYG{l+m}{100} \PYG{l+s+se}{\PYGZbs{}}
+         \PYGZhy{}RATsensor\PYGZus{}wavebands wavebands.dat \PYG{l+s+se}{\PYGZbs{}}
+         \PYGZhy{}RATtolerance \PYG{l+m}{0}.00000000001 \PYG{l+s+se}{\PYGZbs{}}
+         \PYGZhy{}RATm \PYG{l+m}{1000} \PYG{l+s+se}{\PYGZbs{}}
+         HET01\PYGZus{}DIS\PYGZus{}ERE.obj \PYG{l+s}{\PYGZlt{}\PYGZlt{} EOF \PYGZgt{} \PYGZdl{}BPMSROOT/RATstart.out.dat}
+\PYG{l+s}{6 0 0 50 0 0 \PYGZhy{}1}
+\PYG{l+s}{6 0 0 50 0 0 \PYGZhy{}1}
+\PYG{l+s}{6 0 0 50 0 0 \PYGZhy{}1}
+\PYG{l+s}{6 0 0 50 0 0 \PYGZhy{}1}
+\PYG{l+s}{6 0 0 50 0 0 \PYGZhy{}1}
+\PYG{l+s}{EOF}
+
+\PYG{c+c1}{\PYGZsh{} filter some information out of the object file}
+\PYG{c+c1}{\PYGZsh{} for visualisation}
+\PYG{c+c1}{\PYGZsh{} 1. \PYGZdl{}BPMSROOT/tmp.obj.dat}
+\PYG{c+c1}{\PYGZsh{}    locations of clone objects}
+awk \PYGZlt{} \PYG{n+nv}{\PYGZdl{}BPMSROOT}/HET01\PYGZus{}DIS\PYGZus{}ERE.obj \PYG{l+s+se}{\PYGZbs{}}
+    \PYG{l+s+s1}{\PYGZsq{}(\PYGZdl{}1==\PYGZdq{}clone\PYGZdq{})\PYGZob{}print \PYGZdl{}2,\PYGZdl{}3,\PYGZdl{}4\PYGZcb{}\PYGZsq{}} \PYGZgt{} \PYG{n+nv}{\PYGZdl{}BPMSROOT}/RATstart.obj.dat
+\PYG{c+c1}{\PYGZsh{} 2. \PYGZdl{}BPMSROOT/tmp.int.dat}
+\PYG{c+c1}{\PYGZsh{}   filter ray intersections from file}
+\PYG{c+c1}{\PYGZsh{}   \PYGZdl{}BPMSROOT/tmp.dat}
+\PYG{c+c1}{\PYGZsh{}   Add the simulation interactions}
+\PYG{c+c1}{\PYGZsh{}   encode Nan to separate the primary rays}
+awk \PYG{l+s+s1}{\PYGZsq{}(\PYGZdl{}4 == \PYGZdq{}point:\PYGZdq{})\PYGZob{}print \PYGZdl{}5,\PYGZdl{}6,\PYGZdl{}7\PYGZcb{} \PYGZbs{}}
+\PYG{l+s+s1}{     (\PYGZdl{}1 == \PYGZdq{}RTD\PYGZdq{})\PYGZob{}print \PYGZdq{}Nan Nan Nan\PYGZdq{}\PYGZcb{}\PYGZsq{}} \PYG{l+s+se}{\PYGZbs{}}
+     \PYGZlt{} \PYG{n+nv}{\PYGZdl{}BPMSROOT}/RATstart.out.dat  \PYG{l+s+se}{\PYGZbs{}}
+     \PYGZgt{} \PYG{n+nv}{\PYGZdl{}BPMSROOT}/RATstart.ray.dat
+\end{sphinxVerbatim}
+}
+
+{
+\sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\llap{\color{nbsphinxin}[11]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYG{o}{\PYGZpc{}}\PYG{k}{matplotlib} inline
+\PYG{k+kn}{from} \PYG{n+nn}{RATlibUtils}\PYG{n+nn}{.}\PYG{n+nn}{plotters} \PYG{k+kn}{import} \PYG{n}{plotter6}
+\PYG{c+c1}{\PYGZsh{} these are the data files}
+\PYG{c+c1}{\PYGZsh{} interactions}
+\PYG{n}{file}\PYG{o}{=}\PYG{n}{BPMS}\PYG{o}{+}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{/obj/RATstart.ray.dat}\PYG{l+s+s2}{\PYGZdq{}}
+\PYG{c+c1}{\PYGZsh{} object locations}
+\PYG{n}{file1}\PYG{o}{=}\PYG{n}{BPMS}\PYG{o}{+}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{/obj/RATstart.obj.dat}\PYG{l+s+s2}{\PYGZdq{}}
+\PYG{n}{plotter6}\PYG{p}{(}\PYG{n}{file}\PYG{p}{,}\PYG{n}{file1}\PYG{p}{)}
+\end{sphinxVerbatim}
+}
+
+\hrule height -\fboxrule\relax
+\vspace{\nbsphinxcodecellspacing}
+
+\makeatletter\setbox\nbsphinxpromptbox\box\voidb@x\makeatother
+
+\begin{nbsphinxfancyoutput}
+
+\noindent\sphinxincludegraphics{{RATstartOptions_18_0}.svg}
+
+\end{nbsphinxfancyoutput}
+
+{
+\sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\llap{\color{nbsphinxin}[12]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
+\PYG{c+c1}{\PYGZsh{} tidy up the files we created}
+
+\PYG{n+nb}{source} examples\PYGZus{}init.sh
+\PYG{n+nv}{BPMSROOT}\PYG{o}{=}\PYG{n+nv}{\PYGZdl{}BPMS}/obj
+rm \PYGZhy{}f \PYG{n+nv}{\PYGZdl{}BPMSROOT}/RATstart.obj.dat \PYG{l+s+se}{\PYGZbs{}}
+      \PYG{n+nv}{\PYGZdl{}BPMSROOT}/RATstart.out.dat \PYG{l+s+se}{\PYGZbs{}}
+      \PYG{n+nv}{\PYGZdl{}BPMSROOT}/RATstart.ray.dat
+\end{sphinxVerbatim}
+}
+
+
+\section{Option 7: query materials}
+\label{\detokenize{RATstartOptions:Option-7:-query-materials}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{l+m+mi}{7}                   \PYG{p}{:} \PYG{n}{get} \PYG{o+ow}{and} \PYG{n+nb}{print} \PYG{n}{materials}
+\end{sphinxVerbatim}
+
+{
+\sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\llap{\color{nbsphinxin}[13]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
+\PYG{n+nb}{source} examples\PYGZus{}init.sh
+
+\PYG{c+c1}{\PYGZsh{} Query materials}
+\PYG{c+c1}{\PYGZsh{} option 7}
+RATstart \PYG{n+nv}{\PYGZdl{}BPMSROOT}/first.obj \PYG{o}{\PYGZlt{}\PYGZlt{}\PYGZlt{}} \PYG{l+m}{7}
+\end{sphinxVerbatim}
+}
+
+{
+
+\kern-\sphinxverbatimsmallskipamount\kern-\baselineskip
+\kern+\FrameHeightAdjust\kern-\fboxrule
+\vspace{\nbsphinxcodecellspacing}
+
+\sphinxsetup{VerbatimColor={named}{nbsphinx-stderr}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+There are 4 materials:
+
+***** Material 0 *****
+        name: WHITE     is used? 0
+        type: (0) = srm with reflectance
+        Number in used material list = -1
+        nBands: 2:
+0.000000 1.000000
+100000000000000000000.000000 1.000000
+***** Material 1 *****
+        name: TRANSPARENT       is used? 0
+        type: (10) = transparent
+        Number in used material list = -1
+***** Material 2 *****
+        name: green     is used? 1
+        type: (0) = srm with reflectance
+        Number in used material list = 0        name: green
+        nBands: 3:
+450.000000 1.000000
+550.000000 1.000000
+650.000000 1.000000
+***** Material 3 *****
+        name: white     is used? 1
+        type: (0) = srm with reflectance
+        Number in used material list = 1        name: white
+        nBands: 3:
+450.000000 1.000000
+550.000000 1.000000
+650.000000 1.000000
+\end{sphinxVerbatim}
+}
+
+
+\section{Option 9: print info on materials used}
+\label{\detokenize{RATstartOptions:Option-9:-print-info-on-materials-used}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{l+m+mi}{9}                   \PYG{p}{:} \PYG{n+nb}{print} \PYG{n}{info} \PYG{n}{on} \PYG{n}{materials} \PYG{n}{used}
+\end{sphinxVerbatim}
+
+{
+\sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\llap{\color{nbsphinxin}[14]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
+\PYG{n+nb}{source} examples\PYGZus{}init.sh
+\PYG{c+c1}{\PYGZsh{} option 9}
+RATstart \PYG{n+nv}{\PYGZdl{}BPMSROOT}/first.obj \PYG{o}{\PYGZlt{}\PYGZlt{}\PYGZlt{}} \PYG{l+m}{9}
+\end{sphinxVerbatim}
+}
+
+{
+
+\kern-\sphinxverbatimsmallskipamount\kern-\baselineskip
+\kern+\FrameHeightAdjust\kern-\fboxrule
+\vspace{\nbsphinxcodecellspacing}
+
+\sphinxsetup{VerbatimColor={named}{nbsphinx-stderr}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+There are 4 materials defined
+There are 2 materials used:
+
+***** Material 0 *****
+        name: green     index: 2
+        type: (0) = srm with reflectance
+        nBands: 3:
+450.000000 1.000000
+550.000000 1.000000
+650.000000 1.000000
+***** Material 1 *****
+        name: white     index: 3
+        type: (0) = srm with reflectance
+        nBands: 3:
+450.000000 1.000000
+550.000000 1.000000
+650.000000 1.000000
+\end{sphinxVerbatim}
+}
+
+
+\section{Option 10: get and set verbosity level (0\sphinxhyphen{}1)}
+\label{\detokenize{RATstartOptions:Option-10:-get-and-set-verbosity-level-(0-1)}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{l+m+mi}{10}                  \PYG{p}{:} \PYG{n}{get} \PYG{o+ow}{and} \PYG{n+nb}{set} \PYG{n}{verbosity} \PYG{n}{level} \PYG{p}{(}\PYG{l+m+mi}{0}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{)}
+\end{sphinxVerbatim}
+
+{
+\sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\llap{\color{nbsphinxin}[ ]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
+\PYG{n+nb}{source} examples\PYGZus{}init.sh
+
+\PYG{c+c1}{\PYGZsh{} interactions to set verbosity to 1}
+RATstart first.obj \PYG{l+s}{\PYGZlt{}\PYGZlt{} EOF}
+\PYG{l+s}{10}
+\PYG{l+s}{y}
+\PYG{l+s}{1}
+\PYG{l+s}{EOF}
+\end{sphinxVerbatim}
+}
+
+{
+\sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\llap{\color{nbsphinxin}[ ]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
+\PYG{n+nb}{source} examples\PYGZus{}init.sh
+
+\PYG{c+c1}{\PYGZsh{} interactions to set verbosity to 0}
+RATstart first.obj \PYG{l+s}{\PYGZlt{}\PYGZlt{} EOF}
+\PYG{l+s}{10}
+\PYG{l+s}{y}
+\PYG{l+s}{0}
+\PYG{l+s}{EOF}
+\end{sphinxVerbatim}
+}
+
+But normally, we would just use the command line to set this:
+
+{
+\sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\llap{\color{nbsphinxin}[ ]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
+\PYG{n+nb}{source} examples\PYGZus{}init.sh
+
+\PYG{c+c1}{\PYGZsh{} interactions to set verbosity to 1}
+RATstart \PYGZhy{}RATv \PYG{l+m}{1} first.obj \PYG{l+s}{\PYGZlt{}\PYGZlt{} EOF}
+\PYG{l+s}{0}
+\PYG{l+s}{EOF}
+\end{sphinxVerbatim}
+}
+
+{
+\sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\llap{\color{nbsphinxin}[ ]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
+\PYG{n+nb}{source} examples\PYGZus{}init.sh
+
+\PYG{c+c1}{\PYGZsh{} interactions to set verbosity to 0}
+RATstart \PYGZhy{}RATv \PYG{l+m}{0} first.obj \PYG{l+s}{\PYGZlt{}\PYGZlt{} EOF}
+\PYG{l+s}{0}
+\PYG{l+s}{EOF}
+\end{sphinxVerbatim}
+}
+
+
+\section{Option 11: get and print object bbox information}
+\label{\detokenize{RATstartOptions:Option-11:-get-and-print-object-bbox-information}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{l+m+mi}{11}                  \PYG{p}{:} \PYG{n}{get} \PYG{o+ow}{and} \PYG{n+nb}{print} \PYG{n+nb}{object} \PYG{n}{bbox} \PYG{n}{information}
+\end{sphinxVerbatim}
+
+{
+\sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\llap{\color{nbsphinxin}[17]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
+\PYG{n+nb}{source} examples\PYGZus{}init.sh
+
+\PYG{c+c1}{\PYGZsh{} interactions to set verbosity to 1}
+RATstart first.obj \PYG{o}{\PYGZlt{}\PYGZlt{}\PYGZlt{}} \PYG{l+m}{11}
+\end{sphinxVerbatim}
+}
+
+{
+
+\kern-\sphinxverbatimsmallskipamount\kern-\baselineskip
+\kern+\FrameHeightAdjust\kern-\fboxrule
+\vspace{\nbsphinxcodecellspacing}
+
+\sphinxsetup{VerbatimColor={named}{white}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+x: -0.999800 1.000200
+y: -0.999800 1.000200
+z: -0.999800 1.000200
+bbox centre @ 0.000200 0.000200 0.000200
+\end{sphinxVerbatim}
+}
+
+
+\section{Option 16: produce a height map}
+\label{\detokenize{RATstartOptions:Option-16:-produce-a-height-map}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{l+m+mi}{16} \PYG{n}{cx} \PYG{n}{cy} \PYG{n}{cz} \PYG{n}{sx} \PYG{n}{sy} \PYG{n}{nrows} \PYG{n}{ncols} \PYG{n}{rpp} \PYG{n}{name} \PYG{p}{:} \PYG{n}{produce} \PYG{n}{a} \PYG{n}{height} \PYG{n+nb}{map} \PYG{o+ow}{in} \PYG{n}{name}
+\end{sphinxVerbatim}
+
+Recall that \sphinxcode{\sphinxupquote{first.obj}} is a plane at \sphinxcode{\sphinxupquote{z=0}} and a sphere or radius 1 centred at \sphinxcode{\sphinxupquote{(0, 0, 0)}}. Option \sphinxcode{\sphinxupquote{16}} produces an image dataset (in a rather old ‘hips’ format) that is a height map of the scene, produced by ray casting. Imagine a rectangle on an \sphinxcode{\sphinxupquote{x\sphinxhyphen{}y}} plane of physical dimensions \sphinxcode{\sphinxupquote{(sx, sy)}}, centred at \sphinxcode{\sphinxupquote{(cx, cy, cz)}}. This option samples such a plane, with \sphinxcode{\sphinxupquote{(nrows, ncols)}} dimensions, with \sphinxcode{\sphinxupquote{rpp}} samples per output pixel. The result is written to the image defined by
+\sphinxcode{\sphinxupquote{name}}.
+
+A simple use of this option, illustrated below, is to give a scene height map. In this case, we want \sphinxcode{\sphinxupquote{(cx, cy, cz)}} to be above the \sphinxcode{\sphinxupquote{z\sphinxhyphen{}dimension}} of the scene bounding box. Lets first re\sphinxhyphen{}familase ourselves with the object file, and look at its bounding box (option \sphinxcode{\sphinxupquote{11}}):
+
+{
+\sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\llap{\color{nbsphinxin}[18]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
+\PYG{n+nb}{source} examples\PYGZus{}init.sh
+
+\PYG{c+c1}{\PYGZsh{} lets look at it}
+cat \PYG{n+nv}{\PYGZdl{}BPMS}/obj/first.obj
+\PYG{n+nb}{echo} \PYG{l+s+s2}{\PYGZdq{}11\PYGZdq{}} \PYG{p}{|} RATstart first.obj
+\end{sphinxVerbatim}
+}
+
+{
+
+\kern-\sphinxverbatimsmallskipamount\kern-\baselineskip
+\kern+\FrameHeightAdjust\kern-\fboxrule
+\vspace{\nbsphinxcodecellspacing}
+
+\sphinxsetup{VerbatimColor={named}{white}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\# My first object file
+mtllib plants.matlib.new
+usemtl green
+v 0 0 0
+v 0 0 1
+plane -1 -2
+!\{
+usemtl white
+!\{
+v 0 0 0
+sph -1 1
+!\}
+!\}
+x: -0.999800 1.000200
+y: -0.999800 1.000200
+z: -0.999800 1.000200
+bbox centre @ 0.000200 0.000200 0.000200
+\end{sphinxVerbatim}
+}
+
+The maximum \sphinxcode{\sphinxupquote{z}} is given as \sphinxcode{\sphinxupquote{1.000200}} (some tolerance is added in calculating the bounding box extent, as really it is \sphinxcode{\sphinxupquote{1.000000}}). We therefore centre our simulation at \sphinxcode{\sphinxupquote{(0, 0, 2)}}. We set the scene \sphinxcode{\sphinxupquote{x}} and \sphinxcode{\sphinxupquote{y}} dimensions to 4 units, and produce an image of 200 by 200 pixels with 1 ray per pixel.
+
+{
+\sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\llap{\color{nbsphinxin}[31]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
+\PYG{n+nb}{source} examples\PYGZus{}init.sh
+
+\PYG{c+c1}{\PYGZsh{} output image name}
+\PYG{n+nv}{op}\PYG{o}{=}\PYG{n+nv}{\PYGZdl{}BPMS}/obj/out1.hips
+
+\PYG{n+nb}{echo} \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{16 0 0 2 4 4  200 200 1 }\PYG{n+nv}{\PYGZdl{}op}\PYG{l+s+s2}{\PYGZdq{}} \PYG{p}{|} RATstart \PYG{l+s+se}{\PYGZbs{}}
+    \PYGZhy{}RATsensor\PYGZus{}wavebands wavebands.dat  \PYG{l+s+se}{\PYGZbs{}}
+    \PYGZhy{}RATv first.obj
+\end{sphinxVerbatim}
+}
+
+{
+
+\kern-\sphinxverbatimsmallskipamount\kern-\baselineskip
+\kern+\FrameHeightAdjust\kern-\fboxrule
+\vspace{\nbsphinxcodecellspacing}
+
+\sphinxsetup{VerbatimColor={named}{nbsphinx-stderr}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+RATstart:
+        VERBOSE flag on (-v option)
+read\_spectral\_file:   3 data entries read in file /Users/plewis/librat/obj/wavebands.dat
+( 99.9975)
+\end{sphinxVerbatim}
+}
+
+We use the python library \sphinxcode{\sphinxupquote{libhipl}} (locally installed) to read the image, then display it using matplotlib:
+
+{
+\sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\llap{\color{nbsphinxin}[30]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYG{k+kn}{from} \PYG{n+nn}{RATlibUtils}\PYG{n+nn}{.}\PYG{n+nn}{libhipl} \PYG{k+kn}{import} \PYG{n}{Hipl}
 \PYG{k+kn}{import} \PYG{n+nn}{pylab} \PYG{k}{as} \PYG{n+nn}{plt}
 
-\PYG{n}{f} \PYG{o}{=} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{../../test/test\PYGZus{}examples/out.hips}\PYG{l+s+s1}{\PYGZsq{}}
+\PYG{n}{f} \PYG{o}{=} \PYG{n}{BPMS}\PYG{o}{+}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{/obj/out1.hips}\PYG{l+s+s1}{\PYGZsq{}}
 \PYG{n}{rabbit}\PYG{o}{=}\PYG{n}{Hipl}\PYG{p}{(}\PYG{p}{)}\PYG{o}{.}\PYG{n}{read}\PYG{p}{(}\PYG{n}{f}\PYG{p}{)}
 \PYG{n}{plt}\PYG{o}{.}\PYG{n}{imshow}\PYG{p}{(}\PYG{n}{rabbit}\PYG{p}{,}\PYG{n}{cmap}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{gray}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{)}
 \PYG{n}{plt}\PYG{o}{.}\PYG{n}{colorbar}\PYG{p}{(}\PYG{p}{)}
@@ -697,7 +2196,7 @@ read\_spectral\_file:   3 data entries read in file /Users/plewis/librat/test/te
 \sphinxsetup{VerbatimColor={named}{white}}
 \sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
-\llap{\color{nbsphinxout}[70]:\,\hspace{\fboxrule}\hspace{\fboxsep}}<matplotlib.colorbar.Colorbar at 0x116d4a6a0>
+\llap{\color{nbsphinxout}[30]:\,\hspace{\fboxrule}\hspace{\fboxsep}}<matplotlib.colorbar.Colorbar at 0x10fe25790>
 \end{sphinxVerbatim}
 }
 
@@ -708,7 +2207,7 @@ read\_spectral\_file:   3 data entries read in file /Users/plewis/librat/test/te
 
 \begin{nbsphinxfancyoutput}
 
-\noindent\sphinxincludegraphics{{Chapter1_18_1}.svg}
+\noindent\sphinxincludegraphics{{RATstartOptions_37_1}.svg}
 
 \end{nbsphinxfancyoutput}
 
@@ -716,58 +2215,16 @@ read\_spectral\_file:   3 data entries read in file /Users/plewis/librat/test/te
 \sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
 \sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
-\llap{\color{nbsphinxin}[65]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
-\PYG{n+nb}{export} \PYG{n+nv}{BPMS}\PYG{o}{=}../..
-\PYG{n+nb}{cd} \PYG{n+nv}{\PYGZdl{}BPMS}
-\PYG{n+nb}{export} \PYG{n+nv}{BPMS}\PYG{o}{=}\PYG{k}{\PYGZdl{}(}\PYG{n+nb}{pwd}\PYG{k}{)}
-\PYG{n+nb}{source} \PYG{n+nv}{\PYGZdl{}BPMS}/test/test\PYGZus{}examples/init.sh
+\llap{\color{nbsphinxin}[26]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
+\PYG{n+nb}{source} examples\PYGZus{}init.sh
 
-\PYG{n+nb}{echo} \PYG{l+m}{6} \PYG{l+m}{0} \PYG{l+m}{0} \PYG{l+m}{110} \PYG{l+m}{0} \PYG{l+m}{0} \PYGZhy{}1 \PYG{p}{|} start \PYGZhy{}RATsensor\PYGZus{}wavebands \PYG{n+nv}{\PYGZdl{}BPMS}/test/test\PYGZus{}examples/wavebands.dat \PYGZhy{}RATsun\PYGZus{}position \PYG{l+m}{0} \PYG{l+m}{1} \PYG{l+m}{1} \PYG{n+nv}{\PYGZdl{}BPMS}/test/test\PYGZus{}examples/first.obj
-\end{sphinxVerbatim}
-}
+\PYG{c+c1}{\PYGZsh{} output image name}
+\PYG{n+nv}{op}\PYG{o}{=}\PYG{n+nv}{\PYGZdl{}BPMS}/obj/out2.hips
 
-{
-
-\kern-\sphinxverbatimsmallskipamount\kern-\baselineskip
-\kern+\FrameHeightAdjust\kern-\fboxrule
-\vspace{\nbsphinxcodecellspacing}
-
-\sphinxsetup{VerbatimColor={named}{white}}
-\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
-\begin{sphinxVerbatim}[commandchars=\\\{\}]
-RTD 0
-order: 0        intersection point:     0.000000 0.000000 100.000010
-                ray length:             9.999990
-                intersection material:  3
-                sun 0:                  no hit
-                sky  :                  reflectance
-                diffuse:                1.000000 1.000000
-\end{sphinxVerbatim}
-}
-
-{
-\sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
-\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
-\begin{sphinxVerbatim}[commandchars=\\\{\}]
-\llap{\color{nbsphinxin}[17]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
-
-\PYG{c+c1}{\PYGZsh{}\PYGZsh{}\PYGZsh{} wavebands}
-
-\PYG{n+nb}{export} \PYG{n+nv}{BPMS}\PYG{o}{=}../..
-\PYG{n+nb}{source} \PYG{n+nv}{\PYGZdl{}BPMS}/test/test\PYGZus{}examples/init.sh
-
-
-\PYG{k}{for} i in \PYG{k}{\PYGZdl{}(}seq \PYG{l+m}{1} \PYG{l+m}{2} \PYG{l+m}{40}\PYG{k}{)}
-\PYG{k}{do}
-cat \PYG{l+s}{\PYGZlt{}\PYGZlt{}EOF | start \PYGZhy{}RATr \PYGZdl{}i \PYGZdl{}BPMS/test/test\PYGZus{}examples/first.obj}
-\PYG{l+s}{3 3 200 20 300 20 400 20}
-\PYG{l+s}{4}
+RATstart HET01\PYGZus{}DIS\PYGZus{}ERE.obj \PYG{l+s}{\PYGZlt{}\PYGZlt{}EOF}
+\PYG{l+s}{11}
+\PYG{l+s}{16 0 0 30 200 200  200 200 1 \PYGZdl{}op}
 \PYG{l+s}{EOF}
-\PYG{k}{done}
-
-
-\PYG{c+c1}{\PYGZsh{} wavelength is min and width}
-
 \end{sphinxVerbatim}
 }
 
@@ -780,37 +2237,10 @@ cat \PYG{l+s}{\PYGZlt{}\PYGZlt{}EOF | start \PYGZhy{}RATr \PYGZdl{}i \PYGZdl{}BP
 \sphinxsetup{VerbatimColor={named}{white}}
 \sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
-wavebands: 202.630756 315.112106 409.173003
-wavebands: 207.892267 305.336319 407.519008
-wavebands: 213.153779 315.560532 405.865013
-wavebands: 218.415290 305.784745 404.211018
-wavebands: 203.676802 316.008958 402.557024
-wavebands: 208.938313 306.233171 400.903029
-wavebands: 214.199825 316.457384 419.249034
-wavebands: 219.461336 306.681597 417.595040
-wavebands: 204.722848 316.905810 415.941045
-wavebands: 209.984359 307.130022 414.287050
-wavebands: 215.245871 317.354235 412.633055
-wavebands: 200.507383 307.578448 410.979061
-wavebands: 205.768894 317.802661 409.325066
-wavebands: 211.030406 308.026874 407.671071
-wavebands: 216.291917 318.251087 406.017077
-wavebands: 201.553429 308.475300 404.363082
-wavebands: 206.814940 318.699513 402.709087
-wavebands: 212.076452 308.923726 401.055092
-wavebands: 217.337963 319.147938 419.401098
-wavebands: 202.599475 309.372151 417.747103
-\end{sphinxVerbatim}
-}
-
-{
-\sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
-\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
-\begin{sphinxVerbatim}[commandchars=\\\{\}]
-\llap{\color{nbsphinxin}[28]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
-\PYG{n+nb}{export} \PYG{n+nv}{BPMS}\PYG{o}{=}../..
-\PYG{n+nb}{source} \PYG{n+nv}{\PYGZdl{}BPMS}/test/test\PYGZus{}examples/init.sh
-\PYG{n+nb}{echo} \PYG{l+m}{10000} \PYG{p}{|} start \PYG{n+nv}{\PYGZdl{}BPMS}/test/test\PYGZus{}examples/first.obj
+x: -51.199330 53.623519
+y: -43.571414 51.254278
+z: 1.493505 27.609156
+bbox centre @ 1.212094 3.841432 14.551330
 \end{sphinxVerbatim}
 }
 
@@ -823,28 +2253,60 @@ wavebands: 202.599475 309.372151 417.747103
 \sphinxsetup{VerbatimColor={named}{nbsphinx-stderr}}
 \sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
-options:
-        -2                   : print PID
-        -1                   : print memory use
-         0                   : quit
-         1 n s1x s1y s1z {\ldots} : set sun vectors
-         2                   : print sun vectors
-         3 n b1 w1 {\ldots}i bn wn: set wavebands
-         4                   : print wavebands
-         5 file.obj          : read object file
-         6 fx fy fz dx dy dz : trace ray from f in direction d
-         7                   : get and print materials
-         8                   : print object information
-         9                   : print info on materials used
-         10                  : get and set verbosity level (0-1)
-         11                  : get and print object bbox information
-         12                    :
-         13                  : same as 14 assuming filenames camera.dat light.dat
-         14 camera.dat light.dat                : ray tracing using defined camera \& illumination
-         15                    : dont go there
-         16 cx cy cz sx sy nrows ncols rpp name : produce a height map in name
+( 99.9975)
 \end{sphinxVerbatim}
 }
+
+{
+\sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\llap{\color{nbsphinxin}[29]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYG{k+kn}{from} \PYG{n+nn}{RATlibUtils}\PYG{n+nn}{.}\PYG{n+nn}{libhipl} \PYG{k+kn}{import} \PYG{n}{Hipl}
+\PYG{k+kn}{import} \PYG{n+nn}{pylab} \PYG{k}{as} \PYG{n+nn}{plt}
+
+\PYG{n}{f} \PYG{o}{=} \PYG{n}{BPMS}\PYG{o}{+}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{/obj/out2.hips}\PYG{l+s+s1}{\PYGZsq{}}
+\PYG{n}{rabbit}\PYG{o}{=}\PYG{n}{Hipl}\PYG{p}{(}\PYG{p}{)}\PYG{o}{.}\PYG{n}{read}\PYG{p}{(}\PYG{n}{f}\PYG{p}{)}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{imshow}\PYG{p}{(}\PYG{n}{rabbit}\PYG{p}{,}\PYG{n}{cmap}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{gray}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{colorbar}\PYG{p}{(}\PYG{p}{)}
+\end{sphinxVerbatim}
+}
+
+{
+
+\kern-\sphinxverbatimsmallskipamount\kern-\baselineskip
+\kern+\FrameHeightAdjust\kern-\fboxrule
+\vspace{\nbsphinxcodecellspacing}
+
+\sphinxsetup{VerbatimColor={named}{white}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\llap{\color{nbsphinxout}[29]:\,\hspace{\fboxrule}\hspace{\fboxsep}}<matplotlib.colorbar.Colorbar at 0x1219bab90>
+\end{sphinxVerbatim}
+}
+
+\hrule height -\fboxrule\relax
+\vspace{\nbsphinxcodecellspacing}
+
+\makeatletter\setbox\nbsphinxpromptbox\box\voidb@x\makeatother
+
+\begin{nbsphinxfancyoutput}
+
+\noindent\sphinxincludegraphics{{RATstartOptions_39_1}.svg}
+
+\end{nbsphinxfancyoutput}
+
+
+\subsection{Summary}
+\label{\detokenize{RATstartOptions:Summary}}
+In this section, we have explored the input options for \sphinxcode{\sphinxupquote{librat}}. These consist of a numeric code on on command line input, followed by some (possibly interactive) set of parameters. We have explored all of those listed, other than \sphinxcode{\sphinxupquote{13}} and \sphinxcode{\sphinxupquote{14}} which refer to camera and light files.
+
+
+\chapter{librat}
+\label{\detokenize{Chapter1:librat}}\label{\detokenize{Chapter1::doc}}
+
+\section{\sphinxstyleliteralintitle{\sphinxupquote{libratlib}}}
+\label{\detokenize{Chapter1:libratlib}}
+Its a shared object library … explain.
 
 {
 \sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
@@ -863,9 +2325,9 @@ options:
 }
 
 
-\chapter{Basic librat / start operation}
-\label{\detokenize{Chapter2:Basic-librat-/-start-operation}}\label{\detokenize{Chapter2::doc}}
-Librat is the library of function calls around which you can write your own code to do things such as read in and parse an object file, read in and parse camera, illumination files, waveband files and so on. However, start is a wrapper code around these commands which gives you access to all the basic operations, and so is the de facto tool for doing simulations. The key things required to carry out a simulation are:
+\chapter{Basic librat / RATstart operation}
+\label{\detokenize{Chapter2:Basic-librat-/-RATstart-operation}}\label{\detokenize{Chapter2::doc}}
+Librat is the library of function calls around which you can write your own code to do things such as read in and parse an object file, read in and parse camera, illumination files, waveband files and so on. However, RATstart (forerly start) is a wrapper code around these commands which gives you access to all the basic operations, and so is the de facto tool for doing simulations. The key things required to carry out a simulation are:
 \begin{itemize}
 \item {} 
 A camera file
@@ -877,7 +2339,7 @@ An illumination file
 A waveband file
 
 \item {} 
-An object file \sphinxhyphen{} this is always assumed to be the last file on the start command line
+An object file \sphinxhyphen{} this is always assumed to be the last file on the RATstart command line
 
 \end{itemize}
 
@@ -890,10 +2352,6 @@ Anything specific you want to do in any of these parts of the process is specifi
 
 \section{Object example 1: planes and ellipsoids}
 \label{\detokenize{Chapter2:Object-example-1:-planes-and-ellipsoids}}
-
-\bigskip\hrule\bigskip
-
-
 {
 \sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
 \sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
@@ -1003,27 +2461,32 @@ File types
 \hline
 \sphinxcode{\sphinxupquote{MATLIB}}
 &
-material library e.g. \sphinxcode{\sphinxupquote{\textasciigrave{}plants.matlib}} \textless{}test/test\_examples/plants.matlib\textgreater{}\textasciigrave{}\_\_, all materials defined in a material library e.g. \sphinxcode{\sphinxupquote{\textasciigrave{}refl/white.dat}} \textless{}test/test\_examples/refl/white.dat\textgreater{}\textasciigrave{}\_\_
+material library e.g. \sphinxcode{\sphinxupquote{plants.matlib}}, all materials defined in a material library e.g. \sphinxcode{\sphinxupquote{white.dat}}
 \\
 \hline
 \sphinxcode{\sphinxupquote{ARARAT\_OBJECT}}
 &
-(extended) wavefront object files e.g. \sphinxcode{\sphinxupquote{\textasciigrave{}first.obj}} \textless{}test/test\_examples/first.obj\textgreater{}\textasciigrave{}\_\_
+(extended) wavefront object files e.g. \sphinxcode{\sphinxupquote{first.obj}}
 \\
 \hline
 \sphinxcode{\sphinxupquote{DIRECT\_ILLUMINATION}}
 &
-spectral files for direct illumination: those defined in \sphinxhyphen{}RATdirect command line option
+spectral files for direct illumination: those defined in \sphinxcode{\sphinxupquote{\sphinxhyphen{}RATdirect}} command line option
 \\
 \hline
 \sphinxcode{\sphinxupquote{RSRLIB}}
 &
-sensor waveband files: those defined in \sphinxhyphen{}RATsensor\_wavebands command line option
+sensor waveband files: those defined in \sphinxcode{\sphinxupquote{\sphinxhyphen{}RATsensor\_wavebands}} command line option
 \\
 \hline
 \sphinxcode{\sphinxupquote{BPMS\_FILES}}
 &
 Not used
+\\
+\hline
+\sphinxcode{\sphinxupquote{SKY\_ILLUMINATION}}
+&
+location of sky map image files: defined in \sphinxcode{\sphinxupquote{\sphinxhyphen{}RATskymap}} command line option
 \\
 \hline
 \end{tabulary}
@@ -1053,6 +2516,16 @@ Maximum number of groups allowed (100000)
 \sphinxcode{\sphinxupquote{PRAT\_MAX\_MATERIALS}}
 &
 Maximum number of materials allowed (DEFAULT\_PRAT\_MAX\_MATERIALS=1024 in \sphinxcode{\sphinxupquote{mtllib.h}})
+\\
+\hline
+\sphinxcode{\sphinxupquote{MAX\_SUNS}}
+&
+Maximum number of suns (180 in \sphinxcode{\sphinxupquote{rat.h}})
+\\
+\hline
+\sphinxcode{\sphinxupquote{MAX\_OBJECT\_TYPES}}
+&
+Maximum number of types of object used (\sphinxcode{\sphinxupquote{sph}}, \sphinxcode{\sphinxupquote{f}}, etc): hardwired in \sphinxcode{\sphinxupquote{intersect\_objects.h}} at 16. Only used in \sphinxcode{\sphinxupquote{RATstart}} option 8
 \\
 \hline
 \end{tabulary}
@@ -1107,10 +2580,10 @@ cat \PYG{l+s}{\PYGZlt{}\PYGZlt{}EOF \PYGZgt{} \PYGZdl{}outfile}
 \PYG{l+s}{export DIRECT\PYGZus{}ILLUMINATION=\PYGZbs{}\PYGZdl{}TEST}
 \PYG{l+s}{export BPMS\PYGZus{}FILES=\PYGZbs{}\PYGZdl{}TEST}
 
-\PYG{l+s}{if [ \PYGZdq{}\PYGZbs{}\PYGZdl{}(which start)\PYGZdq{} == \PYGZdq{}\PYGZbs{}\PYGZdl{}\PYGZob{}bin\PYGZcb{}/start\PYGZdq{} ]}
+\PYG{l+s}{if [ \PYGZdq{}\PYGZbs{}\PYGZdl{}(which RATstart)\PYGZdq{} == \PYGZdq{}\PYGZbs{}\PYGZdl{}\PYGZob{}bin\PYGZcb{}/RATstart\PYGZdq{} ]}
 \PYG{l+s}{then}
 \PYG{l+s}{  if [ \PYGZdq{}\PYGZbs{}\PYGZdl{}VERBOSE\PYGZdq{} ]; then}
-\PYG{l+s}{      echo \PYGZdq{}start found ok\PYGZdq{}}
+\PYG{l+s}{      echo \PYGZdq{}RATstart found ok\PYGZdq{}}
 \PYG{l+s}{  fi}
 \PYG{l+s}{else}
 \PYG{l+s}{  \PYGZsh{} we should create them}
@@ -1150,7 +2623,7 @@ make: *** No rule to make target `clean'.  Stop.
 \textcolor{ansi-red}{---------------------------------------------------------------------------}
 \textcolor{ansi-red}{CalledProcessError}                        Traceback (most recent call last)
 \textcolor{ansi-green}{<ipython-input-6-d988add8e183>} in \textcolor{ansi-cyan}{<module>}
-\textcolor{ansi-green}{----> 1}\textcolor{ansi-red}{ }get\_ipython\textcolor{ansi-blue}{(}\textcolor{ansi-blue}{)}\textcolor{ansi-blue}{.}run\_cell\_magic\textcolor{ansi-blue}{(}\textcolor{ansi-blue}{'bash'}\textcolor{ansi-blue}{,} \textcolor{ansi-blue}{''}\textcolor{ansi-blue}{,} \textcolor{ansi-blue}{'\textbackslash{}n\# create the init.sh file we want\textbackslash{}noutfile=test/test\_examples/init.sh\textbackslash{}n\textbackslash{}ncat <<EOF > \$outfile\textbackslash{}n\#!/bin/bash\textbackslash{}n\#\textbackslash{}n\# preamble \textbackslash{}n\#\textbackslash{}nBPMS=\textbackslash{}\textbackslash{}\$\{BPMS-\textbackslash{}\textbackslash{}\$(pwd)\}\textbackslash{}n\# set shell variables lib, bin, verbose\textbackslash{}n\# with defaults in case not set \textbackslash{}nlib=\textbackslash{}\textbackslash{}\$\{lib-"\textbackslash{}\textbackslash{}\$BPMS/src"\}\textbackslash{}nbin=\textbackslash{}\textbackslash{}\$\{bin-"\textbackslash{}\textbackslash{}\$BPMS/src"\}\textbackslash{}nVERBOSE=\textbackslash{}\textbackslash{}\$\{VERBOSE-1\}\textbackslash{}n\textbackslash{}n\# set up required environment variables for bash\textbackslash{}nexport LD\_LIBRARY\_PATH="\textbackslash{}\textbackslash{}\$\{lib\}:\textbackslash{}\textbackslash{}\$\{LD\_LIBRARY\_PATH\}"\textbackslash{}nexport DYLD\_LIBRARY\_PATH="\textbackslash{}\textbackslash{}\$\{lib\}:\textbackslash{}\textbackslash{}\$\{DYLD\_LIBRARY\_PATH\}"\textbackslash{}nexport PATH="\textbackslash{}\textbackslash{}\$\{bin\}:\textbackslash{}\textbackslash{}\$\{PATH\}"\textbackslash{}n\textbackslash{}n\# set up required environment variables for librat\textbackslash{}nexport TEST=\textbackslash{}\textbackslash{}\$\{BPMS\}/test/test\_example\textbackslash{}nexport MATLIB=\textbackslash{}\textbackslash{}\$TEST\textbackslash{}nexport RSRLIB=\textbackslash{}\textbackslash{}\$TEST\textbackslash{}nexport ARARAT\_OBJECT=\textbackslash{}\textbackslash{}\$TEST\textbackslash{}nexport DIRECT\_ILLUMINATION=\textbackslash{}\textbackslash{}\$TEST\textbackslash{}nexport BPMS\_FILES=\textbackslash{}\textbackslash{}\$TEST\textbackslash{}n\textbackslash{}nif [ "\textbackslash{}\textbackslash{}\$(which start)" == "\textbackslash{}\textbackslash{}\$\{bin\}/start" ]\textbackslash{}nthen\textbackslash{}n  if [ "\textbackslash{}\textbackslash{}\$VERBOSE" ]; then\textbackslash{}n      echo "start found ok"\textbackslash{}n  fi\textbackslash{}nelse\textbackslash{}n  \# we should create them\textbackslash{}n  make clean all \textbackslash{}nfi\textbackslash{}nEOF\textbackslash{}n\textbackslash{}n\# set executable mode\textbackslash{}nchmod +x \$outfile\textbackslash{}n\# test run\textbackslash{}n\$outfile\textbackslash{}n'}\textcolor{ansi-blue}{)}
+\textcolor{ansi-green}{----> 1}\textcolor{ansi-red}{ }get\_ipython\textcolor{ansi-blue}{(}\textcolor{ansi-blue}{)}\textcolor{ansi-blue}{.}run\_cell\_magic\textcolor{ansi-blue}{(}\textcolor{ansi-blue}{'bash'}\textcolor{ansi-blue}{,} \textcolor{ansi-blue}{''}\textcolor{ansi-blue}{,} \textcolor{ansi-blue}{'\textbackslash{}n\# create the init.sh file we want\textbackslash{}noutfile=test/test\_examples/init.sh\textbackslash{}n\textbackslash{}ncat <<EOF > \$outfile\textbackslash{}n\#!/bin/bash\textbackslash{}n\#\textbackslash{}n\# preamble \textbackslash{}n\#\textbackslash{}nBPMS=\textbackslash{}\textbackslash{}\$\{BPMS-\textbackslash{}\textbackslash{}\$(pwd)\}\textbackslash{}n\# set shell variables lib, bin, verbose\textbackslash{}n\# with defaults in case not set \textbackslash{}nlib=\textbackslash{}\textbackslash{}\$\{lib-"\textbackslash{}\textbackslash{}\$BPMS/src"\}\textbackslash{}nbin=\textbackslash{}\textbackslash{}\$\{bin-"\textbackslash{}\textbackslash{}\$BPMS/src"\}\textbackslash{}nVERBOSE=\textbackslash{}\textbackslash{}\$\{VERBOSE-1\}\textbackslash{}n\textbackslash{}n\# set up required environment variables for bash\textbackslash{}nexport LD\_LIBRARY\_PATH="\textbackslash{}\textbackslash{}\$\{lib\}:\textbackslash{}\textbackslash{}\$\{LD\_LIBRARY\_PATH\}"\textbackslash{}nexport DYLD\_LIBRARY\_PATH="\textbackslash{}\textbackslash{}\$\{lib\}:\textbackslash{}\textbackslash{}\$\{DYLD\_LIBRARY\_PATH\}"\textbackslash{}nexport PATH="\textbackslash{}\textbackslash{}\$\{bin\}:\textbackslash{}\textbackslash{}\$\{PATH\}"\textbackslash{}n\textbackslash{}n\# set up required environment variables for librat\textbackslash{}nexport TEST=\textbackslash{}\textbackslash{}\$\{BPMS\}/test/test\_example\textbackslash{}nexport MATLIB=\textbackslash{}\textbackslash{}\$TEST\textbackslash{}nexport RSRLIB=\textbackslash{}\textbackslash{}\$TEST\textbackslash{}nexport ARARAT\_OBJECT=\textbackslash{}\textbackslash{}\$TEST\textbackslash{}nexport DIRECT\_ILLUMINATION=\textbackslash{}\textbackslash{}\$TEST\textbackslash{}nexport BPMS\_FILES=\textbackslash{}\textbackslash{}\$TEST\textbackslash{}n\textbackslash{}nif [ "\textbackslash{}\textbackslash{}\$(which RATstart)" == "\textbackslash{}\textbackslash{}\$\{bin\}/RATstart" ]\textbackslash{}nthen\textbackslash{}n  if [ "\textbackslash{}\textbackslash{}\$VERBOSE" ]; then\textbackslash{}n      echo "RATstart found ok"\textbackslash{}n  fi\textbackslash{}nelse\textbackslash{}n  \# we should create them\textbackslash{}n  make clean all \textbackslash{}nfi\textbackslash{}nEOF\textbackslash{}n\textbackslash{}n\# set executable mode\textbackslash{}nchmod +x \$outfile\textbackslash{}n\# test run\textbackslash{}n\$outfile\textbackslash{}n'}\textcolor{ansi-blue}{)}
 
 \textcolor{ansi-green}{\textasciitilde{}/opt/anaconda3/envs/librat/lib/python3.8/site-packages/IPython/core/interactiveshell.py} in \textcolor{ansi-cyan}{run\_cell\_magic}\textcolor{ansi-blue}{(self, magic\_name, line, cell)}
 \textcolor{ansi-green-intense}{\textbf{   2360}}             \textcolor{ansi-green}{with} self\textcolor{ansi-blue}{.}builtin\_trap\textcolor{ansi-blue}{:}
@@ -1182,7 +2655,7 @@ make: *** No rule to make target `clean'.  Stop.
 \textcolor{ansi-green-intense}{\textbf{    246}}
 \textcolor{ansi-green-intense}{\textbf{    247}}     \textcolor{ansi-green}{def} \_run\_script\textcolor{ansi-blue}{(}self\textcolor{ansi-blue}{,} p\textcolor{ansi-blue}{,} cell\textcolor{ansi-blue}{,} to\_close\textcolor{ansi-blue}{)}\textcolor{ansi-blue}{:}
 
-\textcolor{ansi-red}{CalledProcessError}: Command 'b'\textbackslash{}n\# create the init.sh file we want\textbackslash{}noutfile=test/test\_examples/init.sh\textbackslash{}n\textbackslash{}ncat <<EOF > \$outfile\textbackslash{}n\#!/bin/bash\textbackslash{}n\#\textbackslash{}n\# preamble \textbackslash{}n\#\textbackslash{}nBPMS=\textbackslash{}\textbackslash{}\$\{BPMS-\textbackslash{}\textbackslash{}\$(pwd)\}\textbackslash{}n\# set shell variables lib, bin, verbose\textbackslash{}n\# with defaults in case not set \textbackslash{}nlib=\textbackslash{}\textbackslash{}\$\{lib-"\textbackslash{}\textbackslash{}\$BPMS/src"\}\textbackslash{}nbin=\textbackslash{}\textbackslash{}\$\{bin-"\textbackslash{}\textbackslash{}\$BPMS/src"\}\textbackslash{}nVERBOSE=\textbackslash{}\textbackslash{}\$\{VERBOSE-1\}\textbackslash{}n\textbackslash{}n\# set up required environment variables for bash\textbackslash{}nexport LD\_LIBRARY\_PATH="\textbackslash{}\textbackslash{}\$\{lib\}:\textbackslash{}\textbackslash{}\$\{LD\_LIBRARY\_PATH\}"\textbackslash{}nexport DYLD\_LIBRARY\_PATH="\textbackslash{}\textbackslash{}\$\{lib\}:\textbackslash{}\textbackslash{}\$\{DYLD\_LIBRARY\_PATH\}"\textbackslash{}nexport PATH="\textbackslash{}\textbackslash{}\$\{bin\}:\textbackslash{}\textbackslash{}\$\{PATH\}"\textbackslash{}n\textbackslash{}n\# set up required environment variables for librat\textbackslash{}nexport TEST=\textbackslash{}\textbackslash{}\$\{BPMS\}/test/test\_example\textbackslash{}nexport MATLIB=\textbackslash{}\textbackslash{}\$TEST\textbackslash{}nexport RSRLIB=\textbackslash{}\textbackslash{}\$TEST\textbackslash{}nexport ARARAT\_OBJECT=\textbackslash{}\textbackslash{}\$TEST\textbackslash{}nexport DIRECT\_ILLUMINATION=\textbackslash{}\textbackslash{}\$TEST\textbackslash{}nexport BPMS\_FILES=\textbackslash{}\textbackslash{}\$TEST\textbackslash{}n\textbackslash{}nif [ "\textbackslash{}\textbackslash{}\$(which start)" == "\textbackslash{}\textbackslash{}\$\{bin\}/start" ]\textbackslash{}nthen\textbackslash{}n  if [ "\textbackslash{}\textbackslash{}\$VERBOSE" ]; then\textbackslash{}n      echo "start found ok"\textbackslash{}n  fi\textbackslash{}nelse\textbackslash{}n  \# we should create them\textbackslash{}n  make clean all \textbackslash{}nfi\textbackslash{}nEOF\textbackslash{}n\textbackslash{}n\# set executable mode\textbackslash{}nchmod +x \$outfile\textbackslash{}n\# test run\textbackslash{}n\$outfile\textbackslash{}n'' returned non-zero exit status 2.
+\textcolor{ansi-red}{CalledProcessError}: Command 'b'\textbackslash{}n\# create the init.sh file we want\textbackslash{}noutfile=test/test\_examples/init.sh\textbackslash{}n\textbackslash{}ncat <<EOF > \$outfile\textbackslash{}n\#!/bin/bash\textbackslash{}n\#\textbackslash{}n\# preamble \textbackslash{}n\#\textbackslash{}nBPMS=\textbackslash{}\textbackslash{}\$\{BPMS-\textbackslash{}\textbackslash{}\$(pwd)\}\textbackslash{}n\# set shell variables lib, bin, verbose\textbackslash{}n\# with defaults in case not set \textbackslash{}nlib=\textbackslash{}\textbackslash{}\$\{lib-"\textbackslash{}\textbackslash{}\$BPMS/src"\}\textbackslash{}nbin=\textbackslash{}\textbackslash{}\$\{bin-"\textbackslash{}\textbackslash{}\$BPMS/src"\}\textbackslash{}nVERBOSE=\textbackslash{}\textbackslash{}\$\{VERBOSE-1\}\textbackslash{}n\textbackslash{}n\# set up required environment variables for bash\textbackslash{}nexport LD\_LIBRARY\_PATH="\textbackslash{}\textbackslash{}\$\{lib\}:\textbackslash{}\textbackslash{}\$\{LD\_LIBRARY\_PATH\}"\textbackslash{}nexport DYLD\_LIBRARY\_PATH="\textbackslash{}\textbackslash{}\$\{lib\}:\textbackslash{}\textbackslash{}\$\{DYLD\_LIBRARY\_PATH\}"\textbackslash{}nexport PATH="\textbackslash{}\textbackslash{}\$\{bin\}:\textbackslash{}\textbackslash{}\$\{PATH\}"\textbackslash{}n\textbackslash{}n\# set up required environment variables for librat\textbackslash{}nexport TEST=\textbackslash{}\textbackslash{}\$\{BPMS\}/test/test\_example\textbackslash{}nexport MATLIB=\textbackslash{}\textbackslash{}\$TEST\textbackslash{}nexport RSRLIB=\textbackslash{}\textbackslash{}\$TEST\textbackslash{}nexport ARARAT\_OBJECT=\textbackslash{}\textbackslash{}\$TEST\textbackslash{}nexport DIRECT\_ILLUMINATION=\textbackslash{}\textbackslash{}\$TEST\textbackslash{}nexport BPMS\_FILES=\textbackslash{}\textbackslash{}\$TEST\textbackslash{}n\textbackslash{}nif [ "\textbackslash{}\textbackslash{}\$(which RATstart)" == "\textbackslash{}\textbackslash{}\$\{bin\}/RATstart" ]\textbackslash{}nthen\textbackslash{}n  if [ "\textbackslash{}\textbackslash{}\$VERBOSE" ]; then\textbackslash{}n      echo "RATstart found ok"\textbackslash{}n  fi\textbackslash{}nelse\textbackslash{}n  \# we should create them\textbackslash{}n  make clean all \textbackslash{}nfi\textbackslash{}nEOF\textbackslash{}n\textbackslash{}n\# set executable mode\textbackslash{}nchmod +x \$outfile\textbackslash{}n\# test run\textbackslash{}n\$outfile\textbackslash{}n'' returned non-zero exit status 2.
 \end{sphinxVerbatim}
 }
 
@@ -1257,12 +2730,12 @@ is in fact a spheroid of x\sphinxhyphen{}y semi\sphinxhyphen{}axis length 30000 
 
 The fields \sphinxcode{\sphinxupquote{!\{}} and \sphinxcode{\sphinxupquote{!\}}} in \sphinxcode{\sphinxupquote{\textasciigrave{}test/test\_examples/first.obj}} \textless{}test/test\_examples/first.obj\textgreater{}\textasciigrave{}\_\_ specify that a bounding box should be placed around objects contained within the brackets. This allows for efficient intersection tests in the ray tracing.
 
-We now want to use the code \sphinxcode{\sphinxupquote{start}} to run \sphinxcode{\sphinxupquote{librat}} functionality.
+We now want to use the code \sphinxcode{\sphinxupquote{RATstart}} to run \sphinxcode{\sphinxupquote{librat}} functionality.
 
 If you have compiled the code, the executable and library should be in the directory \sphinxcode{\sphinxupquote{\textasciigrave{}src}} \textless{}src\textgreater{}\textasciigrave{}\_\_ as
 
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
-\PYG{n}{src}\PYG{o}{/}\PYG{n}{start}
+\PYG{n}{src}\PYG{o}{/}\PYG{n}{RATstart}
 \PYG{n}{src}\PYG{o}{/}\PYG{n}{libratlib}\PYG{o}{.}\PYG{p}{[}\PYG{n}{dll}\PYG{p}{,}\PYG{n}{so}\PYG{p}{]}
 \end{sphinxVerbatim}
 
@@ -1277,7 +2750,7 @@ The suffix for the library will be \sphinxcode{\sphinxupquote{dll}} on windows, 
 \PYG{n+nv}{lib}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}./src\PYGZsq{}}
 \PYG{n+nv}{bin}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}./src\PYGZsq{}}
 
-ls \PYGZhy{}l \PYG{l+s+si}{\PYGZdl{}\PYGZob{}}\PYG{n+nv}{lib}\PYG{l+s+si}{\PYGZcb{}}/start \PYG{l+s+si}{\PYGZdl{}\PYGZob{}}\PYG{n+nv}{bin}\PYG{l+s+si}{\PYGZcb{}}/libratlib.*
+ls \PYGZhy{}l \PYG{l+s+si}{\PYGZdl{}\PYGZob{}}\PYG{n+nv}{lib}\PYG{l+s+si}{\PYGZcb{}}/RATstart \PYG{l+s+si}{\PYGZdl{}\PYGZob{}}\PYG{n+nv}{bin}\PYG{l+s+si}{\PYGZcb{}}/libratlib.*
 \end{sphinxVerbatim}
 }
 
@@ -1312,10 +2785,10 @@ Don’t worry too much if its not there as we can make it when we need it.
 \PYG{n+nb}{export} \PYG{n+nv}{DIRECT\PYGZus{}ILLUMINATION}\PYG{o}{=}\PYG{n+nv}{\PYGZdl{}TEST}
 \PYG{n+nb}{export} \PYG{n+nv}{BPMS\PYGZus{}FILES}\PYG{o}{=}\PYG{n+nv}{\PYGZdl{}TEST}
 
-\PYG{k}{if} \PYG{o}{[} \PYG{k}{\PYGZdl{}(}which start\PYG{k}{)} \PYG{o}{=}\PYG{o}{=} \PYG{l+s+s1}{\PYGZsq{}./src/start\PYGZsq{}} \PYG{o}{]}
+\PYG{k}{if} \PYG{o}{[} \PYG{k}{\PYGZdl{}(}which RATstart\PYG{k}{)} \PYG{o}{=}\PYG{o}{=} \PYG{l+s+s1}{\PYGZsq{}./src/RATstart\PYGZsq{}} \PYG{o}{]}
 \PYG{k}{then}
   \PYG{k}{if} \PYG{o}{[} \PYG{n+nv}{\PYGZdl{}verbose} \PYG{o}{]}\PYG{p}{;} \PYG{k}{then}
-      \PYG{n+nb}{echo} \PYG{l+s+s2}{\PYGZdq{}start found ok\PYGZdq{}}
+      \PYG{n+nb}{echo} \PYG{l+s+s2}{\PYGZdq{}RATstart found ok\PYGZdq{}}
   \PYG{k}{fi}
 \PYG{k}{else}
   \PYG{c+c1}{\PYGZsh{} we should create them}
@@ -1369,6 +2842,35 @@ cat \PYG{l+s}{\PYGZlt{}\PYGZlt{}EOF \PYGZgt{} test/test\PYGZus{}examples/second.
 \chapter{Appendix 1: \sphinxstyleliteralintitle{\sphinxupquote{bash}} help}
 \label{\detokenize{Appendix1:Appendix-1:-bash-help}}\label{\detokenize{Appendix1::doc}}
 To use \sphinxcode{\sphinxupquote{librat}}, we need to have a passing awareness of some computer system settings called \sphinxhref{https://en.wikipedia.org/wiki/Environment\_variable}{environment variables}. We do this in this chapter, alongside a few other basic linux/unix commands that may be useful to know.
+
+{
+\sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\llap{\color{nbsphinxin}[1]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYG{k+kn}{import} \PYG{n+nn}{sys}
+\PYG{k+kn}{from} \PYG{n+nn}{prelim} \PYG{k+kn}{import} \PYG{o}{*}
+\PYG{o}{\PYGZpc{}}\PYG{k}{set\PYGZus{}env} BPMS=\PYGZdl{}BPMS
+\PYG{o}{\PYGZpc{}}\PYG{k}{set\PYGZus{}env} PATH=\PYGZdl{}BPMS/bin:\PYGZdl{}BPMS/src:\PYGZdl{}BPMS/bin/csh:\PYGZdl{}PATH\PYGZus{}
+\PYG{o}{\PYGZpc{}}\PYG{k}{set\PYGZus{}env} MATLIB=\PYGZdl{}BPMS/obj
+\PYG{o}{\PYGZpc{}}\PYG{k}{set\PYGZus{}env} BPMSROOT=\PYGZdl{}BPMS/obj
+\end{sphinxVerbatim}
+}
+
+{
+
+\kern-\sphinxverbatimsmallskipamount\kern-\baselineskip
+\kern+\FrameHeightAdjust\kern-\fboxrule
+\vspace{\nbsphinxcodecellspacing}
+
+\sphinxsetup{VerbatimColor={named}{white}}
+\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+env: BPMS=/Users/plewis/librat
+env: PATH=/Users/plewis/librat/bin:/Users/plewis/librat/src:/Users/plewis/librat/bin/csh:/Users/plewis/opt/anaconda3/bin:/Users/plewis/opt/anaconda3/condabin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/VMware Fusion.app/Contents/Public:/Library/TeX/texbin:/opt/X11/bin:/Library/Apple/usr/bin
+env: MATLIB=/Users/plewis/librat/obj
+env: BPMSROOT=/Users/plewis/librat/obj
+\end{sphinxVerbatim}
+}
 
 In practical terms, the important thing here is that you can generate the file \sphinxcode{\sphinxupquote{test/test\_examples/init.sh}} and modify it to your needs. The rest you can skip for now, if you really want to. But you may well find yourself returning to this chapter when you want to ask more of your computer and of this tool.
 
@@ -1429,9 +2931,10 @@ We can see the value a variable is set to with the command \sphinxcode{\sphinxup
 \sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
 \sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
-\llap{\color{nbsphinxin}[1]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
+\llap{\color{nbsphinxin}[2]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
+\PYG{n+nb}{source} examples\PYGZus{}init.sh
 
-\PYG{n+nb}{export} \PYG{n+nv}{MATLIB}\PYG{o}{=}test/test\PYGZus{}examples
+\PYG{n+nb}{export} \PYG{n+nv}{MATLIB}\PYG{o}{=}\PYG{n+nv}{\PYGZdl{}BPMS}/obj
 \PYG{n+nb}{echo} \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{MATLIB is set to }\PYG{n+nv}{\PYGZdl{}MATLIB}\PYG{l+s+s2}{\PYGZdq{}}
 \end{sphinxVerbatim}
 }
@@ -1445,7 +2948,7 @@ We can see the value a variable is set to with the command \sphinxcode{\sphinxup
 \sphinxsetup{VerbatimColor={named}{white}}
 \sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
-MATLIB is set to test/test\_examples
+MATLIB is set to /Users/plewis/librat/obj
 \end{sphinxVerbatim}
 }
 
@@ -1460,9 +2963,10 @@ If you want to replace the value of a variable in a string, then you should gene
 \sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
 \sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
-\llap{\color{nbsphinxin}[2]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
+\llap{\color{nbsphinxin}[3]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
+\PYG{n+nb}{source} examples\PYGZus{}init.sh
 
-\PYG{n+nb}{export} \PYG{n+nv}{MATLIB}\PYG{o}{=}test/test\PYGZus{}examples
+\PYG{n+nb}{export} \PYG{n+nv}{MATLIB}\PYG{o}{=}\PYG{n+nv}{\PYGZdl{}BPMS}/obj
 
 \PYG{n+nb}{echo} \PYG{l+s+s1}{\PYGZsq{}1. MATLIB is set to \PYGZdl{}MATLIB in single quotes\PYGZsq{}}
 \PYG{n+nb}{echo} \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{2. MATLIB is set to }\PYG{n+nv}{\PYGZdl{}MATLIB}\PYG{l+s+s2}{ in double quotes}\PYG{l+s+s2}{\PYGZdq{}}
@@ -1480,7 +2984,7 @@ If you want to replace the value of a variable in a string, then you should gene
 \sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
 1. MATLIB is set to \$MATLIB in single quotes
-2. MATLIB is set to test/test\_examples in double quotes
+2. MATLIB is set to /Users/plewis/librat/obj in double quotes
 2. MATLIB is set to \$MATLIB in double quotes but with \textbackslash{} escaping the \$
 \end{sphinxVerbatim}
 }
@@ -1496,9 +3000,9 @@ To see the values of all environment variables, type \sphinxcode{\sphinxupquote{
 \sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
 \sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
-\llap{\color{nbsphinxin}[3]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
-
-\PYG{n+nb}{export} \PYG{n+nv}{MATLIB}\PYG{o}{=}test/test\PYGZus{}examples
+\llap{\color{nbsphinxin}[4]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
+\PYG{n+nb}{source} examples\PYGZus{}init.sh
+\PYG{n+nb}{export} \PYG{n+nv}{MATLIB}\PYG{o}{=}\PYG{n+nv}{\PYGZdl{}BPMS}/obj
 
 env \PYG{p}{|} grep M
 \end{sphinxVerbatim}
@@ -1516,18 +3020,22 @@ env \PYG{p}{|} grep M
 TERM\_PROGRAM=Apple\_Terminal
 TERM=xterm-color
 TMPDIR=/var/folders/mp/9cxd5s793bjd4q3zng6dv\_cw0000gn/T/
-CONDA\_PROMPT\_MODIFIER=(librat)
 TERM\_PROGRAM\_VERSION=433
-GSETTINGS\_SCHEMA\_DIR\_CONDA\_BACKUP=
-TERM\_SESSION\_ID=7FC61198-BCF5-4CED-8B68-076E150723FD
+CONDA\_PROMPT\_MODIFIER=(base)
+SKY\_ILLUMINATION==/Users/plewis/librat/obj
+TERM\_SESSION\_ID=D1A31568-329D-434C-986B-E84F76B8FCB3
+BPMS=/Users/plewis/librat
+TEMP=/tmp
+DIRECT\_ILLUMINATION=/Users/plewis/librat/obj
 KERNEL\_LAUNCH\_TIMEOUT=40
-MATLIB=test/test\_examples
-PATH=/Users/plewis/opt/anaconda3/envs/librat/bin:/Users/plewis/opt/anaconda3/condabin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/VMware Fusion.app/Contents/Public:/opt/X11/bin:/Library/Apple/usr/bin
-GSETTINGS\_SCHEMA\_DIR=/Users/plewis/opt/anaconda3/envs/librat/share/glib-2.0/schemas
+MATLIB=/Users/plewis/librat/obj
+PATH=/Users/plewis/librat/src:/Users/plewis/librat/bin:/Users/plewis/librat/src:/Users/plewis/librat/bin/csh:/Users/plewis/opt/anaconda3/bin:/Users/plewis/opt/anaconda3/condabin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/VMware Fusion.app/Contents/Public:/Library/TeX/texbin:/opt/X11/bin:/Library/Apple/usr/bin
 MPLBACKEND=module://ipykernel.pylab.backend\_inline
-\_CE\_M=
+BPMSROOT=/Users/plewis/librat/obj
 XPC\_SERVICE\_NAME=0
+\_CE\_M=
 HOME=/Users/plewis
+BPMS\_FILES=/Users/plewis/librat/obj
 LOGNAME=plewis
 \end{sphinxVerbatim}
 }
@@ -1558,7 +3066,7 @@ for example:
 \sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
 \sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
-\llap{\color{nbsphinxin}[4]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
+\llap{\color{nbsphinxin}[5]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
 
 \PYG{n+nv}{hello}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{hello world }\PYG{n+nv}{\PYGZdl{}USER}\PYG{l+s+s2}{\PYGZdq{}}
 \PYG{n+nb}{echo} \PYG{n+nv}{\PYGZdl{}hello}
@@ -1594,7 +3102,7 @@ Like \sphinxcode{\sphinxupquote{env}}, this is likely to produce a long list. We
 \sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
 \sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
-\llap{\color{nbsphinxin}[5]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
+\llap{\color{nbsphinxin}[6]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
 
 \PYG{n+nb}{echo} \PYG{l+s+s1}{\PYGZsq{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZsq{}}
 \PYG{n+nb}{echo} \PYG{l+s+s2}{\PYGZdq{}1. The first 5 shell variables ...\PYGZdq{}}
@@ -1671,7 +3179,7 @@ We can see which one it finds with the command \sphinxhref{https://en.wikipedia.
 \sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
 \sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
-\llap{\color{nbsphinxin}[6]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
+\llap{\color{nbsphinxin}[7]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
 
 which ls
 \end{sphinxVerbatim}
@@ -1699,7 +3207,7 @@ As we saw above, \sphinxhref{https://en.wikipedia.org/wiki/Ls}{ls} gives a listi
 \sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
 \sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
-\llap{\color{nbsphinxin}[7]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
+\llap{\color{nbsphinxin}[8]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
 
 \PYG{c+c1}{\PYGZsh{} get a listing of the current directory, just to see whats here}
 ls \PYGZhy{}C
@@ -1715,12 +3223,14 @@ ls \PYGZhy{}C
 \sphinxsetup{VerbatimColor={named}{white}}
 \sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
-Appendix1.ipynb                 default.profraw
-Chapter1.ipynb                  index.rst
-Chapter2.ipynb                  ipython\_kernel\_config.py
-\_static                                references.bib
-\_templates                     requirements.txt
-conf.py                         test
+Appendix1.ipynb                 conf.py
+Chapter1.ipynb                  default.profraw
+Chapter2.ipynb                  index.rst
+RATstart.ipynb                  ipython\_kernel\_config.py
+RATstartOptions.ipynb           prelim.py
+\_\_pycache\_\_                 references.bib
+\_static                                requirements.txt
+\_templates                     test
 \end{sphinxVerbatim}
 }
 
@@ -1733,7 +3243,7 @@ These core environment variables are usually set with default values appropriate
 \sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
 \sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
-\llap{\color{nbsphinxin}[8]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
+\llap{\color{nbsphinxin}[9]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
 \PYG{c+c1}{\PYGZsh{} \PYGZhy{}d \PYGZhy{}\PYGZgt{} no directories}
 
 ls \PYGZhy{}Cd  \PYGZti{}/.bash*
@@ -1770,7 +3280,7 @@ One useful option to \sphinxcode{\sphinxupquote{ls}} is \sphinxcode{\sphinxupquo
 \sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
 \sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
-\llap{\color{nbsphinxin}[9]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
+\llap{\color{nbsphinxin}[10]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
 \PYG{c+c1}{\PYGZsh{} \PYGZhy{}d \PYGZhy{}\PYGZgt{} no directories}
 
 ls \PYGZhy{}lhd  \PYGZti{}/.bash*
@@ -1786,11 +3296,11 @@ ls \PYGZhy{}lhd  \PYGZti{}/.bash*
 \sphinxsetup{VerbatimColor={named}{white}}
 \sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
--rw-------    1 plewis  staff    27K 17 Apr 18:32 /Users/plewis/.bash\_history
+-rw-------    1 plewis  staff   1.5K 21 Apr 10:26 /Users/plewis/.bash\_history
 -rw-r--r--    1 plewis  staff   3.0K 17 Apr 17:00 /Users/plewis/.bash\_profile
 -rw-r--r--    1 plewis  staff   1.1K 15 Jul  2019 /Users/plewis/.bash\_profile-anaconda3.bak
 -rw-r--r--    1 plewis  staff   727B 15 Jul  2019 /Users/plewis/.bash\_profile.backup
-drwx------  108 plewis  staff   3.4K  2 Feb 14:42 /Users/plewis/.bash\_sessions
+drwx------  111 plewis  staff   3.5K 21 Apr 10:26 /Users/plewis/.bash\_sessions
 \end{sphinxVerbatim}
 }
 
@@ -1851,7 +3361,7 @@ Just in case the file already exists, and we have previously messed around with 
 \sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
 \sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
-\llap{\color{nbsphinxin}[10]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
+\llap{\color{nbsphinxin}[11]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
 
 \PYG{c+c1}{\PYGZsh{} create a unique directory name}
 \PYG{n+nv}{dir}\PYG{o}{=}/tmp/files.\PYG{n+nv}{\PYGZdl{}\PYGZdl{}}
@@ -1895,9 +3405,9 @@ rm \PYGZhy{}rf \PYG{n+nv}{\PYGZdl{}dir}
 \sphinxsetup{VerbatimColor={named}{white}}
 \sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
--rw-r--r--  1 plewis  wheel    12B 18 Apr 20:41 /tmp/files.88512/hello.dat
--rw-------  1 plewis  wheel    12B 18 Apr 20:41 /tmp/files.88512/hello.dat
--rwx------  1 plewis  wheel    12B 18 Apr 20:41 /tmp/files.88512/hello.dat
+-rw-r--r--  1 plewis  wheel    12B 21 Apr 18:47 /tmp/files.29478/hello.dat
+-rw-------  1 plewis  wheel    12B 21 Apr 18:47 /tmp/files.29478/hello.dat
+-rwx------  1 plewis  wheel    12B 21 Apr 18:47 /tmp/files.29478/hello.dat
 \end{sphinxVerbatim}
 }
 
@@ -1918,7 +3428,7 @@ Since this may be quite long, we will use \sphinxcode{\sphinxupquote{head}} just
 \sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
 \sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
-\llap{\color{nbsphinxin}[11]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
+\llap{\color{nbsphinxin}[12]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
 
 cat \PYGZti{}/.bash\PYGZus{}profile \PYG{p}{|} head \PYGZhy{}5
 \end{sphinxVerbatim}
@@ -1964,8 +3474,8 @@ where \sphinxcode{\sphinxupquote{location}} is somewhere on the file system.
 \sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
 \sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
-\llap{\color{nbsphinxin}[12]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
-
+\llap{\color{nbsphinxin}[13]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
+\PYG{n+nb}{source} examples\PYGZus{}init.sh
 
 \PYG{n+nb}{echo} \PYGZhy{}n \PYG{l+s+s2}{\PYGZdq{}where am I now?: \PYGZdq{}}
 \PYG{n+nb}{pwd}
@@ -1978,13 +3488,7 @@ where \sphinxcode{\sphinxupquote{location}} is somewhere on the file system.
 
 \PYG{c+c1}{\PYGZsh{} go to directory librat \PYGZsq{}cd librat\PYGZsq{}}
 \PYG{n+nb}{echo} \PYG{l+s+s2}{\PYGZdq{}go to librat: \PYGZdq{}}
-\PYG{n+nb}{cd} librat
-\PYG{n+nb}{echo} \PYGZhy{}n \PYG{l+s+s2}{\PYGZdq{}where am I now?: \PYGZdq{}}
-\PYG{n+nb}{pwd}
-
-\PYG{c+c1}{\PYGZsh{} go to directory librat \PYGZsq{}cd \PYGZti{}/librat\PYGZsq{}}
-\PYG{n+nb}{echo} \PYG{l+s+s2}{\PYGZdq{}go to \PYGZti{}/librat: \PYGZdq{}}
-\PYG{n+nb}{cd} \PYGZti{}/librat
+\PYG{n+nb}{cd} \PYG{n+nv}{\PYGZdl{}BPMS}
 \PYG{n+nb}{echo} \PYGZhy{}n \PYG{l+s+s2}{\PYGZdq{}where am I now?: \PYGZdq{}}
 \PYG{n+nb}{pwd}
 \end{sphinxVerbatim}
@@ -2004,8 +3508,6 @@ go home (\textasciitilde{}):
 where am I now?: /Users/plewis
 go to librat:
 where am I now?: /Users/plewis/librat
-go to \textasciitilde{}/librat:
-where am I now?: /Users/plewis/librat
 \end{sphinxVerbatim}
 }
 
@@ -2024,7 +3526,7 @@ Note the round brackets \sphinxcode{\sphinxupquote{\$()}} enclosing the command 
 \sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
 \sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
-\llap{\color{nbsphinxin}[13]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
+\llap{\color{nbsphinxin}[14]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
 
 \PYG{c+c1}{\PYGZsh{} set PWD to the result of running `pwd`}
 \PYG{n+nb}{echo} \PYGZhy{}n \PYG{l+s+s2}{\PYGZdq{}1. Run the command pwd: \PYGZdq{}}
@@ -2074,14 +3576,14 @@ Note that the environment \sphinxcode{\sphinxupquote{BPMS}} is generally used to
 \sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
 \sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
-\llap{\color{nbsphinxin}[14]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
+\llap{\color{nbsphinxin}[15]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
+\PYG{n+nb}{source} examples\PYGZus{}init.sh
 
 \PYG{c+c1}{\PYGZsh{}}
 \PYG{c+c1}{\PYGZsh{} example using \PYGZdl{}\PYGZob{}BPMS\PYGZhy{}\PYGZdl{}(pwd)\PYGZcb{}}
 \PYG{c+c1}{\PYGZsh{}}
 
 \PYG{c+c1}{\PYGZsh{} set BPMS variable to result of pwd, unless its already set}
-\PYG{n+nv}{BPMS}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}Previous Value\PYGZdq{}}
 \PYG{n+nv}{BPMS}\PYG{o}{=}\PYG{l+s+si}{\PYGZdl{}\PYGZob{}}\PYG{n+nv}{BPMS}\PYG{p}{\PYGZhy{}}\PYG{k}{\PYGZdl{}(}\PYG{n+nb}{pwd}\PYG{k}{)}\PYG{l+s+si}{\PYGZcb{}}
 \PYG{n+nb}{echo} \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{1. BPMS set to }\PYG{n+nv}{\PYGZdl{}BPMS}\PYG{l+s+s2}{ because BPMS is set}\PYG{l+s+s2}{\PYGZdq{}}
 
@@ -2101,7 +3603,7 @@ Note that the environment \sphinxcode{\sphinxupquote{BPMS}} is generally used to
 \sphinxsetup{VerbatimColor={named}{white}}
 \sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
-1. BPMS set to Previous Value because BPMS is set
+1. BPMS set to /Users/plewis/librat because BPMS is set
 2. BPMS set to /Users/plewis/librat/docs/source, from running pwd, because BPMS is not set
 \end{sphinxVerbatim}
 }
@@ -2197,7 +3699,8 @@ Then, if we want to put a \sphinxcode{\sphinxupquote{librat}} directory at the f
 \sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
 \sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
-\llap{\color{nbsphinxin}[15]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
+\llap{\color{nbsphinxin}[16]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
+\PYG{n+nb}{source} examples\PYGZus{}init.sh
 
 \PYG{c+c1}{\PYGZsh{} example initial setting of PATH}
 \PYG{c+c1}{\PYGZsh{} NB Only an example, your shell will set something}
@@ -2207,8 +3710,7 @@ Then, if we want to put a \sphinxcode{\sphinxupquote{librat}} directory at the f
 \PYG{n+nb}{echo} \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{1. PATH is }\PYG{n+nv}{\PYGZdl{}PATH}\PYG{l+s+s2}{\PYGZdq{}}
 
 \PYG{c+c1}{\PYGZsh{} change directory from docs/source up to root}
-\PYG{n+nv}{HERE}\PYG{o}{=}\PYG{k}{\PYGZdl{}(}\PYG{n+nb}{pwd}\PYG{k}{)}\PYG{p}{;}\PYG{n+nb}{cd} ../..
-\PYG{n+nv}{BPMS}\PYG{o}{=}\PYG{l+s+si}{\PYGZdl{}\PYGZob{}}\PYG{n+nv}{BPMS}\PYG{p}{\PYGZhy{}}\PYG{k}{\PYGZdl{}(}\PYG{n+nb}{pwd}\PYG{k}{)}\PYG{l+s+si}{\PYGZcb{}}\PYG{p}{;}\PYG{n+nb}{cd} \PYG{n+nv}{\PYGZdl{}HERE}
+\PYG{n+nv}{BPMS}\PYG{o}{=}\PYG{l+s+si}{\PYGZdl{}\PYGZob{}}\PYG{n+nv}{BPMS}\PYG{p}{\PYGZhy{}}\PYG{k}{\PYGZdl{}(}\PYG{n+nb}{pwd}\PYG{k}{)}\PYG{l+s+si}{\PYGZcb{}}\PYG{p}{;}
 
 \PYG{n+nv}{bin}\PYG{o}{=}\PYG{n+nv}{\PYGZdl{}BPMS}/src
 
@@ -2282,7 +3784,8 @@ We can again add search directories to the front of the library paths:
 \sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
 \sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
-\llap{\color{nbsphinxin}[16]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
+\llap{\color{nbsphinxin}[17]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
+\PYG{n+nb}{source} examples\PYGZus{}init.sh
 
 \PYG{c+c1}{\PYGZsh{} example initial setting of LD\PYGZus{}LIBRARY\PYGZus{}PATH}
 \PYG{c+c1}{\PYGZsh{} NB Only an example, your shell will set something}
@@ -2292,9 +3795,6 @@ We can again add search directories to the front of the library paths:
 \PYG{n+nb}{echo} \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{1. LD\PYGZus{}LIBRARY\PYGZus{}PATH is }\PYG{n+nv}{\PYGZdl{}LD\PYGZus{}LIBRARY\PYGZus{}PATH}\PYG{l+s+s2}{\PYGZdq{}}
 
 \PYG{c+c1}{\PYGZsh{} change directory from docs/source up to root}
-\PYG{n+nv}{HERE}\PYG{o}{=}\PYG{k}{\PYGZdl{}(}\PYG{n+nb}{pwd}\PYG{k}{)}\PYG{p}{;}\PYG{n+nb}{cd} ../..
-\PYG{n+nv}{BPMS}\PYG{o}{=}\PYG{l+s+si}{\PYGZdl{}\PYGZob{}}\PYG{n+nv}{BPMS}\PYG{p}{\PYGZhy{}}\PYG{k}{\PYGZdl{}(}\PYG{n+nb}{pwd}\PYG{k}{)}\PYG{l+s+si}{\PYGZcb{}}\PYG{p}{;}\PYG{n+nb}{cd} \PYG{n+nv}{\PYGZdl{}HERE}
-
 \PYG{n+nv}{lib}\PYG{o}{=}\PYG{n+nv}{\PYGZdl{}BPMS}/src
 
 \PYG{c+c1}{\PYGZsh{} put \PYGZdl{}bin on the front of PATH}
@@ -2322,7 +3822,8 @@ We can again add search directories to the front of the library paths:
 \sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
 \sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
-\llap{\color{nbsphinxin}[17]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
+\llap{\color{nbsphinxin}[18]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
+\PYG{n+nb}{source} examples\PYGZus{}init.sh
 
 \PYG{c+c1}{\PYGZsh{} example initial setting of DYLD\PYGZus{}LIBRARY\PYGZus{}PATH}
 \PYG{c+c1}{\PYGZsh{} NB Only an example, your shell will set something}
@@ -2330,11 +3831,6 @@ We can again add search directories to the front of the library paths:
 \PYG{n+nv}{DYLD\PYGZus{}LIBRARY\PYGZus{}PATH}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}/usr/local/lib:/usr/lib\PYGZdq{}}
 
 \PYG{n+nb}{echo} \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{1. DYLD\PYGZus{}LIBRARY\PYGZus{}PATH is }\PYG{n+nv}{\PYGZdl{}DYLD\PYGZus{}LIBRARY\PYGZus{}PATH}\PYG{l+s+s2}{\PYGZdq{}}
-
-
-\PYG{c+c1}{\PYGZsh{} change directory from docs/source up to root}
-\PYG{n+nv}{HERE}\PYG{o}{=}\PYG{k}{\PYGZdl{}(}\PYG{n+nb}{pwd}\PYG{k}{)}\PYG{p}{;}\PYG{n+nb}{cd} ../..
-\PYG{n+nv}{BPMS}\PYG{o}{=}\PYG{l+s+si}{\PYGZdl{}\PYGZob{}}\PYG{n+nv}{BPMS}\PYG{p}{\PYGZhy{}}\PYG{k}{\PYGZdl{}(}\PYG{n+nb}{pwd}\PYG{k}{)}\PYG{l+s+si}{\PYGZcb{}}\PYG{p}{;}\PYG{n+nb}{cd} \PYG{n+nv}{\PYGZdl{}HERE}
 
 \PYG{n+nv}{lib}\PYG{o}{=}\PYG{n+nv}{\PYGZdl{}BPMS}/src
 
@@ -2417,7 +3913,8 @@ Note that the spaces in \sphinxcode{\sphinxupquote{if {[} \$VAR = value1 {]}}} a
 \sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
 \sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
-\llap{\color{nbsphinxin}[18]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
+\llap{\color{nbsphinxin}[19]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
+\PYG{n+nb}{source} examples\PYGZus{}init.sh
 
 \PYG{c+c1}{\PYGZsh{} these to see what sort of computer we are running on}
 \PYG{n+nv}{OS}\PYG{o}{=}\PYG{k}{\PYGZdl{}(}uname \PYGZhy{}s\PYG{k}{)}
@@ -2472,15 +3969,12 @@ where \sphinxcode{\sphinxupquote{\$\{ext\}}} is \sphinxcode{\sphinxupquote{so}} 
 \sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
 \sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
-\llap{\color{nbsphinxin}[19]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
+\llap{\color{nbsphinxin}[20]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
+\PYG{n+nb}{source} examples\PYGZus{}init.sh
 
 \PYG{c+c1}{\PYGZsh{} these to see what sort of computer we are running on}
 \PYG{n+nv}{OS}\PYG{o}{=}\PYG{k}{\PYGZdl{}(}uname \PYGZhy{}s\PYG{k}{)}
 \PYG{n+nb}{echo} \PYG{n+nv}{\PYGZdl{}OS}
-
-\PYG{c+c1}{\PYGZsh{} change directory from docs/source up to root}
-\PYG{n+nv}{HERE}\PYG{o}{=}\PYG{k}{\PYGZdl{}(}\PYG{n+nb}{pwd}\PYG{k}{)}\PYG{p}{;}\PYG{n+nb}{cd} ../..
-\PYG{n+nv}{BPMS}\PYG{o}{=}\PYG{l+s+si}{\PYGZdl{}\PYGZob{}}\PYG{n+nv}{BPMS}\PYG{p}{\PYGZhy{}}\PYG{k}{\PYGZdl{}(}\PYG{n+nb}{pwd}\PYG{k}{)}\PYG{l+s+si}{\PYGZcb{}}\PYG{p}{;}\PYG{n+nb}{cd} \PYG{n+nv}{\PYGZdl{}HERE}
 
 \PYG{n+nv}{lib}\PYG{o}{=}\PYG{n+nv}{\PYGZdl{}BPMS}/src
 
@@ -2511,11 +4005,11 @@ where \sphinxcode{\sphinxupquote{\$\{ext\}}} is \sphinxcode{\sphinxupquote{so}} 
 \sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
 Darwin
-0000000000047500 T \_Add\_2D
-00000000000477c0 T \_Affine\_transform
-0000000000049090 T \_B\_allocate
-00000000000477f0 T \_Backwards\_affine\_transform
-00000000000470b0 T \_Bbox
+00000000000475f0 T \_Add\_2D
+00000000000478b0 T \_Affine\_transform
+0000000000049180 T \_B\_allocate
+00000000000478e0 T \_Backwards\_affine\_transform
+00000000000471a0 T \_Bbox
 \end{sphinxVerbatim}
 }
 
@@ -2535,13 +4029,12 @@ We can conveniently create files in \sphinxcode{\sphinxupquote{bash}} from text 
 \sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
 \sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
-\llap{\color{nbsphinxin}[20]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
+\llap{\color{nbsphinxin}[21]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
+\PYG{n+nb}{source} examples\PYGZus{}init.sh
 
 \PYG{c+c1}{\PYGZsh{} change directory from docs/source up to root}
-\PYG{n+nb}{cd} ../..
-\PYG{n+nv}{BPMS}\PYG{o}{=}\PYG{l+s+si}{\PYGZdl{}\PYGZob{}}\PYG{n+nv}{BPMS}\PYG{p}{\PYGZhy{}}\PYG{k}{\PYGZdl{}(}\PYG{n+nb}{pwd}\PYG{k}{)}\PYG{l+s+si}{\PYGZcb{}}
 
-cat \PYG{l+s}{\PYGZlt{}\PYGZlt{}EOF \PYGZgt{} \PYGZdl{}BPMS/test/test\PYGZus{}examples/first.obj}
+cat \PYG{l+s}{\PYGZlt{}\PYGZlt{}EOF \PYGZgt{} \PYGZdl{}BPMS/obj/second.obj}
 \PYG{l+s}{\PYGZsh{} My first object file}
 \PYG{l+s}{mtllib plants.matlib}
 \PYG{l+s}{usemtl white}
@@ -2565,13 +4058,10 @@ Let’s look at the file we have just created:
 \sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
 \sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
-\llap{\color{nbsphinxin}[21]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
+\llap{\color{nbsphinxin}[22]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
+\PYG{n+nb}{source} examples\PYGZus{}init.sh
 
-\PYG{c+c1}{\PYGZsh{} change directory from docs/source up to root}
-\PYG{n+nb}{cd} ../..
-\PYG{n+nv}{BPMS}\PYG{o}{=}\PYG{l+s+si}{\PYGZdl{}\PYGZob{}}\PYG{n+nv}{BPMS}\PYG{p}{\PYGZhy{}}\PYG{k}{\PYGZdl{}(}\PYG{n+nb}{pwd}\PYG{k}{)}\PYG{l+s+si}{\PYGZcb{}}
-
-cat \PYG{n+nv}{\PYGZdl{}BPMS}/test/test\PYGZus{}examples/first.obj
+cat \PYG{n+nv}{\PYGZdl{}BPMS}/obj/second.obj
 \end{sphinxVerbatim}
 }
 
@@ -2634,27 +4124,32 @@ File types
 \hline
 \sphinxcode{\sphinxupquote{MATLIB}}
 &
-material library e.g. \sphinxhref{test/test\_examples/plants.matlib}{plants.matlib}, all materials defined in a material library e.g. \sphinxhref{test/test\_examples/refl/white.dat}{refl/white.dat}
+material library e.g. \sphinxcode{\sphinxupquote{plants.matlib}}, all materials defined in a material library e.g. \sphinxcode{\sphinxupquote{white.dat}}
 \\
 \hline
 \sphinxcode{\sphinxupquote{ARARAT\_OBJECT}}
 &
-(extended) wavefront object files e.g. \sphinxhref{test/test\_examples/first.obj}{first.obj}
+(extended) wavefront object files e.g. \sphinxcode{\sphinxupquote{first.obj}}
 \\
 \hline
 \sphinxcode{\sphinxupquote{DIRECT\_ILLUMINATION}}
 &
-spectral files for direct illumination: those defined in \sphinxhyphen{}RATdirect command line option
+spectral files for direct illumination: those defined in \sphinxcode{\sphinxupquote{\sphinxhyphen{}RATdirect}} command line option
 \\
 \hline
 \sphinxcode{\sphinxupquote{RSRLIB}}
 &
-sensor waveband files: those defined in \sphinxhyphen{}RATsensor\_wavebands command line option
+sensor waveband files: those defined in \sphinxcode{\sphinxupquote{\sphinxhyphen{}RATsensor\_wavebands}} command line option
 \\
 \hline
 \sphinxcode{\sphinxupquote{BPMS\_FILES}}
 &
 Not used
+\\
+\hline
+\sphinxcode{\sphinxupquote{SKY\_ILLUMINATION}}
+&
+location of sky map image files: defined in \sphinxcode{\sphinxupquote{\sphinxhyphen{}RATskymap}} command line option
 \\
 \hline
 \end{tabulary}
@@ -2686,6 +4181,11 @@ Maximum number of groups allowed (100000)
 Maximum number of materials allowed (DEFAULT\_PRAT\_MAX\_MATERIALS=1024 in \sphinxcode{\sphinxupquote{mtllib.h}})
 \\
 \hline
+\sphinxcode{\sphinxupquote{MAX\_SUNS}}
+&
+Maximum number of suns (180 in \sphinxcode{\sphinxupquote{rat.h}})
+\\
+\hline
 \end{tabulary}
 \par
 \sphinxattableend\end{savenotes}
@@ -2694,69 +4194,48 @@ Maximum number of materials allowed (DEFAULT\_PRAT\_MAX\_MATERIALS=1024 in \sphi
 \sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
 \sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
-\llap{\color{nbsphinxin}[22]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
-
-\PYG{c+c1}{\PYGZsh{} change directory from docs/source up to root}
-\PYG{n+nb}{cd} ../..
-\PYG{n+nv}{BPMS}\PYG{o}{=}\PYG{l+s+si}{\PYGZdl{}\PYGZob{}}\PYG{n+nv}{BPMS}\PYG{p}{\PYGZhy{}}\PYG{k}{\PYGZdl{}(}\PYG{n+nb}{pwd}\PYG{k}{)}\PYG{l+s+si}{\PYGZcb{}}
-\PYG{c+c1}{\PYGZsh{} create the init.sh file we want}
-\PYG{n+nv}{INIT}\PYG{o}{=}\PYG{n+nv}{\PYGZdl{}BPMS}/test/test\PYGZus{}examples/init.sh
-
-cat \PYG{l+s}{\PYGZlt{}\PYGZlt{}EOF \PYGZgt{} \PYGZdl{}INIT}
+\llap{\color{nbsphinxin}[23]:\,\hspace{\fboxrule}\hspace{\fboxsep}}\PYGZpc{}\PYGZpc{}bash
+\PYG{c+c1}{\PYGZsh{}}
+\PYG{c+c1}{\PYGZsh{} create examples\PYGZus{}init.sh}
+\PYG{c+c1}{\PYGZsh{} for examples initialisation}
+\PYG{c+c1}{\PYGZsh{}}
+\PYG{c+c1}{\PYGZsh{} create the init shell}
+cat \PYG{l+s}{\PYGZlt{}\PYGZlt{}EOF \PYGZgt{} \PYGZdl{}BPMS/bin/examples\PYGZus{}init\PYGZus{}test.sh}
 \PYG{l+s}{\PYGZsh{}!/bin/bash}
 \PYG{l+s}{\PYGZsh{}}
-\PYG{l+s}{\PYGZsh{} preamble}
+\PYG{l+s}{\PYGZsh{} defaults}
 \PYG{l+s}{\PYGZsh{}}
-\PYG{l+s}{export BPMS=\PYGZdl{}BPMS}
-
-\PYG{l+s}{\PYGZsh{} set shell variables lib, bin, verbose}
-\PYG{l+s}{\PYGZsh{} with defaults in case not set}
-\PYG{l+s}{lib=\PYGZbs{}\PYGZdl{}\PYGZob{}lib\PYGZhy{}\PYGZdq{}\PYGZbs{}\PYGZdl{}BPMS/src\PYGZdq{}\PYGZcb{}}
-\PYG{l+s}{bin=\PYGZbs{}\PYGZdl{}\PYGZob{}bin\PYGZhy{}\PYGZdq{}\PYGZbs{}\PYGZdl{}BPMS/src\PYGZdq{}\PYGZcb{}}
-\PYG{l+s}{VERBOSE=\PYGZbs{}\PYGZdl{}\PYGZob{}VERBOSE\PYGZhy{}1\PYGZcb{}}
+\PYG{l+s}{export BPMS=\PYGZbs{}\PYGZdl{}\PYGZob{}BPMS\PYGZhy{}\PYGZdl{}BPMS\PYGZcb{}}
+\PYG{l+s}{export BPMSROOT=\PYGZbs{}\PYGZdl{}\PYGZob{}BPMSROOT\PYGZhy{}\PYGZbs{}\PYGZdl{}BPMSROOT\PYGZcb{}}
+\PYG{l+s}{lib=\PYGZbs{}\PYGZdl{}\PYGZob{}lib\PYGZhy{}\PYGZbs{}\PYGZdl{}BPMS/src\PYGZcb{}}
+\PYG{l+s}{bin=\PYGZbs{}\PYGZdl{}\PYGZob{}bin\PYGZhy{}\PYGZbs{}\PYGZdl{}BPMS/src\PYGZcb{}}
+\PYG{l+s}{VERBOSE=\PYGZbs{}\PYGZdl{}\PYGZob{}VERBOSE\PYGZhy{}0\PYGZcb{}}
+\PYG{l+s}{export TEMP=\PYGZbs{}\PYGZdl{}\PYGZob{}TEMP\PYGZhy{}/tmp\PYGZcb{}}
 
 \PYG{l+s}{\PYGZsh{} set up required environment variables for bash}
 \PYG{l+s}{export LD\PYGZus{}LIBRARY\PYGZus{}PATH=\PYGZdq{}\PYGZbs{}\PYGZdl{}\PYGZob{}lib\PYGZcb{}:\PYGZbs{}\PYGZdl{}\PYGZob{}LD\PYGZus{}LIBRARY\PYGZus{}PATH\PYGZcb{}\PYGZdq{}}
 \PYG{l+s}{export DYLD\PYGZus{}LIBRARY\PYGZus{}PATH=\PYGZdq{}\PYGZbs{}\PYGZdl{}\PYGZob{}lib\PYGZcb{}:\PYGZbs{}\PYGZdl{}\PYGZob{}DYLD\PYGZus{}LIBRARY\PYGZus{}PATH\PYGZcb{}\PYGZdq{}}
 \PYG{l+s}{export PATH=\PYGZdq{}\PYGZbs{}\PYGZdl{}\PYGZob{}bin\PYGZcb{}:\PYGZbs{}\PYGZdl{}\PYGZob{}PATH\PYGZcb{}\PYGZdq{}}
 
-\PYG{l+s}{\PYGZsh{} set up required environment variables for librat}
-\PYG{l+s}{export BPMSROOT=\PYGZbs{}\PYGZdl{}\PYGZob{}BPMSROOT\PYGZhy{}\PYGZdq{}\PYGZbs{}\PYGZdl{}BPMS/test/test\PYGZus{}examples\PYGZdq{}\PYGZcb{}}
 \PYG{l+s}{export MATLIB=\PYGZbs{}\PYGZdl{}BPMSROOT}
 \PYG{l+s}{export RSRLIB=\PYGZbs{}\PYGZdl{}BPMSROOT}
 \PYG{l+s}{export ARARAT\PYGZus{}OBJECT=\PYGZbs{}\PYGZdl{}BPMSROOT}
 \PYG{l+s}{export DIRECT\PYGZus{}ILLUMINATION=\PYGZbs{}\PYGZdl{}BPMSROOT}
 \PYG{l+s}{export BPMS\PYGZus{}FILES=\PYGZbs{}\PYGZdl{}BPMSROOT}
-\PYG{l+s}{echo \PYGZdl{}BPMS}
-\PYG{l+s}{if [ \PYGZdq{}\PYGZbs{}\PYGZdl{}(which start)\PYGZdq{} == \PYGZdq{}\PYGZbs{}\PYGZdl{}\PYGZob{}bin\PYGZcb{}/start\PYGZdq{} ]}
+\PYG{l+s}{export SKY\PYGZus{}ILLUMINATION==\PYGZbs{}\PYGZdl{}BPMSROOT}
+
+\PYG{l+s}{if [ \PYGZdq{}\PYGZbs{}\PYGZdl{}(which RATstart)\PYGZdq{} == \PYGZdq{}\PYGZbs{}\PYGZdl{}\PYGZob{}bin\PYGZcb{}/RATstart\PYGZdq{} ]}
 \PYG{l+s}{then}
 \PYG{l+s}{  if [ \PYGZdq{}\PYGZbs{}\PYGZdl{}VERBOSE\PYGZdq{} == 1 ]; then}
-\PYG{l+s}{      echo \PYGZdq{}start found ok\PYGZdq{}}
+\PYG{l+s}{      echo \PYGZdq{}RATstart found ok\PYGZdq{}}
 \PYG{l+s}{  fi}
 \PYG{l+s}{else}
 \PYG{l+s}{  \PYGZsh{} we should create them}
 \PYG{l+s}{  make clean all}
 \PYG{l+s}{fi}
 \PYG{l+s}{EOF}
-\PYG{c+c1}{\PYGZsh{} set executable mode}
-chmod +x \PYG{n+nv}{\PYGZdl{}INIT}
-\PYG{c+c1}{\PYGZsh{} test run}
-\PYG{n+nb}{export} \PYG{n+nv}{VERBOSE}\PYG{o}{=}\PYG{l+m}{1}
-\PYG{n+nv}{\PYGZdl{}INIT}
-\end{sphinxVerbatim}
-}
-
-{
-
-\kern-\sphinxverbatimsmallskipamount\kern-\baselineskip
-\kern+\FrameHeightAdjust\kern-\fboxrule
-\vspace{\nbsphinxcodecellspacing}
-
-\sphinxsetup{VerbatimColor={named}{white}}
-\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
-\begin{sphinxVerbatim}[commandchars=\\\{\}]
-/Users/plewis/librat
-start found ok
+chmod +x \PYG{n+nv}{\PYGZdl{}BPMS}/bin/examples\PYGZus{}init\PYGZus{}test.sh
+examples\PYGZus{}init\PYGZus{}test.sh
 \end{sphinxVerbatim}
 }
 
@@ -2768,15 +4247,7 @@ what files are where, reading on the internet or help pages what they do, and so
 
 Maybe thats wishful thinking on my part though. You may not feel you have time for basic unix at the moment … and we did say at the top of this chapter that it was not compulsory … I’d reccomend you \sphinxstyleemphasis{do} spend some time on \sphinxstyleemphasis{unix} … you’ll develop skills that willlast you a lifetime! ;\sphinxhyphen{})
 
-In practical terms, as we have said, the important thing here is that you can generate the file \sphinxcode{\sphinxupquote{test/test\_examples/init.sh}} and modify it to your needs.
-
-{
-\sphinxsetup{VerbatimColor={named}{nbsphinx-code-bg}}
-\sphinxsetup{VerbatimBorderColor={named}{nbsphinx-code-border}}
-\begin{sphinxVerbatim}[commandchars=\\\{\}]
-\llap{\color{nbsphinxin}[ ]:\,\hspace{\fboxrule}\hspace{\fboxsep}}
-\end{sphinxVerbatim}
-}
+In practical terms, as we have said, the important thing here is that you can generate the file \sphinxcode{\sphinxupquote{examples\_init\_test.sh}} and modify it to your needs.
 
 
 \chapter{Indices and tables}

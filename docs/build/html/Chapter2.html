@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>2. Basic librat / RATstart operation &mdash; librat  documentation</title>
+  <title>4. Basic librat / RATstart operation &mdash; librat  documentation</title>
   
 
   
@@ -34,8 +34,8 @@
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
     <link rel="top" title="librat  documentation" href="index.html"/>
-        <link rel="next" title="3. RATstart" href="RATstart.html"/>
-        <link rel="prev" title="1. librat" href="Chapter1.html"/> 
+        <link rel="next" title="5. Appendix 1: bash help" href="Appendix1.html"/>
+        <link rel="prev" title="3. librat" href="Chapter1.html"/> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -83,15 +83,16 @@
             
                 <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="Chapter1.html">1. librat</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">2. Basic librat / RATstart operation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#Object-example-1:-planes-and-ellipsoids">2.1. Object example 1: planes and ellipsoids</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#Environment-variables">2.2. Environment variables</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#Object-example-2:-clones">2.3. Object example 2: clones</a></li>
+<li class="toctree-l1"><a class="reference internal" href="RATstart.html">1. <code class="docutils literal notranslate"><span class="pre">RATstart</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="RATstartOptions.html">2. <code class="docutils literal notranslate"><span class="pre">RATstart</span></code> options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Chapter1.html">3. librat</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">4. Basic librat / RATstart operation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#Object-example-1:-planes-and-ellipsoids">4.1. Object example 1: planes and ellipsoids</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Environment-variables">4.2. Environment variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Object-example-2:-clones">4.3. Object example 2: clones</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="RATstart.html">3. <code class="docutils literal notranslate"><span class="pre">RATstart</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="Appendix1.html">4. Appendix 1: <code class="docutils literal notranslate"><span class="pre">bash</span></code> help</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Appendix1.html">5. Appendix 1: <code class="docutils literal notranslate"><span class="pre">bash</span></code> help</a></li>
 </ul>
 
             
@@ -136,7 +137,7 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li><span class="section-number">2. </span>Basic librat / RATstart operation</li>
+      <li><span class="section-number">4. </span>Basic librat / RATstart operation</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -376,7 +377,7 @@ div.rendered_html tbody tr:hover {
 }
 </style>
 <div class="section" id="Basic-librat-/-RATstart-operation">
-<h1><span class="section-number">2. </span>Basic librat / RATstart operation<a class="headerlink" href="#Basic-librat-/-RATstart-operation" title="Permalink to this headline">¶</a></h1>
+<h1><span class="section-number">4. </span>Basic librat / RATstart operation<a class="headerlink" href="#Basic-librat-/-RATstart-operation" title="Permalink to this headline">¶</a></h1>
 <p>Librat is the library of function calls around which you can write your own code to do things such as read in and parse an object file, read in and parse camera, illumination files, waveband files and so on. However, RATstart (forerly start) is a wrapper code around these commands which gives you access to all the basic operations, and so is the de facto tool for doing simulations. The key things required to carry out a simulation are:</p>
 <ul class="simple">
 <li><p>A camera file</p></li>
@@ -387,7 +388,7 @@ div.rendered_html tbody tr:hover {
 <p>Anything specific you want to do in any of these parts of the process is specified in these files. There are a limited number of additional command line options which either allow you to override a few key things in these files (the waveband file for example), or more usually are external to these things. Each of these can be passed through via the <code class="docutils literal notranslate"><span class="pre">-RAT</span></code> keyword. Examples are the ray tree depth (<code class="docutils literal notranslate"><span class="pre">-RATm</span></code>) , verbose level (<code class="docutils literal notranslate"><span class="pre">-RATv</span></code>), waveband file (<code class="docutils literal notranslate"><span class="pre">-RATsensor_wavebands</span></code>) etc.</p>
 <hr class="docutils" />
 <div class="section" id="Object-example-1:-planes-and-ellipsoids">
-<h2><span class="section-number">2.1. </span>Object example 1: planes and ellipsoids<a class="headerlink" href="#Object-example-1:-planes-and-ellipsoids" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">4.1. </span>Object example 1: planes and ellipsoids<a class="headerlink" href="#Object-example-1:-planes-and-ellipsoids" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
@@ -473,7 +474,7 @@ cat <span class="s">&lt;&lt;EOF &gt; test/test_examples/refl/white.dat</span>
 <p>tells the librat reader to load the ‘material library’ called <code class="docutils literal notranslate"><span class="pre">`plants.matlib</span></code> &lt;test/test_examples/plants.matlib&gt;`__. First, it will look in the current directory for the file. If it doesn’t find it there, it will see if the environment variable <code class="docutils literal notranslate"><span class="pre">MATLIB</span></code> is set. If so, it will look there next.</p>
 </div>
 <div class="section" id="Environment-variables">
-<h2><span class="section-number">2.2. </span>Environment variables<a class="headerlink" href="#Environment-variables" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">4.2. </span>Environment variables<a class="headerlink" href="#Environment-variables" title="Permalink to this headline">¶</a></h2>
 <p>The following environmental variables can be used:</p>
 <table class="docutils align-default">
 <colgroup>
@@ -773,7 +774,7 @@ ls -l <span class="si">${</span><span class="nv">lib</span><span class="si">}</s
 </div>
 </div>
 <div class="section" id="Object-example-2:-clones">
-<h2><span class="section-number">2.3. </span>Object example 2: clones<a class="headerlink" href="#Object-example-2:-clones" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">4.3. </span>Object example 2: clones<a class="headerlink" href="#Object-example-2:-clones" title="Permalink to this headline">¶</a></h2>
 <hr class="docutils" />
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
@@ -820,10 +821,10 @@ cat <span class="s">&lt;&lt;EOF &gt; test/test_examples/second.obj</span>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="RATstart.html" class="btn btn-neutral float-right" title="3. RATstart" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="Appendix1.html" class="btn btn-neutral float-right" title="5. Appendix 1: bash help" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="Chapter1.html" class="btn btn-neutral" title="1. librat" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="Chapter1.html" class="btn btn-neutral" title="3. librat" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

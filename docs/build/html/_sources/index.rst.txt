@@ -19,11 +19,15 @@ UCL Geography/NCEO librat software
    Chapter1
    Chapter2
    RATstart
+   RATstartOptions
    Appendix1
 
 .. _Chapter1: https://mybinder.org/v2/gh/profLewis/librat.git/master?filepath=Chapter1.ipynb
 .. _Chapter2: https://mybinder.org/v2/gh/profLewis/librat.git/master?filepath=Chapter2.ipynb
 .. _Appendix1: https://mybinder.org/v2/gh/profLewis/librat.git/master?filepath=Appendix1.ipynb
+.. _RATstart: https://mybinder.org/v2/gh/profLewis/librat.git/master?filepath=RATstart.ipynb
+.. _RATstartOptions: https://mybinder.org/v2/gh/profLewis/librat.git/master?filepath=RATstartOptions.ipynb
+
 
 .. |image0| image:: ../res/ucl_logo.png 
 
@@ -33,3 +37,4 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
+

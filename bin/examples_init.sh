@@ -3,9 +3,9 @@
 # defaults
 #
 export BPMS=${BPMS-/Users/plewis/librat}
-export BPMSROOT=${BPMSROOT-/Users/plewis/librat/test/test_examples}
-lib=${lib-"$BPMS/src"}
-bin=${bin-"$BPMS/src"}
+export BPMSROOT=${BPMSROOT-$BPMSROOT}
+lib=${lib-$BPMS/src}
+bin=${bin-$BPMS/src}
 VERBOSE=${VERBOSE-0}
 export TEMP=${TEMP-/tmp}
 

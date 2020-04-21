@@ -34,7 +34,7 @@
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
     <link rel="top" title="librat  documentation" href="index.html"/>
-        <link rel="next" title="4. Appendix 1: bash help" href="Appendix1.html"/>
+        <link rel="next" title="4. RATstart options" href="RATstartOptions.html"/>
         <link rel="prev" title="2. Basic librat / RATstart operation" href="Chapter2.html"/> 
 
   
@@ -87,14 +87,23 @@
 <li class="toctree-l1"><a class="reference internal" href="Chapter2.html">2. Basic librat / RATstart operation</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">3. <code class="docutils literal notranslate"><span class="pre">RATstart</span></code></a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#RATstart-(formerly-start)">3.1. <code class="docutils literal notranslate"><span class="pre">RATstart</span></code> (formerly <code class="docutils literal notranslate"><span class="pre">start</span></code>)</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#Initialisation-shells">3.1.1. Initialisation shells</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Getting-started">3.1.1. Getting started</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Initialisation-shells">3.1.2. Initialisation shells</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#Environment-variables">3.2. Environment variables</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#Making-files">3.3. Making files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Making-some-basic-files">3.3. Making some basic files</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#bash-constructs">3.3.1. <code class="docutils literal notranslate"><span class="pre">bash</span></code> constructs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#first.obj-and-associated-files">3.3.2. <code class="docutils literal notranslate"><span class="pre">first.obj</span></code> and associated files</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#height-map-visualisation">3.3.3. height map visualisation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Ray-tracing">3.3.4. Ray tracing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Summary">3.3.5. Summary</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="Appendix1.html">4. Appendix 1: <code class="docutils literal notranslate"><span class="pre">bash</span></code> help</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="RATstartOptions.html">4. <code class="docutils literal notranslate"><span class="pre">RATstart</span></code> options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Appendix1.html">5. Appendix 1: <code class="docutils literal notranslate"><span class="pre">bash</span></code> help</a></li>
 </ul>
 
             
@@ -380,16 +389,26 @@ div.rendered_html tbody tr:hover {
 </style>
 <div class="section" id="RATstart">
 <h1><span class="section-number">3. </span><code class="docutils literal notranslate"><span class="pre">RATstart</span></code><a class="headerlink" href="#RATstart" title="Permalink to this headline">¶</a></h1>
-<p>This section deals with using the direct interface to the <code class="docutils literal notranslate"><span class="pre">librat</span></code> code at a high level, through the <code class="docutils literal notranslate"><span class="pre">RATstart</span></code> software. This is a short piece of <code class="docutils literal notranslate"><span class="pre">C</span></code> code, the main role of with is to present a set of simple functions controlled by text input on the command line. One of these ‘options’ (option 14) gives an extremely fexible interface for defining viewing and illumination conditions for radiative transfer simulations, and it is this part of the interface that is most widely used. We will
-deal with option 14 in more detail elsewhere, concentrating in this section on the other options to the software.</p>
+<p>This section deals with using the direct interface to the <code class="docutils literal notranslate"><span class="pre">librat</span></code> code at a high level, through the <code class="docutils literal notranslate"><span class="pre">RATstart</span></code> software. This is a short piece of <code class="docutils literal notranslate"><span class="pre">C</span></code> code, the main role of with is to present a set of simple functions controlled by text input on the command line. One of these ‘options’ (option 14) gives an extremely fexible interface for defining viewing and illumination conditions for radiative transfer simulations, and it is this part of the interface that is most widely used.</p>
+<p>In this section, we introduse some of the functionality of <code class="docutils literal notranslate"><span class="pre">RATstart</span></code>.</p>
 <div class="section" id="RATstart-(formerly-start)">
 <h2><span class="section-number">3.1. </span><code class="docutils literal notranslate"><span class="pre">RATstart</span></code> (formerly <code class="docutils literal notranslate"><span class="pre">start</span></code>)<a class="headerlink" href="#RATstart-(formerly-start)" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">RATstart</span></code> used to be called <code class="docutils literal notranslate"><span class="pre">start</span></code>, but that causes conflicts sometimes, so its now changed to <code class="docutils literal notranslate"><span class="pre">RATstart</span></code>.</p>
+<div class="section" id="Getting-started">
+<h3><span class="section-number">3.1.1. </span>Getting started<a class="headerlink" href="#Getting-started" title="Permalink to this headline">¶</a></h3>
 <p>The minimum requirement for the <code class="docutils literal notranslate"><span class="pre">RATstart</span></code> command line is the declaration of some object file to use in the simulation. An object file describes the real world geometry and scattering properties of the objects we are using in the simulation, such as some representation of a vegetation canopy. We generate a very simple object file for demonstrating <code class="docutils literal notranslate"><span class="pre">RATstart</span></code>:</p>
-<p>!{ usemtl WHITE v 0 0 0 sph -1 100 !}</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>!{
+usemtl WHITE
+v 0 0 0
+sph -1 100
+!}
+</pre></div>
+</div>
 <p>Other than that, its functionality is mainly controlled though a series of option codes read on the input.</p>
-<p>Valid options are (currently) between 0 and 16, inclusive. If we give a non-valid option code, we get the help message:</p>
+<p>Valid options are (currently) between 0 and 16, inclusive, with some missing. You shouldn’t use the ones not listed as they tend to be experimental and may not work as expected.</p>
+<p>If we give a non-valid option code, we get the help message:</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
 </pre></div>
 </div>
 <div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
@@ -406,9 +425,13 @@ cat <span class="s">&lt;&lt;EOF &gt; $TEMP/tmp.$$.obj</span>
 <span class="s">sph -1 100</span>
 <span class="s">!}</span>
 <span class="s">EOF</span>
+
 <span class="nb">export</span> <span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span><span class="s2">&quot;src:</span><span class="si">${</span><span class="nv">LD_LIBRARY_PATH</span><span class="si">}</span><span class="s2">&quot;</span>
 <span class="nb">export</span> <span class="nv">DYLD_LIBRARY_PATH</span><span class="o">=</span><span class="s2">&quot;src:</span><span class="si">${</span><span class="nv">DYLD_LIBRARY_PATH</span><span class="si">}</span><span class="s2">&quot;</span>
 src/RATstart <span class="nv">$TEMP</span>/tmp.<span class="nv">$$</span>.obj <span class="o">&lt;&lt;&lt;</span> <span class="m">1000</span><span class="p">;</span>
+
+<span class="c1"># tidy up, removing file</span>
+rm -f <span class="nv">$TEMP</span>/tmp.<span class="nv">$$</span>.obj
 </pre></div>
 </div>
 </div>
@@ -421,32 +444,65 @@ options:
          0                   : quit
          1 n s1x s1y s1z ... : set sun vectors
          2                   : print sun vectors
-         3 n b1 w1 ...i bn wn: set wavebands
-         4                   : print wavebands
-         5 file.obj          : read object file
          6 fx fy fz dx dy dz : trace ray from f in direction d
          7                   : get and print materials
-         8                   : print object information
          9                   : print info on materials used
          10                  : get and set verbosity level (0-1)
          11                  : get and print object bbox information
          13                  : same as 14 assuming filenames camera.dat light.dat
-         14 camera.dat light.dat                : ray tracing using defined camera &amp; illumination
-         16 cx cy cz sx sy nrows ncols rpp name : produce a height map in name
-Extent of scene is {-99.990000 -99.990000 -99.990000} to {100.010000 100.010000 100.010000} accept? (y/n)? How many samples in each dimension? 512 512 3  accept? (y/n)? How many histogram samples? 90 accept? (y/n)? Root filename for output files? volume accept? (y/n)? getting object information ...
-  0.5000          printing object information ...
-done
+         14 camera.dat light.dat
+                             : ray tracing using defined camera &amp; illumination
+         16 cx cy cz sx sy nrows ncols rpp name
+                             : produce a height map in name
 </pre></div></div>
 </div>
 <p>As noted above, we most commonly use option <code class="docutils literal notranslate"><span class="pre">14</span></code>. This allows the definition of a ‘camera’ and ‘light source’ defined in the files <code class="docutils literal notranslate"><span class="pre">camera.dat</span></code> and <code class="docutils literal notranslate"><span class="pre">light.dat</span></code> here, respectively and gives a very general interface for radiative transfer simulations. Using the code then amounts to setting up camera and illumination files for the scenarious you are interested in, which greatly simplifies the interface.</p>
+<p>The command line option <code class="docutils literal notranslate"><span class="pre">-RAThelp</span></code> will provide the list of command line options:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
+<span></span>%%bash
+<span class="c1"># a simple object file</span>
+<span class="c1"># --help to see command line options</span>
+<span class="nv">BPMS</span><span class="o">=</span><span class="s2">&quot;../..&quot;</span><span class="p">;</span><span class="nv">TEMP</span><span class="o">=</span>/tmp<span class="p">;</span><span class="nb">cd</span> <span class="nv">$BPMS</span><span class="p">;</span><span class="nv">BPMS</span><span class="o">=</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>
+<span class="c1"># a very simple object file</span>
+cat <span class="s">&lt;&lt;EOF &gt; $TEMP/tmp.$$.obj</span>
+<span class="s">!{</span>
+<span class="s">usemtl WHITE</span>
+<span class="s">v 0 0 0</span>
+<span class="s">sph -1 100</span>
+<span class="s">!}</span>
+<span class="s">EOF</span>
+
+<span class="nb">export</span> <span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span><span class="s2">&quot;src:</span><span class="si">${</span><span class="nv">LD_LIBRARY_PATH</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="nb">export</span> <span class="nv">DYLD_LIBRARY_PATH</span><span class="o">=</span><span class="s2">&quot;src:</span><span class="si">${</span><span class="nv">DYLD_LIBRARY_PATH</span><span class="si">}</span><span class="s2">&quot;</span>
+src/RATstart -RAThelp <span class="nv">$TEMP</span>/tmp.<span class="nv">$$</span>.obj <span class="o">&lt;&lt;&lt;</span> <span class="m">1000</span><span class="p">;</span>
+
+<span class="c1"># tidy up, removing file</span>
+rm -f <span class="nv">$TEMP</span>/tmp.<span class="nv">$$</span>.obj
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+src/RATstart: [-RATm 1] [-RATl] [-RATsun_position x y z] [-RATr randomSeed] [-RATblack] [-RATblockSize blocksize] [-RATstoreVertex N] [-RATsensor_wavebands wavebands.dat] [-RATsun_fov 0 (degrees)] [-RATskymap skymap.hips] [-RATtolerance 0.00001] [-RATdirect directIllumination.dat] [-help | -RAThelp] [-RATv 0|1] [-RATn] [-Useless] [-UsetSun x y z] data_filename.obj
+</pre></div></div>
+</div>
+<p>In the rest of this section, we will learn how to make a call to <code class="docutils literal notranslate"><span class="pre">RATstart</span></code> and how to use the various command line options and input options.</p>
+</div>
 <div class="section" id="Initialisation-shells">
-<h3><span class="section-number">3.1.1. </span>Initialisation shells<a class="headerlink" href="#Initialisation-shells" title="Permalink to this headline">¶</a></h3>
+<h3><span class="section-number">3.1.2. </span>Initialisation shells<a class="headerlink" href="#Initialisation-shells" title="Permalink to this headline">¶</a></h3>
 <p>Before proceeding, we make sure we set appropriate environment variables to run a set of examples with RATstart. We also want to test that the software runs ok. We generate two <code class="docutils literal notranslate"><span class="pre">bash</span></code> shells to achieve this here, and use these in subsequent notes.</p>
 <p>You can modify any of this as a user, but be careful not to break it! 🙄. In an emergency, you can always just re-download this set of notes and software from <a class="reference external" href="https://github.com/profLewis/librat">github</a> and start again.</p>
 <p>If you want to know more about setting up this sort of file, and what it all means, see <a class="reference external" href="Appendix1">Appendix 1</a>. At the moment, you just need to be aware of the need to set environment variables, but not to understand all of the intricacies.</p>
 <p>We simplify the interface for the environment variables by setting up two configuration files <code class="docutils literal notranslate"><span class="pre">examples_init.sh</span></code> and <code class="docutils literal notranslate"><span class="pre">local_init.sh</span></code>. We then run them, to test the code.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
@@ -468,7 +524,7 @@ cat <span class="s">&lt;&lt;EOF &gt; local_init.sh</span>
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
 <div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
@@ -502,6 +558,8 @@ cat <span class="s">&lt;&lt;EOF &gt; $INIT</span>
 <span class="s">export ARARAT_OBJECT=\$BPMSROOT</span>
 <span class="s">export DIRECT_ILLUMINATION=\$BPMSROOT</span>
 <span class="s">export BPMS_FILES=\$BPMSROOT</span>
+<span class="s">export SKY_ILLUMINATION==\$BPMSROOT</span>
+
 <span class="s">if [ &quot;\$(which RATstart)&quot; == &quot;\${bin}/RATstart&quot; ]</span>
 <span class="s">then</span>
 <span class="s">  if [ &quot;\$VERBOSE&quot; == 1 ]; then</span>
@@ -516,8 +574,13 @@ chmod +x <span class="nv">$INIT</span>
 </pre></div>
 </div>
 </div>
+<p>Let us set the <code class="docutils literal notranslate"><span class="pre">VERBOSE</span></code> flag on, by setting:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">export</span> <span class="n">VERBOSE</span><span class="o">=</span><span class="mi">1</span>
+</pre></div>
+</div>
+<p>before running <code class="docutils literal notranslate"><span class="pre">$INIT</span></code>. This will cause the shell to print <code class="docutils literal notranslate"><span class="pre">RATstart</span> <span class="pre">found</span> <span class="pre">ok</span></code> is the executable <code class="docutils literal notranslate"><span class="pre">RATstart</span></code> is where it is expected.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
 <div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
@@ -525,7 +588,7 @@ chmod +x <span class="nv">$INIT</span>
 <span class="c1"># run test</span>
 <span class="nb">source</span> ./local_init.sh
 <span class="nb">export</span> <span class="nv">VERBOSE</span><span class="o">=</span><span class="m">1</span>
-<span class="nv">$INIT</span>
+<span class="nb">source</span> <span class="nv">$INIT</span>
 </pre></div>
 </div>
 </div>
@@ -537,13 +600,60 @@ chmod +x <span class="nv">$INIT</span>
 RATstart found ok
 </pre></div></div>
 </div>
+<p>The shell sets <code class="docutils literal notranslate"><span class="pre">BPMSROOT</span></code> to be <code class="docutils literal notranslate"><span class="pre">$BPMS/test/test_examples</span></code> by default. This causes other variables such as <code class="docutils literal notranslate"><span class="pre">MATLIB</span></code> to be set to the same value, so <code class="docutils literal notranslate"><span class="pre">RATstart</span></code> will look for materials in <code class="docutils literal notranslate"><span class="pre">$BPMS/test/test_examples</span></code> (see below):</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
+<span></span>%%bash
+
+<span class="c1"># run test</span>
+<span class="nb">source</span> ./local_init.sh
+<span class="nb">source</span> <span class="nv">$INIT</span>
+<span class="nb">echo</span> <span class="s2">&quot;MATLIB is </span><span class="nv">$MATLIB</span><span class="s2">&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+MATLIB is /Users/plewis/librat/test/test_examples
+</pre></div></div>
+</div>
+<p>If we want to use this shell for <code class="docutils literal notranslate"><span class="pre">BPMSROOT</span></code> elsewhere, such as <code class="docutils literal notranslate"><span class="pre">$BPMS/obj</span></code>, we just need to make sure <code class="docutils literal notranslate"><span class="pre">BPMSROOT</span></code> is set to this before running <code class="docutils literal notranslate"><span class="pre">$INIT</span></code>:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
+<span></span>%%bash
+
+<span class="c1"># run test</span>
+<span class="nb">source</span> ./local_init.sh
+<span class="nb">export</span> <span class="nv">BPMSROOT</span><span class="o">=</span><span class="nv">$BPMS</span>/obj
+<span class="nb">source</span> <span class="nv">$INIT</span>
+<span class="nb">echo</span> <span class="s2">&quot;MATLIB is </span><span class="nv">$MATLIB</span><span class="s2">&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+MATLIB is /Users/plewis/librat/obj
+</pre></div></div>
+</div>
 </div>
 </div>
 <div class="section" id="Environment-variables">
 <h2><span class="section-number">3.2. </span>Environment variables<a class="headerlink" href="#Environment-variables" title="Permalink to this headline">¶</a></h2>
 <p>If we take a quick look at the <code class="docutils literal notranslate"><span class="pre">examples_init.sh</span></code> file we generated, we see:</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
 <div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
@@ -579,6 +689,8 @@ export RSRLIB=$BPMSROOT
 export ARARAT_OBJECT=$BPMSROOT
 export DIRECT_ILLUMINATION=$BPMSROOT
 export BPMS_FILES=$BPMSROOT
+export SKY_ILLUMINATION==$BPMSROOT
+
 if [ &#34;$(which RATstart)&#34; == &#34;${bin}/RATstart&#34; ]
 then
   if [ &#34;$VERBOSE&#34; == 1 ]; then
@@ -606,19 +718,22 @@ fi
 </thead>
 <tbody>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">MATLIB</span></code></p></td>
-<td><p>material library e.g. <code class="docutils literal notranslate"><span class="pre">`plants.matlib</span></code> &lt;test/test_examples/plants.matlib&gt;`__, all materials defined in a material library e.g. <code class="docutils literal notranslate"><span class="pre">`refl/white.dat</span></code> &lt;test/test_examples/refl/white.dat&gt;`__</p></td>
+<td><p>material library e.g. <code class="docutils literal notranslate"><span class="pre">plants.matlib</span></code>, all materials defined in a material library e.g. <code class="docutils literal notranslate"><span class="pre">white.dat</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ARARAT_OBJECT</span></code></p></td>
-<td><p>(extended) wavefront object files e.g. <code class="docutils literal notranslate"><span class="pre">`first.obj</span></code> &lt;test/test_examples/first.obj&gt;`__</p></td>
+<td><p>(extended) wavefront object files e.g. <code class="docutils literal notranslate"><span class="pre">first.obj</span></code></p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">DIRECT_ILLUMINATION</span></code></p></td>
-<td><p>spectral files for direct illumination: those defined in -RATdirect command line option</p></td>
+<td><p>spectral files for direct illumination: those defined in <code class="docutils literal notranslate"><span class="pre">-RATdirect</span></code> command line option</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">RSRLIB</span></code></p></td>
-<td><p>sensor waveband files: those defined in -RATsensor_wavebands command line option</p></td>
+<td><p>sensor waveband files: those defined in <code class="docutils literal notranslate"><span class="pre">-RATsensor_wavebands</span></code> command line option</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">BPMS_FILES</span></code></p></td>
 <td><p>Not used</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">SKY_ILLUMINATION</span></code></p></td>
+<td><p>location of sky map image files: defined in <code class="docutils literal notranslate"><span class="pre">-RATskymap</span></code> command line option</p></td>
 </tr>
 </tbody>
 </table>
@@ -642,12 +757,15 @@ fi
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">PRAT_MAX_MATERIALS</span></code></p></td>
 <td><p>Maximum number of materials allowed (DEFAULT_PRAT_MAX_MATERIALS=1024 in <code class="docutils literal notranslate"><span class="pre">mtllib.h</span></code>)</p></td>
 </tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">MAX_SUNS</span></code></p></td>
+<td><p>Maximum number of suns (180 in <code class="docutils literal notranslate"><span class="pre">rat.h</span></code>)</p></td>
+</tr>
 </tbody>
 </table>
 <p>If you want to run a shell that uses the setup, you will need to use the command <code class="docutils literal notranslate"><span class="pre">source</span></code> to export the variables to your shell.</p>
 <p>You can test the init file by running the cell (shell) below.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
 <div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
@@ -671,7 +789,7 @@ MATLIB is set to /Users/plewis/librat/test/test_examples
 RSRLIB is set to /Users/plewis/librat/test/test_examples
 </pre></div></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">EXERCISE</span> <span class="mf">1.1</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">EXERCISE</span> <span class="mi">1</span>
 
     <span class="mf">1.</span> <span class="n">Try</span> <span class="n">changing</span> <span class="n">the</span> <span class="n">environment</span> <span class="n">variable</span> <span class="n">VERBOSE</span> <span class="n">to</span> <span class="mi">1</span> <span class="p">(</span><span class="kc">True</span><span class="p">)</span> <span class="ow">or</span> <span class="mi">0</span> <span class="p">(</span><span class="kc">False</span><span class="p">)</span> <span class="n">to</span> <span class="n">see</span> <span class="n">the</span> <span class="n">effect</span><span class="o">.</span>
 
@@ -680,21 +798,22 @@ RSRLIB is set to /Users/plewis/librat/test/test_examples
 </div>
 <p><strong>Answers below:</strong></p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
 <div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
 <span></span>%%bash
+<span class="c1"># Answers to Exercise 1</span>
+
 <span class="c1">#----------------------</span>
 <span class="c1"># this part same as above</span>
-<span class="c1">#</span>
 <span class="c1"># test the init file</span>
 <span class="c1"># set INIT script</span>
 <span class="nb">source</span> ./local_init.sh
 <span class="nb">source</span> <span class="nv">$INIT</span>
 <span class="c1">#----------------------</span>
 
-<span class="c1"># 1.1.1: Try changing the environment variable VERBOSE to 1</span>
+<span class="c1"># 1.1: Try changing the environment variable VERBOSE to 1</span>
 <span class="c1"># (True) and 0 (False) to see the effect.</span>
 
 <span class="c1"># ANSWER</span>
@@ -723,7 +842,7 @@ RSRLIB is set to /Users/plewis/librat/test/test_examples
 <span class="c1"># Above, the export in &#39;export VERBOSE=1&#39; is not</span>
 <span class="c1"># strictly needed if we source $INIT, but it is otherwise</span>
 
-<span class="c1"># 1.1.2: You can change the name of the directory where the</span>
+<span class="c1"># 1.2: You can change the name of the directory where the</span>
 <span class="c1"># object and material files are through the</span>
 <span class="c1"># environment variable BPMSROOT.</span>
 <span class="c1"># See if you can find what BPMSROOT is set to,</span>
@@ -760,9 +879,11 @@ BPMSROOT is /tmp
 </pre></div></div>
 </div>
 </div>
-<div class="section" id="Making-files">
-<h2><span class="section-number">3.3. </span>Making files<a class="headerlink" href="#Making-files" title="Permalink to this headline">¶</a></h2>
-<p>We will create the files we need as we go along, using <code class="docutils literal notranslate"><span class="pre">bash</span></code> shell <code class="docutils literal notranslate"><span class="pre">cat</span> <span class="pre">&lt;&lt;EOF</span> <span class="pre">&gt;</span> <span class="pre">filename</span></code> syntax. You may have noticed that we did this above in creating the <code class="docutils literal notranslate"><span class="pre">init</span></code> file.</p>
+<div class="section" id="Making-some-basic-files">
+<h2><span class="section-number">3.3. </span>Making some basic files<a class="headerlink" href="#Making-some-basic-files" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="bash-constructs">
+<h3><span class="section-number">3.3.1. </span><code class="docutils literal notranslate"><span class="pre">bash</span></code> constructs<a class="headerlink" href="#bash-constructs" title="Permalink to this headline">¶</a></h3>
+<p>We will create the files we need as we go along, using <code class="docutils literal notranslate"><span class="pre">bash</span></code> shell <code class="docutils literal notranslate"><span class="pre">cat</span> <span class="pre">&lt;&lt;EOF</span> <span class="pre">&gt;</span> <span class="pre">filename</span></code> syntax for multi-line data input. You may have noticed that we did this above in creating the <code class="docutils literal notranslate"><span class="pre">init</span></code> file.</p>
 <p>If we type:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cat</span> <span class="o">&lt;&lt;</span><span class="n">EOF</span> <span class="o">&gt;</span> <span class="n">filename</span>
 <span class="n">this</span> <span class="ow">is</span> <span class="n">line</span> <span class="mi">1</span>
@@ -775,18 +896,26 @@ BPMSROOT is /tmp
 <span class="n">this</span> <span class="ow">is</span> <span class="n">line</span> <span class="mi">2</span>
 </pre></div>
 </div>
-<p>Wew can try that now:</p>
-<p>We first create the <code class="docutils literal notranslate"><span class="pre">BPMSROOT</span></code> directory to do our work (using the <code class="docutils literal notranslate"><span class="pre">linux</span></code> command <code class="docutils literal notranslate"><span class="pre">mkdir</span> <span class="pre">-p</span></code> in a <code class="docutils literal notranslate"><span class="pre">bash</span></code> shell):</p>
+<p>In a similar fashion, if we type:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cat</span> <span class="o">&lt;&lt;&lt;</span><span class="s2">&quot;this is line 1&quot;</span> <span class="o">&gt;</span> <span class="n">filename</span>
+</pre></div>
+</div>
+<p>(note the quotes!) then we can create a single line file with the contents:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">this</span> <span class="ow">is</span> <span class="n">line</span> <span class="mi">1</span>
+</pre></div>
+</div>
+<p>This is equivalent to:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">echo</span> <span class="s2">&quot;this is line 1&quot;</span> <span class="o">|</span> <span class="n">cat</span> <span class="o">&gt;</span> <span class="n">filename</span>
+</pre></div>
+</div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
 <div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
 <span></span>%%bash
-<span class="nb">source</span> ./local_init.sh
-<span class="nb">echo</span> <span class="nv">$BPMSROOT</span>
 
-mkdir -p <span class="nv">$BPMSROOT</span>
+cat <span class="o">&lt;&lt;&lt;</span><span class="s2">&quot;hello world&quot;</span>
 </pre></div>
 </div>
 </div>
@@ -795,12 +924,104 @@ mkdir -p <span class="nv">$BPMSROOT</span>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-/Users/plewis/librat/test/test_examples
+hello world
 </pre></div></div>
 </div>
-<p>Now we will put some text some files in that directory. We will be creating files that we need to run a radiative transfer simulation. We will look into what these mean and their formats later in the notes.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
+<span></span>%%bash
+
+cat <span class="s">&lt;&lt; EOF</span>
+<span class="s">hello world</span>
+<span class="s">EOF</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+hello world
+</pre></div></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">EXERCISE</span> <span class="mi">2</span>
+
+    <span class="mf">1.</span> <span class="n">Use</span> <span class="n">these</span> <span class="n">shell</span> <span class="n">constructs</span> <span class="k">as</span> <span class="n">appropriate</span> <span class="n">to</span> <span class="n">create</span> <span class="n">a</span> <span class="n">file</span> <span class="n">called</span> <span class="n">green</span><span class="o">.</span><span class="n">dat</span><span class="p">,</span> <span class="k">with</span> <span class="mi">2</span> <span class="n">columns</span> <span class="n">of</span> <span class="n">data</span><span class="p">,</span> <span class="n">the</span> <span class="n">first</span> <span class="n">being</span> <span class="n">wavelength</span> <span class="ow">in</span> <span class="n">nm</span><span class="p">,</span> <span class="n">the</span> <span class="n">second</span> <span class="n">being</span> <span class="n">reflectance</span><span class="p">,</span> <span class="n">representing</span> <span class="n">a</span> <span class="n">typical</span> <span class="n">green</span> <span class="n">spectrum</span><span class="p">,</span> <span class="k">for</span> <span class="n">samples</span> <span class="n">at</span> <span class="mi">450</span> <span class="n">nm</span><span class="p">,</span> <span class="mi">550</span> <span class="n">nm</span> <span class="ow">and</span> <span class="mi">650</span> <span class="n">nm</span><span class="o">.</span>
+
+    <span class="mf">2.</span> <span class="n">Use</span> <span class="n">these</span> <span class="n">shell</span> <span class="n">constructs</span> <span class="k">as</span> <span class="n">appropriate</span> <span class="n">to</span> <span class="n">create</span> <span class="n">a</span> <span class="n">file</span> <span class="n">called</span> <span class="n">white</span><span class="o">.</span><span class="n">dat</span><span class="p">,</span> <span class="k">with</span> <span class="mi">2</span> <span class="n">columns</span> <span class="n">of</span> <span class="n">data</span><span class="p">,</span> <span class="n">the</span> <span class="n">first</span> <span class="n">being</span> <span class="n">wavelength</span> <span class="ow">in</span> <span class="n">nm</span><span class="p">,</span> <span class="n">the</span> <span class="n">second</span> <span class="n">being</span> <span class="n">reflectance</span><span class="p">,</span> <span class="n">representing</span> <span class="n">a</span> <span class="n">white</span> <span class="n">spectrum</span><span class="p">,</span> <span class="k">for</span> <span class="n">samples</span> <span class="n">at</span> <span class="mi">450</span> <span class="n">nm</span><span class="p">,</span> <span class="mi">550</span> <span class="n">nm</span> <span class="ow">and</span> <span class="mi">650</span> <span class="n">nm</span><span class="o">.</span>
+</pre></div>
+</div>
+<p><strong>Answers below:</strong></p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
+<span></span>%%bash
+
+<span class="c1"># Answers to Exercise 2</span>
+
+<span class="c1"># 2.1 green: high at 550 nm, low at 450 and 650 nm</span>
+<span class="c1"># Its a multi-line file that we need, so</span>
+cat <span class="s">&lt;&lt; EOF &gt; green.dat</span>
+<span class="s">450 0.1</span>
+<span class="s">550 0.9</span>
+<span class="s">650 0.1</span>
+<span class="s">EOF</span>
+
+<span class="c1"># 2.2 white: high at all</span>
+<span class="c1"># Its a multi-line file that we need, so</span>
+cat <span class="s">&lt;&lt; EOF &gt; white.dat</span>
+<span class="s">450 0.1</span>
+<span class="s">550 0.9</span>
+<span class="s">650 0.1</span>
+<span class="s">EOF</span>
+
+<span class="c1"># show results:</span>
+<span class="nb">echo</span> <span class="s2">&quot;========&quot;</span>
+<span class="nb">echo</span> <span class="s2">&quot;green&quot;</span>
+<span class="nb">echo</span> <span class="s2">&quot;========&quot;</span>
+cat green.dat
+
+<span class="nb">echo</span> <span class="s2">&quot;========&quot;</span>
+<span class="nb">echo</span> <span class="s2">&quot;white&quot;</span>
+<span class="nb">echo</span> <span class="s2">&quot;========&quot;</span>
+cat white.dat
+
+<span class="c1"># be polite and tidy up</span>
+rm -f green.dat white.dat
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+========
+green
+========
+450 0.1
+550 0.9
+650 0.1
+========
+white
+========
+450 0.1
+550 0.9
+650 0.1
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="first.obj-and-associated-files">
+<h3><span class="section-number">3.3.2. </span><code class="docutils literal notranslate"><span class="pre">first.obj</span></code> and associated files<a class="headerlink" href="#first.obj-and-associated-files" title="Permalink to this headline">¶</a></h3>
+<p>Now we will use these constructs to put some text some files in that directory. We will be creating files that we need to run a radiative transfer simulation. We will look into what these mean and their formats later in the notes.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
 <div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
@@ -823,7 +1044,7 @@ cat <span class="s">&lt;&lt;EOF &gt; $BPMSROOT/first.obj</span>
 <span class="s">usemtl white</span>
 <span class="s">!{</span>
 <span class="s">v 0 0 0</span>
-<span class="s">sph -1 100</span>
+<span class="s">sph -1 1</span>
 <span class="s">!}</span>
 <span class="s">!}</span>
 <span class="s">EOF</span>
@@ -857,42 +1078,26 @@ cat <span class="s">&lt;&lt;EOF &gt; $BPMSROOT/plants.matlib</span>
 </pre></div>
 </div>
 </div>
-<p>And now run a simple example:</p>
+<p>The scene object described in <code class="docutils literal notranslate"><span class="pre">first.obj</span></code> is a sphere of radius 1, centred at location <code class="docutils literal notranslate"><span class="pre">(0,</span> <span class="pre">0,</span> <span class="pre">0)</span></code>, as well as a plane with normal <code class="docutils literal notranslate"><span class="pre">(0,</span> <span class="pre">0,</span> <span class="pre">1)</span></code> passing through location <code class="docutils literal notranslate"><span class="pre">(0,</span> <span class="pre">0,</span> <span class="pre">0)</span></code>. The sphere is <code class="docutils literal notranslate"><span class="pre">white</span></code> and the plane is <code class="docutils literal notranslate"><span class="pre">green</span></code>.</p>
+</div>
+<div class="section" id="height-map-visualisation">
+<h3><span class="section-number">3.3.3. </span>height map visualisation<a class="headerlink" href="#height-map-visualisation" title="Permalink to this headline">¶</a></h3>
+<p>In the first example, we produce a visualisation of the object using option <code class="docutils literal notranslate"><span class="pre">16</span></code>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">16</span> <span class="n">cx</span> <span class="n">cy</span> <span class="n">cz</span> <span class="n">sx</span> <span class="n">sy</span> <span class="n">nrows</span> <span class="n">ncols</span> <span class="n">rpp</span> <span class="n">name</span> <span class="p">:</span> <span class="n">produce</span> <span class="n">a</span> <span class="n">height</span> <span class="nb">map</span> <span class="ow">in</span> <span class="n">name</span>
+</pre></div>
+</div>
+<p>Option 16 produces an image dataset (in a rather old ‘hips’ format) that is a height map of the scene, produced by ray casting. Imagine a rectangle on an x-y plane of physical dimensions (sx, sy), centred at (cx, cy, cz).</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[63]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
 <div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
 <span></span>%%bash
-<span class="nb">source</span> ./local_init.sh<span class="p">;</span><span class="nb">source</span> <span class="nv">$INIT</span>
-
-<span class="nb">echo</span> <span class="m">11</span> <span class="p">|</span> RATstart -RATsensor_wavebands <span class="nv">$BPMS</span>/test/test_examples/wavebands.dat <span class="se">\</span>
-                -RATsun_position <span class="m">0</span> <span class="m">1</span> <span class="m">1</span> <span class="nv">$BPMS</span>/test/test_examples/first.obj
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-x: -99.980001 100.020001
-y: -99.980001 100.020001
-z: -99.980001 100.020001
-bbox centre @ 0.020000 0.020000 0.020000
-</pre></div></div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[64]:
-</pre></div>
-</div>
-<div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
-<span></span>%%bash
-<span class="nb">source</span> ./local_init.sh<span class="p">;</span><span class="nb">source</span> <span class="nv">$INIT</span>
-
-<span class="nb">echo</span> <span class="s2">&quot;16 0 0 400 400 400  200 200 1 </span><span class="nv">$BPMS</span><span class="s2">/test/test_examples/out.hips&quot;</span> <span class="p">|</span> RATstart <span class="se">\</span>
-    -RATsensor_wavebands <span class="nv">$BPMS</span>/test/test_examples/wavebands.dat  <span class="se">\</span>
-    -RATv  -RATsun_position <span class="m">0</span> <span class="m">1</span> <span class="m">1</span> <span class="nv">$BPMS</span>/test/test_examples/first.obj
+<span class="nb">source</span> ./local_init.sh<span class="p">;</span> <span class="nb">source</span> <span class="nv">$INIT</span>
+<span class="c1"># option 8</span>
+RATstart first.obj <span class="s">&lt;&lt; EOF</span>
+<span class="s">16 0 0 4 4 4 200 200 1 $BPMS/obj/out.tmp.hips</span>
+<span class="s">EOF</span>
 </pre></div>
 </div>
 </div>
@@ -901,240 +1106,298 @@ bbox centre @ 0.020000 0.020000 0.020000
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-RATstart:
-        VERBOSE flag on (-v option)
-read_spectral_file:     3 data entries read in file /Users/plewis/librat/test/test_examples/wavebands.dat
 ( 99.9975)
 </pre></div></div>
 </div>
+<p>We can use the python library <code class="docutils literal notranslate"><span class="pre">libhipl</span></code> to read (and write) hips format images:</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[65]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">libhipl</span> <span class="kn">import</span> <span class="n">Hipl</span>
 <span class="kn">import</span> <span class="nn">pylab</span> <span class="k">as</span> <span class="nn">plt</span>
 
-<span class="n">f</span> <span class="o">=</span> <span class="s1">&#39;../../test/test_examples/out.hips&#39;</span>
-<span class="n">rabbit</span><span class="o">=</span><span class="n">Hipl</span><span class="p">()</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">rabbit</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
+<span class="n">f</span> <span class="o">=</span> <span class="s1">&#39;../../obj/out.tmp.hips&#39;</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">Hipl</span><span class="p">()</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">f</span><span class="p">),</span><span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[65]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-&lt;matplotlib.colorbar.Colorbar at 0x123a32a90&gt;
+&lt;matplotlib.colorbar.Colorbar at 0x1172d0ed0&gt;
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/RATstart_21_1.svg" src="_images/RATstart_21_1.svg" /></div>
+<img alt="_images/RATstart_33_1.svg" src="_images/RATstart_33_1.svg" /></div>
 </div>
+<p>In the visualisation we can see the shere and plane as a height map. The height varies from 0 (the plane) to 1 (at the top of the sphere). The extent of the scene is <code class="docutils literal notranslate"><span class="pre">4</span> <span class="pre">x</span> <span class="pre">4</span></code> units, so we can confirm that the radius of the sphere is 1 unit by inspection.</p>
+</div>
+<div class="section" id="Ray-tracing">
+<h3><span class="section-number">3.3.4. </span>Ray tracing<a class="headerlink" href="#Ray-tracing" title="Permalink to this headline">¶</a></h3>
+<p>And now another example.</p>
+<p>We run this with the verbose flag set on running <code class="docutils literal notranslate"><span class="pre">RATstart</span></code>.</p>
+<p>The input:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">1</span> <span class="mi">3</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">1</span>
+</pre></div>
+</div>
+<p>(option <code class="docutils literal notranslate"><span class="pre">1</span></code>) sets the number of suns (3) followed by the sun direction vectors <code class="docutils literal notranslate"><span class="pre">(0,</span> <span class="pre">1,</span> <span class="pre">1)</span></code> <code class="docutils literal notranslate"><span class="pre">(1,</span> <span class="pre">1,</span> <span class="pre">1)</span></code> and <code class="docutils literal notranslate"><span class="pre">(1,</span> <span class="pre">0,</span> <span class="pre">1)</span></code> here. In practice, we tend to run simulations with a single illumination (sun) vector, but we illustrate using 3 here to encourage the use of this option.</p>
+<p>The input:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">6</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">10</span> <span class="mi">0</span> <span class="mi">0</span> <span class="o">-</span><span class="mi">1</span>
+</pre></div>
+</div>
+<p>(option <code class="docutils literal notranslate"><span class="pre">6</span></code>) sets up a ray tracing case, for a ray <em>from</em> location <code class="docutils literal notranslate"><span class="pre">(0</span> <span class="pre">0</span> <span class="pre">10)</span></code>, in direction <code class="docutils literal notranslate"><span class="pre">(0</span> <span class="pre">0</span> <span class="pre">-1)</span></code> (straight down).</p>
+<p>We set the <code class="docutils literal notranslate"><span class="pre">-RATtolerance</span></code> command line option to a small number, relative to scene size objects: <code class="docutils literal notranslate"><span class="pre">0.0000001</span></code> is sufficient in this case.</p>
+<p>We should be able to visualise this situation, and see that the ray will hit the sphere at <code class="docutils literal notranslate"><span class="pre">(0</span> <span class="pre">0</span> <span class="pre">1)</span></code>, so be of length 9 units.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[66]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
 </pre></div>
 </div>
 <div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
 <span></span>%%bash
 <span class="nb">source</span> ./local_init.sh<span class="p">;</span><span class="nb">source</span> <span class="nv">$INIT</span>
 
-<span class="nb">echo</span> <span class="m">6</span> <span class="m">0</span> <span class="m">0</span> <span class="m">110</span> <span class="m">0</span> <span class="m">0</span> -1 <span class="p">|</span> RATstart -RATsensor_wavebands <span class="nv">$BPMS</span>/test/test_examples/wavebands.dat -RATsun_position <span class="m">0</span> <span class="m">1</span> <span class="m">1</span> <span class="nv">$BPMS</span>/test/test_examples/first.obj
+RATstart -RATtolerance <span class="m">0</span>.0000001 -RATsensor_wavebands wavebands.dat first.obj <span class="s">&lt;&lt;EOF</span>
+<span class="s">1 3 0 1 1 1 1 1 1 0 1</span>
+<span class="s">6 0 0 10 0 0 -1</span>
+<span class="s">EOF</span>
+
 </pre></div>
 </div>
 </div>
-<div class="nboutput nblast docutils container">
+<div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 RTD 0
-order: 0        intersection point:     0.000000 0.000000 100.000010
-                ray length:             9.999990
+order: 0        intersection point:     0.000000 0.000000 1.000000
+                ray length:             9.000000
                 intersection material:  3
-                sun 0:                  no hit
+                sun 0:                  1 reflectance
+                direct:                 0.707107 0.707107 0.707107
+                sun 1:                  1 reflectance
+                direct:                 0.577350 0.577350 0.577350
+                sun 2:                  1 reflectance
+                direct:                 0.707107 0.707107 0.707107
                 sky  :                  reflectance
                 diffuse:                1.000000 1.000000 1.000000
 </pre></div></div>
 </div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+how many sun vectors? (&gt;0): enter sun vector number 1 (3 floats): enter sun vector number 2 (3 floats): enter sun vector number 3 (3 floats):
+</pre></div></div>
+</div>
+<p>In the example above, we hit the sphere at its apex. The normal vector of the sphere at that point is <code class="docutils literal notranslate"><span class="pre">(0,0,1)</span></code> and the material reflectance (<code class="docutils literal notranslate"><span class="pre">white</span></code>) is 1.0 at all wavelengths. So we might notice that the <code class="docutils literal notranslate"><span class="pre">direct</span></code> reflectance above is always the cosine of the angle between the normal vector <code class="docutils literal notranslate"><span class="pre">(0,0,1)</span></code> and the solar vector.</p>
+<p>We explore this in the code below by calculating the <a class="reference external" href="https://mathworld.wolfram.com/DotProduct.html">vector dot product</a> of the sun and normal unit vectors. Note that the unit vectors have unit (1) length, so if we define them as vectors of arbitrary length (e.g. <code class="docutils literal notranslate"><span class="pre">(1,</span> <span class="pre">1,</span> <span class="pre">1)</span></code>) we need to normalise them (divide by the length, to give the unit length):</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
 </pre></div>
 </div>
-<div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
-<span></span>%%bash
-<span class="nb">source</span> ./local_init.sh<span class="p">;</span><span class="nb">source</span> <span class="nv">$INIT</span>
-<span class="c1"># option 8</span>
-RATstart <span class="nv">$BPMS</span>/test/test_examples/first.obj <span class="s">&lt;&lt; EOF</span>
-<span class="s">8</span>
-<span class="s">y</span>
-<span class="s">y</span>
-<span class="s">y</span>
-<span class="s">y</span>
-<span class="s">0</span>
-<span class="s">EOF</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">linalg</span> <span class="k">as</span> <span class="n">LA</span>
+
+<span class="c1">#### dot product for angle ####</span>
+
+<span class="n">sun</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mf">1.</span><span class="p">])</span>
+<span class="c1"># normalise vector</span>
+<span class="n">length</span> <span class="o">=</span> <span class="n">LA</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">sun</span><span class="p">)</span>
+<span class="n">sunHat</span> <span class="o">=</span> <span class="n">sun</span><span class="o">/</span><span class="n">length</span>
+
+<span class="n">normal</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">1.</span><span class="p">])</span>
+<span class="c1"># normalise vector</span>
+<span class="n">length</span> <span class="o">=</span> <span class="n">LA</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">normal</span><span class="p">)</span>
+<span class="n">normalHat</span> <span class="o">=</span> <span class="n">normal</span><span class="o">/</span><span class="n">length</span>
+
+<span class="n">cosine</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">sunHat</span><span class="p">,</span><span class="n">normalHat</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;cosine of&quot;</span><span class="p">,</span><span class="n">sun</span><span class="p">,</span><span class="s2">&quot;=&quot;</span><span class="p">,</span><span class="n">cosine</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
-<div class="output_area stderr docutils container">
+<div class="output_area docutils container">
 <div class="highlight"><pre>
-Extent of scene is {-99.980001 -99.980001 -99.980001} to {100.020001 100.020001 100.020001} accept? (y/n)? How many samples in each dimension? 512 512 3  accept? (y/n)? How many histogram samples? 90 accept? (y/n)? Root filename for output files? volume accept? (y/n)? getting object information ...
-  0.5000          printing object information ...
-done
+cosine of [1. 1. 1.] = 0.5773502691896258
 </pre></div></div>
 </div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[51]:
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">EXERCISE</span> <span class="mi">3</span>
+
+<span class="n">Adapt</span> <span class="n">the</span> <span class="n">RATstart</span> <span class="n">example</span> <span class="n">above</span> <span class="n">to</span> <span class="n">have</span> <span class="n">just</span> <span class="n">a</span> <span class="n">single</span> <span class="n">sun</span> <span class="n">vector</span><span class="o">.</span>
+
+<span class="n">Change</span> <span class="n">the</span> <span class="n">sun</span> <span class="n">vector</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">RATstart</span> <span class="n">example</span><span class="p">,</span> <span class="ow">and</span> <span class="n">use</span> <span class="n">the</span> <span class="n">python</span> <span class="n">code</span> <span class="n">above</span> <span class="n">to</span> <span class="n">predict</span> <span class="n">what</span> <span class="n">the</span> <span class="n">direct</span> <span class="n">reflectance</span> <span class="n">will</span> <span class="n">be</span><span class="o">.</span> <span class="n">Do</span> <span class="n">this</span> <span class="k">for</span> <span class="n">several</span> <span class="n">examples</span><span class="o">.</span>
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">NumberDensity</span> <span class="o">=</span> <span class="s1">&#39;volume.NumberDensity.sphere.WHITE.dat&#39;</span>
-<span class="n">AngleHistogram</span> <span class="o">=</span> <span class="s1">&#39;volume.AngleHistogram.sphere.WHITE.dat&#39;</span>
-<span class="n">SizeHistogram</span> <span class="o">=</span> <span class="s1">&#39;volume.SizeHistogram.sphere.WHITE.dat&#39;</span>
+<p><strong>Answers below:</strong></p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
+<span></span>%%bash
+<span class="c1">#</span>
+<span class="c1"># set a single sun vector, here (0,0,1)</span>
+<span class="c1"># so dot product = 1.0 and direct refl = 1</span>
+<span class="c1">#</span>
+<span class="nb">source</span> ./local_init.sh<span class="p">;</span><span class="nb">source</span> <span class="nv">$INIT</span>
 
-<span class="kn">from</span> <span class="nn">libhipl</span> <span class="kn">import</span> <span class="n">Hipl</span>
-<span class="kn">import</span> <span class="nn">pylab</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-
-<span class="n">rabbit</span><span class="o">=</span><span class="n">Hipl</span><span class="p">()</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">NumberDensity</span><span class="p">)</span>
-<span class="c1">#plt.imshow(rabbit[:,:,2],vmax=1)</span>
-<span class="c1">#plt.colorbar()</span>
-<span class="n">rabbit</span><span class="o">.</span><span class="n">shape</span>
-<span class="n">rabbit</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span><span class="n">rabbit</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
-<span class="n">x</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">SizeHistogram</span><span class="p">)</span>
-<span class="n">x</span><span class="o">.</span><span class="n">shape</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span><span class="n">x</span><span class="p">[:,</span><span class="mi">1</span><span class="p">])</span>
+RATstart -RATtolerance <span class="m">0</span>.0000001 -RATsensor_wavebands wavebands.dat first.obj <span class="s">&lt;&lt;EOF</span>
+<span class="s">1 1 0 0 1</span>
+<span class="s">6 0 0 10 0 0 -1</span>
+<span class="s">EOF</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[51]:
-</pre></div>
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-[&lt;matplotlib.lines.Line2D at 0x10e9e5f70&gt;]
-</pre></div></div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="_images/RATstart_24_1.svg" src="_images/RATstart_24_1.svg" /></div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[67]:
-</pre></div>
-</div>
-<div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
-<span></span>%%bash
-
-<span class="c1">### wavebands</span>
-
-<span class="nb">source</span> ./local_init.sh<span class="p">;</span><span class="nb">source</span> <span class="nv">$INIT</span>
-
-<span class="k">for</span> i in <span class="k">$(</span>seq <span class="m">1</span> <span class="m">2</span> <span class="m">40</span><span class="k">)</span>
-<span class="k">do</span>
-cat <span class="s">&lt;&lt;EOF | RATstart -RATr $i $BPMS/test/test_examples/first.obj</span>
-<span class="s">3 3 200 20 300 20 400 20</span>
-<span class="s">4</span>
-<span class="s">EOF</span>
-<span class="k">done</span>
-
-
-<span class="c1"># wavelength is min and width</span>
-
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-wavebands: 202.630756 315.112106 409.173003
-wavebands: 207.892267 305.336319 407.519008
-wavebands: 213.153779 315.560532 405.865013
-wavebands: 218.415290 305.784745 404.211018
-wavebands: 203.676802 316.008958 402.557024
-wavebands: 208.938313 306.233171 400.903029
-wavebands: 214.199825 316.457384 419.249034
-wavebands: 219.461336 306.681597 417.595040
-wavebands: 204.722848 316.905810 415.941045
-wavebands: 209.984359 307.130022 414.287050
-wavebands: 215.245871 317.354235 412.633055
-wavebands: 200.507383 307.578448 410.979061
-wavebands: 205.768894 317.802661 409.325066
-wavebands: 211.030406 308.026874 407.671071
-wavebands: 216.291917 318.251087 406.017077
-wavebands: 201.553429 308.475300 404.363082
-wavebands: 206.814940 318.699513 402.709087
-wavebands: 212.076452 308.923726 401.055092
-wavebands: 217.337963 319.147938 419.401098
-wavebands: 202.599475 309.372151 417.747103
+RTD 0
+order: 0        intersection point:     0.000000 0.000000 1.000000
+                ray length:             9.000000
+                intersection material:  3
+                sun 0:                  1 reflectance
+                direct:                 1.000000 1.000000 1.000000
+                sky  :                  reflectance
+                diffuse:                1.000000 1.000000 1.000000
 </pre></div></div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[68]:
-</pre></div>
-</div>
-<div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
-<span></span>%%bash
-<span class="nb">source</span> ./local_init.sh<span class="p">;</span><span class="nb">source</span> <span class="nv">$INIT</span>
-
-<span class="nb">echo</span> <span class="m">10000</span> <span class="p">|</span> RATstart <span class="nv">$BPMS</span>/test/test_examples/first.obj
-</pre></div>
-</div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-options:
-         0                   : quit
-         1 n s1x s1y s1z ... : set sun vectors
-         2                   : print sun vectors
-         3 n b1 w1 ...i bn wn: set wavebands
-         4                   : print wavebands
-         5 file.obj          : read object file
-         6 fx fy fz dx dy dz : trace ray from f in direction d
-         7                   : get and print materials
-         8                   : print object information
-         9                   : print info on materials used
-         10                  : get and set verbosity level (0-1)
-         11                  : get and print object bbox information
-         13                  : same as 14 assuming filenames camera.dat light.dat
-         14 camera.dat light.dat                : ray tracing using defined camera &amp; illumination
-         16 cx cy cz sx sy nrows ncols rpp name : produce a height map in name
+how many sun vectors? (&gt;0): enter sun vector number 1 (3 floats):
 </pre></div></div>
 </div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">linalg</span> <span class="k">as</span> <span class="n">LA</span>
+
+<span class="c1">#### dot product for angle ####</span>
+
+<span class="n">sun</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">1.</span><span class="p">])</span>
+<span class="c1"># normalise vector</span>
+<span class="n">length</span> <span class="o">=</span> <span class="n">LA</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">sun</span><span class="p">)</span>
+<span class="n">sunHat</span> <span class="o">=</span> <span class="n">sun</span><span class="o">/</span><span class="n">length</span>
+
+<span class="n">normal</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">1.</span><span class="p">])</span>
+<span class="c1"># normalise vector</span>
+<span class="n">length</span> <span class="o">=</span> <span class="n">LA</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">normal</span><span class="p">)</span>
+<span class="n">normalHat</span> <span class="o">=</span> <span class="n">normal</span><span class="o">/</span><span class="n">length</span>
+
+<span class="n">cosine</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">sunHat</span><span class="p">,</span><span class="n">normalHat</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;cosine of&quot;</span><span class="p">,</span><span class="n">sun</span><span class="p">,</span><span class="s2">&quot;=&quot;</span><span class="p">,</span><span class="n">cosine</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+cosine of [0. 0. 1.] = 1.0
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+</pre></div>
+</div>
+<div class="input_area highlight-bash notranslate"><div class="highlight"><pre>
+<span></span>%%bash
+<span class="c1">#</span>
+<span class="c1"># set a single sun vector, here (0,1,1)</span>
+<span class="c1"># so dot product = 0.707 (sqrt(2))</span>
+<span class="c1"># and so direct refl = 0.707</span>
+<span class="c1">#</span>
+<span class="nb">source</span> ./local_init.sh<span class="p">;</span><span class="nb">source</span> <span class="nv">$INIT</span>
+
+RATstart -RATtolerance <span class="m">0</span>.0000001 -RATsensor_wavebands wavebands.dat first.obj <span class="s">&lt;&lt;EOF</span>
+<span class="s">1 1 0 1 1</span>
+<span class="s">6 0 0 10 0 0 -1</span>
+<span class="s">EOF</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+RTD 0
+order: 0        intersection point:     0.000000 0.000000 1.000000
+                ray length:             9.000000
+                intersection material:  3
+                sun 0:                  1 reflectance
+                direct:                 0.707107 0.707107 0.707107
+                sky  :                  reflectance
+                diffuse:                1.000000 1.000000 1.000000
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+how many sun vectors? (&gt;0): enter sun vector number 1 (3 floats):
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">linalg</span> <span class="k">as</span> <span class="n">LA</span>
+
+<span class="c1">#### dot product for angle ####</span>
+
+<span class="n">sun</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mf">1.</span><span class="p">])</span>
+<span class="c1"># normalise vector</span>
+<span class="n">length</span> <span class="o">=</span> <span class="n">LA</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">sun</span><span class="p">)</span>
+<span class="n">sunHat</span> <span class="o">=</span> <span class="n">sun</span><span class="o">/</span><span class="n">length</span>
+
+<span class="n">normal</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">1.</span><span class="p">])</span>
+<span class="c1"># normalise vector</span>
+<span class="n">length</span> <span class="o">=</span> <span class="n">LA</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">normal</span><span class="p">)</span>
+<span class="n">normalHat</span> <span class="o">=</span> <span class="n">normal</span><span class="o">/</span><span class="n">length</span>
+
+<span class="n">cosine</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">sunHat</span><span class="p">,</span><span class="n">normalHat</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;cosine of&quot;</span><span class="p">,</span><span class="n">sun</span><span class="p">,</span><span class="s2">&quot;=&quot;</span><span class="p">,</span><span class="n">cosine</span><span class="p">)</span>
 </pre></div>
 </div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+cosine of [0. 1. 1.] = 0.7071067811865475
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="Summary">
+<h3><span class="section-number">3.3.5. </span>Summary<a class="headerlink" href="#Summary" title="Permalink to this headline">¶</a></h3>
+<p>In this section, we have introduced the <code class="docutils literal notranslate"><span class="pre">RATstart</span></code> code, some information about the requirements for running the code. We generated some initialisation scripts to simplify setting up environment variables, generated a simple world object (sphere on a plane) and visualised this.</p>
 </div>
 </div>
 </div>
@@ -1146,7 +1409,7 @@ options:
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="Appendix1.html" class="btn btn-neutral float-right" title="4. Appendix 1: bash help" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="RATstartOptions.html" class="btn btn-neutral float-right" title="4. RATstart options" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="Chapter2.html" class="btn btn-neutral" title="2. Basic librat / RATstart operation" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>

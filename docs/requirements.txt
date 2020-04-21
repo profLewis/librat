@@ -10,3 +10,4 @@ sphinx-gallery
 jupytext
 stanford_theme
 ipympl
+jupyter-c-kernel

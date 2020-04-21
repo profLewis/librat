@@ -393,17 +393,14 @@ void doStuff(RATobj *ratObj,void *info){
 						fprintf(stderr,"\t 0                   : quit\n");
 						fprintf(stderr,"\t 1 n s1x s1y s1z ... : set sun vectors\n");
 						fprintf(stderr,"\t 2                   : print sun vectors\n");
-						fprintf(stderr,"\t 3 n b1 w1 ...i bn wn: set wavebands\n");
-						fprintf(stderr,"\t 4                   : print wavebands\n");
-						fprintf(stderr,"\t 5 file.obj          : read object file\n");
 						fprintf(stderr,"\t 6 fx fy fz dx dy dz : trace ray from f in direction d\n");
 						fprintf(stderr,"\t 7                   : get and print materials\n");
 						fprintf(stderr,"\t 9                   : print info on materials used\n");
 						fprintf(stderr,"\t 10                  : get and set verbosity level (0-1)\n");
 						fprintf(stderr,"\t 11                  : get and print object bbox information\n");
 						fprintf(stderr,"\t 13                  : same as 14 assuming filenames camera.dat light.dat\n");
-						fprintf(stderr,"\t 14 camera.dat light.dat                : ray tracing using defined camera & illumination\n");
-						fprintf(stderr,"\t 16 cx cy cz sx sy nrows ncols rpp name : produce a height map in name\n");				
+	fprintf(stderr,"\t 14 camera.dat light.dat\n\t                     : ray tracing using defined camera & illumination\n");
+						fprintf(stderr,"\t 16 cx cy cz sx sy nrows ncols rpp name\n\t                     : produce a height map in name\n");				
 						break;
 		}
 	}

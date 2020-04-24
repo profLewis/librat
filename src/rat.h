@@ -2,28 +2,9 @@
 #define MAX_SUNS 180
 #include <stdlib.h>
 
-double *sphereTesselate(int maxlevel,int *nTriangles);
+double *sphereTesselate(int maxlevel,int *ntriangles);
 double facetNormal(double *normal,struct Facet_struct *n);
-void allocate_material_list();
-void fp_fwrite_header();
-void            calculate_material_lut();
-int find_number_of_materials_in_material_map();
-void calculate_sun_elevation_axis();
-void            pre_calculate_sun_parameters();
-void clearHitPoint();
-void gatherPixelStatsForRay();
-int getNdefaultMaterials();
-int seed_randomise();
-int quantise_sky_waveband();
-void	Vector_Matrix_multiplication_to_Vector();
-int     expand_filename();
-int calculate_reflectance_data();
-void loadObjectInfo();
-void	Matrix_Matrix_multiplication_to_Matrix();
-int loadObject();
-
 char *RATgetProgramName(RATobj *ratObj);
-RATobj *RATinit();
 void RATprintOptions(RATobj *);
 int RATuserParse(RATobj *bb,int thisarg,int argc,char **argv,void *info);
 void RATreadObject(RATobj *bb);

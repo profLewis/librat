@@ -1,4 +1,3 @@
-
 /* this first line is required in the main() file */
 #define RAT_MAIN
 /* you need to include this file */

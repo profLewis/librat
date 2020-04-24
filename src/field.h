@@ -5,21 +5,20 @@
 **	field type
 */
 
-#include "define_float.h"
 
 typedef	struct  {
-	FLOAT	mean,sigma;
+	float	mean,sigma;
 	} distribution;
 
 typedef struct {
-	FLOAT		x_origin;
-	FLOAT		y_origin;
-	FLOAT		x_extent;
-	FLOAT		y_extent;
+	float		x_origin;
+	float		y_origin;
+	float		x_extent;
+	float		y_extent;
 	distribution	row_phase,
 			row_spacing,
 			row_width;
-	INT		row_flag;		/* row or random */
+	int		row_flag;		/* row or random */
 	distribution	plant_density;
 } Field;
 

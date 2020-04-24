@@ -1,16 +1,12 @@
 #include "frat.h"
+#include <math.h>
+
 /*
  * *    Plant RAy Tracer (PRAT):
  */
 
 /* coded by Lewis, dept P&S UCL, Gower St. London. Wed Jun 12 1991 */
 
-extern void     error1(), error2(), exit(), reset_local_z_to_local_max_height();
-extern void    *calloc();
-#ifdef __SUNPRO_C
-char           *strchr();
-#endif
-void allocate_material_list();
 /*
  * *    flagged camera ip format: - options *
  * 
@@ -19,14 +15,9 @@ void allocate_material_list();
  * FRAME_NUMBER n *    FOCAL_LENGTH f *    F_STOP f_stop *    ZOOM zoom
  */
 
-char           *
-read_data_from_line(buff, flag, n, data, idata)
-char           *buff, *flag;
-double         *data;
-int            *idata;
-int             n;
+char           *read_data_from_line(char *buff, char *flag, int n, double *data, int *idata)
 {
-	int             i, atoi();
+	int             i;
 	char           *obuff, nflag[100];
 	
 	obuff = strchr(buff, flag[0]) + strlen(flag);
@@ -44,12 +35,7 @@ int             n;
 	return (obuff);
 }
 
-void 
-read_flagged_camera_ip(local_height, camera_ip, buffer, restartPtr)
-Camera_ip      *camera_ip;
-char           *buffer;
-Restart        *restartPtr;
-int            *local_height;
+void read_flagged_camera_ip(int *local_height, Camera_ip *camera_ip, char *buffer, Restart *restartPtr)
 {
 	char           *buff, flag[100];
 	double          data[3];
@@ -158,12 +144,7 @@ int            *local_height;
  * *    read camera ip
  */
 /*char  globalCameraInfo[5000];*/
-int 
-read_camera_description(cameraFile, local_height, camera_ip, restartPtr)
-Camera_ip      *camera_ip;
-Restart        *restartPtr;
-int            *local_height;
-CameraFile     *cameraFile;
+int read_camera_description(CameraFile *cameraFile,int *local_height, Camera_ip *camera_ip, Restart *restartPtr)
 {
 	char            buffer[5000], *format_str, *format_str1, *format_str2, *format_str3, flag[100];
 char  globalCameraInfo[5000];
@@ -216,13 +197,7 @@ char  globalCameraInfo[5000];
  */
 
 
-int 
-precalculate_camera_characteristics(verbose, camera_ip, camera_op, image_characteristics, flagbag)
-Image_characteristics *image_characteristics;
-Camera_ip      *camera_ip;
-Camera_op      *camera_op;
-int             verbose;
-FlagBag        *flagbag;
+int precalculate_camera_characteristics(int verbose, Camera_ip *camera_ip, Camera_op *camera_op, Image_characteristics *image_characteristics, FlagBag *flagbag)
 {
 	double          focal_length, U, V, HD=0, circle_of_confusion = (1.0 / 20.0);
 	triplet         v;
@@ -247,7 +222,7 @@ FlagBag        *flagbag;
 			if (flagbag->joint_probability){
 				fprintf(stderr, "WARNING: librat:\tcannot really focus that close (focal length <= %f)\n", (float)U);
 			}else{
-				error1("librat:\tcannot focus that close (focal length <= %lf)", U);
+				error1("librat:\tcannot focus that close (focal length)");
 			}
 		}
 		V = U * focal_length / (U - focal_length);
@@ -391,9 +366,7 @@ if (verbose) {
 return (1);
 }
 
-void 
-calculate_sun_elevation_axis(sun_elevation_axis_Ptr, sun_Ptr)
-triplet        *sun_elevation_axis_Ptr, *sun_Ptr;
+void calculate_sun_elevation_axis(triplet *sun_elevation_axis_Ptr, triplet *sun_Ptr)
 {
 	
 	double          nx, ny, nz, sx, sy, sz;
@@ -421,27 +394,16 @@ triplet        *sun_elevation_axis_Ptr, *sun_Ptr;
 }
 
 
-void 
-calculate_pixel_variance(n, pixel_variance, pixel_condition)
-int             n;
-double         *pixel_variance;
-PixelCondition *pixel_condition;
+void calculate_pixel_variance(int n, double *pixel_variance, PixelCondition *pixel_condition)
 {
 	*pixel_variance = fabs((pixel_condition->sigma_f_sqr - ((pixel_condition->sigma_f * pixel_condition->sigma_f) / (double) n)) / (double) n);
 	return;
 }
 
-int 
-calculate_reflectance_data(wavebandbag, materialbag, illumination, lambda_min, lambda_width, verbose)
-double          lambda_min, lambda_width;
-int             verbose;
-IlluminationBag *illumination;
-WavebandBag    *wavebandbag;
-MaterialBag    *materialbag;
+int calculate_reflectance_data(WavebandBag *wavebandbag, MaterialBag *materialbag, IlluminationBag *illumination, double lambda_min, double lambda_width, int verbose)
 {
-	int             ns, k, l, sample, quantise_sky_waveband();
-	double         sunmag=0., Random(), lambda=0.,*rsr0=NULL,*rsr1=NULL;
-	void            calculate_material_lut();
+	int             ns, k, l, sample;
+	double         sunmag=0., lambda=0.,*rsr0=NULL,*rsr1=NULL;
 	/*
 	 * *
 	 * 
@@ -494,21 +456,11 @@ MaterialBag    *materialbag;
 	return (1);
 }
 
-void 
-get_ray(bb,materialbag, ray, i, j, col, row, camera_op_Ptr, image_characteristics_Ptr, flagbag, bbox)
-BigBag *bb;
-Ray            *ray;
-int             col, row;
-Camera_op      *camera_op_Ptr;
-Image_characteristics *image_characteristics_Ptr;
-double          i, j;
-FlagBag        *flagbag;
-BBox           *bbox;
-void           *materialbag;
+void get_ray(RATobj *bb,void *materialbag, Ray *ray, double i, double j, int col, int row, Camera_op *camera_op_Ptr, Image_characteristics *image_characteristics_Ptr, FlagBag *flagbag, BBox *bbox)
 {
 	triplet         dum_trip, projected_imaging_plane_point, p;
 	double          r, theta;
-	double          u, v, randomise_variable(), phi;
+	double          u, v, phi;
 	
 	ray->lengthOfRaySoFar = 0.;
 	ray->rayLengthThroughObject=0.; 
@@ -606,8 +558,7 @@ void           *materialbag;
 	return;
 }
 
-void 
-allocate_material_list(MaterialBag *materialbag, WavebandBag *wavebandbag)
+void allocate_material_list(MaterialBag *materialbag, WavebandBag *wavebandbag)
 {
 	int             I;
 	if(!materialbag->material_list->no_of_materials)return;
@@ -664,8 +615,7 @@ void clearDouble__Array(double ***array,int size1,int size2,int size3){
 	for(i=0;i<size1;i++)for(j=0;j<size2;j++)for(k=0;k<size2;k++)array[i][j][k]=0.;
 }
 
-void skyRadiance(BigBag *bb,double norm,double *diffuseRadiance,WavebandBag *wavebandbag,IlluminationBag *illumination,triplet *toVector,MaterialBag *materialbag){
-	double intersect_sky();
+void skyRadiance(RATobj *bb,double norm,double *diffuseRadiance,WavebandBag *wavebandbag,IlluminationBag *illumination,triplet *tovector,MaterialBag *materialbag){
 	int i;
 	if(bb->flagbag->blackSky){
 		for(i=0;i<wavebandbag->sensor_wavebands->no_of_wavebands;i++){
@@ -674,7 +624,7 @@ void skyRadiance(BigBag *bb,double norm,double *diffuseRadiance,WavebandBag *wav
 	}else{
 		if(illumination->sky_flag){
     		for(i=0;i<wavebandbag->sensor_wavebands->no_of_wavebands;i++){
-      			diffuseRadiance[i] = norm*intersect_sky(materialbag->samples->wavelength[i],illumination->sun_Ptr,illumination->sky_data_Ptr,toVector,&illumination->phi_gap,&illumination->theta_sun,&wavebandbag->theta_gap);
+      			diffuseRadiance[i] = norm*intersect_sky(materialbag->samples->wavelength[i],illumination->sun_Ptr,illumination->sky_data_Ptr,tovector,&illumination->phi_gap,&illumination->theta_sun,&wavebandbag->theta_gap);
     		}
 		}else{
     		for(i=0;i<wavebandbag->sensor_wavebands->no_of_wavebands;i++){
@@ -684,10 +634,7 @@ void skyRadiance(BigBag *bb,double norm,double *diffuseRadiance,WavebandBag *wav
 	}
 }
 
-void sunRadiance(double norm,double *directRadiance,WavebandBag *wavebandbag,IlluminationBag *illumination,triplet *toVector,MaterialBag *materialbag){
-	double intersect_sky(),V_dot();
-	triplet vector_copy2();
-	
+void sunRadiance(double norm,double *directRadiance,WavebandBag *wavebandbag,IlluminationBag *illumination,triplet *tovector,MaterialBag *materialbag){
 	int i;
 	if(strlen(illumination->direct_file)){
 		for(i=0;i<wavebandbag->sensor_wavebands->no_of_wavebands;i++){
@@ -717,7 +664,6 @@ void *getReflectance(int isDiffuse,double *out,int type,Material_table *material
 void *attenuateRadiance(triplet viewer,triplet illumin,int isDiffuse,Material_table *material,int type,double *radiance,double lambertian,MaterialBag *materialbag,WavebandBag *wavebandbag,FlagBag *flagbag){
 	static double *reflectance=NULL;
 	int i;
-	double *d_allocate(),len[2],cosphi,acos(),sqrt();
         double k,bigtheta,rhoc,rho0=1.0,modulation,thetas,thetas_,thetav,relphi;
         void *this=NULL;
 	triplet invector,outvector;
@@ -763,7 +709,6 @@ void *attenuateRadiance(triplet viewer,triplet illumin,int isDiffuse,Material_ta
 void *attenuateRadianceRTD(int isDiffuse,int rtd,Material_table *material,int type,double **radiance,double lambertian,MaterialBag *materialbag,WavebandBag *wavebandbag,FlagBag *flagbag){
 	static double *reflectance=NULL;
 	int i;
-	double *d_allocate();
   	void *this=NULL;
 	
 	if(!reflectance)reflectance=d_allocate(wavebandbag->sensor_wavebands->no_of_wavebands);
@@ -775,24 +720,11 @@ void *attenuateRadianceRTD(int isDiffuse,int rtd,Material_table *material,int ty
 	}
 	return(this);
 }
-void gatherPixelStatsForRay(bb,norm,nowt,rtd,hitPoint,materialbag,illumination,wavebandbag,objectlist,bbox_Ptr,flagbag,material)
-BigBag *bb;
-void *nowt;
-int rtd;
-HitPoint *hitPoint;
-Material_table  *material;
-IlluminationBag *illumination;
-FlagBag        *flagbag;
-WavebandBag    *wavebandbag;
-MaterialBag    *materialbag;
-ObjectList     *objectlist;
-BBox		   *bbox_Ptr;
-double        norm;
+void gatherPixelStatsForRay(RATobj *bb,double norm,void *nowt,int rtd,HitPoint *hitPoint,MaterialBag *materialbag,IlluminationBag *illumination,WavebandBag *wavebandbag,ObjectList *objectlist,BBox *bbox_Ptr,FlagBag *flagbag,Material_table *material)
 {
 	int nBands,i,j,k,l,nMaterials,thisRTD,thisMaterial;
 	double directScale,sumDistance;
 	static double *radiance=NULL,*diffuseRadiance=NULL;
-	double *d_allocate(),v_dot();
 
 	nMaterials = materialbag->material_list->useage->no_of_materials;
         nBands=bb->wavebandbag->sensor_wavebands->no_of_wavebands;	
@@ -816,16 +748,16 @@ double        norm;
 			
 			/* 
 				** only a single diffuse entry 
-			 ** so diffuse[array] = skyRadiance(hitPoint[i].toVector)
+			 ** so diffuse[array] = skyRadiance(hitPoint[i].tovector)
 			 ** multiplied by the reflectances along the way
 			 */
 			for(j=0;j<nBands;j++)radiance[j]=0.;  
 			/* clear radiance array */
 			
-			skyRadiance(bb,norm,diffuseRadiance,wavebandbag,illumination,&hitPoint[MAX(0,i)].toVector,materialbag);
+			skyRadiance(bb,norm,diffuseRadiance,wavebandbag,illumination,&hitPoint[MAX(0,i)].tovector,materialbag);
 			if(flagbag->reverse){
 				for(;i>=0;i--){
-					attenuateRadiance((hitPoint[MAX(0,i)].fromVector),(hitPoint[MAX(0,i)].toVector),TRUE,hitPoint[i].material,hitPoint[i].interactionType,diffuseRadiance,1.0,materialbag,wavebandbag,flagbag);
+					attenuateRadiance((hitPoint[MAX(0,i)].fromvector),(hitPoint[MAX(0,i)].tovector),TRUE,hitPoint[i].material,hitPoint[i].interactionType,diffuseRadiance,1.0,materialbag,wavebandbag,flagbag);
 				}
 			}
 			/* set the corresponding RTD value */
@@ -845,16 +777,16 @@ double        norm;
 				/* clear radiance array */
 				for(j=0;j<nBands;j++)radiance[j]=0.;  
 				/* put solar radiance in  */
-				sunRadiance(norm,radiance,wavebandbag,illumination,&hitPoint[i].sunVector[l],materialbag);
+				sunRadiance(norm,radiance,wavebandbag,illumination,&hitPoint[i].sunvector[l],materialbag);
 				/* attenuate radiance by first scattering interactions */
-				attenuateRadiance((hitPoint[i].fromVector),(hitPoint[i].sunVector[l]),FALSE,hitPoint[i].material,hitPoint[i].sunInteractionType[l],radiance,1.0,materialbag,wavebandbag,flagbag);
+				attenuateRadiance((hitPoint[i].fromvector),(hitPoint[i].sunvector[l]),FALSE,hitPoint[i].material,hitPoint[i].sunInteractionType[l],radiance,1.0,materialbag,wavebandbag,flagbag);
 				/* attenuate by projection term */
 				for(j=0;j<nBands;j++){
 					radiance[j] *= hitPoint[i].lambertian[l]*directScale;
 				}
 				/* attenuate by other (diffuse) scttering interactions */
 				for(k=i-1;k>=0;k--){
-					attenuateRadiance((hitPoint[k].fromVector),(hitPoint[k].sunVector[l]),TRUE,hitPoint[k].material,hitPoint[k].interactionType,radiance,1.0,materialbag,wavebandbag,flagbag);
+					attenuateRadiance((hitPoint[k].fromvector),(hitPoint[k].sunvector[l]),TRUE,hitPoint[k].material,hitPoint[k].interactionType,radiance,1.0,materialbag,wavebandbag,flagbag);
 				}
 				
 				for(j=0;j<nBands;j++){
@@ -876,7 +808,7 @@ double        norm;
 				bb->ratTree[l].hitSun[i]=hitPoint[i].hitSun[l];
 				bb->ratTree[l].hitSky[i]=hitPoint[i].hitSky;
 				
-				bb->ratTree[l].rayLengths[i]=hitPoint[i].fromVectorLength;
+				bb->ratTree[l].rayLengths[i]=hitPoint[i].fromvectorLength;
 				bb->ratTree[l].intersectionPoints[i][0]=hitPoint[i].location.x;
 				bb->ratTree[l].intersectionPoints[i][1]=hitPoint[i].location.y;
 				bb->ratTree[l].intersectionPoints[i][2]=hitPoint[i].location.z;
@@ -893,20 +825,20 @@ double        norm;
  */
 
 
-void clearVector(triplet *v){
+void clearvector(triplet *v){
 	v->x = v->y = v->z = 0.;
 }
 
 void clearAHitPoint(HitPoint *hitPoint){
 	int i;
-	clearVector(&hitPoint->location);
-	clearVector(&hitPoint->localNormal);
-	clearVector(&hitPoint->fromLocation);
-	clearVector(&hitPoint->toVector);
-	for(i=0;i<hitPoint->nSuns;i++)clearVector(&hitPoint->sunVector[i]);
-	clearVector(&hitPoint->skyVector);
+	clearvector(&hitPoint->location);
+	clearvector(&hitPoint->localNormal);
+	clearvector(&hitPoint->fromLocation);
+	clearvector(&hitPoint->tovector);
+	for(i=0;i<hitPoint->nSuns;i++)clearvector(&hitPoint->sunvector[i]);
+	clearvector(&hitPoint->skyvector);
 	
-	hitPoint->fromVectorLength=0.;
+	hitPoint->fromvectorLength=0.;
 	hitPoint->interactionType=0;
 	for(i=0;i<hitPoint->nSuns;i++){
 		hitPoint->hitSun[i]=0;
@@ -930,15 +862,7 @@ double gaussianFunction(double x){
 	return((1./sqrt(2.*M_PI))*exp(-x*x/2.));
 }
 
-void 
-scan_image(argc,argv,timer, bb, bbox_Ptr, camera_op_Ptr, image_characteristics_Ptr, datafile)
-int argc;char **argv;
-BigBag         *bb;
-BBox           *bbox_Ptr;
-Camera_op      *camera_op_Ptr;
-Image_characteristics *image_characteristics_Ptr;
-FILE          **datafile;
-int             timer;
+void scan_image(int argc,char **argv,int timer, RATobj *bb, BBox *bbox_Ptr, Camera_op *camera_op_Ptr, Image_characteristics *image_characteristics_Ptr, FILE **datafile)
 {
 	IlluminationBag *illumination;
 	FlagBag        *flagbag;
@@ -947,12 +871,11 @@ int             timer;
 	PixelVarianceLimits *desired_pixel_variance;
 	double          normSum=0.,norm=1.0,i, j, R, C;
 	int             noUpdate,ps,timer2,counter, doLidar, nRPP, nBins, nBands, nRTD,  rtd,
-		test_image_op_frame = 0, no_of_rays_per_pixel = 0,
+		no_of_rays_per_pixel = 0,
 		tree_depth = 0, I, J, II, JJ;
-	Ray		    newRay(),render(),prevRay;
+	Ray		    prevRay;
 	ObjectList      objectlist;
 	double          lambda_min, lambda_width;
-	void            pre_calculate_sun_parameters();
 	Material_table  material;
 	Ray             prev2,prev3,ray;
 	HitPoint *hitPoint;
@@ -985,7 +908,7 @@ int             timer;
 	for(jj=0;jj<nRTD+1;jj++){ 
 		hitPoint[jj].nSuns=bb->nSuns;
 		hitPoint[jj].hitSun=(int *)v_allocate(bb->nSuns,sizeof(int));
-		hitPoint[jj].sunVector=(triplet *)v_allocate(bb->nSuns,sizeof(triplet));
+		hitPoint[jj].sunvector=(triplet *)v_allocate(bb->nSuns,sizeof(triplet));
 		hitPoint[jj].sunInteractionType=(int *)v_allocate(bb->nSuns,sizeof(int));
 		hitPoint[jj].lambertian=(double *)v_allocate(bb->nSuns,sizeof(double)); 
 	} 
@@ -1144,10 +1067,10 @@ int             timer;
 						ray = render(bb,&(hitPoint[rtd]),&rtd,&ray,materialbag,illumination,wavebandbag,&objectlist,bbox_Ptr,flagbag,&material);
 						if(hitPoint[rtd].hitSky==1 || hitPoint[rtd].hitSky== -1)
 							break;
-						hitPoint[rtd].fromVectorLength = V_mod(vector_minus(hitPoint[rtd].fromLocation,hitPoint[rtd].location));
+						hitPoint[rtd].fromvectorLength = V_mod(vector_minus(hitPoint[rtd].fromLocation,hitPoint[rtd].location));
 						ray.ray_length=1e20;ray.lengthOfRaySoFar=0.;ray.rayLengthThroughObject=-1.;
 					}
-					if(rtd==0)hitPoint[rtd].toVector=prevRay.direction;
+					if(rtd==0)hitPoint[rtd].tovector=prevRay.direction;
 					gatherPixelStatsForRay(bb,norm,NULL,nRTD,hitPoint,materialbag,illumination,wavebandbag,&objectlist,bbox_Ptr,flagbag,&material);
 					/* process the information gathered in hitPoint */
 					if(flagbag->reverse)no_of_rays_per_pixel++;

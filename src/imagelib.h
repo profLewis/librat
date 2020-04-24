@@ -1,6 +1,7 @@
 #ifndef IMAGELIB_H
 #define IMAGELIB_H
 
+#include "hipl_format.h"
 #include "filelib.h"
 
 #define TRUE 1
@@ -63,10 +64,10 @@ typedef struct{
 	int	arrayAccess;	/* BIL/BSQ etc. */
 
         int     format;   	/* The format of each pixel, see above */
-	int	(*read_header)();	/* read header function */
-	void    (*write_header)();	/* write header function */
-	int	(*update_header)();	/* optional */
-	int	(*index)();		/* function returning array index */
+	int	(*read_header)(void *);	/* read header function */
+	void    (*write_header)(void *);	/* write header function */
+	int	(*update_header)(void *,int argc, char **argv);	/* optional */
+	int	(*index)(void *,int,int,int);		/* function returning array index */
 
 	char	supported[NFORMATS];	
 	/* set flags to say if image format is supported */
@@ -128,73 +129,90 @@ typedef struct{
 
 }GenericImage;
 
-void	setImageStyle();	/* HIPS etc. */
-int	getImageStyle();
-int     setImageDefaults();
-int     getImageBlockSize();
-void    setImageBlockSize();
-int     getDataSize();
-int     allocateImage();
-int     writeImage();
-int     readImage();
-int     imageArrayIndex();
-GenericImage 	*resetImageFrame();
-/*int*/ void     getPixel();
-int     putPixel();
-int     openImage();
-int     getImageFormat();
-GenericImage *getImageHeader();
-int     copyImageHeader();
-void    setImageFormat();
-void    setImageRows();
-void    setImageCols();
-void 	setImageFrames();
-int getImageFrames();
-int getImageRows();
-int getImageCols();
-GenericImage	*allocateImageArray();
-float	pixelFloat();
-short	pixelShort();
-int	pixelInt();
-unsigned char	pixelChar();
-unsigned char	pixelByte();
-void	setArrayCheckFlag();
-int	getArrayCheckFlag();
-int	getArrayAccess();
-void	setArrayAccess();
-int	queryImageStyle();
-char	*getImageName();
-int	setImageName();
-FILE *getStream();
-FILE	*putStream(),*setStream();
-int	getImageVerbose();
-void	setImageVerbose(),unsetImageVerbose();
-int	copyImage();
-GenericImage *setOutImage(),*setImage(),*setOutImageArray();
-float getPixelFloat();
-int getPixelInt();
-short getPixelShort();
-unsigned char getPixelChar();
-unsigned char getPixelByte();
-float getValidPixelFloat();
-int getValidPixelInt();
-unsigned char getValidPixelChar();
-unsigned char getValidPixelByte();
-short getValidPixelShort();
-void setValueFromInt();
-void setValueFromDouble();
-void setValueFromFloat();
-void setValueFromChar();
-void setValueFromByte();
-void setValueFromShort();
-FILE *getStreamH(GenericImage *ImagePtr), *putStreamH(GenericImage *ImagePtr, FILE *stream), *setStreamH(GenericImage *ImagePtr,FILE *stream);
-char *getImageNameH(GenericImage *ImagePtr);
-int setImageNameH(GenericImage *ImagePtr,char* file);
 #ifndef MAX
 #define MAX(a,b) ((a>b)?(a):(b))
 #endif
 #ifndef MIN
 #define MIN(a,b) ((a<b)?(a):(b))
 #endif
+#endif
+
+#ifndef IMAGE_H_PROTO
+#define IMAGE_H_PROTO
+float getPixelFloat(GenericImage *image, int b, int r, int c);
+int getPixelInt(GenericImage *image, int b, int r, int c);
+short getPixelShort(GenericImage *image, int b, int r, int c);
+unsigned char getPixelChar(GenericImage *image, int b, int r, int c);
+unsigned char getPixelByte(GenericImage *image, int b, int r, int c);
+int copyImageData(void *data, GenericImage *ImagePtr, GenericImage *InImagePtr, int fromb, int fromr, int fromc, int tob, int tor, int toc,int skip);
+int copyImageMaskData(void *data, GenericImage *ImagePtr, GenericImage *InImagePtr, GenericImage *Mask, int maskValue, int fromb, int fromr, int fromc, int tob, int tor, int toc,int skip);
+float getValidPixelFloat(GenericImage *image, int b, int r, int c, int *valid);
+int getValidPixelInt(GenericImage *image, int b, int r, int c, int *valid);
+unsigned char getValidPixelChar(GenericImage *image, int b, int r, int c, unsigned char  *valid);
+unsigned char getValidPixelByte(GenericImage *image, int b, int r, int c, unsigned char  *valid);
+short getValidPixelShort(GenericImage *image, int b, int r, int c, unsigned char  *valid);
+void setValueFromInt(double *out, GenericImage *image, int value);
+void setValueFromDouble(double *out, GenericImage *image, double value);
+void setValueFromFloat(double *out, GenericImage *image, float value);
+void setValueFromChar(double *out, GenericImage *image, unsigned char value);
+void setValueFromByte(double *out, GenericImage *image, unsigned char value);
+void setValueFromShort(double *out, GenericImage *image, short value);
+int getImageVerbose(GenericImage *ImagePtr);
+void setImageVerbose(GenericImage *ImagePtr);
+void unsetImageVerbose(GenericImage *ImagePtr);
+void setArrayCheckFlag(GenericImage *ImagePtr, int flag);
+int getArrayCheckFlag(GenericImage *ImagePtr);
+void setImageFormat(GenericImage *ImagePtr, int format);
+void setImageFrames(GenericImage *ImagePtr, int frames);
+int getImageRows(GenericImage *ImagePtr);
+int getImageCols(GenericImage *ImagePtr);
+int getImageFrames(GenericImage *ImagePtr);
+void setImageRows(GenericImage *ImagePtr, int rows);
+void setImageCols(GenericImage *ImagePtr, int cols);
+GenericImage   *getImageHeader(GenericImage *ImagePtr);
+int copyImage(GenericImage *input, GenericImage *output);
+int getImageFormat(GenericImage *ImagePtr);
+int getArrayAccess(GenericImage *ImagePtr, int format);
+void setArrayAccess(GenericImage *ImagePtr, int format);
+int setImageDefaults(GenericImage *ImagePtr, int inputFlag);
+void setImageBlockSize(GenericImage *ImagePtr, int size);
+int getImageBlockSize(GenericImage *ImagePtr, int size);
+void setImageStyle(GenericImage *ImagePtr, int style);
+int getImageStyle(GenericImage *ImagePtr);
+int pixelInt(void *value, GenericImage *ImagePtr);
+unsigned char pixelByte(void *value, GenericImage *ImagePtr);
+unsigned char pixelChar(void *value, GenericImage *ImagePtr);
+float pixelFloat(void *value, GenericImage *ImagePtr);
+short pixelShort(void *value, GenericImage *ImagePtr);
+int getDataSize(int pixelFormat);
+GenericImage   *allocateImageArray(int n, GenericImage *ImagePtr);
+int allocateImage(GenericImage *ImagePtr);
+int upDateImage(GenericImage *ImagePtr, int argc, char **argv);
+int writeImage(GenericImage *ImagePtr, int argc, char **argv, int closeFlag, int deallocateFlag,char *env);
+int copyFromHdr(GenericImage *im,struct  header  *hdr);
+int copyToHdr(struct  header  *hdr,GenericImage *im);
+int readImage(GenericImage *ImagePtr, char *env);
+int defaultIndex(GenericImage *ImagePtr, int frame, int row, int col);
+int imageArrayIndex(GenericImage *ImagePtr, int frame, int row, int col, int *blankPixel);
+int getPixel(GenericImage *ImagePtr, int frame, int row, int col, void **valuePtr);
+int putPixel(GenericImage *ImagePtr, int frame, int row, int col, void *valuePtr);
+int openImage(GenericImage *ImagePtr, int inputFlag, char *env);
+int openImageCopy(GenericImage *ImagePtr, GenericImage *InImagePtr, int outFormat, char *env,int skip);
+int openImageMaskedCopy(GenericImage *ImagePtr, GenericImage *InImagePtr, GenericImage *MaskImage, int maskValue, int outFormat, char *env,int skip);
+int queryImageStyle(GenericImage *ImagePtr, int styleSet, char *env);
+FILE           *getStreamH(GenericImage *ImagePtr);
+FILE           *putStreamH(GenericImage *ImagePtr, FILE *stream);
+FILE           *setStreamH(GenericImage *ImagePtr, FILE *stream);
+char           *getImageNameH(GenericImage *ImagePtr);
+FILE           *getStream(GenericImage *ImagePtr);
+FILE           *putStream(GenericImage *ImagePtr, FILE *stream);
+FILE           *setStream(GenericImage *ImagePtr, FILE *stream);
+char           *getImageName(GenericImage *ImagePtr);
+int setImageName(GenericImage *ImagePtr, char *name);
+int setImageNameH(GenericImage *ImagePtr, char *name);
+GenericImage   *resetImageFrame(GenericImage *ImagePtr, GenericImage *outImagePtr, int frame, int nFrames);
+GenericImage   *setOutImageArray(char *name, int nImages, int nFrames, int nRows, int nCols, int format, int styleSet, char *env, int mmap);
+GenericImage   *setOutImage(char *name, int nFrames, int nRows, int nCols, int format,int styleSet, char *env, int mmap);
+GenericImage   *setImage(char *name, int nFrames, int nRows, int nCols, int format);
 
 #endif

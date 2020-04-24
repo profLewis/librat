@@ -9,20 +9,36 @@
 
 #include	<stdio.h>
 #include	<math.h>
-#include	"useful3.h"
-#include	"vectors2.h"
 #include <unistd.h>
 #include <stdlib.h>
-#include "matrix.h"
+#include "4D_vectors.h"
 
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
 #endif
-void	error1();
-
-Matrix4 load_identity_matrix4()
+triplet old_multiply_matrix4_vector3(matrix4 m,triplet v)
 {
-	Matrix4 out;
+        int     i;
+        triplet out;
+        double  vout[3];
+
+        for(i=0;i<3;i++){
+                vout[i] = v.x * m.data[i][0] +
+                        v.y * m.data[i][1] +
+                        v.z * m.data[i][2] +
+                        m.data[i][3];
+        }
+        out.x = vout[0];
+        out.y = vout[1];
+        out.z = vout[2];
+        return(out);
+
+}
+
+
+matrix4 load_identity_matrix4(void)
+{
+	matrix4 out;
 	int	i,j;
 
 	for(i=0;i<4;i++)for(j=0;j<4;j++){
@@ -32,8 +48,7 @@ Matrix4 load_identity_matrix4()
 	return(out);
 }
 
-void	pload_identity_matrix4(out)
-Matrix4 *out;
+void	pload_identity_matrix4(matrix4 *out)
 {
 	int	i,j;
 
@@ -44,10 +59,9 @@ Matrix4 *out;
 	return;
 }
 
-Matrix4 load_translation_matrix4(t)
-triplet	t;
+matrix4 load_translation_matrix4(triplet t)
 {
-	Matrix4 out;
+	matrix4 out;
 	out = load_identity_matrix4();
 	out.data[0][3] = t.x;
 	out.data[1][3] = t.y;
@@ -55,10 +69,9 @@ triplet	t;
 	return(out);
 }
 
-Matrix4 multiply_matrix4_matrix4(a,b)
-Matrix4 a,b;
+matrix4 multiply_matrix4_matrix4(matrix4 a,matrix4 b)
 {
-	Matrix4 out;
+	matrix4 out;
 	int	i,j,k;
 
 	for(i=0;i<4;i++)for(j=0;j<4;j++){
@@ -70,10 +83,9 @@ Matrix4 a,b;
 	return(out);
 }
 
-Vector4 vector_copy4(a,b,c,d)
-double	a,b,c,d;
+vector4 vector_copy4(double a,double b,double c,double d)
 {
-	Vector4	out;
+	vector4	out;
 	out.v[0]=a;
 	out.v[1]=b;
 	out.v[2]=c;
@@ -81,11 +93,9 @@ double	a,b,c,d;
 	return(out);
 }
 
-Vector4	multiply_matrix4_vector4(m,v)
-Matrix4 m;
-Vector4 v;
+vector4	multiply_matrix4_vector4(matrix4 m,vector4 v)
 {
-	Vector4	out;
+	vector4	out;
 	int	i,j;
 
 	for(i=0;i<4;i++){
@@ -96,10 +106,7 @@ Vector4 v;
 	return(out);
 }
 
-triplet	multiply_matrix4_vector3(m,v,translation_flag)
-Matrix4 m;
-triplet v;
-int	translation_flag;
+triplet	multiply_matrix4_vector3(matrix4 m,triplet v,int translation_flag)
 {
 	triplet	out;
 
@@ -112,10 +119,9 @@ int	translation_flag;
 	return(out);
 }
 
-Matrix4 load_scaling_matrix4(s)
-double s;
+matrix4 load_scaling_matrix4(double s)
 {
-	Matrix4 out;
+	matrix4 out;
 	out = load_identity_matrix4();
 	out.data[0][0] = s;
 	out.data[1][1] = s;
@@ -123,10 +129,9 @@ double s;
 	return(out);
 }
 
-Matrix4 load_differential_scaling_matrix4(s)
-triplet s;
+matrix4 load_differential_scaling_matrix4(triplet s)
 {
-	Matrix4 out;
+	matrix4 out;
 	out = load_identity_matrix4();
 	out.data[0][0] = s.x;
 	out.data[1][1] = s.y;
@@ -134,10 +139,9 @@ triplet s;
 	return(out);
 }
 
-Matrix4 load_x_axis_rotation_matrix4(theta)
-double	theta;
+matrix4 load_x_axis_rotation_matrix4(double theta)
 {
-	Matrix4 out;
+	matrix4 out;
 	double	s,c,th;
 
 	th= DTOR(theta);
@@ -151,10 +155,9 @@ double	theta;
 	return(out);
 }
 
-Matrix4 load_y_axis_rotation_matrix4(theta)
-double	theta;
+matrix4 load_y_axis_rotation_matrix4(double theta)
 {
-	Matrix4 out;
+	matrix4 out;
 	double	s,c,th;
 
 	th= DTOR(theta);
@@ -168,10 +171,9 @@ double	theta;
 	return(out);
 }
 
-Matrix4 load_z_axis_rotation_matrix4(theta)
-double	theta;
+matrix4 load_z_axis_rotation_matrix4(double theta)
 {
-	Matrix4 out;
+	matrix4 out;
 	double	s,c,th;
 
 	th= DTOR(theta);
@@ -185,11 +187,9 @@ double	theta;
 	return(out);
 }
 
-Matrix4 load_scaling_fix_point_matrix4(s,fix_point)
-double s;
-triplet	fix_point;
+matrix4 load_scaling_fix_point_matrix4(double s,triplet fix_point)
 {
-	Matrix4 out,t,t1,m;
+	matrix4 out,t,t1,m;
 	t = load_translation_matrix4(fix_point);
 	t1= load_translation_matrix4(V_factor(fix_point,-1.0));
 	m = load_scaling_matrix4(s);
@@ -200,11 +200,9 @@ triplet	fix_point;
 	return(out);
 }
 
-Matrix4 load_differential_scaling_fix_point_matrix4(s,fix_point)
-triplet s;
-triplet	fix_point;
+matrix4 load_differential_scaling_fix_point_matrix4(triplet s,triplet fix_point)
 {
-	Matrix4 out,t,t1,m;
+	matrix4 out,t,t1,m;
 	t = load_translation_matrix4(fix_point);
 	t1= load_translation_matrix4(V_factor(fix_point,-1.0));
 	m = load_differential_scaling_matrix4(s);
@@ -215,11 +213,9 @@ triplet	fix_point;
 	return(out);
 }
 
-Matrix4 load_x_axis_rotation_fix_point_matrix4(theta,fix_point)
-double	theta;
-triplet	fix_point;
+matrix4 load_x_axis_rotation_fix_point_matrix4(double theta,triplet fix_point)
 {
-	Matrix4 out,t,t1,m;
+	matrix4 out,t,t1,m;
 
 	t = load_translation_matrix4(fix_point);
 	t1= load_translation_matrix4(V_factor(fix_point,-1.0));
@@ -227,11 +223,9 @@ triplet	fix_point;
 	out = multiply_matrix4_matrix4(t,multiply_matrix4_matrix4(m,t1));	return(out);
 }
 
-Matrix4 load_y_axis_rotation_fix_point_matrix4(theta,fix_point)
-double	theta;
-triplet	fix_point;
+matrix4 load_y_axis_rotation_fix_point_matrix4(double theta,triplet fix_point)
 {
-	Matrix4 out,t,t1,m;
+	matrix4 out,t,t1,m;
 
 	t = load_translation_matrix4(fix_point);
 	t1= load_translation_matrix4(V_factor(fix_point,-1.0));
@@ -239,11 +233,9 @@ triplet	fix_point;
 	out = multiply_matrix4_matrix4(t,multiply_matrix4_matrix4(m,t1));	return(out);
 }
 
-Matrix4 load_z_axis_rotation_fix_point_matrix4(theta,fix_point)
-double	theta;
-triplet	fix_point;
+matrix4 load_z_axis_rotation_fix_point_matrix4(double theta,triplet fix_point)
 {
-	Matrix4 out,t,t1,m;
+	matrix4 out,t,t1,m;
 
 	t = load_translation_matrix4(fix_point);
 	t1= load_translation_matrix4(V_factor(fix_point,-1.0));
@@ -252,10 +244,9 @@ triplet	fix_point;
 	return(out);
 }
 
-Matrix4 transpose4(in)
-Matrix4 in;
+matrix4 transpose4(matrix4 in)
 {
-	Matrix4 out;
+	matrix4 out;
 	int	i,j;
 
 	for(i=0;i<4;i++)for(j=0;j<4;j++)
@@ -263,8 +254,7 @@ Matrix4 in;
 	return(out);
 }
 
-int	clock_count(mod,in)
-int	mod,in;
+int	clock_count(int mod,int in)
 {
 /* assumes in +ve */
 	int	i,out;
@@ -274,8 +264,7 @@ int	mod,in;
 	return(out);
 }
 
-double	modulus_matrix4(in)
-Matrix4 in;
+double	modulus_matrix4(matrix4 in)
 {
 	matrix3 temp;
 	int	i,j,k;
@@ -289,13 +278,11 @@ Matrix4 in;
 	return(out);
 }
 
-Matrix4 inverse_matrix4(in)
-Matrix4 in;
+matrix4 inverse_matrix4(matrix4 in)
 {
-	Matrix4 out;
-	double	det=0,u[100],b[16],a[16];
+	matrix4 out;
+	double	u[100],b[16],a[16];
 	int	i,j;
-	void error1();
 
 
 	for(i=0;i<4;i++)for(j=0;j<4;j++)
@@ -304,7 +291,7 @@ Matrix4 in;
 /*
 **	-> invert for nxn matrix
 */
-	Matrix_inversion(&a[0],&b[0],&u[0],4,&det);
+	matrix_inversion(&a[0],&b[0],&u[0],4,NULL);
 
 	for(i=0;i<4;i++)for(j=0;j<4;j++)
 		out.data[i][j]=(double)a[i*4+j];
@@ -312,13 +299,12 @@ Matrix4 in;
 	return(out);
 }
 
-Matrix4 read_matrix4(fp)
-FILE	*fp;
+matrix4 read_matrix4(FILE *fp)
 {
 /*
 **	read in 12 values to load matrix
 */
-	Matrix4 out;
+	matrix4 out;
 	int	i,j;
 	double	temp;
 
@@ -327,27 +313,31 @@ FILE	*fp;
 			if(j==4)out.data[j][i]=1;
 			else 	out.data[j][i]=0;
 		}else{
-			if( fscanf(fp,"%lf",&temp)!=1)error1("error in Matrix4 read");
+			if( fscanf(fp,"%lf",&temp)!=1){
+                          fprintf(stderr,"error in matrix4 read");
+                          exit(1);
+                        }
 			out.data[j][i] = temp;
 		}
 	}
 	return(out);
 }
 
-Matrix4 load_arbitrary_axis_rotation_matrix4(axis,theta,fix_point)
-triplet	axis,fix_point;
-double	theta;
+matrix4 load_arbitrary_axis_rotation_matrix4(triplet axis,double theta,triplet fix_point)
 {
 /*
 **	axis -> unit vector
 */
-	Matrix4 tm,m;
+	matrix4 tm,m;
 	double	d;
 
 	d = sqrt(axis.y*axis.y + axis.z*axis.z);
 	if(d==0.0){
-		if(axis.x==0.0)error1("load_arbitrary_axis_rotation_matrix4:\tzero axis loaded");
-		return(load_x_axis_rotation_fix_point_matrix4(theta,fix_point));
+		if(axis.x==0.0){
+                  fprintf(stderr,"load_arbitrary_axis_rotation_matrix4:\tzero axis loaded");
+	          exit(1);
+   	        }
+                return(load_x_axis_rotation_fix_point_matrix4(theta,fix_point));
 	}
 	tm = load_translation_matrix4(V_factor(fix_point,-1.0));
 /*
@@ -399,36 +389,7 @@ double	theta;
 	return(tm);
 }
 
-/*
-**
-**	old... redundent...
-**
-
-triplet	multiply_matrix4_vector3(m,v)
-Matrix4 m;
-triplet	v;
-{
-	int	i,j;
-	triplet	out;
-	double	vout[3];
-	
-	for(i=0;i<3;i++){
-		vout[i] = v.x * m.data[i][0] + 
-			v.y * m.data[i][1] +
-			v.z * m.data[i][2] +
-			m.data[i][3];
-	}
-	out.x = vout[0];
-	out.y = vout[1];
-	out.z = vout[2];
-	return(out);
-
-}
-*/
-
-triplet	multiply_upper_matrix3_vector3(m,v)
-Matrix4 m;
-triplet	v;
+triplet	multiply_upper_matrix3_vector3(matrix4 m,triplet v)
 {
 	triplet	out;
 	int	i,j;

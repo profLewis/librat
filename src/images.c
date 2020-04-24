@@ -4,10 +4,7 @@
 #include <sys/stat.h>
 #include <time.h>
 
-int	InitHeader(image,orig_name,num_frame,seq_name,seq_desc,format)
-Image_characteristics	*image;
-char	*orig_name,*seq_name,*seq_desc;
-int	format,num_frame;
+int	InitHeader(Image_characteristics *image,char *orig_name,int num_frame,char *seq_name,char *seq_desc,int format)
 {
 	int	size=0;
 	char	*orig_date;
@@ -35,9 +32,7 @@ int	format,num_frame;
 	return(1);
 }
 	
-void	write_hips_image(imagename,image_characteristicsPtr)
-char	*imagename;
-Image_characteristics	*image_characteristicsPtr;
+void	write_hips_image(char *imagename,Image_characteristics *image_characteristicsPtr)
 {
 	switch(image_characteristicsPtr->hd.pixel_format){
 		case PFBYTE:	
@@ -52,12 +47,7 @@ Image_characteristics	*image_characteristicsPtr;
 	return;
 }
 
-int	Mmap_op(fip,bip,data_Ptr,hd,r,c,frame)
-Data	*data_Ptr;
-struct header *hd;
-int	r,c,frame;
-float	fip;	/* not so elegant this bit... */
-char	bip;
+int	Mmap_op(float fip,char bip,Data *data_Ptr,struct header *hd,int r,int c,int frame)
 {
 	switch(hd->pixel_format){
 		case PFBYTE:
@@ -73,23 +63,15 @@ char	bip;
 }
 
 /* mmap input image into buffer */
+#ifndef CLOSE
 #define CLOSE -1
-
-int	mmap_read_hips_image(imagename, head, buffer,env)
-char            *imagename;
-struct  header  *head;
-Data	*buffer;
-char *env;
-{
-        FILE *fp,*openFile();
-	long offset;
-        int     rows, cols;
-        int     mmap_flag, fd;
-#ifdef __SUNPRO_C___
-		int lseek();
 #endif
-	void	exit(),fp_fread_header();
-	Data	D_allocate();
+
+int	mmap_read_hips_image(char *imagename, struct  header  *head, Data *buffer,char *env)
+{
+        FILE *fp;
+        int     rows, cols;
+        int     mmap_flag;
 
 #ifdef MMAP
 	mmap_flag=1;
@@ -108,25 +90,25 @@ char *env;
 	*buffer = D_allocate(head->pixel_format,rows*cols*head->num_frame);
 	switch(head->pixel_format){
 	    case PFBYTE:
-		if(fread(buffer->bdata,sizeof(char),rows*cols*head->num_frame,fp)!=rows*cols*head->num_frame){
+		if((int)fread(buffer->bdata,sizeof(char),rows*cols*head->num_frame,fp)!=(int)rows*cols*head->num_frame){
                 	error2("mmap_read_hips_image:\terror reading PFBYTE image data",imagename);
                         exit(1);
                 }
 		break;		
 	    case PFFLOAT:
-		if(fread(buffer->fdata,sizeof(float),rows*cols*head->num_frame,fp)!=rows*cols*head->num_frame){
-                         error2("mmap_read_hips_image:\terror reading PFFLOAT image data",imagename);
+		if((int)fread(buffer->fdata,sizeof(float),rows*cols*head->num_frame,fp)!=(int)(rows*cols*head->num_frame)){
+                         error2("mmap_read_hips_image:\terror reading PFfloat image data",imagename);
                          exit(1);
 		}
                 break;		
             case PFINT:
-                if(fread(buffer->idata,sizeof(float),rows*cols*head->num_frame,fp)!=rows*cols*head->num_frame){
-                         error2("mmap_read_hips_image:\terror reading PFINT image data",imagename);
+                if((int)fread(buffer->idata,sizeof(float),rows*cols*head->num_frame,fp)!=(int)(rows*cols*head->num_frame)){
+                         error2("mmap_read_hips_image:\terror reading PFint image data",imagename);
                          exit(1);
                 }
                 break;
             case PFSHORT:
-                if(fread(buffer->sdata,sizeof(float),rows*cols*head->num_frame,fp)!=rows*cols*head->num_frame){
+                if((int)fread(buffer->sdata,sizeof(float),rows*cols*head->num_frame,fp)!=(int)rows*cols*head->num_frame){
                          error2("mmap_read_hips_image:\terror reading PFSHORT image data",imagename);
                          exit(1);
                 }
@@ -135,15 +117,13 @@ char *env;
 		error2("mmap_read_hips_image:\timage pixel format must be bytes or int or short or float",imagename);
                 exit(1);
 	}
-        fp=openFile(imagename,CLOSE,fp);
+        fp=openFile(imagename,CLOSE,(char *)fp);
         return(0);
 }
 
 /* write out updated hips header */
-void	write_hips_header(fd,hd,argc,argv)
-struct header *hd;int argc;char **argv;int fd;
+void	write_hips_header(int fd,struct header *hd,int argc,char **argv)
 {
-	void	update_header(),fwrite_header();
 
 	update_header(hd,argc,argv);
 	fwrite_header(fd,hd);
@@ -151,17 +131,10 @@ struct header *hd;int argc;char **argv;int fd;
 
 #ifdef MMAP
 /* setup mmap op image - if !restart, write data first */
-void	mmap_write_hips_image(imagename, head,buf,argc,argv,restart_flag)
-char    *imagename;int argc;char **argv;int restart_flag;
-struct  header  *head;
-Data	*buf;
+void	mmap_write_hips_image(char *imagename, struct  header  *head,Data *buf,int argc,char **argv,int restart_flag)
 {
         int     rows, cols;
         int     fd, offset,size=0;
-#ifdef __SUNPRO_C___
-		int	lseek();
-#endif
-	void	exit(),fread_header();
 
 #ifndef __SUNPRO_C
 #endif
@@ -218,18 +191,11 @@ Data	*buf;
 **	mmaping for output
 */
 
-int	mmap_write_hips_image_no_free(imagename, head,buf,argc,argv,restart_flag)
-char    *imagename;int argc;char **argv;int restart_flag;
-struct  header  *head;
-Data	*buf;
+int	mmap_write_hips_image_no_free(char *imagename, struct  header  *head,Data *buf,int argc,char **argv,int restart_flag)
 {
-        int     i,size,rows, cols,mmap_flag;
+        int     rows, cols,mmap_flag;
         int     fd, offset=0;
-#ifdef __SUNPRO_C___
-		int	lseek();
-#endif
-	Data 	buffer,D_allocate();
-	void	exit(),fwrite_header(),fread_header();
+	Data 	buffer;
 
 /*
 **	get environmental variable MMAP_OP to see
@@ -307,9 +273,7 @@ Data	*buf;
 	return(fd);
 }
 
-void	set_data_value(sunshine,op_col,op_row,op_frame,op_buffer,op_head)
-int	op_col,op_row,op_frame;float	*sunshine;
-Data	*op_buffer;struct header *op_head;
+void	set_data_value(float *sunshine,int op_col,int op_row,int op_frame,Data *op_buffer,struct header *op_head)
 {
 	int	i;
 	for(i=0;i<op_head->num_frame;i++)
@@ -322,10 +286,7 @@ Data	*op_buffer;struct header *op_head;
 
 }
 
-void	set_data(ip_col,ip_row,ip_frame,op_col,op_row,op_frame,ip_buffer,ip_head,op_buffer,op_head)
-int	ip_col,ip_row,ip_frame,op_col,op_row,op_frame;
-Data 	*ip_buffer,*op_buffer;
-struct header *ip_head,*op_head;
+void	set_data(int ip_col,int ip_row,int ip_frame,int op_col,int op_row,int op_frame,Data *ip_buffer,struct header *ip_head,Data *op_buffer,struct header *op_head)
 {
 	switch(op_head->pixel_format){
 		case PFFLOAT:
@@ -346,8 +307,7 @@ struct header *ip_head,*op_head;
 }
 
 
-void	pad_header(head,offset)
-struct header *head;int	offset;
+void	pad_header(struct header *head,int offset)
 {
 	int	size,add;char	seq_desc[1000];
 
@@ -359,8 +319,7 @@ struct header *head;int	offset;
 	return;
 }
 
-void	mmap_op(data,buffer,size,pixel_format)
-Data	buffer;int	size,pixel_format;float	data;
+void	mmap_op(float data,Data buffer,int size,int pixel_format)
 {
 	switch(pixel_format){
 		case PFBYTE:

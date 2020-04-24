@@ -1,6 +1,6 @@
 #include "frat.h"
 
-triplet rotateByMatrix(triplet in,double *m,int transpose);
+triplet rotateBymatrix(triplet in,double *m,int transpose);
 
 /*
 **	in special cases, reset the local z-coordinate of the 
@@ -8,14 +8,9 @@ triplet rotateByMatrix(triplet in,double *m,int transpose);
 **	of the watch point
 */
 
-void	reset_local_z_to_local_max_height(bb,materialbag,look_at,camera_position,flagbag,bbox_Ptr)
-     BigBag *bb;
-     triplet			*look_at, *camera_position;
-     FlagBag			*flagbag;
-     BBox			*bbox_Ptr;
-     void			*materialbag;
+void	reset_local_z_to_local_max_height(RATobj *bb,void *materialbag,triplet *look_at,triplet *camera_position,FlagBag *flagbag,BBox *bbox_Ptr)
 {
-  int		plane_hit_count=0,intersect_plane(),intersect_objects();
+  int		plane_hit_count=0;
   Plane		*current_plane;
   Ray		ipray;
   ObjectList	objectlist;
@@ -57,23 +52,12 @@ void	reset_local_z_to_local_max_height(bb,materialbag,look_at,camera_position,fl
   return;
 }
 
-Material_table *doIHitAnything(bb,normal,plane_normal,tree_depth_Ptr,objectlist_Ptr,bbox_Ptr,illumination,flagbag,wavebandbag,materialbag,ipray)
-     BigBag *bb;
-     ObjectList	*objectlist_Ptr;
-     triplet *normal,*plane_normal;
-     BBox		*bbox_Ptr;
-     IlluminationBag		*illumination;
-     FlagBag			*flagbag;
-     WavebandBag		*wavebandbag;
-     MaterialBag		*materialbag;
-     Ray			*ipray;
-     int 			*tree_depth_Ptr;
+Material_table *doIHitAnything(RATobj *bb,triplet *normal,triplet *plane_normal,int *tree_depth_Ptr,ObjectList *objectlist_Ptr,BBox *bbox_Ptr,IlluminationBag *illumination,FlagBag *flagbag,WavebandBag *wavebandbag,MaterialBag *materialbag,Ray *ipray)
 {
   int hitMe=0,continueOn=0,transparent=0,plane_hit_count=0,ray_clip=0;
   Plane *current_plane=NULL;
-  Material_table	*get_reflection_ray_value(),*material_Ptr;
+  Material_table	*material_Ptr;
   Ray		initial_ray;
-  int intersect_plane(),intersect_objects(),test_calculate_current_reflectance(); 
   material_Ptr=NULL;
   initial_ray= *ipray;
   objectlist_Ptr->RayLength=BIG;
@@ -108,7 +92,7 @@ Material_table *doIHitAnything(bb,normal,plane_normal,tree_depth_Ptr,objectlist_
     material_Ptr=get_reflection_ray_value(materialbag,wavebandbag,flagbag,&(materialbag->samples->wavelength[0]),normal,plane_normal,objectlist_Ptr);
     
     /* special case of transparent materials - continue on */ 
-    if((transparent=test_calculate_current_reflectance(0,material_Ptr->material_proportions[0],NULL,NULL,materialbag,wavebandbag,flagbag,NULL,NULL,NULL,material_Ptr,NULL))){
+    if((transparent=test_calculate_current_reflectance(0,material_Ptr->material_proportions[0],0,NULL,materialbag,wavebandbag,flagbag,NULL,NULL,NULL,material_Ptr,NULL))){
       /* continue on */
       continueOn=1;
     }
@@ -137,7 +121,7 @@ Material_table *doIHitAnything(bb,normal,plane_normal,tree_depth_Ptr,objectlist_
       if((hitMe=(intersect_objects(bb,materialbag,flagbag,bbox_Ptr,ipray,objectlist_Ptr,ray_clip)||plane_hit_count))!=0){
 	plane_hit_count=0;
 	material_Ptr=get_reflection_ray_value(materialbag,wavebandbag,flagbag,&(materialbag->samples->wavelength[0]),normal,plane_normal,objectlist_Ptr);
-	if(!(transparent=test_calculate_current_reflectance(0,material_Ptr->material_proportions[0],NULL,NULL,materialbag,wavebandbag,flagbag,NULL,NULL,NULL,material_Ptr,NULL)))
+	if(!(transparent=test_calculate_current_reflectance(0,material_Ptr->material_proportions[0],0,NULL,materialbag,wavebandbag,flagbag,NULL,NULL,NULL,material_Ptr,NULL)))
 	  continueOn=0;	
       }else{
 	continueOn=0;
@@ -163,9 +147,7 @@ Material_table *doIHitAnything(bb,normal,plane_normal,tree_depth_Ptr,objectlist_
     return(NULL);
 }
 
-int getMaterialIndex(material_Ptr,materialbag)
-     MaterialBag		*materialbag;
-     Material_table	*material_Ptr;
+int getMaterialIndex(Material_table *material_Ptr,MaterialBag *materialbag)
 {
   int currentMat,i,j;
   
@@ -196,15 +178,10 @@ int getMaterialIndex(material_Ptr,materialbag)
   return(currentMat);
 }
 
-double lidarDistance(materialbag,ipray,illumination,flagbag,sunNo)
-     MaterialBag		*materialbag;
-     Ray			*ipray;
-     IlluminationBag		*illumination;
-     FlagBag			*flagbag;
-     int sunNo;
+double lidarDistance(MaterialBag *materialbag,Ray *ipray,IlluminationBag *illumination,FlagBag *flagbag,int sunNo)
 {
-  triplet hitpt,normalise(),vector_minus(),V2,vector_copy(),vector_copy2();
-  double V_mod(),distanceBackToViewer=0., d,screen,V_dot();
+  triplet hitpt,V2;
+  double distanceBackToViewer=0., d,screen;
   int nSuns;
   screen=1.0;
   /* LIDAR */
@@ -232,24 +209,11 @@ double lidarDistance(materialbag,ipray,illumination,flagbag,sunNo)
 **	render pixel with multiple illumination vectors
 */
 
-Ray	renders(hitCamera,bb,hitPoint,tree_depth_Ptr,ipray,materialbag,illumination,wavebandbag,objectlist_Ptr,bbox_Ptr,flagbag,material_table_Ptr)
-     BigBag *bb;
-     Material_table	*material_table_Ptr;
-     HitPoint *hitPoint;
-     ObjectList	*objectlist_Ptr;
-     BBox		*bbox_Ptr;
-     IlluminationBag		*illumination;
-     FlagBag			*flagbag;
-     WavebandBag		*wavebandbag;
-     MaterialBag		*materialbag; 
-     Ray			*ipray;  
-     int                        *tree_depth_Ptr,hitCamera;
+Ray	renders(int hitCamera,RATobj *bb,HitPoint *hitPoint,int *tree_depth_Ptr,Ray *ipray,MaterialBag *materialbag,IlluminationBag *illumination,WavebandBag *wavebandbag,ObjectList *objectlist_Ptr,BBox *bbox_Ptr,FlagBag *flagbag,Material_table *material_table_Ptr)
 {
   ObjectList	shadowRayList;
-  int			currentMat,intersect_plane(),intersect_objects();
-  Ray apply_diffuse_model(),apply_shadow_model();
-  triplet		plane_normal2,normal2,plane_normal,normal,normalise();
-  double		Random(),intersect_sky();
+  int			currentMat;
+  triplet		plane_normal2,normal2,plane_normal,normal;
   int diffuseTransmittance,diffuseReflectance;
   Ray diffuseRay,shadowRay;
   Material_table *material_Ptr; 
@@ -257,7 +221,7 @@ Ray	renders(hitCamera,bb,hitPoint,tree_depth_Ptr,ipray,materialbag,illumination,
 
   if(! hitCamera ){
     hitPoint->fromLocation = vector_copy2(ipray->origin.x,ipray->origin.y,ipray->origin.z);
-    hitPoint->fromVector = vector_copy2(ipray->direction.x,ipray->direction.y,ipray->direction.z);
+    hitPoint->fromvector = vector_copy2(ipray->direction.x,ipray->direction.y,ipray->direction.z);
 
     flagbag->isSunTest=FALSE;
     material_Ptr = doIHitAnything(bb,&normal,&plane_normal,tree_depth_Ptr,objectlist_Ptr,bbox_Ptr,illumination,flagbag,wavebandbag,materialbag,ipray);
@@ -269,7 +233,7 @@ Ray	renders(hitCamera,bb,hitPoint,tree_depth_Ptr,ipray,materialbag,illumination,
       /* run out of ray tree */
       hitPoint->hitSky=-1;
       for(l=0;l<bb->nSuns;l++)hitPoint->hitSun[l]=-1;
-      return(diffuseRay);
+      return(*ipray);
     }
   }else{
     /* we make it seem as though the ray has hit the camera */
@@ -277,7 +241,7 @@ Ray	renders(hitCamera,bb,hitPoint,tree_depth_Ptr,ipray,materialbag,illumination,
     objectlist_Ptr->intersection = ipray->origin;
     flagbag->normal = 1;
     hitPoint->fromLocation = vector_copy2(ipray->origin.x,ipray->origin.y,ipray->origin.z);
-    hitPoint->fromVector = vector_copy2(ipray->direction.x,ipray->direction.y,ipray->direction.z);
+    hitPoint->fromvector = vector_copy2(ipray->direction.x,ipray->direction.y,ipray->direction.z);
     flagbag->isSunTest=FALSE;
     material_Ptr = &(materialbag->materials[0]); /* WHITE */
     normal=normal2=normalise(vector_copy2(-ipray->direction.x,-ipray->direction.y,-ipray->direction.z));
@@ -339,7 +303,7 @@ Ray	renders(hitCamera,bb,hitPoint,tree_depth_Ptr,ipray,materialbag,illumination,
     lidarDistance(materialbag,ipray,illumination,flagbag,0);
     /* hit sky */
     hitPoint->hitSky=1;
-    return(diffuseRay);
+    return(*ipray);
   }
 }
 
@@ -348,30 +312,17 @@ Ray	renders(hitCamera,bb,hitPoint,tree_depth_Ptr,ipray,materialbag,illumination,
 **	render pixel
 */
 
-Ray	render(bb,hitPoint,tree_depth_Ptr,ipray,materialbag,illumination,wavebandbag,objectlist_Ptr,bbox_Ptr,flagbag,material_table_Ptr)
-     BigBag *bb;
-     Material_table	*material_table_Ptr;
-     HitPoint *hitPoint;
-     ObjectList	*objectlist_Ptr;
-     BBox		*bbox_Ptr;
-     IlluminationBag		*illumination;
-     FlagBag			*flagbag;
-     WavebandBag		*wavebandbag;
-     MaterialBag		*materialbag;
-     Ray			*ipray;
-     int                        *tree_depth_Ptr;
+Ray	render(RATobj *bb,HitPoint *hitPoint,int *tree_depth_Ptr,Ray *ipray,MaterialBag *materialbag,IlluminationBag *illumination,WavebandBag *wavebandbag,ObjectList *objectlist_Ptr,BBox *bbox_Ptr,FlagBag *flagbag,Material_table *material_table_Ptr)
 {
   ObjectList	shadowRayList;
-  int			currentMat,intersect_plane(),intersect_objects();
-  Ray apply_diffuse_model(),apply_shadow_model();
-  triplet		plane_normal2,normal2,plane_normal,normal,normalise();
-  double		Random(),intersect_sky();
+  int			currentMat;
+  triplet		plane_normal2,normal2,plane_normal,normal;
   int diffuseTransmittance,diffuseReflectance;
   Ray diffuseRay,shadowRay;
   Material_table *material_Ptr;
   
   hitPoint->fromLocation = vector_copy2(ipray->origin.x,ipray->origin.y,ipray->origin.z);
-  hitPoint->fromVector = vector_copy2(ipray->direction.x,ipray->direction.y,ipray->direction.z);
+  hitPoint->fromvector = vector_copy2(ipray->direction.x,ipray->direction.y,ipray->direction.z);
   
   flagbag->isSunTest=FALSE;
   material_Ptr = doIHitAnything(bb,&normal,&plane_normal,tree_depth_Ptr,objectlist_Ptr,bbox_Ptr,illumination,flagbag,wavebandbag,materialbag,ipray);
@@ -383,7 +334,7 @@ Ray	render(bb,hitPoint,tree_depth_Ptr,ipray,materialbag,illumination,wavebandbag
     /* run out of ray tree */
     hitPoint->hitSky=-1;
     hitPoint->hitSun[0]=-1;
-    return(diffuseRay);
+    return(*ipray);
   }if(material_Ptr){
     
     /* 
@@ -437,15 +388,12 @@ Ray	render(bb,hitPoint,tree_depth_Ptr,ipray,materialbag,illumination,wavebandbag
     lidarDistance(materialbag,ipray,illumination,flagbag,0);
     /* hit sky */
     hitPoint->hitSky=1;
-    return(diffuseRay);
+    return(*ipray);
   }
 }
 
 
-Contents_order	*quantise_ray_direction(quantised_direction_Ptr,ray_direction_Ptr,bbox_Ptr)
-     triplet	*ray_direction_Ptr;
-     BBox	*bbox_Ptr;
-     int	*quantised_direction_Ptr;
+struct Sort_Hit *quantise_ray_direction(int *quantised_direction_Ptr,triplet *ray_direction_Ptr,BBox *bbox_Ptr)
 {
   double	x,y,z;
   
@@ -476,17 +424,10 @@ Contents_order	*quantise_ray_direction(quantised_direction_Ptr,ray_direction_Ptr
   return(bbox_Ptr->hit[*quantised_direction_Ptr]);
 }
 
-int	intersect_objects(bb,materialbag,flag_Ptr,bbox_Ptr,ipray,objectlist_Ptr,ray_clip)
-     BigBag *bb;
-     BBox	*bbox_Ptr;
-     Ray	*ipray;
-     ObjectList	*objectlist_Ptr;
-     int	ray_clip;
-     FlagBag	*flag_Ptr;
-     MaterialBag		*materialbag;
+int	intersect_objects(RATobj *bb,MaterialBag *materialbag,FlagBag *flag_Ptr,BBox *bbox_Ptr,Ray *ipray,ObjectList *objectlist_Ptr,int ray_clip)
 {
-  int		quit_flag=0,hit=0,i,quantised_ray_direction,store_hit=0,ray_to_bbox(),ray_in_sphere(),ray_on_infinite_cylinder(),ray_on_finite_cylinder(),ray_dem_intersect(),ray_to_plane(),point_in_triangle();
-  fFacet		*triangle_Ptr,*volumeRayTrace();
+  int		quit_flag=0,hit=0,i,quantised_ray_direction,store_hit=0;
+  fFacet		*triangle_Ptr;
   Sphere		*sphere_Ptr;
   Cylinder	*cylinder_Ptr;
   Ellipse		*ellipse_Ptr;
@@ -498,12 +439,11 @@ int	intersect_objects(bb,materialbag,flag_Ptr,bbox_Ptr,ipray,objectlist_Ptr,ray_
   Clones		*clone_Ptr,*store_clone_Ptr=NULL;
   double		Radius,ray_length_clip,local_coords[2],mod_ray_direction,D[2],p1,p2,L,plane_distance=0;
   double		lengthToTravel,distanceTravelled,ray_length_so_far;
-  Contents_order	*contents,*current_object,*previous_object,*object_start;
+  struct Sort_Hit *contents,*current_object,*previous_object,*object_start;
   triplet		normal,hit_point,*S;
   BBox		*next_bbox_Ptr;
   Ray		transformed_ray,new_ray;
   Volume		*volume;
-  int ray_to_infinite_bbox(),vray_in_ellipse(),vray_in_spheroid(),vray_in_sphere(),ray_on_disk(),ray_on_BiLinearPatch(),vray_on_finite_cylinder(),ray_on_ellipse(),ray_on_spheroid();
   if(bbox_Ptr->hit[0]==NULL || bbox_Ptr->hit[0]->hit==NULL)return(0);	/* empty box return */
   previous_object=NULL;
   
@@ -541,7 +481,6 @@ int	intersect_objects(bb,materialbag,flag_Ptr,bbox_Ptr,ipray,objectlist_Ptr,ray_
 	    int nBoxHits;
 	    double tnearList[MAX_BBOX_LIST],tfarList[MAX_BBOX_LIST];
 	    triplet offsetList[MAX_BBOX_LIST];
-	    double V_mod();
 	    /* there are nBoxHits potential hits which must be checked */
 	    nBoxHits=ray_to_infinite_bbox(bb->flagbag,tnearList,tfarList,bbox_Ptr,ipray,offsetList);
 	    for(i=0;i<nBoxHits;i++){
@@ -607,10 +546,10 @@ int	intersect_objects(bb,materialbag,flag_Ptr,bbox_Ptr,ipray,objectlist_Ptr,ray_
           triangle_Ptr->material=(Material_table *)(&materialbag->materials[volume->material]);
           objectlist_Ptr->real_intersection=vector_plus(V_factor(ipray->direction,plane_distance+distanceTravelled),ipray->origin);
           objectlist_Ptr->ObjectType=FO;
-          objectlist_Ptr->TriangleObj=triangle_Ptr;
+          objectlist_Ptr->triangleObj=triangle_Ptr;
           objectlist_Ptr->RayLength=plane_distance+distanceTravelled;
           objectlist_Ptr->rayLengthThroughObject=0.0;
-          objectlist_Ptr->normal=normalise(objectlist_Ptr->TriangleObj->normal);
+          objectlist_Ptr->normal=normalise(objectlist_Ptr->triangleObj->normal);
           store_hit=1;
         }
       }
@@ -641,10 +580,10 @@ int	intersect_objects(bb,materialbag,flag_Ptr,bbox_Ptr,ipray,objectlist_Ptr,ray_
 	  triangle_Ptr->material=(Material_table *)(&materialbag->materials[volume->material]);
 	  objectlist_Ptr->real_intersection=vector_plus(V_factor(ipray->direction,plane_distance+distanceTravelled),ipray->origin);
 	  objectlist_Ptr->ObjectType=FO;
-	  objectlist_Ptr->TriangleObj=triangle_Ptr;
+	  objectlist_Ptr->triangleObj=triangle_Ptr;
 	  objectlist_Ptr->RayLength=plane_distance+distanceTravelled;
 	  objectlist_Ptr->rayLengthThroughObject=0.0;
-	  objectlist_Ptr->normal=normalise(objectlist_Ptr->TriangleObj->normal);
+	  objectlist_Ptr->normal=normalise(objectlist_Ptr->triangleObj->normal);
 	  store_hit=1;
 	}			
       }
@@ -675,10 +614,10 @@ int	intersect_objects(bb,materialbag,flag_Ptr,bbox_Ptr,ipray,objectlist_Ptr,ray_
 	  triangle_Ptr->material=(Material_table *)(&materialbag->materials[volume->material]);
 	  objectlist_Ptr->real_intersection=vector_plus(V_factor(ipray->direction,plane_distance+distanceTravelled),ipray->origin);
 	  objectlist_Ptr->ObjectType=FO;
-	  objectlist_Ptr->TriangleObj=triangle_Ptr;
+	  objectlist_Ptr->triangleObj=triangle_Ptr;
 	  objectlist_Ptr->RayLength=plane_distance+distanceTravelled;
 	  objectlist_Ptr->rayLengthThroughObject=0.0;
-	  objectlist_Ptr->normal=normalise(objectlist_Ptr->TriangleObj->normal);
+	  objectlist_Ptr->normal=normalise(objectlist_Ptr->triangleObj->normal);
 	  store_hit=1;
 	}			
       }
@@ -724,18 +663,6 @@ int	intersect_objects(bb,materialbag,flag_Ptr,bbox_Ptr,ipray,objectlist_Ptr,ray_
 	store_hit=1;			
       }
       break;
-    case BILINEARPATCH:
-      blp_Ptr=(BiLinearPatch *)current_object->hit;
-      if(ray_on_BiLinearPatch(&(plane_distance),blp_Ptr,ipray,&Radius) && objectlist_Ptr->RayLength > plane_distance){
-	objectlist_Ptr->real_intersection=vector_plus(V_factor(ipray->direction,plane_distance),ipray->origin);
-	objectlist_Ptr->ObjectType=BILINEARPATCH;
-	objectlist_Ptr->BiLinearPatchObj=blp_Ptr;
-	objectlist_Ptr->RayLength=plane_distance;
-	objectlist_Ptr->rayLengthThroughObject=0.0;
-	objectlist_Ptr->normal=normalise(objectlist_Ptr->BiLinearPatchObj->normal);
-	store_hit=1;			
-      }
-      break;
     case CYLINDER:
     case CLOSED_CYLINDER:
       cylinder_Ptr=(Cylinder *)current_object->hit;
@@ -764,15 +691,15 @@ int	intersect_objects(bb,materialbag,flag_Ptr,bbox_Ptr,ipray,objectlist_Ptr,ray_
 	  /* test for intersection within the sphere and return a facet ! */
 	  volume=&(materialbag->material_list->material[cylinder_Ptr->material->material[0]].volume);
 	  if(ipray->sourceOfRay==ILLUMINATION)S=&(volume->s);else S=NULL;
-	  triangle_Ptr=(fFacet *)volumeRayTrace(flag_Ptr,&distanceTravelled,&ipray->direction,volume,lengthToTravel,S);
+	  triangle_Ptr=(fFacet *)volumeRayTrace(bb,flag_Ptr,&distanceTravelled,&ipray->direction,volume,lengthToTravel,S);
 	  if(triangle_Ptr){
 	    objectlist_Ptr->real_intersection=vector_plus(V_factor(ipray->direction,plane_distance+distanceTravelled),ipray->origin);
 	    triangle_Ptr->material=(Material_table *)(&materialbag->materials[volume->material]);
 	    objectlist_Ptr->ObjectType=FO;
-	    objectlist_Ptr->TriangleObj=triangle_Ptr;
+	    objectlist_Ptr->triangleObj=triangle_Ptr;
 	    objectlist_Ptr->RayLength=plane_distance+distanceTravelled;
 	    objectlist_Ptr->rayLengthThroughObject=0.0;
-	    objectlist_Ptr->normal=normalise(objectlist_Ptr->TriangleObj->normal);
+	    objectlist_Ptr->normal=normalise(objectlist_Ptr->triangleObj->normal);
 	    store_hit=1;
 	  }			
 	}
@@ -818,8 +745,8 @@ int	intersect_objects(bb,materialbag,flag_Ptr,bbox_Ptr,ipray,objectlist_Ptr,ray_
           ** the up vector (V1) and the vector from the intersection point
           ** to the centre
           */
-          static triplet        IC,H,dv,f[2],v[2],vn[2],tmp,v0,v1;
-          static double NX,NY,X,Y,a,b,d,lambda,num,dom;
+          static triplet        IC,tmp,v0,v1;
+          static double NX,NY,X,Y,a,b,d;
 
           tmp = vector_minus(objectlist_Ptr->real_intersection,objectlist_Ptr->SpheroidObj->centre);
           IC = tmp;
@@ -855,7 +782,6 @@ int	intersect_objects(bb,materialbag,flag_Ptr,bbox_Ptr,ipray,objectlist_Ptr,ray_
             if(objectlist_Ptr->SpheroidObj->a2>0){
               /* oblate */
               v0 = spheroid_Ptr->V1;
-              v1 = v1;
               a = spheroid_Ptr->dimensions.z;
               b = spheroid_Ptr->dimensions.x;
             }else{
@@ -903,7 +829,7 @@ int	intersect_objects(bb,materialbag,flag_Ptr,bbox_Ptr,ipray,objectlist_Ptr,ray_
       spherical_dem_Ptr=(Spherical_Dem *)current_object->hit;
       /* note dummies p1,p2 used to pass **
       ** local info			   */
-      if(ray_dem_intersect(bb,&normal,&(objectlist_Ptr->RayLength),spherical_dem_Ptr,ipray,SPHERICAL_DEM) && objectlist_Ptr->RayLength > plane_distance){
+      if(ray_dem_intersect(bb,&normal,&(objectlist_Ptr->RayLength),spherical_dem_Ptr,ipray,SPHERICAL_DEM,local_coords) && objectlist_Ptr->RayLength > plane_distance){
 	objectlist_Ptr->real_intersection=vector_plus(V_factor(ipray->direction,objectlist_Ptr->RayLength),ipray->origin);
 	objectlist_Ptr->ObjectType=SPHERICAL_DEM;
 	objectlist_Ptr->DemObj= (Dem *)spherical_dem_Ptr;
@@ -916,10 +842,10 @@ int	intersect_objects(bb,materialbag,flag_Ptr,bbox_Ptr,ipray,objectlist_Ptr,ray_
       break;
     case FO:
       triangle_Ptr=(fFacet *)current_object->hit;
-      if(ray_to_plane(&(plane_distance),&(triangle_Ptr->dw),&(triangle_Ptr->normal),ipray) && objectlist_Ptr->RayLength > plane_distance){
+      if(ray_to_plane(&(plane_distance),&(triangle_Ptr->dw),&(triangle_Ptr->normal),&(ipray->origin),&(ipray->direction)) && objectlist_Ptr->RayLength > plane_distance){
 	if(point_in_triangle(&hit_point,triangle_Ptr,ipray,plane_distance,local_coords)){				
 	  objectlist_Ptr->ObjectType=FO;
-	  objectlist_Ptr->TriangleObj= triangle_Ptr;
+	  objectlist_Ptr->triangleObj= triangle_Ptr;
 	  objectlist_Ptr->RayLength=plane_distance;
 	  objectlist_Ptr->normal=normalise(triangle_Ptr->normal);
 	  objectlist_Ptr->real_intersection=vector_plus(V_factor(ipray->direction,plane_distance),ipray->origin);
@@ -937,12 +863,11 @@ int	intersect_objects(bb,materialbag,flag_Ptr,bbox_Ptr,ipray,objectlist_Ptr,ray_
       transformed_ray.origin=vector_minus(ipray->origin,clone_Ptr->translation);
       transformed_ray.direction=ipray->direction;
       if(clone_Ptr->z_rotation_flag){
-        { double mod=1.0,V_mod();
-          triplet V_factor();
-	transformed_ray.direction=rotateByMatrix(ipray->direction,clone_Ptr->matrix,1);
+        { double mod=1.0;
+	transformed_ray.direction=rotateBymatrix(ipray->direction,clone_Ptr->matrix,1);
         mod = V_mod(transformed_ray.direction);
         transformed_ray.direction=V_factor(transformed_ray.direction,1.0/mod);
-	transformed_ray.origin=rotateByMatrix(transformed_ray.origin,clone_Ptr->matrix,1);
+	transformed_ray.origin=rotateBymatrix(transformed_ray.origin,clone_Ptr->matrix,1);
         /* 
         ** July 8 2011 Lewis:
         ** this might seem odd 
@@ -961,8 +886,8 @@ int	intersect_objects(bb,materialbag,flag_Ptr,bbox_Ptr,ipray,objectlist_Ptr,ray_
 	 
           /* July 8 2011 Lewis: normalise normal in case theres any scaling on the matrix */ 
 	  if(hit){
-	     objectlist_Ptr->normal=normalise(rotateByMatrix(objectlist_Ptr->normal,clone_Ptr->matrix,0));
-             /*objectlist_Ptr->real_intersection = rotateByMatrix(objectlist_Ptr->real_intersection,clone_Ptr->matrix,0);
+	     objectlist_Ptr->normal=normalise(rotateBymatrix(objectlist_Ptr->normal,clone_Ptr->matrix,0));
+             /*objectlist_Ptr->real_intersection = rotateBymatrix(objectlist_Ptr->real_intersection,clone_Ptr->matrix,0);
              objectlist_Ptr->real_intersection = vector_plus(objectlist_Ptr->real_intersection,clone_Ptr->translation);*/
 	  }
 	  /* something like this ... */

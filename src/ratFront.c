@@ -7,19 +7,13 @@
  *
  */
 #include <string.h>
-#include "rat.h"
-#include "ratFront.h" 
-#include "imagelib.h"
-/*size_t strlen();*/
-#ifndef i386
-size_t strlen();
-#endif
 /*
 **  rubbish on suns ... use strtok() instead of strsep()
 */
 #include <string.h>
 #include <strings.h>
 #include <stdint.h>
+#include "prat.h"
  
 #define strsep(a,b) Strsep(a,b)
 #define index(a,b) strchr((a),(b))
@@ -35,9 +29,7 @@ size_t strlen();
 ** and returns the first
 ** and sets *stringp to the rest
 */
-char *Strsep(stringp,delim)
-     register char **stringp;
-     register const char *delim;
+char *Strsep(register char **stringp,register const char *delim)
 {
   register char *s;
   register const char *spanp;
@@ -573,9 +565,8 @@ double linearInterpolateFunction(double *fn,int ns,double where){
 }
 
 int pulseResample(double *binWeight,int *rayBin,double rayLengthStart,RATdevice *camera,RATdevice *light){
-  int nBins=0,ki,i,rbStart=-1;
-  int iRayLengthStart,iRayLengthEnd;
-  double a,b,k,d,prop,cumulativeStart,cumulativeEnd,sum=0;
+  int nBins=0,i;
+  double a,b,sum=0;
   
   /* deal with underflow */
   if(rayLengthStart-camera->binStart<0){
@@ -616,8 +607,7 @@ int pulseResample(double *binWeight,int *rayBin,double rayLengthStart,RATdevice 
 
 int getPulseBins(int *rayBin,double *binWeight,int nRayBins,RATdevice *camera,RATdevice *light,double rayLength){
   int nBins=0;
-  double rayLengthStart,rayLengthEnd,*resampled=NULL; 
-  int iRayLengthStart,iRayLengthEnd;
+  double rayLengthStart,rayLengthEnd; 
   
   if(nRayBins==1 || camera->nBins == 0 ){
     /* no pulse */
@@ -655,7 +645,7 @@ int searchForThisMat(RATobj *rat,RATorder *order,int thisMat,int thisType){
  if(lut==NULL){
   lut=(int **)v_allocate(2,sizeof(int *));
   for(i=0;i<2;i++){
-   lut[i]=(int *)v_allocate(rat->nMaterials,sizeof(int));
+   lut[i]=(int *)v_allocate(*(rat->nMaterials),sizeof(int));
    for(j=0;j<*(rat->nMaterials);j++)lut[i][j]=-1;
   }
   for(i=0;i<order->m;i++){
@@ -718,12 +708,12 @@ double **RATreadSpectra(char *filename){
   double **fdata=NULL;
   char buffer[MAX_STRING_LENGTH];
   char **ap,*Str,*strings[1024];
-  FILE *open_file_for_read();
 
   fp=open_file_for_read(filename);
 
   /* read one line */
-  char *tmp_=fgets(buffer,MAX_STRING_LENGTH-1,fp);
+  char *tmp_;
+  tmp_=fgets(buffer,MAX_STRING_LENGTH-1,fp);
   /* how many columns? */
   Str=&buffer[0];
   for (nspectra=0,ap = strings; (*ap = Strsep(&Str," \t\n")) != NULL;nspectra++){
@@ -747,8 +737,8 @@ double **RATreadSpectra(char *filename){
 void addContributions(RATorder *order,double *sum, struct RATorderStore *base,double **refl,int m,int n);
 void addContributions(RATorder *order,double *sum, struct RATorderStore *base,double **refl,int m,int n){
    struct RATorderStore *nbase;
-   int i,j,k,scatteringOrder;
-   double tmp[2],r,s,t;
+   int i,scatteringOrder;
+   double tmp[2],s,t;
    if(base->code){
      /* we are here */
      scatteringOrder=0;for(i=0;i<m;i++)scatteringOrder+=base->code[i];
@@ -776,7 +766,7 @@ void addContributions(RATorder *order,double *sum, struct RATorderStore *base,do
 double ****RATassignSpectraToOrder(double **fdata,RATorder *orders,double *bininfo,int nLidarBins){
   double ****fullRadiance=NULL,sum[2];
   RATorder *order=NULL;
-  int i,j,k,l,h;
+  int i,j,k,l;
   int n,m,nbands;
   double **refl=NULL;
   struct RATorderStore *base=NULL;
@@ -824,8 +814,7 @@ double ****RATassignSpectraToOrder(double **fdata,RATorder *orders,double *binin
 
 int hitDirectionalSource(double rayLength,int i,int k,double *binWeight,int *rayBin,int *nPulseBins,int nRayBins,double *PSF,RATobj *rat,RATtree *ratTree,RATdevice *suns,RATdevice *camera,RATsample *pixel){
   int hit=1;
-  int j,bin;
-  int nBands,nSuns,xxx,yyy,index;
+  int xxx,yyy;
   double lambda,x,y,xx,yy;
   triplet old,direction,dd,P;
 
@@ -860,10 +849,10 @@ int hitDirectionalSource(double rayLength,int i,int k,double *binWeight,int *ray
 
 int RATunpackRatTree(double modulation,RATobj *rat,RATtree *ratTree,RATdevice *suns,RATdevice *camera,RATsample *pixel,double *norm){
   int i,j,k,hit,bin,nPulseBins,*code=NULL;
-  int material,nBands,nSuns,xxx,yyy,index;
+  int material,nBands,nSuns,index;
   static int *rayBin=NULL,nRayBins=0;
   static double *binWeight=NULL;
-  double r,rayLength=0,PSF=1.0,**ptr,thisNorm,**RATgetOrderAddress();
+  double r,rayLength=0,PSF=1.0,**ptr,thisNorm;
   
   nSuns = RATgetNsuns(rat);
   nBands=pixel[0].nBands;
@@ -1007,7 +996,7 @@ int getFields(char *str,char *oToken,char fields[MAXFIELDS][128]){
     if((ind=index(Str,'#'))!=NULL)*ind='\0';
     /* check for blank string */
     isBlank=1;
-    for(i=0;i<strlen(Str);i++){
+    for(i=0;i<(int)strlen(Str);i++){
       if(Str[i] != ' ' && Str[i] != '\t' && Str[i] != '\n'){
           isBlank=0;
 	  break;
@@ -1123,10 +1112,9 @@ RATdevice  *RATreadACameraFile(char *file,RATobj *rat,RATdevice *ratCamera){
   double focalLength = 0,zenith=0.0,azimuth=0.,twist=0.,angles[3];
   double imagingPlaneDimensions[2] = {-1,-1};
   int nPixels = -1,rpp=1,dolookat=0,nRows=-1,nCols=-1,cameralocationset=0;
-  int getFields();
   double *gaussian=NULL; 
   int size[2]={-1,-1},nBins=0;
-  double boomLength = -1, aspectRatio,binStart=0,binStep=1.0,sizesd[2] = {-1,-1},centre[2]={0,0},thresh=1e-10, areaToBeViewed=0, idealArea = 0;
+  double boomLength = -1, aspectRatio,binStart=0,binStep=1.0,sizesd[2] = {-1,-1},centre[2]={0,0},thresh=1e-10, idealArea = 0;
   FILE *fp;
   char filename[1024] = "stdin",*samplingImage=NULL;
   int nf=0,i,doidealarea=0;
@@ -1139,7 +1127,6 @@ RATdevice  *RATreadACameraFile(char *file,RATobj *rat,RATdevice *ratCamera){
   char **scatteredImages=NULL;
   int *scatterStart=NULL,orthographic=1;	
   int *scatterEnd=NULL;
-  FILE *openFile();
   #define CLOSE -1
 
   nBands = RATgetNWavebands(rat,NULL);
@@ -1226,30 +1213,6 @@ RATdevice  *RATreadACameraFile(char *file,RATobj *rat,RATdevice *ratCamera){
 	  cameraLocation[i] = atof(fields[i]);
 	}
 	cameralocationset=1;
-      }else if(0 && !strcasecmp(token,"spectral.wavebands")){
-        /* THIS REMOVED ... YOU NEED TO SPECIFUY ON THE CND LINE */
-	ratCamera->wavebandFiles = (char **)v_allocate(MAX(1,nf),sizeof(char *));
-	ratCamera->nWavebandFiles = MAX(1,nf);
-				/* load wavebands */
-	/*for(i=0;i<wavebandbag->sensor_wavebands->no_of_wavebands;i++){
-	  if(wavebandbag->sensor_filenames[i])free(wavebandbag->sensor_filenames[i]);
-	}*/
-	for(i=0;i<nf;i++){
-	  ratCamera->wavebandFiles[i] = (char *)v_allocate(strlen(fields[i])+1,sizeof(char));
-	  strcpy(ratCamera->wavebandFiles[i],fields[i]);
-	  wavebandbag->sensor_filenames[i]=ratCamera->wavebandFiles[i];
-          /* try for size */
-          if(!(fp=openFile(wavebandbag->sensor_filenames[i],TRUE,"RSRLIB"))){
-	    error2("ratlib:\terror opening sensor relative spectral response file",wavebandbag->sensor_filenames[i]);
-            exit(1);
-          }
-          fp=openFile(wavebandbag->sensor_filenames[i],CLOSE,fp);
-	}
-	wavebandbag->sensor_wavebands->no_of_wavebands=MAX(1,nf);
-	wavebandbag->rsr_flag=1;
-	read_spectral_file(rat->flagbag->verbose,wavebandbag->sensor_filenames,wavebandbag->rsr_flag,&(rat->flagbag->fixed_wavelength),wavebandbag->sensor_wavebands);		
-	calculate_reflectance_data(rat->wavebandbag, rat->materialbag, rat->illumination, *rat->wavebandbag->lambda_min_Ptr, *rat->wavebandbag->lambda_width_Ptr, 0); 
-	nBands=ratCamera->nBands=rat->globalnBands=rat->wavebandbag->sensor_wavebands->no_of_wavebands;		
       }else if(!strcasecmp(token,"samplingPattern.form")){
 	samplingPattern = (char *)v_allocate(strlen(fields[0])+1,sizeof(char));
 	strcpy(samplingPattern,fields[0]);
@@ -1461,7 +1424,7 @@ RATdevice  *RATreadACameraFile(char *file,RATobj *rat,RATdevice *ratCamera){
     }else if(boomLength > 0){
       /* work out camera location */
       {
-	triplet vector_copy2(),Vx,Vz,F;
+	triplet Vx,Vz,F;
 	
 	Vz = vector_copy2(0.,0.,1.0);
 	Vx = vector_copy2(1.,0.,0.);
@@ -1480,7 +1443,7 @@ RATdevice  *RATreadACameraFile(char *file,RATobj *rat,RATdevice *ratCamera){
     /* requires setting of camera location if lookat not set */
     if(cameralocationset){
       {
-        triplet vector_copy2(),Vx,Vz,F;
+        triplet Vx,Vz,F;
         double boomLength=0.;
 
         Vz = vector_copy2(0.,0.,1.0);
@@ -1543,7 +1506,7 @@ RATdevice  *RATreadACameraFile(char *file,RATobj *rat,RATdevice *ratCamera){
     /* set location */
     if(dolookat && boomLength>0){
     {
-       triplet vector_copy2(),Vx,Vz,F;
+       triplet Vx,Vz,F;
 
         Vz = vector_copy2(0.,0.,1.0);
         Vx = vector_copy2(1.,0.,0.);
@@ -1555,7 +1518,7 @@ RATdevice  *RATreadACameraFile(char *file,RATobj *rat,RATdevice *ratCamera){
     }
     }else if(cameralocationset){
     {
-        triplet vector_copy2(),Vx,Vz,F;
+        triplet Vx,Vz,F;
         double boomLength=0.;
 
         Vz = vector_copy2(0.,0.,1.0);
@@ -1606,7 +1569,7 @@ RATdevice  *RATreadACameraFile(char *file,RATobj *rat,RATdevice *ratCamera){
     if(ratCamera->pulseIPFile){
       /* read pulse file */
       {
-	FILE *fp,*open_file_for_read();
+	FILE *fp;
 	int i=0;
 	char buffer[MAX_STRING_LENGTH];
 	
@@ -1755,7 +1718,7 @@ GenericImage *putHeader(char *name,FILE *fp,int mode,int format,int  rtd,int nBa
     setImageCols(out,cols);
     setImageFormat(out,IMAGE_FLOAT);
     if(out->seq_desc)free(out->seq_desc);
-    out->seq_desc=(char *)v_allocate(strlen(str)+1);
+    out->seq_desc=(char *)v_allocate(strlen(str)+1,sizeof(char));
     strcpy(out->seq_desc,str);
     out->mmap=-1;
     openImage(out,FALSE,NULL);
@@ -1783,10 +1746,9 @@ void putReturn(GenericImage *im,FILE *fp,int mode){
 
 void RAToutputOrder(RATobj *ratObj,RATdevice *camera,int mode){
   int rtd,nBands,nBins;
-  int I,i,j,k,r,c,f;
-  int J,K,L;
+  int I,i,j,k;
+  int J;
   int *code=NULL;
-  GenericImage *out;
   double **data=NULL,*wavebands=NULL,binstart;
   nBands=camera->nBands;
   nBins=(camera->nBins == 0 ? 1 : camera->nBins + 2);
@@ -2098,7 +2060,7 @@ void RAToutputCameraResults(RATobj *ratObj,RATdevice *illumination,int nSuns){
 
 void SequenceDoiIt(int nbands,struct RATorderStore *RATorder,int **store,int *c,int m,int n,int *o,int x,unsigned char **coder);
 void SequenceDoiIt(int nbands,struct RATorderStore *RATorder,int **store,int *c,int m,int n,int *o,int x,unsigned char **coder){
-  int i,j,sum=0,code=0;
+  int i,j,sum=0;
   for(i=0;i<=x;i++)sum+=o[i];
   if(x>=m-2){
     o[m-1]=MAX(0,n-sum);
@@ -2175,7 +2137,6 @@ RATorder *RATsetOrderTerms(double **fdata,RATobj *rat,int *nLidarBins,char *resu
  double **data,binstart=0,binstep=0;
  RATmaterials *tmpm,*tmp;
  RATorder *orders=NULL,*order=NULL,*iorder=NULL;
- FILE *open_file_for_read();
 
  if(rat)max_ray_depth=rat->flagbag->max_ray_depth;
 
@@ -2486,8 +2447,8 @@ int RATScanPSF(RATobj *rat,RATdevice *camera,int nCameras,RATdevice *illuminatio
 /* loop over camera PSF and trace rays */
 int RATScanPSFSample(int *thisCol,int *thisRow,int *schedule,int *active,int *xstart,int *ystart,RATobj *rat,RATdevice *camera,double *sunPosition){
   int x,y,grabber,traced;
-  triplet fromImagingPlane,X,Y,directionv,calculate_diffuse_sample_ray_direction();
-  double direction[3],from[3],xx,yy,delta=1e-10;
+  triplet fromImagingPlane,X,Y,directionv;
+  double direction[3],from[3],xx,yy;
   int nSuns,p;
   
   nSuns = RATgetNsuns(rat);
@@ -2544,7 +2505,7 @@ RATdevice *RATloadCamera(RATdevice *rat,int orthographic,int nBands,int nBins,do
   double cphi,sphi,ctheta,stheta,cbeta,sbeta,scale[3],aspectRatio,y_angle;
   int nPsfSamples;
   double zenith, azimuth, twist,sum,tantheta_2;
-  triplet angels,Xv,Yv,Zv,vector_copy2();
+  triplet angels,Xv,Yv,Zv;
   
   zenith = angles[0]; 
   azimuth = angles[1];

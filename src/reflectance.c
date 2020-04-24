@@ -2,7 +2,7 @@
 #include "prat.h"
 
 
-triplet rotateByMatrix(triplet v,double *m,int transpose){
+triplet rotateBymatrix(triplet v,double *m,int transpose){
 /* rotation matrix */
 	triplet out;
 	if(!transpose){
@@ -17,11 +17,10 @@ triplet rotateByMatrix(triplet v,double *m,int transpose){
 	return(out);
 }
 
-triplet	calculate_diffuse_sample_ray_direction(normal_Ptr)
-     triplet	*normal_Ptr;
+triplet	calculate_diffuse_sample_ray_direction(triplet *normal_Ptr)
 {
   triplet	out,geocentrics,ngx,nx;
-  double	r,z,Random();
+  double	r,z;
   
   /*
   **	azimuth angle -> geocentrics.y
@@ -73,9 +72,7 @@ triplet	calculate_diffuse_sample_ray_direction(normal_Ptr)
     */
 }
 
-void	setReflectanceValue(timer,mat_count,depth_value,out,presult,f,C)
-     int	*timer,mat_count,C;
-     double	*depth_value,*out,*presult,f;
+void	setReflectanceValue(int *timer,int mat_count,double *depth_value,double *out,double *presult,double f,int C)
 {
 /* EDIT LEWIS Jan 2010 ... not sure what 'result' does, so remove its influence
 ** This was stopping the mxture model from working
@@ -100,22 +97,11 @@ void	setReflectanceValue(timer,mat_count,depth_value,out,presult,f,C)
   }
   return;
 }
-void *calculate_current_reflectance();
-void	*calculate_current_reflectance(isDiffuse,m,material_proportion,mode,current_reflectance_bag,materialbag,wavebandbag,flagbag,out,depth_value,tree_depth_ptr,material_Ptr,mat_count)
-     double				material_proportion;
-     int				mode,*tree_depth_ptr,isDiffuse;
-     CurrentReflectanceBag		*current_reflectance_bag;
-     double				*out,*depth_value;
-     Material_table			*material_Ptr;
-     FlagBag			*flagbag;
-     WavebandBag		*wavebandbag;
-     MaterialBag		*materialbag;
-     int			*mat_count,m;
+void	*calculate_current_reflectance(int isDiffuse,int m,double material_proportion,int mode,CurrentReflectanceBag *current_reflectance_bag,MaterialBag *materialbag,WavebandBag *wavebandbag,FlagBag *flagbag,double *out,double *depth_value,int *tree_depth_ptr,Material_table *material_Ptr,int *mat_count)
 {
-  int	transparent=0,k,j,no_of_samples=0,thisMaterial;
-  double	*depthValuePtr,lambda,radiometric=0.0,rho0,rhoc,bigtheta,rpvk;
+  int	transparent=0,k,j,no_of_samples=0;
+  double	*depthValuePtr,lambda,radiometric=0.0;
   int	texture_done=0,index;
-  void	mvbp1_();
   Material_table	*material,*texture_material;
   Rpv *rpv=NULL;
 
@@ -193,21 +179,11 @@ void	*calculate_current_reflectance(isDiffuse,m,material_proportion,mode,current
 
 
 
-int test_calculate_current_reflectance(m,material_proportion,mode,current_reflectance_bag,materialbag,wavebandbag,flagbag,out,depth_value,tree_depth_ptr,material_Ptr,mat_count)
-     double				material_proportion;
-     int				mode,*tree_depth_ptr;
-     CurrentReflectanceBag		*current_reflectance_bag;
-     double				*out,*depth_value;
-     Material_table			*material_Ptr;
-     FlagBag			*flagbag;
-     WavebandBag		*wavebandbag;
-     MaterialBag		*materialbag;
-     int			*mat_count,m;
+int test_calculate_current_reflectance(int m,double material_proportion,int mode,CurrentReflectanceBag *current_reflectance_bag,MaterialBag *materialbag,WavebandBag *wavebandbag,FlagBag *flagbag,double *out,double *depth_value,int *tree_depth_ptr,Material_table *material_Ptr,int *mat_count)
 {
   int	transparent=0,k,j;
   double	lambda;
   int	texture_done=0,index;
-  void	mvbp1_();
   Material_table	*material,*texture_material;
   
   material=material_Ptr;
@@ -243,17 +219,11 @@ int test_calculate_current_reflectance(m,material_proportion,mode,current_reflec
 
 /* simple interface to reflectance data */
 
-void	calculate_specific_reflectance(w,lambda,material_proportion,materialbag,out,material_Ptr,mat_count)
-     double				material_proportion;
-     double				*out,lambda;
-     Material_table			*material_Ptr;
-     MaterialBag		*materialbag;
-     int			*mat_count,w;
+void	calculate_specific_reflectance(int w,double lambda,double material_proportion,MaterialBag *materialbag,double *out,Material_table *material_Ptr,int *mat_count)
 {
   int	k;
   double	radiometric=0.0;
   int	texture_done=0,index;
-  void	mvbp1_(),calculate_specific_reflectance();
   Material_table	*material,*texture_material;
   
   material=material_Ptr;
@@ -288,19 +258,7 @@ void	calculate_specific_reflectance(w,lambda,material_proportion,materialbag,out
 
 
 
-Ray	apply_diffuse_model(hitPoint,ipray,materialbag,illumination,wavebandbag,flagbag,reflectance_type,material_Ptr,normal_Ptr,plane_normal_Ptr,tree_depth_Ptr,objectlist_Ptr,bbox_Ptr)
-     HitPoint *hitPoint;
-     int		reflectance_type;
-     Material_table	*material_Ptr;
-     triplet		*normal_Ptr,*plane_normal_Ptr;
-     ObjectList	*objectlist_Ptr;
-     BBox		*bbox_Ptr;
-     int		*tree_depth_Ptr;
-     IlluminationBag		*illumination;
-     FlagBag			*flagbag;
-     WavebandBag		*wavebandbag;
-     MaterialBag		*materialbag;
-     Ray		*ipray;
+Ray	apply_diffuse_model(HitPoint *hitPoint,Ray *ipray,MaterialBag *materialbag,IlluminationBag *illumination,WavebandBag *wavebandbag,FlagBag *flagbag,int reflectance_type,Material_table *material_Ptr,triplet *normal_Ptr,triplet *plane_normal_Ptr,int *tree_depth_Ptr,ObjectList *objectlist_Ptr,BBox *bbox_Ptr)
 {
   int signbit=0,invert_ray=0;
   triplet	*tmp_normal_Ptr,S1,ray;
@@ -351,29 +309,16 @@ Ray	apply_diffuse_model(hitPoint,ipray,materialbag,illumination,wavebandbag,flag
    /* store info in hitPoint */
    hitPoint->interactionType=reflectance_type;
    hitPoint->location = opray.origin;
-   hitPoint->fromVector  = ipray->direction;
-   hitPoint->toVector = opray.direction;
+   hitPoint->fromvector  = ipray->direction;
+   hitPoint->tovector = opray.direction;
    return(opray);
 }
 
-Ray	apply_shadow_model(l,hitPoint,ipray,materialbag,illumination,wavebandbag,flagbag,material_Ptr,normal_Ptr,plane_normal_Ptr,tree_depth_Ptr,objectlist_Ptr,bbox_Ptr)
-     HitPoint *hitPoint;
-     int l;
-     Material_table	*material_Ptr;
-     triplet		*normal_Ptr,*plane_normal_Ptr;
-     ObjectList	*objectlist_Ptr;
-     BBox		*bbox_Ptr;
-     int		*tree_depth_Ptr;
-     IlluminationBag		*illumination;
-     FlagBag			*flagbag;
-     WavebandBag		*wavebandbag;
-     MaterialBag		*materialbag;
-     Ray		*ipray;
+Ray	apply_shadow_model(int l,HitPoint *hitPoint,Ray *ipray,MaterialBag *materialbag,IlluminationBag *illumination,WavebandBag *wavebandbag,FlagBag *flagbag,Material_table *material_Ptr,triplet *normal_Ptr,triplet *plane_normal_Ptr,int *tree_depth_Ptr,ObjectList *objectlist_Ptr,BBox *bbox_Ptr)
 {
-  triplet	ray,rotate_about();
-  double	s1,s2,Random(),V_dot();
+  double	s1,s2;
   Ray	opray;
-  triplet normal;
+  triplet normal,ray;
   if(!flagbag->sunlocation)
     ray= *illumination->sun_Ptr;
   else
@@ -406,17 +351,14 @@ Ray	apply_shadow_model(l,hitPoint,ipray,materialbag,illumination,wavebandbag,fla
     /* jump the ray by objectlist_Ptr->rayLengthThroughObject through the object */
     opray.origin= vector_plus(opray.origin,V_factor(normal,objectlist_Ptr->rayLengthThroughObject));
   }
-  hitPoint->sunVector[l]=opray.direction;  
+  hitPoint->sunvector[l]=opray.direction;  
   return(opray);
 }
 
-int	apply_bump_map(material,normal,correction_ratio)
-     Material_table	*material;
-     triplet	*normal;
-     double	*correction_ratio;
+int	apply_bump_map(Material_table *material,triplet *normal,double *correction_ratio)
 {
   double	sin_dz_du,sin_dz_dv,cos_dz_du,cos_dz_dv,u,v;
-  triplet	perturbed_normal,rotate_about();
+  triplet	perturbed_normal;
   
   sin_dz_du = *(material->imagemap->data.fdata + (material->local_coords.y * material->imagemap->hd.cols) + material->local_coords.x);
   cos_dz_du = *(material->imagemap->data.fdata + (material->imagemap->hd.cols*material->imagemap->hd.rows) + (material->local_coords.y * material->imagemap->hd.cols) + material->local_coords.x);
@@ -437,9 +379,7 @@ int	apply_bump_map(material,normal,correction_ratio)
   return(1);
 }
 
-int	apply_material_map(material,flag)
-     Material_table	*material;
-     int	flag;
+int	apply_material_map(Material_table *material,int flag)
 {
   unsigned char	map_value;
   int	retval;
@@ -456,11 +396,7 @@ int	apply_material_map(material,flag)
   return(retval);
 }
 
-void calculate_local_coords(material,objectlist_Ptr,flag,correction_ratio,type)
-     Material_table *material;
-     ObjectList	*objectlist_Ptr;
-     int		flag,type;
-     double	*correction_ratio;
+void calculate_local_coords(Material_table *material,ObjectList *objectlist_Ptr,int flag,double *correction_ratio,int type)
 {
   double	x,y;
   
@@ -479,15 +415,15 @@ void calculate_local_coords(material,objectlist_Ptr,flag,correction_ratio,type)
       material->local_coords.x = MAX(MIN((int)(((double)(material->imagemap->hd.cols) * x)),material->imagemap->hd.cols - 1),0);
       material->local_coords.y = MAX(MIN((int)(((double)(material->imagemap->hd.rows) * y)),material->imagemap->hd.rows),0);	    
     }
-  }else if(flag && type==FO && objectlist_Ptr->TriangleObj && objectlist_Ptr->TriangleObj->local_coords){
-    x = objectlist_Ptr->TriangleObj->local_coords->vertex_local.x + objectlist_Ptr->ancilliary[1] * objectlist_Ptr->TriangleObj->local_coords->local_du.x + objectlist_Ptr->ancilliary[0] * objectlist_Ptr->TriangleObj->local_coords->local_dv.x;
-    y = objectlist_Ptr->TriangleObj->local_coords->vertex_local.y + objectlist_Ptr->ancilliary[1] * objectlist_Ptr->TriangleObj->local_coords->local_du.y + objectlist_Ptr->ancilliary[0] * objectlist_Ptr->TriangleObj->local_coords->local_dv.y;
+  }else if(flag && type==FO && objectlist_Ptr->triangleObj && objectlist_Ptr->triangleObj->local_coords){
+    x = objectlist_Ptr->triangleObj->local_coords->vertex_local.x + objectlist_Ptr->ancilliary[1] * objectlist_Ptr->triangleObj->local_coords->local_du.x + objectlist_Ptr->ancilliary[0] * objectlist_Ptr->triangleObj->local_coords->local_dv.x;
+    y = objectlist_Ptr->triangleObj->local_coords->vertex_local.y + objectlist_Ptr->ancilliary[1] * objectlist_Ptr->triangleObj->local_coords->local_du.y + objectlist_Ptr->ancilliary[0] * objectlist_Ptr->triangleObj->local_coords->local_dv.y;
     
     if(correction_ratio&&material->material_type[0]==BUMPMAP){
       
-      correction_ratio[0] = fabs(((objectlist_Ptr->TriangleObj->local_coords->du_length)*x*(objectlist_Ptr->TriangleObj->local_coords->local_du.x) + (objectlist_Ptr->TriangleObj->local_coords->du_length)*x*(objectlist_Ptr->TriangleObj->local_coords->local_du.x) + (objectlist_Ptr->TriangleObj->local_coords->vertex_local.x))/((objectlist_Ptr->TriangleObj->local_coords->du_length)*(objectlist_Ptr->TriangleObj->local_coords->local_du.x) + (objectlist_Ptr->TriangleObj->local_coords->du_length)*(objectlist_Ptr->TriangleObj->local_coords->local_du.x) + (objectlist_Ptr->TriangleObj->local_coords->vertex_local.x)));
+      correction_ratio[0] = fabs(((objectlist_Ptr->triangleObj->local_coords->du_length)*x*(objectlist_Ptr->triangleObj->local_coords->local_du.x) + (objectlist_Ptr->triangleObj->local_coords->du_length)*x*(objectlist_Ptr->triangleObj->local_coords->local_du.x) + (objectlist_Ptr->triangleObj->local_coords->vertex_local.x))/((objectlist_Ptr->triangleObj->local_coords->du_length)*(objectlist_Ptr->triangleObj->local_coords->local_du.x) + (objectlist_Ptr->triangleObj->local_coords->du_length)*(objectlist_Ptr->triangleObj->local_coords->local_du.x) + (objectlist_Ptr->triangleObj->local_coords->vertex_local.x)));
       
-      correction_ratio[1] = fabs(((objectlist_Ptr->TriangleObj->local_coords->dv_length)*y*(objectlist_Ptr->TriangleObj->local_coords->local_dv.y) + (objectlist_Ptr->TriangleObj->local_coords->dv_length)*y*(objectlist_Ptr->TriangleObj->local_coords->local_dv.y) + (objectlist_Ptr->TriangleObj->local_coords->vertex_local.y))/((objectlist_Ptr->TriangleObj->local_coords->dv_length)*(objectlist_Ptr->TriangleObj->local_coords->local_dv.y) + (objectlist_Ptr->TriangleObj->local_coords->dv_length)*(objectlist_Ptr->TriangleObj->local_coords->local_dv.y) + (objectlist_Ptr->TriangleObj->local_coords->vertex_local.y)));
+      correction_ratio[1] = fabs(((objectlist_Ptr->triangleObj->local_coords->dv_length)*y*(objectlist_Ptr->triangleObj->local_coords->local_dv.y) + (objectlist_Ptr->triangleObj->local_coords->dv_length)*y*(objectlist_Ptr->triangleObj->local_coords->local_dv.y) + (objectlist_Ptr->triangleObj->local_coords->vertex_local.y))/((objectlist_Ptr->triangleObj->local_coords->dv_length)*(objectlist_Ptr->triangleObj->local_coords->local_dv.y) + (objectlist_Ptr->triangleObj->local_coords->dv_length)*(objectlist_Ptr->triangleObj->local_coords->local_dv.y) + (objectlist_Ptr->triangleObj->local_coords->vertex_local.y)));
       
     }
     x-=(int)x;
@@ -511,12 +447,7 @@ void calculate_local_coords(material,objectlist_Ptr,flag,correction_ratio,type)
   return;
 }
 
-Material_table *apply_local_coordinates(material,objectlist_Ptr,plane_normal,materialbag,type)
-     Material_table	*material;
-     ObjectList	*objectlist_Ptr;
-     triplet		*plane_normal;
-     MaterialBag	*materialbag;
-     int             type;
+Material_table *apply_local_coordinates(Material_table *material,ObjectList *objectlist_Ptr,triplet *plane_normal,MaterialBag *materialbag,int type)
 {
   int	i,index;
   double	correction_ratio[2];
@@ -543,7 +474,7 @@ Material_table *apply_local_coordinates(material,objectlist_Ptr,plane_normal,mat
       **	bumpmap material
       */
       calculate_local_coords(&(materialbag->materials[material->material[i]]),objectlist_Ptr,1,&(correction_ratio[0]),type);
-      materialbag->materials[material->material[i]].basis=&(objectlist_Ptr->TriangleObj->local_coords->basis[0]);
+      materialbag->materials[material->material[i]].basis=&(objectlist_Ptr->triangleObj->local_coords->basis[0]);
       apply_bump_map(&(materialbag->materials[material->material[i]]),plane_normal,&(correction_ratio[0]));
     }else if(materialbag->materials[material->material[i]].no_of_materials>1){
       /*
@@ -557,28 +488,22 @@ Material_table *apply_local_coordinates(material,objectlist_Ptr,plane_normal,mat
   return(new_material);
 }
 
-Material_table	*get_reflection_ray_value(materialbag,wavebandbag,flagbag,wavelength,normal,plane_normal,objectlist_Ptr)
-     ObjectList	*objectlist_Ptr;
-     int		*wavelength[];
-     triplet		*plane_normal,*normal;
-     FlagBag			*flagbag;
-     WavebandBag		*wavebandbag;
-     MaterialBag		*materialbag;
+Material_table	*get_reflection_ray_value(MaterialBag *materialbag,WavebandBag *wavebandbag,FlagBag *flagbag,int *wavelength,triplet *normal,triplet *plane_normal,ObjectList *objectlist_Ptr)
 {
   Material_table	*material=0;
   
   switch(objectlist_Ptr->ObjectType){
   case FO:	/* triangle */
-    material=(objectlist_Ptr->TriangleObj->material);
+    material=(objectlist_Ptr->triangleObj->material);
     /*
     **	facet -> interpolated normal 
     */
-    if(flagbag->normal&&objectlist_Ptr->TriangleObj->vertex_normals){
-      *plane_normal=normalise(vector_plus(vector_plus(V_factor(objectlist_Ptr->TriangleObj->vertex_normals->normal_du,objectlist_Ptr->ancilliary[1]),V_factor(objectlist_Ptr->TriangleObj->vertex_normals->normal_dv,objectlist_Ptr->ancilliary[0])),objectlist_Ptr->TriangleObj->vertex_normals->vertex_normal));
+    if(flagbag->normal&&objectlist_Ptr->triangleObj->vertex_normals){
+      *plane_normal=normalise(vector_plus(vector_plus(V_factor(objectlist_Ptr->triangleObj->vertex_normals->normal_du,objectlist_Ptr->ancilliary[1]),V_factor(objectlist_Ptr->triangleObj->vertex_normals->normal_dv,objectlist_Ptr->ancilliary[0])),objectlist_Ptr->triangleObj->vertex_normals->vertex_normal));
     }else{
-      *plane_normal = objectlist_Ptr->TriangleObj->normal;
+      *plane_normal = objectlist_Ptr->triangleObj->normal;
     }
-    *normal=objectlist_Ptr->TriangleObj->normal;		
+    *normal=objectlist_Ptr->triangleObj->normal;		
     break;
   case SPHERE:	/* sphere */
     material=(objectlist_Ptr->SphereObj->material);

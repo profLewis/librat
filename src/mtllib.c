@@ -1,17 +1,12 @@
 #include "prat.h"
-/*#undef __STDC__
-#include "./dlfcn.h"*/
 #ifdef PFAT
 #include "pfat/pratRead.h"
 extern MaterialBag *Materialbag; 
 #endif 
-extern	FILE 	*open_file_for_read();
-extern	void	mmap_read_hips_image();
-extern	void	*calloc();
-triplet readFileEqual();
-double	Random();
-FILE *openFile();
+
+#ifndef CLOSE
 #define CLOSE -1
+#endif
 
 int getArrayNo(double lambda,Standard_Material_List *material){
   int i;
@@ -30,15 +25,9 @@ int getArrayNo(double lambda,Standard_Material_List *material){
 int VOLUME_nZeniths=0;
 double LADEccentricity=0;
 
-int	calculate_material_lut(nBands,out,lambda,material_list,waveband,material_no)
-     int nBands;
-     double				lambda;
-     Material_List			*material_list;
-     int				waveband,material_no;
-     Standard_Material_List	*out;
+int	calculate_material_lut(int nBands,Standard_Material_List *out,double lambda,Material_List *material_list,int waveband,int material_no)
 {
   int				array_no; 
-  double			*d_allocate(),k,bigtheta,rhoc;
   if(!material_list->material[material_no].wavelength){
       return(0);
   }
@@ -62,8 +51,7 @@ int	calculate_material_lut(nBands,out,lambda,material_list,waveband,material_no)
   return(1);
 }
 
-void	preprocess_bumpmap_data(material_table_Ptr)
-     Material_table	*material_table_Ptr;
+void	preprocess_bumpmap_data(Material_table *material_table_Ptr)
 {
   ImageMap	imagemap;
   int	i,j;
@@ -116,8 +104,7 @@ void	preprocess_bumpmap_data(material_table_Ptr)
 **	determine max. number indexed on material map
 */
 
-int	find_number_of_materials_in_material_map(material_map)
-     ImageMap	*material_map;
+int	find_number_of_materials_in_material_map(ImageMap *material_map)
 {
   int	i,j,max_number=0;
   
@@ -129,11 +116,7 @@ int	find_number_of_materials_in_material_map(material_map)
   return(max_number+1);
 }
 
-void	read_material_map_table(fp,no_of_materials_Ptr,material_table,material_names)
-     FILE	*fp;
-     int	*no_of_materials_Ptr;
-     Material_table	*material_table;
-     char	**material_names;
+void	read_material_map_table(FILE *fp,int *no_of_materials_Ptr,Material_table *material_table,char **material_names)
 {
   int	i,found_material=0,index;
   char	material[1024];
@@ -164,14 +147,10 @@ void	read_material_map_table(fp,no_of_materials_Ptr,material_table,material_name
   return;
 }
 
-void	read_material_map_file(material_table,filename,no_of_materials_Ptr,material_names)
-     char	*filename;
-     char	**material_names;
-     int	*no_of_materials_Ptr;
-     Material_table	*material_table;
+void	read_material_map_file(Material_table *material_table,char *filename,int *no_of_materials_Ptr,char **material_names)
 {
   char	buf[1064];
-  FILE	*fp,*open_file_for_read();
+  FILE	*fp;
   int	no_of_materials;
 
   if(!(fp=openFile(filename,TRUE,"MATLIB"))){
@@ -239,12 +218,7 @@ void	read_material_map_file(material_table,filename,no_of_materials_Ptr,material
   return;
 }
 
-void	read_default_materials(bb,verbose,material_list_Ptr,material_table,material_names)
-     BigBag *bb;
-     Material_List   *material_list_Ptr;
-     char    **material_names;
-     Material_table  *material_table;
-     int	verbose;
+void	read_default_materials(RATobj *bb,int verbose,Material_List *material_list_Ptr,Material_table *material_table,char **material_names)
 {
   int	i,*no_of_materials_Ptr,len,nmat=0;
   static char	**material_name=NULL;
@@ -319,7 +293,7 @@ void	read_default_materials(bb,verbose,material_list_Ptr,material_table,material
   }
   strcpy(material_names[nmat],material_name[0]);
   
-  if(nmat>bb->PRAT_MAX_MATERIALS)error1("read_material_file:\tonly %d materials can be defined (set with environment variable PRAT_MAX_MATERIALS)",bb->PRAT_MAX_MATERIALS);
+  if(nmat>bb->PRAT_MAX_MATERIALS)error2i("read_material_file:\tonly %d materials can be defined (set with environment variable PRAT_MAX_MATERIALS)",bb->PRAT_MAX_MATERIALS);
   thismat->diffuse_transmittance_flag=0;
   thismat->diffuse_reflectance_flag=1;
   thismat->transWeightingThreshold=0.0;
@@ -362,7 +336,7 @@ void	read_default_materials(bb,verbose,material_list_Ptr,material_table,material
     exit(1);
   } 
   strcpy(material_names[ nmat],material_name[1]);
-  if(nmat>bb->PRAT_MAX_MATERIALS)error1("read_material_file:\tonly %d materials can be defined (set with environment variable PRAT_MAX_MATERIALS)",bb->PRAT_MAX_MATERIALS);
+  if(nmat>bb->PRAT_MAX_MATERIALS)error1("read_material_file:\t(set with environment variable PRAT_MAX_MATERIALS)");
   thismat->diffuse_transmittance_flag=material_Ptr->diffuse_reflectance_flag=0;
   if(timer==1)thesemat->wavelength=(double *)v_allocate(2,sizeof(double));
   thesemat->wavelength[0]=0;
@@ -380,7 +354,7 @@ void	read_default_materials(bb,verbose,material_list_Ptr,material_table,material
 ** p.lewis@ucl.ac.uk 12 May 2012
 ** This needs to be consistent with the function above 
 */
-int getNdefaultMaterials(){return 2;}
+int getNdefaultMaterials(void){return 2;}
 /*
 **	read material definition file
 **	materials defined:
@@ -389,21 +363,14 @@ int getNdefaultMaterials(){return 2;}
 **	mix	<material_name> <material_proportion> <material_name> <material_proportion> ...
 */
 
-int	read_material_definition_file(bb,verbose,filename,material_list_Ptr,material_names,no_of_materials_Ptr,material_table)
-     BigBag *bb;
-     char	**filename;
-     Material_List	*material_list_Ptr;
-     char	**material_names;
-     int	*no_of_materials_Ptr;
-     int	verbose;
-     Material_table	*material_table;
+int	read_material_definition_file(RATobj *bb,int verbose,char **filename,Material_List *material_list_Ptr,char **material_names,int *no_of_materials_Ptr,Material_table *material_table)
 {
   static int timer=0;
   FILE	*fp;
-  char	buf[1024],*line,k_filename[1024],bigtheta_filename[1024],rhoc_filename[1024],proportion_str[1024],material_name[1024],dum[1024],material_filename[1024],material[1024];
-  int	i,j,ok_flag,found_material,*i_allocate(),read_brdf_material_file(),white=0;
+  char	buf[1024],*line,proportion_str[1024],material_name[1024],dum[1024],material_filename[1024],material[1024];
+  int	i,j,ok_flag,found_material,white=0;
   double	proportion,transWeightingThreshold;
-  int	read_material_file(),isRT=0,read_volume_material_file();
+  int	isRT=0;
 #ifdef PFAT
   int I,row,col,n;
   Standard_Material_List  *sml=NULL;
@@ -414,7 +381,7 @@ int	read_material_definition_file(bb,verbose,filename,material_list_Ptr,material
 #endif
   if(verbose)fprintf(stderr,"reading material library %s\n",*filename);
   if(!(fp=openFile(*filename,TRUE,"MATLIB"))){
-    error2("Error opening MATLIB",filename);
+    fprintf(stderr,"Error opening MATLIB %s\n",*filename);
     exit(1);
   }
   while(fgets(buf,1024,fp) != NULL )	/* get line */
@@ -704,13 +671,11 @@ int	read_material_definition_file(bb,verbose,filename,material_list_Ptr,material
 	(material_list_Ptr->no_of_materials)++;
 	/*(*no_of_materials_Ptr)++;*/
       }
-  fp=openFile(*filename,CLOSE,fp);
+  fp=openFile(*filename,CLOSE,(char *)fp);
   return(1);
 }
 
-int	is_double(str,data_Ptr)
-     char	*str;
-     double	*data_Ptr;
+int	is_double(char *str,double *data_Ptr)
 {
   int	i;
   if( (*data_Ptr = atof(str))!=0.0)return(1);
@@ -741,16 +706,10 @@ double *sortRPVData(char *name,char *data,int *material,int no_of_materials,char
   return(out);
 }
 
-int	read_volume_model(verbose,filename,material_Ptr,material_list_Ptr,no_of_materials_Ptr,fp,material_names)
-     Material_List	*material_list_Ptr;
-     int	*no_of_materials_Ptr;
-     FILE	*fp;
-     Material_table	*material_Ptr;
-     char	*filename,**material_names;
-     int	verbose;
+int	read_volume_model(int verbose,char *filename,Material_table *material_Ptr,Material_List *material_list_Ptr,int *no_of_materials_Ptr,FILE *fp,char **material_names)
 {
   char	buf[1024],buffy[1024];
-  int	found,i,rows=0,get_no_of_columns_in_file();
+  int	found,i,rows=0;
   FILE	*fp1;
   double	sum;
   
@@ -789,8 +748,8 @@ int	read_volume_model(verbose,filename,material_Ptr,material_list_Ptr,no_of_mate
           exit(1);
         }
 	handle=dlopen(NULL,RTLD_LAZY);
-	material_list_Ptr->material[*no_of_materials_Ptr].volume.lad=(triplet (*) ()) dlsym(handle,buf);
-	 material_list_Ptr->material[*no_of_materials_Ptr].volume.lad=(triplet (*) ())readFileEqual;
+	material_list_Ptr->material[*no_of_materials_Ptr].volume.lad=(triplet (*) (Volume *)) dlsym(handle,buf);
+	 material_list_Ptr->material[*no_of_materials_Ptr].volume.lad=(triplet (*) (Volume *))readFileEqual;
 	if(!material_list_Ptr->material[*no_of_materials_Ptr].volume.lad){
 	  fprintf(stderr,"%s not found\n",buf);
 	  error1("read_volume_model: parse error after flag angle - specified angle distribution function not found");
@@ -890,20 +849,16 @@ int	read_volume_model(verbose,filename,material_Ptr,material_list_Ptr,no_of_mate
   return(1);
 }
 
-int	read_volume_material_file(bb,verbose,filename,material_list_Ptr,no_of_materials_Ptr,material_Ptr,material_names)
-     BigBag *bb;
-     char	*filename;
-     int	verbose;
-     Material_List	*material_list_Ptr;
-     int	*no_of_materials_Ptr;
-     Material_table	*material_Ptr;
-     char **material_names;
+int	read_volume_material_file(RATobj *bb,int verbose,char *filename,Material_List *material_list_Ptr,int *no_of_materials_Ptr,Material_table *material_Ptr,char **material_names)
 {
-  FILE	*fp, *open_file_for_read();
-  int	get_no_of_columns_in_file(),type=0;
+  FILE	*fp;
+  int	type=0;
   char	volume_type[96];
   
-  if(*no_of_materials_Ptr>bb->PRAT_MAX_MATERIALS)error1("read_material_file:\tonly %d materials can be defined (set with environment variable PRAT_MAX_MATERIALS)",bb->PRAT_MAX_MATERIALS);
+  if(*no_of_materials_Ptr>bb->PRAT_MAX_MATERIALS){
+    fprintf(stderr,"read_material_file:\tonly %d materials can be defined (set with environment variable PRAT_MAX_MATERIALS)",bb->PRAT_MAX_MATERIALS);
+    exit(1);
+  }
   material_Ptr->diffuse_transmittance_flag=material_Ptr->diffuse_reflectance_flag=0;
   fp=open_file_for_read(filename);
   if(fscanf(fp,"%s",volume_type)!=1)error1("read_volume_material_file:\tbrdf_model_type expected");
@@ -912,20 +867,16 @@ int	read_volume_material_file(bb,verbose,filename,material_list_Ptr,no_of_materi
   return(type);
 }
 
-int	read_material_file(bb,verbose,filename,material_list_Ptr,no_of_materials_Ptr,material_Ptr,white)
-     BigBag *bb;
-     char	*filename;
-     int	verbose;
-     Material_List	*material_list_Ptr;
-     int	*no_of_materials_Ptr;
-     Material_table	*material_Ptr;
-     int white;
+int	read_material_file(RATobj *bb,int verbose,char *filename,Material_List *material_list_Ptr,int *no_of_materials_Ptr,Material_table *material_Ptr,int white)
 {
-  FILE	*fp, *open_file_for_read();
+  FILE	*fp;
   double	wavelength,reflectance,this;
-  int	rows=0,no_more=0,no_of_columns,i,timer=0,rc, get_no_of_columns_in_file();
+  int	rows=0,no_more=0,no_of_columns,i,timer=0,rc;
   
-  if(*no_of_materials_Ptr>bb->PRAT_MAX_MATERIALS)error1("read_material_file:\tonly %d materials can be defined (set with environment variable PRAT_MAX_MATERIALS)",bb->PRAT_MAX_MATERIALS);
+  if(*no_of_materials_Ptr>bb->PRAT_MAX_MATERIALS){
+    fprintf(stderr,"read_material_file:\tonly %d materials can be defined (set with environment variable PRAT_MAX_MATERIALS)",bb->PRAT_MAX_MATERIALS);
+    exit(1);
+  }
   material_Ptr->diffuse_transmittance_flag=material_Ptr->diffuse_reflectance_flag=0;
 
   if((fp=openFile(filename,TRUE,"MATLIB"))==NULL){
@@ -988,14 +939,14 @@ int	read_material_file(bb,verbose,filename,material_list_Ptr,no_of_materials_Ptr
      }
   }
   material_list_Ptr->material[ *no_of_materials_Ptr].no_of_samples=timer;
-  fp=openFile(filename,CLOSE,fp);
+  fp=openFile(filename,CLOSE,(char *)fp);
   return(1);
 }
 
 /*************************************/
 /*material distribution functions here */
 /* spherical distribution */
-triplet spherical()
+triplet spherical(Volume *v)
 {
   double t,p,s,x;
   triplet out;
@@ -1010,7 +961,7 @@ triplet spherical()
 }
 
 /* spherical distribution */
-triplet elliptical()
+triplet elliptical(Volume *v)
 {
   double t,p,s,x;
   triplet out;

@@ -2,10 +2,7 @@
 #define FILELIB_H
 #include <strings.h>
 #include <string.h>
-
-char *getFilenameExtension(),*prependEnv(),*prependDIR();
-int	get_mmap_flag();
-FILE	*openFile();
+#include <stdlib.h>
 
 #ifndef MAX
 #define MAX(a,b) ((a>b)?(a):(b))
@@ -20,5 +17,13 @@ FILE	*openFile();
 #ifndef FALSE
 #define FALSE 0
 #endif
+#include "files.h"
+
+char *getFilenameExtension(char *fileName);
+char    *prependEnv(char *file,char *Env);
+char    *prependDIR(char *file,char *DIR,int freed);
+char *typer(int inputFlag);
+FILE *openFile(char *fileName,int inputFlag,char *env);
+
 
 #endif

@@ -11,10 +11,7 @@
 **	glassner p.36
 */
 
-int	ray_on_ellipse(D_Ptr,ellipse_Ptr,ray,p1_Ptr,p2_Ptr,D)
-double	*D_Ptr,*p1_Ptr,*p2_Ptr,*D;
-Ray	*ray;
-Ellipse	*ellipse_Ptr;
+int	ray_on_ellipse(double *D_Ptr,Ellipse *ellipse_Ptr,Ray *ray,double *p1_Ptr,double *p2_Ptr,double *D)
 {
 	double	p,q,r,b;
 	triplet	A,B,C;
@@ -43,10 +40,7 @@ Ellipse	*ellipse_Ptr;
 
 }
 
-int	vray_in_ellipse(D_Ptr,lengthToTravel,ellipse_Ptr,ray,p1_Ptr,p2_Ptr,D)
-double	*D_Ptr,*p1_Ptr,*p2_Ptr,*D,*lengthToTravel;
-Ray	*ray;
-Ellipse	*ellipse_Ptr;
+int	vray_in_ellipse(double *D_Ptr,double *lengthToTravel,Ellipse *ellipse_Ptr,Ray *ray,double *p1_Ptr,double *p2_Ptr,double *D)
 {
 	double	p,q,r,b;
 	triplet	A,B,C;

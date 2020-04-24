@@ -3,10 +3,7 @@
 **	random.c
 **
 */
-double Random();
-
-double   randomise_variable(start,width)
-double   start,width;
+double   randomise_variable(double start,double width)
 {
         double   random_width,out;
         random_width=width*Random();

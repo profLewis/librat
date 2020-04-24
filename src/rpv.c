@@ -86,7 +86,7 @@ C     Hence, only the absolute value of the azimuth difference matters.
 C  3. WARNING: All variables in this routine are declared explicitly,
 C     and their names have been selected to correspond to those
 C     of the mathematical variables in the appropriate reference.
-C     DO NOT ASSUME THAT A VARIABLE IS INTEGER OR REAL BASED ON
+C     DO NOT ASSUME THAT A VARIABLE IS intEGER OR REAL BASED ON
 C     ITS FIRST LETTER.
 C
 C  Disclaimer: 
@@ -148,7 +148,7 @@ C
       REAL coss, cosv, sins, sinv, cosp, tans, tanv
       REAL bgthsq, csmllg, bigg, expon, denom, f1, f2, f3
       REAL r80, r100, r180
-      INTRINSIC ABS, COS, SQRT
+      intRINSIC ABS, COS, SQRT
       DATA r80 /1.396263402/, r100 /1.745329252/, r180 /3.141592654/
 C
 C  Initialize the error code and check input values:

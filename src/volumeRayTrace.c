@@ -1,22 +1,19 @@
 #include "frat.h"
+
 /* some potential hot spot stuff */
 
-double HS_k1(G,G_,m,m_)
-double G,G_,m,m_;
+double HS_k1(double G,double G_,double m,double m_)
 {
 	return(sqrt(MAX(0.,G_*m*m_*G)));
 }
 
-double HS_k2(m,m_,cosAlpha)
-double m,m_,cosAlpha;
+double HS_k2(double m,double m_,double cosAlpha)
 {
 	return(sqrt(MAX(0.,m*m+m_*m_+2.0*m*m_*cosAlpha)));
 }
 
 /* Kuusk's 1985 model */
-double HS_effect(l,G,G_,m,m_,v,s)
-double l,G,G_,m,m_;
-triplet *v,*s;
+double HS_effect(double l,double G,double G_,double m,double m_,triplet *v,triplet *s)
 {
 	double cosAlpha;
 	double f,k1,k2;
@@ -43,7 +40,7 @@ triplet *v,*s;
 void sortGlut(Volume *volume,int n){
   int i,j,total=10000;
   double angle,sum;
-  triplet leaf,view,readFileEqual();
+  triplet leaf,view;
   double projection;
 
   if(!(volume->Glut=(double *)calloc(n,sizeof(double)))){
@@ -67,9 +64,7 @@ void sortGlut(Volume *volume,int n){
   }
 }
 
-double HS_term(l,G,G_,m,m_,v,s)
-double l,G,G_,m,m_;
-triplet *v,*s;
+double HS_term(double l,double G,double G_,double m,double m_,triplet *v,triplet *s)
 {
 	double f;
 	f=HS_effect(l,G,G_,m,m_,v,s);
@@ -116,19 +111,12 @@ fFacet *reallocateFacetBlock(int nFacets,int nFacetBlock,fFacet *facets){
 ** & if valid, a facet of the correct orientation
 */
 
-fFacet *volumeRayTrace(bb,flag_Ptr,mv,v,volume,maxV,s)
-     BigBag *bb;
-triplet *v;
-double maxV;
-double *mv;
-FlagBag *flag_Ptr;
-Volume *volume;
-triplet *s;	/* sun vector - set to NULL if viewing */
+/* sun vector - set to NULL if viewing */
+fFacet *volumeRayTrace(RATobj *bb,FlagBag *flag_Ptr,double *mv,triplet *v,Volume *volume,double maxV,triplet *s)
 {
 	double	nzenith,tol=0.01,diff,Gv,hs,m_,uL;
-	double l,G,m,zenith;	
+	double l,G=0.0,m,zenith;	
 	/* leaf linear dimension, G of viewer, path length of viewer */
-	triplet (*Normal)(),readFileEqual();
 	int	izenith,iter=20;
 	triplet V;
 /* your actual facet ... chosen from the stack */
@@ -146,8 +134,7 @@ triplet *s;	/* sun vector - set to NULL if viewing */
 	uL=volume->uL;
 	l=volume->l;
 	m=volume->m;
-	Normal=volume->lad;
-	if(!Normal)volume->lad=Normal=readFileEqual;
+	if(!volume->lad)volume->lad=readFileEqual;
 
 /* ok ... do I need to allocate any facets */
 	if(bb->whichFacet>=bb->nFacets){
@@ -170,12 +157,12 @@ triplet *s;	/* sun vector - set to NULL if viewing */
 	}else{
 	  Gv = volume->Glut[izenith] + (nzenith-izenith)*(volume->Glut[izenith+1]-volume->Glut[izenith]);
 	}
-	facet->normal=Normal(volume);
+	facet->normal=volume->lad(volume);
 
 	*mv=-log((double)Random())/(double)(Gv*uL);
 
 /* hs term */
-	if(s&&m&&V_mod(s)!=0){
+	if(s&&m&&V_mod(*s)!=0){
 		V=normalise(*v);
 /* 
 **	approximate m_ - converges to tol*m (e.g. 0.01*m) 
@@ -209,7 +196,7 @@ triplet *s;	/* sun vector - set to NULL if viewing */
 */
 /* ray exits bounding box before interaction */
 /* only store values if you hit */
-	if(!s||V_mod(s)==0){
+	if(!s||V_mod(*s)==0){
 /* store values */
 		if(maxV>0&&*mv>maxV){
 			volume->m=maxV;

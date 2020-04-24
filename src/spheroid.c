@@ -97,10 +97,7 @@
 ** 6. l = [-(A . B) +/- sqrt(Q)]/(B . B)
 */
 
-int	ray_on_spheroid(D_Ptr,spheroid_Ptr,ray,p1_Ptr,p2_Ptr,D)
-double	*D_Ptr,*p1_Ptr,*p2_Ptr,*D;
-Ray	*ray;
-Spheroid *spheroid_Ptr;
+int	ray_on_spheroid(double *D_Ptr,Spheroid *spheroid_Ptr,Ray *ray,double *p1_Ptr,double *p2_Ptr,double *D)
 {
 	double	aa,bb,ab,q,sq;
 	triplet	A,B,Oprime;
@@ -132,10 +129,7 @@ Spheroid *spheroid_Ptr;
 
 }
 
-int	vray_in_spheroid(D_Ptr,lengthToTravel,spheroid_Ptr,ray,p1_Ptr,p2_Ptr,D)
-double	*D_Ptr,*p1_Ptr,*p2_Ptr,*D,*lengthToTravel;
-Ray	*ray;
-Spheroid *spheroid_Ptr;
+int	vray_in_spheroid(double *D_Ptr,double *lengthToTravel,Spheroid *spheroid_Ptr,Ray *ray,double *p1_Ptr,double *p2_Ptr,double *D)
 {
         double  aa,bb,ab,q,sq;
         triplet A,B,Oprime;

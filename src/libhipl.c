@@ -4,6 +4,8 @@
 #include <time.h>
 #define MAX(a,b) (a > b ? a : b)
 #include <stdint.h>
+#include "libhipl.h"
+#include <stdlib.h>
 
 /* 
 **	libhipl : Hipl compatible library routines
@@ -47,32 +49,15 @@
 #define HIPS2 "HIPS\n"
 #define UNIT 4
 
-static int fd_read_line(), fp_read_line();
-static int fd_write_line(), fp_write_line();
-static char *copy_buf(), *add_buf();
-static void h2_fp_rhd(), h2_fd_rhd(), hperr();
-static void h2clean_header();
-static char *h2sgetline();
-static char *h2stripspace(), *h2clean_hist();
-
-char *fix_desc();
-
-void fp_fread_header();
-void fp_fwrite_header();
-void fread_header();
-void fwrite_header();
-
 void read_header(struct header *hd){fread_header(0,hd);}
 void write_header(struct header *hd){fwrite_header(1,hd);}
 void fp_read_header(struct header *hd){fp_fread_header(stdin,hd);}
 void fp_write_header(struct header *hd){fp_fwrite_header(stdout,hd);}
 
-void fp_fread_header(fp, hd)
-FILE *fp;
-struct header *hd;
+void fp_fread_header(FILE *fp, struct header *hd)
 {
 	char buf[SIZE];
-	int len,atoi();
+	int len;
 
 	/* Read orig_name. */
 	len = fp_read_line(fp, buf, SIZE);
@@ -139,11 +124,7 @@ struct header *hd;
 	}
 }
 
-static int
-fp_read_line(fp, buf, size)
-FILE *fp;
-char *buf;
-int size;
+int fp_read_line(FILE *fp, char *buf, int size)
 {
 	/* reads in one line - easy use fgets */
 	if ( fgets(buf, size, fp) == NULL )
@@ -152,12 +133,10 @@ int size;
 
 	return (strlen(buf));
 }
-void fread_header(fd, hd)
-int fd;
-struct header *hd;
+void fread_header(int fd, struct header *hd)
 {
 	char buf[SIZE];
-	int len,atoi();
+	int len;
 
 	/* Read orig_name. */
 	len = fd_read_line(fd, buf, SIZE);
@@ -224,14 +203,10 @@ struct header *hd;
 	}
 }
 
-static int
-fd_read_line(fd, buf, size)
-int fd;
-char *buf;
-int size;
+int fd_read_line(int fd, char *buf, int size)
 {
 	/* fd_read_line acts like a UNIX I/O version of gets() */
-	int	count = 0,hpread();
+	int	count = 0;
 	char	val;
 
 	size--;
@@ -253,10 +228,7 @@ int size;
 
 	return(count);
 }
-static char *
-copy_buf(buf,len)
-char	*buf;
-int	len;
+char * copy_buf(char *buf,int len)
 {
 	/* allocate memory and copy buffer for header fields */
 	char	*ptr;
@@ -275,11 +247,7 @@ int	len;
 */
 }
 
-void init_header(hd,orig_name,seq_name,num_frame,orig_date,rows,
-	cols,bits_per_pixel,bit_packing,pixel_format,seq_desc)
-struct header *hd;
-int num_frame, rows, cols, bits_per_pixel, bit_packing, pixel_format;
-char *orig_name, *seq_name, *orig_date, *seq_desc;
+void init_header(struct header *hd,char *orig_name,char *seq_name,int num_frame,char *orig_date,int rows,int cols,int bits_per_pixel,int bit_packing,int pixel_format,char *seq_desc)
 {
 	hd->orig_name = copy_buf(orig_name,strlen(orig_name));
 
@@ -304,8 +272,7 @@ char *orig_name, *seq_name, *orig_date, *seq_desc;
 	hd->seq_desc = fix_desc(copy_buf(seq_desc,strlen(seq_desc)));
 }
 
-int
-hpread(int fd, char *buf, int len)
+int hpread(int fd, char *buf, int len)
 {
 	/* used for reads on stdin */
 	int in, count;
@@ -325,9 +292,7 @@ hpread(int fd, char *buf, int len)
 #undef	NEWLINE
 #define	NEWLINE putc('\n',fp); len++
 
-void fp_fwrite_header(fp, hd)
-FILE *fp;
-struct header *hd;
+void fp_fwrite_header(FILE *fp, struct header *hd)
 {
 	char buf[SIZE];
 	int len = 0;
@@ -395,10 +360,7 @@ struct header *hd;
 	fwrite("\n.\n",3,1,fp);
 }
 
-static int
-fp_write_line(fp, buf)
-FILE *fp;
-char *buf;
+int fp_write_line(FILE *fp, char *buf)
 {
 	/* writes line without '\n' character at end */
 	int num;
@@ -422,9 +384,7 @@ char *buf;
 
 /* #define write_header(a) fwrite_header(stdout,a) */
 
-void fwrite_header(fd, hd)
-int fd;
-struct header *hd;
+void fwrite_header(int fd, struct header *hd)
 {
 	char buf[SIZE];
 	int len = 0;
@@ -491,10 +451,7 @@ struct header *hd;
 	write(fd,"\n.\n",3);
 }
 
-static int
-fd_write_line(fd, buf)
-int fd;
-char *buf;
+int fd_write_line(int fd, char *buf)
 {
 	/* writes line without '\n' character at end */
 	int num;
@@ -512,10 +469,7 @@ char *buf;
 
 	return(num);
 }
-static char *
-add_buf(desc, buf, len)
-char *desc, *buf;
-int len;
+char * add_buf(char *desc, char *buf, int len)
 {
 	int size;
         char *_desc;
@@ -525,7 +479,7 @@ int len;
 
 	size = strlen(desc);
 
-	_desc = (char *)calloc(size+MAX(strlen(buf),len)+1,sizeof(char));
+	_desc = (char *)calloc(size+MAX((int)strlen(buf),len)+1,sizeof(char));
         if(_desc==NULL){
           fprintf(stderr,"error in core allocation in libhipl add_buf()\n");
           return(desc);
@@ -536,9 +490,7 @@ int len;
 	return(_desc);
 }
 
-void update_desc(hd, buf)
-struct header	*hd;
-char *buf;
+void update_desc(struct header   *hd, char *buf)
 {
 	/* update header description */
 	int	len, size;
@@ -564,9 +516,7 @@ char *buf;
 	hd->seq_desc = fix_desc(hd->seq_desc);
 }
 	
-char *
-fix_desc(desc)
-char *desc;
+char * fix_desc(char *desc)
 {
 	/* strips out any "\n.\n" that may creep in to the description */
 	char 	*p, *q;
@@ -592,10 +542,7 @@ char *desc;
 	}
 	return(desc);
 }
-void update_header(hd, argc, argv)
-struct header *hd;
-int	argc;
-char	*argv[];
+void update_header(struct header *hd, int argc, char **argv)
 {
 	char	*seq, *prog, *new;
 	int	i, slen = 0, nlen = 0;
@@ -669,10 +616,7 @@ char	*argv[];
 	free(new);
 }
 
-static void
-h2_fp_rhd(fp,hd)
-FILE	*fp;
-struct header *hd;
+void h2_fp_rhd(FILE *fp,struct header *hd)
 {
 	char buf[SIZE];
 	int len, i;
@@ -759,10 +703,7 @@ struct header *hd;
 	}
 }
 
-static void
-h2_fd_rhd(fd,hd)
-int	fd;
-struct header *hd;
+void h2_fd_rhd(int fd,struct header *hd)
 {
 	char buf[SIZE];
 	int len, i;
@@ -845,9 +786,7 @@ struct header *hd;
 		free(tmp);
 	}
 }
-static void
-h2clean_header(hd)
-struct	header *hd;
+void h2clean_header(struct  header *hd)
 {
 
 	char	*tmp;
@@ -897,9 +836,7 @@ struct	header *hd;
 **	h2sgetline() : break up a string by setting nl to null
 */
 
-static char *
-h2sgetline(s,e)
-char *s, *e;
+char * h2sgetline(char *s,char *e)
 {
 	while(s < e)
 	{
@@ -917,9 +854,7 @@ char *s, *e;
 /*
 **	h2stripspace() : strip out any leading space characters in a line
 */
-static char *
-h2stripspace(s,e)
-char *s, *e;  
+char * h2stripspace(char *s,char *e)
 {
 	char *save;
 
@@ -948,9 +883,7 @@ char *s, *e;
 **	this routine removes the HIPS-2 specific bits.
 */
 
-static char *
-h2clean_hist(buf)
-char	*buf;
+char * h2clean_hist(char *buf)
 {
 	int	len;
 	char	*nl, *bp, *c, *end;
@@ -1006,9 +939,7 @@ char	*buf;
 	return(hist);
 }
 
-static void
-hperr(a)
-char	*a;
+void hperr(char *a)
 {
 	fprintf(stderr,"%s\n",a);
 	exit(1);

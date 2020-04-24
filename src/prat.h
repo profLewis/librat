@@ -32,27 +32,49 @@
 #include <sys/time.h>
 #include <sys/types.h>
 
+#include "r250.h"
 
+#include "error.h"
 #include "useful3.h"
 #include "vectors2.h"
 #include "4D_vectors.h"
 #include "2D_vectors.h"
 #include "wavefront.h"
 #include "allocate.h"
-#include "intersect_objects.h"
 #include "prat_objects.h"
 #include "sensor_rsr.h"
-#include "camera.h"
-#include "globals.h"
-#include "reflectance.h"
-#include "mtllib.h"
-#include "element_types.h"
 #include "reflectance_functions.h"
 #include "bags.h"
-/* #include "random_array.h" */
+#include "reflectance.h"
+#include "mtllib.h"
+
+#include "camera.h"
+#include "globals.h"
+#include "element_types.h"
 #include "vector_macros.h"
-#include "3D_vectors_double.h"
-#include "define_float.h"
+#include "sky.h"
+#include "rat.h"
+#include "ratFront.h"
+#include "libhipl.h"
+#include "imagelib.h"
+#include "allocate.h"
+#include "plane.h"
+#include "disk.h"
+#include "facet.h"
+#include "bbox.h"
+#include "spheroid.h"
+#include "sphere.h"
+#include "bilinear.h"
+#include "ellipse.h"
+#include "cylinder.h"
+#include "dem.h"
+#include "images.h"
+#include "cylinderTess.h"
+
+#include "volumeRayTrace.h"
+
+#include "intersect_objects.h"
+
 #include <stdio.h>
 
 #define EXPONENTIAL(X) ((X)<(-300)?(0):(exp(X)))
@@ -76,15 +98,6 @@
 #ifdef __SUNPRO_C
 	char *strchr();
 #endif
-FILE *open_file_for_read();
-double atof();
-void	exit();
-void	error1(),error2(),init_header();
-int	apply_material_map();
-void      *calculate_current_reflectance();
-int	mmap_write_hips_image_no_free();
-extern	void	*calloc();
-
 #define	IP	1
 #define	OP	2
 
@@ -98,7 +111,7 @@ int writeInfo(PixelStats *pixelStats,FILE **datafile,FlagBag *flagbag,MaterialBa
 
 /* if you pass (NULL,NULL to volumeRayTrace it resets the internal (static) stack counter */
 #define RESET_VOLUMETRIC_STACKCOUNTER volumeRayTrace(NULL,NULL,NULL,NULL,0.,NULL)
-
+#include "fratP.h"
 
 #endif
 

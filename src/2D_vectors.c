@@ -7,25 +7,21 @@
 */
 #include <stdio.h>
 #include <math.h>
-#include	"useful4.h"
 #include	"2D_vectors.h"
 #include <stdlib.h>
 
-INT	FsIgN();
 
-INT FsIgN(input)
-FLOAT	input;
+int FsIgN(float input)
 {
 	if(input<0.0)return(-1);
 	if(input==0.0)return(0);
 	return(1);
 }
 
-PAIR same_sign(a,b)
-PAIR a,b;
+pair same_sign(pair a, pair b)
 {
 	/* force b vector to be in same direction as a */
-	PAIR	out;
+	pair	out;
 	if((FsIgN(a.x)==(-1*FsIgN(b.x)))&&(FsIgN(a.y)==(-1*FsIgN(b.y))))
 		out=factor_2D(b,-1.0);
 	else
@@ -33,45 +29,40 @@ PAIR a,b;
 	return(out);
 }
 
-PAIR	normalise_2D(a)
-PAIR	a;
+pair	normalise_2D(pair a)
 {
-	FLOAT	mod;PAIR	out;
+	float	mod;pair	out;
 	mod=mod_2D(a);
 	if(mod==0.0)return(copy_2D(-1.0,-1.0));	/* error */
 	out=factor_2D(a,1.0/mod);
 	return(out);
 }
 
-PAIR	fabs_2D(a)
-PAIR	a;
+pair	fabs_2D(pair a)
 {
-	PAIR	out;
+	pair	out;
 	out=copy_2D(fabs(a.x),fabs(a.y));
 	return(out);
 }
 
-PAIR	copy_2D(x,y)
-FLOAT	x,y;
+pair	copy_2D(float x,float y)
 {
-	PAIR	out;
+	pair	out;
 	out.x=x;out.y=y;
 	return(out);
 }
 
-IPAIR	icopy_2D(x,y)
-INT	x,y;
+ipair	icopy_2D(int x,int y)
 {
-	IPAIR	out;
+	ipair	out;
 	out.x=x;out.y=y;
 	return(out);
 }
 
-PAIR	*bbox(vectors,num_vectors)
-PAIR	*vectors;INT	num_vectors;
+pair	*bbox(pair *vectors,int num_vectors)
 {
-	INT	i;PAIR	max,min,*out;
-	out=(PAIR *)calloc(2,sizeof(PAIR));
+	int i;pair	max,min,*out;
+	out=(pair *)calloc(2,sizeof(pair));
 	max=vectors[0];min=vectors[0];
 	for(i=1;i<num_vectors;i++){
 		max=copy_2D(MAX(max.x,vectors[i].x),MAX(max.y,vectors[i].y));
@@ -81,21 +72,19 @@ PAIR	*vectors;INT	num_vectors;
 	return(out);
 }
 
-INT	odd_check(in)
-INT	in;
+int odd_check(int in)
 {
-	INT	hold,out;FLOAT	temp;
-	hold=in/2;temp=2.0*(FLOAT)hold;
-	out=(INT)temp-in;
+	int hold,out;float	temp;
+	hold=in/2;temp=2.0*(float)hold;
+	out=(int)temp-in;
 	return(out);	/* 0-> even */
 }
 	
-INT	check_group_belonging(way_out,tri,test)
-PAIR	way_out,test;triangle	tri;
+int check_group_belonging(pair way_out,triangle tri,pair test)
 {
-	INT	i,next,out=1,no_of_cross_points=0;
-	PAIR	v1_dir,v2_point,v2_dir;
-	FLOAT	mu;
+	int	i,next,out=1,no_of_cross_points=0;
+	pair	v1_dir,v2_point,v2_dir;
+	float	mu;
 	v1_dir=minus_2D(test,way_out);
 	for(i=0;i<3;i++){
 		next=i+1;if(next==3)next=0;
@@ -108,56 +97,49 @@ PAIR	way_out,test;triangle	tri;
 	return(out);
 }
 
-PAIR	plus_2D(a,b)
-PAIR	a,b;
+pair	plus_2D(pair a,pair b)
 {
-	PAIR	out;
+	pair	out;
 	out=copy_2D(a.x + b.x,a.y + b.y);
 	return(out);
 }
 
-IPAIR	iplus_2D(a,b)
-IPAIR	a,b;
+ipair	iplus_2D(ipair a,ipair b)
 {
-	IPAIR	out;
+	ipair	out;
 	out=icopy_2D(a.x + b.x,a.y + b.y);
 	return(out);
 }
 
-PAIR	factor_2D(a,factor)
-PAIR	a;FLOAT	factor;
+pair	factor_2D(pair a,float factor)
 {
-	PAIR	out;
+	pair	out;
 	out=copy_2D(a.x * factor,a.y * factor);
 	return(out);	
 }
 
-PAIR	multiply_2D(a,b)
-PAIR	a,b;
+pair	multiply_2D(pair a,pair b)
 {
-	PAIR	out;
+	pair	out;
 	out=copy_2D(a.x * b.x,a.y * b.y);
 	return(out);	
 }
 
-PAIR	divide_2D(a,b)
-PAIR	a,b;
+pair	divide_2D(pair a,pair b)
 {
-	PAIR	out;
+	pair	out;
 	out=copy_2D(a.x / b.x,a.y / b.y);
 	return(out);	
 }
 
-PAIR	minus_2D(a,b)
-PAIR	a,b;
+pair	minus_2D(pair a,pair b)
 {
-	PAIR	out;
+	pair	out;
 	out=copy_2D(a.x - b.x,a.y - b.y);
 	return(out);
 }
 
-INT	compare_2D(a,b)
-PAIR	a,b;
+int	compare_2D(pair a,pair b)
 {
 /*
 **	0 -> both different
@@ -165,21 +147,19 @@ PAIR	a,b;
 **	2 -> y same
 **	3 -> x,y same
 */
-	INT	out=0;
+	int	out=0;
 	if(a.x==b.x)out+=1;
 	if(a.y==b.y)out+=2;
 	return(out);
 }
 
-FLOAT	determinant_2D(in)
-matrix_2D	in;
+float	determinant_2D(matrix_2D in)
 {
-	FLOAT	out;
+	float	out;
 	out=( in.column[0].x * in.column[1].y )-( in.column[1].x * in.column[0].y );
 	return(out);
 }
-matrix_2D	factor_matrix_2D(in,factor)
-matrix_2D	in;FLOAT	factor;
+matrix_2D	factor_matrix_2D(matrix_2D in,float factor)
 {
 	matrix_2D	out;
 	out.column[0]=factor_2D(in.column[0],factor);
@@ -187,10 +167,11 @@ matrix_2D	in;FLOAT	factor;
 	return(out);
 }
 
-matrix_2D	inverse_2D(in)
-matrix_2D	in;
+matrix_2D	inverse_2D(matrix_2D in)
 {
-	matrix_2D	out,temp;FLOAT	mod;
+	matrix_2D	out,temp;float	mod;
+        out.column[0].x=out.column[1].x=0.;
+        out.column[0].y=out.column[1].y=0.;
 	mod=determinant_2D(in);
 	if(mod==0.0)return(out);
 	temp.column[0].x=in.column[1].y;
@@ -201,15 +182,13 @@ matrix_2D	in;
 	return(out);
 }
 
-FLOAT	mod_2D(in)
-PAIR	in;
+float	mod_2D(pair in)
 {
-	FLOAT	out;
+	float	out;
 	out=sqrt(in.x*in.x + in.y*in.y);
 	return(out);
 }
-matrix_2D	transpose_2D(in)
-matrix_2D	in;
+matrix_2D	transpose_2D(matrix_2D in)
 {
 	matrix_2D	out;
 	out.column[0].x=in.column[0].x;
@@ -219,43 +198,38 @@ matrix_2D	in;
 	return(out);
 }
 
-PAIR	matrix_mult_2D(matrix,v)
-matrix_2D	matrix;PAIR	v;
+pair	matrix_mult_2D(matrix_2D matrix,pair v)
 {
-	PAIR	out;matrix_2D	temp;
+	pair	out;matrix_2D	temp;
 	temp = transpose_2D(matrix);
 	out=copy_2D(add_2D(multiply_2D(temp.column[0],v)),add_2D(multiply_2D(temp.column[1],v)));
 	return(out);
 }
 
-FLOAT	add_2D(a)
-PAIR	a;
+float	add_2D(pair a)
 {
-	FLOAT	out;
+	float	out;
 	out=a.x + a.y;
 	return(out);
 }
 
-IPAIR	f2i_2D(in)
-PAIR	in;
+ipair	f2i_2D(pair in)
 {
-	IPAIR	out;
-	out.x=(INT)in.x;out.y=(INT)in.y;
+	ipair	out;
+	out.x=(int)in.x;out.y=(int)in.y;
 	return(out);
 }
 
-PAIR	i2f_2D(in)
-IPAIR	in;
+pair	i2f_2D(ipair in)
 {
-	PAIR	out;
-	out.x=(FLOAT)in.x;out.y=(FLOAT)in.y;
+	pair	out;
+	out.x=(float)in.x;out.y=(float)in.y;
 	return(out);
 }	
 
-PAIR	lo_allign_to_grid(in,spacing,origin)
-PAIR	in,spacing,origin;
+pair	lo_allign_to_grid(pair in,pair spacing,pair origin)
 {
-	PAIR	position,out,lesser_position;
+	pair	position,out,lesser_position;
 	position=divide_2D(minus_2D(in,origin),spacing);
 	lesser_position=i2f_2D(f2i_2D(position));
 /*	switch((char)compare_2D(position,lesser_position)){
@@ -277,20 +251,18 @@ PAIR	in,spacing,origin;
 	return(out);
 }
 
-PAIR	hi_allign_to_grid(in,spacing,origin)
-PAIR	in,spacing,origin;
+pair	hi_allign_to_grid(pair in,pair spacing,pair origin)
 {
-	PAIR	position,out;
+	pair	position,out;
 	position=divide_2D(minus_2D(in,origin),spacing);
 	out=i2f_2D(f2i_2D(position));
 	return(out);
 }
 
-PAIR	line_intersection_2D(v1_point,v1_dir,v2_point,v2_dir)
-PAIR	v1_point,v1_dir,v2_point,v2_dir;
+pair	line_intersection_2D(pair v1_point,pair v1_dir,pair v2_point,pair v2_dir)
 {
-	PAIR	out,lambda_mu;
-	FLOAT	lambda,mu;
+	pair	out,lambda_mu;
+	float	lambda,mu;
 	matrix_2D	matrix;
 	matrix.column[0]=v1_dir;matrix.column[1]=v2_dir;
 	lambda_mu=matrix_mult_2D(inverse_2D(matrix),minus_2D(v1_point,v2_point));
@@ -299,11 +271,10 @@ PAIR	v1_point,v1_dir,v2_point,v2_dir;
 	return(out);
 }
 
-FLOAT	line_distance_2D(v1_point,v1_dir,v2_point,v2_dir)
-PAIR	v1_point,v1_dir,v2_point,v2_dir;
+float	line_distance_2D(pair v1_point,pair v1_dir,pair v2_point,pair v2_dir)
 {
-	PAIR	out,lambda_mu;
-	FLOAT	lambda,mu;
+	pair	out,lambda_mu;
+	float	lambda,mu;
 	matrix_2D	matrix;
 	matrix.column[0]=v1_dir;matrix.column[1]=v2_dir;
 	lambda_mu=matrix_mult_2D(inverse_2D(matrix),minus_2D(v1_point,v2_point));
@@ -311,12 +282,10 @@ PAIR	v1_point,v1_dir,v2_point,v2_dir;
 	out=plus_2D(v1_point,factor_2D(v1_dir,lambda));
 	return(mu);
 }
-triangle	quick_affine(triangle_number,v0,v1,v2)
-PAIR	v0,v1,v2;INT	triangle_number;
+triangle	quick_affine(int triangle_number,pair v0,pair v1,pair v2)
 {
 	triangle	out;
-	FLOAT	mod_matrix;
-	void	exit();
+	float	mod_matrix;
 	mod_matrix=(v1.x*v2.y - v2.x*v1.y) - v0.x*(v2.y-v1.y) + v0.y*(v2.x - v1.x);
 	if(mod_matrix==0){
 		fprintf(stderr,"triangle %d incorrectly defined\n",triangle_number);exit(1);
@@ -330,19 +299,17 @@ PAIR	v0,v1,v2;INT	triangle_number;
 	return(out);
 }
 
-PAIR	affine_transform(trans_matrix,point)
-triangle	trans_matrix;PAIR	point;
+pair	affine_transform(triangle trans_matrix,pair point)
 {
-	PAIR	out;
+	pair	out;
 	out.x=add_2D(multiply_2D(trans_matrix.vertex[1],point))+trans_matrix.vertex[0].x;
 	out.y=add_2D(multiply_2D(trans_matrix.vertex[2],point))+trans_matrix.vertex[0].y;
 	return(out);
 }
 
-PAIR	backwards_affine_transform(trans_matrix,point)
-triangle	trans_matrix;PAIR	point;
+pair	backwards_affine_transform(triangle trans_matrix,pair point)
 {
-	PAIR	out;
+	pair	out;
 	matrix_2D	in,matrix;
 	in.column[0]=trans_matrix.vertex[1];
 	in.column[1]=trans_matrix.vertex[2];

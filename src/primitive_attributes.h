@@ -6,7 +6,6 @@
 #define MAX_ARRAY 100000
 #define STRING_SIZE 20
 
-#include "define_float.h"
 
 typedef struct{
 	double	angles[3];

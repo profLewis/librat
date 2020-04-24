@@ -1,5 +1,6 @@
 #ifndef _MATERIALS_
 #define _MATERIALS_
+#include "hips.h"
 #include "rpv.h"
 typedef struct {
 	Data		data;

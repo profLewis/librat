@@ -5,6 +5,7 @@
 #include "filelib.h"
 #include "hipl_format.h"
 #include "hiplib.h"
+#include "envilib.h"
 #include <stdlib.h>
 #include <unistd.h>
 
@@ -118,10 +119,10 @@ char *getField(char *field,char *data){
   /* assume data contains all of the text we might need
   ** and we want to return a string array of the fields
   */
-  char *current=NULL,*buffer=NULL;
-  int lField,lData,i,j;
+  char *buffer=NULL;
+  int lField,j;
 
-  lField = strlen(field);
+  lField = (int)strlen(field);
   /* look for a hook with the first letter */
   buffer = strchr(data,field[0]);
   if(buffer==NULL)return(NULL);
@@ -131,7 +132,7 @@ char *getField(char *field,char *data){
   }
   buffer = &data[lField];
   /* strip leading white space */
-  while(strlen(buffer) > 1 && (buffer[0] == ' ' || buffer[0] == '\t'))buffer = &buffer[1];
+  while((int)strlen(buffer) > 1 && (buffer[0] == ' ' || buffer[0] == '\t'))buffer = &buffer[1];
   return(buffer);
 }
 
@@ -162,7 +163,7 @@ char *getData(FILE *f,char *field){
             if((reste = getField("}",reste2))){
               tmp = strrchr(reste2,'}');if(tmp != NULL)*tmp = '\0';
               if(data)free(data);
-              data = (char *) calloc (strlen(reste2) + 1,sizeof(char));
+              data = (char *) calloc ((int)strlen(reste2) + 1,sizeof(char));
               strcpy(data,reste2);
               keepGoing = 0;
             }else{
@@ -182,11 +183,11 @@ char *getData(FILE *f,char *field){
           }
           bytes_read=keepGoing;
           if(data)free(data);
-          data = (char *) calloc (strlen(reste2) + 1,sizeof(char));
+          data = (char *) calloc ((int)strlen(reste2) + 1,sizeof(char));
           strcpy(data,reste2);
         }else{
           if(data)free(data);
-          data = (char *) calloc (strlen(reste) + 1,sizeof(char));
+          data = (char *) calloc ((int)strlen(reste) + 1,sizeof(char));
           strcpy(data,reste);
           bytes_read=0;
         }
@@ -210,7 +211,7 @@ char *fgetData(FILE *f,char *field){
 char *enviTidyImagename(char *imageName){
   char *out=NULL,*out2;
   int l;
-  l = strlen(imageName);
+  l = (int)strlen(imageName);
   if( !(out=(char *)calloc(l+1+4,sizeof(char)))){
     fprintf(stderr,"error in core allocation\n");
     exit(1);
@@ -224,11 +225,6 @@ char *enviTidyImagename(char *imageName){
 }
 
 int writeEnviHeader(GenericImage *ImagePtr,char *filename){
-  char *reste,*headerName=NULL,*dummy;
-  FILE *f;
-  int l;
-
-  struct header   hd;
   static char tmp[] = "";
 
   if(!ImagePtr->seq_history)ImagePtr->seq_history=&tmp[0];
@@ -242,7 +238,7 @@ int writeEnviHeader(GenericImage *ImagePtr,char *filename){
     fprintf(stderr,"error with unspecified image file\n");
     exit(1);
   }
-  if (!filename || strlen(filename) == 0) filename = ImagePtr->imageName;
+  if (!filename || (int)strlen(filename) == 0) filename = ImagePtr->imageName;
 
   if(filename)ImagePtr->imageNameH=NULL;
   if(!(ImagePtr->imageNameH)){
@@ -272,7 +268,7 @@ int writeEnviHeader(GenericImage *ImagePtr,char *filename){
 
 int readEnviHeader(GenericImage *ImagePtr){
   char *reste,*headerName=NULL,*dummy,*fn;
-  FILE *f,*open_file_for_read();
+  FILE *f;
   int l;
   char *filename;
   filename = getImageName(ImagePtr);
@@ -282,7 +278,7 @@ int readEnviHeader(GenericImage *ImagePtr){
     exit(1);
   }
   dummy[0] = '\0';
-  l = strlen(filename);
+  l = (int)strlen(filename);
 
   if (! (f = open_file_for_read(filename))){
     char *filename2;
@@ -363,14 +359,12 @@ int readEnviHeader(GenericImage *ImagePtr){
 }
 
 
-int     checkEnvi(ImagePtr,env)
-GenericImage    *ImagePtr;
-char            *env;
+int     checkEnvi(GenericImage *ImagePtr,char *env)
 {
         int     i,openFlag;
         char    *extension,*name,c,*nameH;
         char HEAD[10];
-        FILE    *stream,*streamH;
+        FILE    *stream=NULL,*streamH=NULL;
 
         strcpy(HEAD,"ENVI");
         name=getImageName(ImagePtr);
@@ -401,7 +395,7 @@ char            *env;
                         }
                 }
         }else{
-                for(i=0;i<strlen(HEAD);i++){
+                for(i=0;i<(int)strlen(HEAD);i++){
                         if((char)fgetc(stream)!=HEAD[i]){
                                 rewind(stream);
                                 if(!openFlag)fclose(stream);
@@ -420,10 +414,7 @@ char            *env;
 **      set HIPS header functions into generic image format
 */
 /* return TRUE if detected image is Hips format or if !check */
-int     isEnvi(ImagePtr,check,env)
-GenericImage    *ImagePtr;
-int             check;
-char            *env;
+int     isEnvi(GenericImage *ImagePtr,int check,char *env)
 {
         int     i,retval=TRUE;
         if(check)retval=checkEnvi(ImagePtr,env);

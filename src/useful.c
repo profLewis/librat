@@ -1,23 +1,18 @@
 #include <stdio.h>
 #include <ctype.h>
-#include "define_float.h"
 #include <string.h>
+#include "useful.h"
 
-int	fsign(f)
-double	f;
+int	fsign(double f)
 {
 	if(f>0.0)return(1);
 	if(f<0.0)return(-1);
 	return(0);
 }
 
-int	atoint(str,fatal,fail_Ptr)
-char	*str;
-int	fatal;
-int	*fail_Ptr;
+int	atoint(char *str,int fatal,int *fail_Ptr)
 {
-	int	out,i,dot_flag,zero_flag,atoi();
-	void	exit();
+	int	out,i,dot_flag,zero_flag;
 
 	*fail_Ptr=0;
 	if(sscanf(str,"%d",&out)!=1){
@@ -28,7 +23,7 @@ int	*fail_Ptr;
 		return(out);
 	}
 	dot_flag=0;zero_flag=0;
-	for(i=0;i<strlen(str);i++){
+	for(i=0;i<(int)strlen(str);i++){
 		if(str[i]=='0' && *fail_Ptr==0){zero_flag=1;*fail_Ptr=0;}
 		else if(str[i]=='.')dot_flag++;
 		else if(zero_flag && str[i]>'0' && str[i]<='9');
@@ -50,27 +45,19 @@ int	*fail_Ptr;
 	return(1);
 }
 
-double	atodouble(str,fatal,fail_Ptr)
-char	*str;
-int	fatal;
-int	*fail_Ptr;
+double	atodouble(char *str,int fatal,int *fail_Ptr)
 {
-	double	out,atof();
+	double	out;
 	int	i,dot_flag;
-	void	exit();
 
-#ifdef DOUBLEDEF
 	sscanf(str,"%lf",&out);
-#else
-	sscanf(str,"%f",&out);
-#endif	
 	/*out=atof(str);*/
 	if(out!=0.0){
 		*fail_Ptr=0;
 		return(out);
 	}
 	dot_flag=0;
-	for(i=0;i<strlen(str);i++){
+	for(i=0;i<(int)strlen(str);i++){
 		if(str[i]=='0')*fail_Ptr=0;
 		else if(str[i]=='.')dot_flag++;
 		else if(fatal){
@@ -95,15 +82,9 @@ int	*fail_Ptr;
 **	scan char ** [i+1] for integer
 */
 
-int	sscan_int(argv,argc,i_Ptr,fatal,out)
-char	**argv;
-int	*i_Ptr;
-int	fatal;
-int	argc;
-int	*out;
+int	sscan_int(char **argv,int argc,int *i_Ptr,int fatal,int *out)
 {
 	int	test_int,fail,i;
-	void	exit();
 
 	if((*i_Ptr+1)>=argc){
 		if(fatal){
@@ -128,16 +109,10 @@ int	*out;
 **	scan char ** [i+1] for double
 */
 
-int	sscan_double(argv,argc,i_Ptr,fatal,out)
-char	**argv;
-int	*i_Ptr;
-int	fatal;
-int	argc;
-double	*out;
+int	sscan_double(char **argv,int argc,int *i_Ptr,int fatal,double *out)
 {
-	double	test_double,atodouble();
+	double	test_double;
 	int	fail=1,i;
-	void	exit();
 
 	if((*i_Ptr+1)>=argc){
 		if(fatal){
@@ -157,14 +132,3 @@ double	*out;
 	}
 	return(0);
 }
-/*
-int is_double(char *buffer,double *ptr){
-	int tmpVar;
-	double atof();
-	*ptr = atof(buffer);
-	for(tmpVar=0;tmpVar<strlen(buffer);tmpVar++){
-		if(!isdigit(buffer[tmpVar] && buffer[tmpVar] != '.'))return(0);
-	}
-	return(1);
-}
-*/

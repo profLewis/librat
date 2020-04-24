@@ -1,7 +1,7 @@
 #ifndef _HIPS_
 #define _HIPS_
-#include "define_float.h"
 #include <stdio.h>
+#include "hipl_format.h"
 
 typedef struct {
 	float	*fdata;
@@ -13,7 +13,7 @@ typedef struct {
 typedef struct {
 	Data	data;
 	struct header	hd;
-	INT	fd;
+	int	fd;
 	FILE	*datafp;
 	char	*imagename;
 }Image_characteristics;

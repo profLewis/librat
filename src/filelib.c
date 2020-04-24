@@ -11,8 +11,7 @@
 #define MAXFPOPEN 253
 
 
-char *getFilenameExtension(fileName)
-char	*fileName;
+char *getFilenameExtension(char *fileName)
 {
 	int	len,i;
 	len=strlen(fileName);
@@ -21,10 +20,9 @@ char	*fileName;
 	return(NULL);
 }
 
-char	*prependEnv(file,Env)
-char	*file,*Env;
+char	*prependEnv(char *file,char *Env)
 {
-	char *out,*env,*getenv();
+	char *out,*env;
 	int	add_slash=FALSE,size;
 
 	if(!file)return(NULL);
@@ -45,9 +43,7 @@ char	*file,*Env;
 	return(file);
 }
 
-char	*prependDIR(file,DIR,freed)
-char	*file,*DIR;
-int	freed;
+char	*prependDIR(char *file,char *DIR,int freed)
 {
 	char *out;
 	int	add_slash=FALSE,len;
@@ -82,12 +78,11 @@ char *typer(int inputFlag){
   }
   return("unknown");
 }
+#ifndef CLOSE
 #define CLOSE -1
+#endif
 
-FILE *openFile(fileName,inputFlag,env)
-char	*fileName;
-int	inputFlag;
-char	*env;
+FILE *openFile(char *fileName,int inputFlag,char *env)
 {
         char    flag[10],*newfileName=NULL;
 	FILE    *stream;
@@ -131,18 +126,25 @@ char	*env;
 #ifdef DEBUG
             fprintf(stderr,"I tried to open %s for %s but failed ... \n",fileName,typer(inputFlag));
 #endif
+
 #ifdef DEBUG
-            char *getenv();
             fprintf(stderr,"Try env: %s %s ... \n",env,getenv(env));
 #endif
 	    if((stream=fopen((newfileName=prependEnv(fileName,env)),flag))==NULL ){
 
 #ifdef DEBUG
                 fprintf(stderr,"I'm trying to open %s for %s ... \n",newfileName,typer(inputFlag));
-#endif	
-		if(strcmp(newfileName,fileName)!=0)fileName=newfileName;
-                fprintf(stderr,"openFile: error opening file %s for %s\n",fileName,typer(inputFlag));
-                return(NULL);
+#endif
+
+                /* dont give up yet ... try ARARAT_OBJECT */
+                if((stream=fopen((newfileName=prependEnv(fileName,"ARARAT_OBJECT")),flag))==NULL ){	
+		    if(strcmp(newfileName,fileName)!=0)fileName=newfileName;
+                    fprintf(stderr,"openFile: error opening file %s for %s\n",fileName,typer(inputFlag));
+                    return(NULL);
+                }else{
+                    nOpen++;
+                    strcpy(fileName,newfileName);
+                }
 	    }else{
 		nOpen++;
 		strcpy(fileName,newfileName);

@@ -6,9 +6,8 @@
 **	
 */
 
-#include "define_float.h"
 
-FLOAT	sine_representation(),		/* 2-parm sine function */
+float sine_representation(),		/* 2-parm sine function */
 	pl1_representation(),           /* 2-parm linear function */
         pl2_representation(),           /* 2-parm piecewise linear function */
 	pln_representation(),		/* n-stage piecewise linear function */
@@ -17,6 +16,6 @@ FLOAT	sine_representation(),		/* 2-parm sine function */
 /*
 **	phase #2 functions
 */
-FLOAT	function_calc();
+float	function_calc();
 
 #endif /* _FUNCTIONAL_REPRESENTATIONS_H */

@@ -10,11 +10,7 @@
 **	glassner p.36
 */
 
-int	ray_in_sphere(normal,D_Ptr,sphere_Ptr,ray,local)
-double	*D_Ptr,*local;
-Ray	*ray;
-Sphere	*sphere_Ptr;
-triplet *normal;
+int	ray_in_sphere(triplet *normal,double *D_Ptr,Sphere *sphere_Ptr,Ray *ray,double *local)
 {
 	double	b,c,q,t0,t1,sinAzimuth,cosAzimuth,zenith,azimuth;
 	triplet	temp,down;
@@ -80,10 +76,7 @@ triplet *normal;
 	return(1);
 }
 
-int	vray_in_sphere(D_Ptr,L_Ptr,sphere_Ptr,ray)
-double	*D_Ptr,*L_Ptr;
-Ray	*ray;
-Sphere	*sphere_Ptr;
+int	vray_in_sphere(double *D_Ptr,double *L_Ptr,Sphere *sphere_Ptr,Ray *ray)
 {
 	double	b,c,q,t0,t1;
 	triplet	temp;
@@ -108,17 +101,14 @@ Sphere	*sphere_Ptr;
 }
 
 
-int	ray_in_sphere_data(tnear_Ptr,tfar_Ptr,sphere_Ptr,ray_origin_Ptr,ray_direction_Ptr)
-double	*tnear_Ptr,*tfar_Ptr;
-triplet	*ray_origin_Ptr,*ray_direction_Ptr;
-D_Sphere	*sphere_Ptr;
+int	ray_in_sphere_data(double *tnear_Ptr,double *tfar_Ptr,D_Sphere *sphere_Ptr,triplet *ray_origin_Ptr,triplet *ray_direction_Ptr)
 {
 	double	b,c,q,t0,t1;
 	triplet	temp;
 
 	temp=vector_minus(*ray_origin_Ptr,sphere_Ptr->centre);
-	b=2.0*v_dot(*ray_direction_Ptr,temp);
-	c=v_dot(temp,temp)-sphere_Ptr->r2;
+	b=2.0*V_dot(*ray_direction_Ptr,temp);
+	c=V_dot(temp,temp)-sphere_Ptr->r2;
 
 	if( (q=((b * b) - (4.0* c))) <0.0)return(0);	/* miss */
 	
@@ -139,10 +129,7 @@ D_Sphere	*sphere_Ptr;
 **	point in triangle test
 */
 
-int	point_on_sphere(p_Ptr,sphere_Ptr,ray_origin_Ptr,ray_direction_Ptr,ray_length)
-Sphere	*sphere_Ptr;
-triplet	*ray_origin_Ptr,*ray_direction_Ptr,*p_Ptr;
-double	ray_length;
+int	point_on_sphere(triplet *p_Ptr,Sphere *sphere_Ptr,triplet *ray_origin_Ptr,triplet *ray_direction_Ptr,double ray_length)
 {
 	
 /*

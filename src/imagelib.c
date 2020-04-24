@@ -6,6 +6,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #define IMAGEFORMATS_H_BETTER
+#include "imagelib.h" 
 #include "image_formats.h"
 #include <errno.h>
 #include <stdint.h>
@@ -17,33 +18,29 @@ int dontReWrite = 0;
  * system V schmap() etc.
  */
 
-float
-getPixelFloat(image, b, r, c)
-	GenericImage   *image;
-	int             r, c, b;
+float getPixelFloat(GenericImage *image, int b, int r, int c)
 {
+        float pixelFloat(void *value, GenericImage *ImagePtr);
+
 	double         *pixVal, _pixVal;
 	float           x;
 	pixVal = &_pixVal;
 	if (r >= 0 && c >= 0. && r < getImageRows(image) && c < getImageCols(image)) {
-		getPixel(image, b, r, c, &pixVal);
+		getPixel(image, b, r, c, (void **)&pixVal);
 		x = pixelFloat(pixVal, image);
 		return (x);
 	} else
 		return (0.0);
 }
 
-int
-getPixelInt(image, b, r, c)
-	GenericImage   *image;
-	int             r, c, b;
+int getPixelInt(GenericImage *image, int b, int r, int c)
 {
 	double         *pixVal, _pixVal;
 	int             x;
 	pixVal = &_pixVal;
 
 	if (r >= 0 && c >= 0. && r < getImageRows(image) && c < getImageCols(image)) {
-		getPixel(image, b, r, c, &pixVal);
+		getPixel(image, b, r, c, (void **)&pixVal);
 		x = pixelInt(pixVal, image);
 		return (x);
 	} else
@@ -51,55 +48,41 @@ getPixelInt(image, b, r, c)
 }
 
 
-short
-getPixelShort(image, b, r, c)
-	GenericImage   *image;
-	int             r, c, b;
+short getPixelShort(GenericImage *image, int b, int r, int c)
 {
 	double         *pixVal, _pixVal;
 	short           x;
 	pixVal = &_pixVal;
 
 	if (r >= 0 && c >= 0. && r < getImageRows(image) && c < getImageCols(image)) {
-		getPixel(image, b, r, c, &pixVal);
+		getPixel(image, b, r, c, (void **)&pixVal);
 		x = pixelInt(pixVal, image);
 		return (x);
 	} else
 		return (0);
 }
 
-unsigned char
-getPixelChar(image, b, r, c)
-	GenericImage   *image;
-	int             r, c, b;
+unsigned char getPixelChar(GenericImage *image, int b, int r, int c)
 {
 	double         *pixVal, _pixVal;
 	unsigned char   x;
 	pixVal = &_pixVal;
 
 	if (r >= 0 && c >= 0. && r < getImageRows(image) && c < getImageCols(image)) {
-		getPixel(image, b, r, c, &pixVal);
+		getPixel(image, b, r, c, (void **)&pixVal);
 		x = pixelInt(pixVal, image);
 		return (x);
 	} else
 		return (0);
 }
 
-unsigned char
-getPixelByte(image, b, r, c)
-	GenericImage   *image;
-	int             r, c, b;
+unsigned char getPixelByte(GenericImage *image, int b, int r, int c)
 {
 	return (getPixelChar(image, b, r, c));
 }
 
 
-int copyImageData(data, ImagePtr, InImagePtr, fromb, fromr, fromc, tob, tor, toc,skip)
-	GenericImage   *ImagePtr, *InImagePtr;
-	void           *data;
-	int             fromr, tor;
-	int             fromc, toc;
-	int             fromb, tob,skip;
+int copyImageData(void *data, GenericImage *ImagePtr, GenericImage *InImagePtr, int fromb, int fromr, int fromc, int tob, int tor, int toc,int skip)
 {
 	int             b,r,c,rows,cols;
 	float           f;
@@ -132,12 +115,7 @@ int copyImageData(data, ImagePtr, InImagePtr, fromb, fromr, fromc, tob, tor, toc
 	return(1);
 }
 
-int copyImageMaskData(data, ImagePtr, InImagePtr, Mask, maskValue, fromb, fromr, fromc, tob, tor, toc,skip)
-	GenericImage   *ImagePtr, *InImagePtr, *Mask;
-	void           *data;
-	int             fromr, tor, maskValue;
-	int             fromc, toc;
-	int             fromb, tob,skip;
+int copyImageMaskData(void *data, GenericImage *ImagePtr, GenericImage *InImagePtr, GenericImage *Mask, int maskValue, int fromb, int fromr, int fromc, int tob, int tor, int toc,int skip)
 {
 	int             b,r,c,rows,cols,m;
 	float           f;
@@ -172,11 +150,7 @@ int copyImageMaskData(data, ImagePtr, InImagePtr, Mask, maskValue, fromb, fromr,
 	return(1);
 }
 
-float
-getValidPixelFloat(image, b, r, c, valid)
-	GenericImage   *image;
-	int             r, c, b;
-	int            *valid;
+float getValidPixelFloat(GenericImage *image, int b, int r, int c, int *valid)
 {
 	if (valid && r >= 0 && r < getImageRows(image) && c >= 0 && c < getImageCols(image) && b >= 0 && b < getImageFrames(image)) {
 		*valid = TRUE;
@@ -188,11 +162,7 @@ getValidPixelFloat(image, b, r, c, valid)
 	return (0.0);
 }
 
-int
-getValidPixelInt(image, b, r, c, valid)
-	GenericImage   *image;
-	int             r, c, b;
-	int            *valid;
+int getValidPixelInt(GenericImage *image, int b, int r, int c, int *valid)
 {
 	if (valid && r >= 0 && r < getImageRows(image) && c >= 0 && c < getImageCols(image) && b >= 0 && b < getImageFrames(image)) {
 		*valid = TRUE;
@@ -204,11 +174,7 @@ getValidPixelInt(image, b, r, c, valid)
 	return (0);
 }
 
-unsigned char
-getValidPixelChar(image, b, r, c, valid)
-	GenericImage   *image;
-	int             r, c, b;
-	unsigned char  *valid;
+unsigned char getValidPixelChar(GenericImage *image, int b, int r, int c, unsigned char  *valid)
 {
 	if (valid && r >= 0 && r < getImageRows(image) && c >= 0 && c < getImageCols(image) && b >= 0 && b < getImageFrames(image)) {
 		*valid = TRUE;
@@ -220,20 +186,12 @@ getValidPixelChar(image, b, r, c, valid)
 	return (0);
 }
 
-unsigned char
-getValidPixelByte(image, b, r, c, valid)
-	GenericImage   *image;
-	int             r, c, b;
-	unsigned char  *valid;
+unsigned char getValidPixelByte(GenericImage *image, int b, int r, int c, unsigned char  *valid)
 {
 	return (getValidPixelChar(image, b, r, c, valid));
 }
 
-short
-getValidPixelShort(image, b, r, c, valid)
-	GenericImage   *image;
-	int             r, c, b;
-	unsigned char  *valid;
+short getValidPixelShort(GenericImage *image, int b, int r, int c, unsigned char  *valid)
 {
 	if (valid && r >= 0 && r < getImageRows(image) && c >= 0 && c < getImageCols(image) && b >= 0 && b < getImageFrames(image)) {
 		*valid = TRUE;
@@ -245,11 +203,7 @@ getValidPixelShort(image, b, r, c, valid)
 	return (0);
 }
 
-void
-setValueFromInt(out, image, value)
-	double         *out;
-	int             value;
-	GenericImage   *image;
+void setValueFromInt(double *out, GenericImage *image, int value)
 {
 	float           x;
 	unsigned char   y;
@@ -275,11 +229,7 @@ setValueFromInt(out, image, value)
 	return;
 }
 
-void
-setValueFromDouble(out, image, value)
-	double         *out;
-	double          value;
-	GenericImage   *image;
+void setValueFromDouble(double *out, GenericImage *image, double value)
 {
 	float           x;
 	unsigned char   y;
@@ -305,11 +255,7 @@ setValueFromDouble(out, image, value)
 	return;
 }
 
-void
-setValueFromFloat(out, image, value)
-	double         *out;
-	float           value;
-	GenericImage   *image;
+void setValueFromFloat(double *out, GenericImage *image, float value)
 {
 	float           x;
 	unsigned char   y;
@@ -335,11 +281,7 @@ setValueFromFloat(out, image, value)
 	return;
 }
 
-void
-setValueFromChar(out, image, value)
-	double         *out;
-	unsigned char   value;
-	GenericImage   *image;
+void setValueFromChar(double *out, GenericImage *image, unsigned char value)
 {
 	float           x;
 	unsigned char   y;
@@ -365,21 +307,13 @@ setValueFromChar(out, image, value)
 	return;
 }
 
-void
-setValueFromByte(out, image, value)
-	double         *out;
-	unsigned char   value;
-	GenericImage   *image;
+void setValueFromByte(double *out, GenericImage *image, unsigned char value)
 {
 	setValueFromChar(out, image, value);
 	return;
 }
 
-void
-setValueFromShort(out, image, value)
-	double         *out;
-	short           value;
-	GenericImage   *image;
+void setValueFromShort(double *out, GenericImage *image, short value)
 {
 	float           x;
 	unsigned char   y;
@@ -406,114 +340,64 @@ setValueFromShort(out, image, value)
 }
 
 
-int
-getImageVerbose(ImagePtr)
-	GenericImage   *ImagePtr;
+int getImageVerbose(GenericImage *ImagePtr)
 {
 	return (ImagePtr->verbose);
 }
 
-void
-setImageVerbose(ImagePtr)
-	GenericImage   *ImagePtr;
+void setImageVerbose(GenericImage *ImagePtr)
 {
 	ImagePtr->verbose = TRUE;
 }
 
-void
-unsetImageVerbose(ImagePtr)
-	GenericImage   *ImagePtr;
+void unsetImageVerbose(GenericImage *ImagePtr)
 {
 	ImagePtr->verbose = FALSE;
 }
 
-void
-setArrayCheckFlag(ImagePtr, flag)
-	GenericImage   *ImagePtr;
-	int             flag;
+void setArrayCheckFlag(GenericImage *ImagePtr, int flag)
 {
 	ImagePtr->arrayCheckFlag = flag;
 	return;
 }
 
-int
-getArrayCheckFlag(ImagePtr)
-	GenericImage   *ImagePtr;
+int getArrayCheckFlag(GenericImage *ImagePtr)
 {
 	return (ImagePtr->arrayCheckFlag);
 }
 
-/*
- * *     setImageFormat(GenericImage *image,int format)
- */
-void
-setImageFormat(ImagePtr, format)
-	GenericImage   *ImagePtr;
-	int             format;
+void setImageFormat(GenericImage *ImagePtr, int format)
 {
 	ImagePtr->format = format;
 	ImagePtr->dataSize = getDataSize(format);
 	ImagePtr->bits_per_pixel = 8 * getDataSize(format);
 	return;
 }
-/*
- * *     setImageFrames(GenericImage *image,int frames)
- */
-void
-setImageFrames(ImagePtr, frames)
-	GenericImage   *ImagePtr;
-	int             frames;
+void setImageFrames(GenericImage *ImagePtr, int frames)
 {
 	ImagePtr->frames = frames;
 	ImagePtr->noElements = ImagePtr->rows * ImagePtr->cols * ImagePtr->frames;
 	return;
 }
-/*
- * *     getImageRows(GenericImage *image)
- */
-int
-getImageRows(ImagePtr)
-	GenericImage   *ImagePtr;
+int getImageRows(GenericImage *ImagePtr)
 {
 	return (ImagePtr->rows);
 }
-/*
- * *     getImageCols(GenericImage *image,int cols)
- */
-int
-getImageCols(ImagePtr)
-	GenericImage   *ImagePtr;
+int getImageCols(GenericImage *ImagePtr)
 {
 	return (ImagePtr->cols);
 }
-/*
- * *     getImageFrames(GenericImage *image)
- */
-int
-getImageFrames(ImagePtr)
-	GenericImage   *ImagePtr;
+int getImageFrames(GenericImage *ImagePtr)
 {
 	return (ImagePtr->frames);
 }
-/*
- * *     setImageRows(GenericImage *image,int rows)
- */
-void
-setImageRows(ImagePtr, rows)
-	GenericImage   *ImagePtr;
-	int             rows;
+void setImageRows(GenericImage *ImagePtr, int rows)
 {
 	ImagePtr->rows = rows;
 	ImagePtr->noElements = ImagePtr->rows * ImagePtr->cols * ImagePtr->frames;
 	return;
 }
-/*
- * *     setImageCols(GenericImage *image,int cols)
- */
-void
-setImageCols(ImagePtr, cols)
-	GenericImage   *ImagePtr;
-	int             cols;
+void setImageCols(GenericImage *ImagePtr, int cols)
 {
 	ImagePtr->cols = cols;
 	ImagePtr->noElements = ImagePtr->rows * ImagePtr->cols * ImagePtr->frames;
@@ -521,45 +405,13 @@ setImageCols(ImagePtr, cols)
 }
 /*
  * *	 only included for backwards compatibility *     GenericImage
- * *getImageHeader(GenericImage *image)
  */
-GenericImage   *
-getImageHeader(ImagePtr)
-	GenericImage   *ImagePtr;
+GenericImage   *getImageHeader(GenericImage *ImagePtr)
 {
 	return (ImagePtr);
 }
-/*
- * *	only included for backwards compatibility *    int
- * copyImageHeader(struct header *input,struct header *output)
- */
-int
-copyImageHeader(input, output)
-	GenericImage   *input, *output;
-{
-	char           *name,*nameH;
-	name = input->imageName;
-        nameH = input->imageNameH;
-	if (!input || !output)
-		return (0);
-	*output = *input;
 
-	output->stream = NULL;
-        output->streamH = NULL;
-	output->pixel = NULL;
-	output->image = NULL;
-	output->allocatedFlag = FALSE;
-	output->openFlag = FALSE;
-	output->fd = 0;
-	output->stats = NULL;
-	output->imageName = name;
-        output->imageNameH = nameH;
-	return (1);
-}
-
-int
-copyImage(input, output)
-	GenericImage   *input, *output;
+int copyImage(GenericImage *input, GenericImage *output)
 {
 	if (!input || !output)
 		return (0);
@@ -567,11 +419,8 @@ copyImage(input, output)
 	return (1);
 }
 /*
- * *    int getImageFormat(GenericImage *image)
  */
-int
-getImageFormat(ImagePtr)
-	GenericImage   *ImagePtr;
+int getImageFormat(GenericImage *ImagePtr)
 {
 	if (!ImagePtr->supported[(int) ImagePtr->format])
 		return (NO_FORMAT);
@@ -581,10 +430,7 @@ getImageFormat(ImagePtr)
 /*
  * *	BIL/BSQ/etc.
  */
-int
-getArrayAccess(ImagePtr, format)
-	GenericImage   *ImagePtr;
-	int             format;
+int getArrayAccess(GenericImage *ImagePtr, int format)
 {
 	return (ImagePtr->arrayAccess);
 }
@@ -592,10 +438,7 @@ getArrayAccess(ImagePtr, format)
 /*
  * *	BIL/BSQ/etc.
  */
-void
-setArrayAccess(ImagePtr, format)
-	GenericImage   *ImagePtr;
-	int             format;
+void setArrayAccess(GenericImage *ImagePtr, int format)
 {
 	ImagePtr->arrayAccess = format;
 	return;
@@ -604,11 +447,9 @@ setArrayAccess(ImagePtr, format)
 /*
  * *      set up defaults for image
  */
-int
-setImageDefaults(ImagePtr, inputFlag)
-	GenericImage   *ImagePtr;
-	int             inputFlag;
+int setImageDefaults(GenericImage *ImagePtr, int inputFlag)
 {
+        FILE           *setStream(GenericImage *ImagePtr, FILE *stream);
 	int             frame;
 
 	ImagePtr->openFlag = FALSE;
@@ -651,43 +492,29 @@ setImageDefaults(ImagePtr, inputFlag)
 	return (1);
 }
 
-void
-setImageBlockSize(ImagePtr, size)
-	GenericImage   *ImagePtr;
-	int             size;
+void setImageBlockSize(GenericImage *ImagePtr, int size)
 {
 	ImagePtr->blockSize = size;
 }
 
-int
-getImageBlockSize(ImagePtr, size)
-	GenericImage   *ImagePtr;
-	int             size;
+int getImageBlockSize(GenericImage *ImagePtr, int size)
 {
 	return (ImagePtr->blockSize);
 }
 
 
 
-void
-setImageStyle(ImagePtr, style)
-	GenericImage   *ImagePtr;
-	int             style;
+void setImageStyle(GenericImage *ImagePtr, int style)
 {
 	ImagePtr->image_format = style;
 }
 
-int
-getImageStyle(ImagePtr)
-	GenericImage   *ImagePtr;
+int getImageStyle(GenericImage *ImagePtr)
 {
 	return (ImagePtr->image_format);
 }
 
-int
-pixelInt(value, ImagePtr)
-	GenericImage   *ImagePtr;
-	void           *value;
+int pixelInt(void *value, GenericImage *ImagePtr)
 {
 	int             out;
 	switch (getImageFormat(ImagePtr)) {
@@ -710,10 +537,7 @@ pixelInt(value, ImagePtr)
 	return (out);
 }
 
-unsigned char
-pixelByte(value, ImagePtr)
-	GenericImage   *ImagePtr;
-	void           *value;
+unsigned char pixelByte(void *value, GenericImage *ImagePtr)
 {
 	unsigned char   out;
 	switch (getImageFormat(ImagePtr)) {
@@ -736,18 +560,12 @@ pixelByte(value, ImagePtr)
 	return (out);
 }
 
-unsigned char
-pixelChar(value, ImagePtr)
-	GenericImage   *ImagePtr;
-	void           *value;
+unsigned char pixelChar(void *value, GenericImage *ImagePtr)
 {
 	return (pixelByte(value, ImagePtr));
 }
 
-float
-pixelFloat(value, ImagePtr)
-	GenericImage   *ImagePtr;
-	void           *value;
+float pixelFloat(void *value, GenericImage *ImagePtr)
 {
 	float           out;
 	switch (getImageFormat(ImagePtr)) {
@@ -770,10 +588,7 @@ pixelFloat(value, ImagePtr)
 	return (out);
 }
 
-short
-pixelShort(value, ImagePtr)
-	GenericImage   *ImagePtr;
-	void           *value;
+short pixelShort(void *value, GenericImage *ImagePtr)
 {
 	short           out;
 	switch (getImageFormat(ImagePtr)) {
@@ -800,9 +615,7 @@ pixelShort(value, ImagePtr)
 /*
  * *      function to return no. of bytes per pixel
  */
-int
-getDataSize(pixelFormat)
-	int             pixelFormat;
+int getDataSize(int pixelFormat)
 {
 	switch (pixelFormat) {
 	case IMAGE_BYTE:
@@ -822,13 +635,9 @@ getDataSize(pixelFormat)
 	}
 }
 
-GenericImage   *
-allocateImageArray(n, ImagePtr)
-	GenericImage   *ImagePtr;
-	int             n;	/* no. of *images* */
+GenericImage   *allocateImageArray(int n, GenericImage *ImagePtr)
 {
 	GenericImage   *image;
-	int             allocateImage();
 
 	if (!ImagePtr) {
 		if (!(image = (GenericImage *) calloc(n, sizeof(GenericImage)))) {
@@ -846,9 +655,7 @@ allocateImageArray(n, ImagePtr)
  * 
  * returns 1 on successful output *      exits with code 0 on failure
  */
-int
-allocateImage(ImagePtr)
-	GenericImage   *ImagePtr;
+int allocateImage(GenericImage *ImagePtr)
 {
 	/*
 	 * *      check to see if data already allocated *      if so,
@@ -899,11 +706,7 @@ allocateImage(ImagePtr)
 	return (1);
 }
 
-int
-upDateImage(ImagePtr, argc, argv)
-	int             argc;
-	char          **argv;
-	GenericImage   *ImagePtr;
+int upDateImage(GenericImage *ImagePtr, int argc, char **argv)
 {
 	if (!(intptr_t) ImagePtr || !(int) argc || !(intptr_t) argv)
 		return (0);
@@ -918,13 +721,10 @@ upDateImage(ImagePtr, argc, argv)
  * if deallocateFlag is set, deallocate array in memory *      also, if
  * closeFlag is set, close data stream
  */
-int
-writeImage(ImagePtr, argc, argv, closeFlag, deallocateFlag, env)
-	int             deallocateFlag, closeFlag, argc;
-	char          **argv;
-	GenericImage   *ImagePtr;
-	char           *env;
+int writeImage(GenericImage *ImagePtr, int argc, char **argv, int closeFlag, int deallocateFlag,char *env)
 {
+FILE           *getStream(GenericImage *ImagePtr);
+char           *getImageName(GenericImage *ImagePtr);
 	/*
 	 * *      update header information with current command-line * and
 	 * write out header to selected stream
@@ -1001,11 +801,9 @@ int copyToHdr(struct  header  *hdr,GenericImage *im){
   return(1);
 }
 
-int
-readImage(ImagePtr, env)
-	GenericImage   *ImagePtr;
-	char           *env;
+int readImage(GenericImage *ImagePtr, char *env)
 {
+FILE           *getStream(GenericImage *ImagePtr);
 	/*
 	 * *     read image header
 	 */
@@ -1035,7 +833,7 @@ readImage(ImagePtr, env)
 		 * could conceivably modify this to read in only * as much data
 		 * as it needs to save on memory
 		 */
-		if (fread(ImagePtr->image, ImagePtr->dataSize, ImagePtr->noElements, getStream(ImagePtr)) != ImagePtr->noElements) {
+		if ((int)fread(ImagePtr->image, ImagePtr->dataSize, ImagePtr->noElements, getStream(ImagePtr)) != (int)ImagePtr->noElements) {
 			perror("GenericImage_basis: error in reading image data");
 			fprintf(stderr, "only %d items read\n", ImagePtr->noElements);
 			exit(0);
@@ -1057,7 +855,7 @@ readImage(ImagePtr, env)
 #endif
 			ImagePtr->mmap = FALSE;
 			allocateImage(ImagePtr);
-			if (fread(ImagePtr->image, ImagePtr->dataSize, ImagePtr->noElements, getStream(ImagePtr)) != ImagePtr->noElements) {
+			if ((int)fread(ImagePtr->image, ImagePtr->dataSize, ImagePtr->noElements, getStream(ImagePtr)) != (int)ImagePtr->noElements) {
 				fprintf(stderr, "error reading image: %s\n", ImagePtr->imageName);
 				fprintf(stderr, "only %d items read\n", ImagePtr->noElements);
 				exit(0);
@@ -1091,10 +889,7 @@ readImage(ImagePtr, env)
 	return (1);
 }
 
-int
-defaultIndex(ImagePtr, frame, row, col)
-	GenericImage   *ImagePtr;
-	int             frame, row, col;
+int defaultIndex(GenericImage *ImagePtr, int frame, int row, int col)
 {
 
 	switch (ImagePtr->arrayAccess) {
@@ -1111,10 +906,7 @@ defaultIndex(ImagePtr, frame, row, col)
 	}
 }
 
-int
-imageArrayIndex(ImagePtr, frame, row, col, blankPixel)
-	GenericImage   *ImagePtr;
-	int             frame, row, col, *blankPixel;
+int imageArrayIndex(GenericImage *ImagePtr, int frame, int row, int col, int *blankPixel)
 {
 	int             index;
 	/*
@@ -1165,13 +957,12 @@ imageArrayIndex(ImagePtr, frame, row, col, blankPixel)
  * this is stored in ImagePtr->pixel, *      the value is also * returned via
  * this pointer
  */
- /* int */ void
-getPixel(ImagePtr, frame, row, col, valuePtr)
-	int             frame, row, col;
-	GenericImage   *ImagePtr;
-	void          **valuePtr;
+ /* int */
+int getPixel(GenericImage *ImagePtr, int frame, int row, int col, void **valuePtr)
 {
 	int             index;
+        char           *getImageName(GenericImage *ImagePtr);
+
 	int             blankPixel;
 	/* flag to unset if pixel value is zero */
 	blankPixel = FALSE;
@@ -1230,7 +1021,7 @@ getPixel(ImagePtr, frame, row, col, valuePtr)
 	/*
 	 * if(blankPixel)return(0); return(1);
 	 */
-	return;
+	return(0);
 }
 /*
  * *      put value in array *
@@ -1238,13 +1029,11 @@ getPixel(ImagePtr, frame, row, col, valuePtr)
  * if valuePtr set to NULL, value is taken from ImagePtr->pixel * otherwise from
  * the contents of valuePtr;
  */
-int
-putPixel(ImagePtr, frame, row, col, valuePtr)
-	int             frame, row, col;
-	GenericImage   *ImagePtr;
-	void           *valuePtr;
+int putPixel(GenericImage *ImagePtr, int frame, int row, int col, void *valuePtr)
 {
 	int             index;
+        char           *getImageName(GenericImage *ImagePtr);
+
 	int             blankPixel;	/* flag to unset if pixel value is
 					 * zero */
 	void           *setValue;
@@ -1287,18 +1076,18 @@ putPixel(ImagePtr, frame, row, col, valuePtr)
  * 
  * if declared as '-' use stdin/stdout
  */
-int
-openImage(ImagePtr, inputFlag, env)
-	GenericImage   *ImagePtr;
-	int             inputFlag;
-	char           *env;
+int openImage(GenericImage *ImagePtr, int inputFlag, char *env)
 {
 #ifdef MMAP
   int             offset, i, j, blockAccumulator = 0, block;
   char           *buffer, *data;
 #endif
   char            *imagename;
-  FILE *fp=NULL; 
+  FILE *fp=NULL;
+  FILE           *getStream(GenericImage *ImagePtr);
+  FILE           *setStream(GenericImage *ImagePtr, FILE *stream);
+  char           *getImageName(GenericImage *ImagePtr);
+
   imagename = ImagePtr->imageName;
   if (!imagename) {
     fprintf(stderr, "openImage:\timage name not set: make sure you use setImageName() before attempting to opan an image\n");
@@ -1470,14 +1259,8 @@ openImage(ImagePtr, inputFlag, env)
   return(1);
 }
 
-int
-openImageCopy(ImagePtr, InImagePtr, outFormat, env,skip)
-	GenericImage   *ImagePtr, *InImagePtr;
-	char           *env;
-	int 		skip;
-	int            outFormat;
+int openImageCopy(GenericImage *ImagePtr, GenericImage *InImagePtr, int outFormat, char *env,int skip)
 {
-	int	openImageMaskedCopy();
 
 	return(openImageMaskedCopy(ImagePtr, InImagePtr, NULL, (int)0, outFormat, env,skip));
 }
@@ -1487,19 +1270,14 @@ openImageCopy(ImagePtr, InImagePtr, outFormat, env,skip)
  * 
  * if declared as '-' use stdin/stdout
  */
-int
-openImageMaskedCopy(ImagePtr, InImagePtr, MaskImage, maskValue, outFormat, env,skip)
-	GenericImage   *ImagePtr, *InImagePtr, *MaskImage;
-	char           *env;
-	int 		skip;
-	int		maskValue;
-        int             outFormat;
+int openImageMaskedCopy(GenericImage *ImagePtr, GenericImage *InImagePtr, GenericImage *MaskImage, int maskValue, int outFormat, char *env,int skip)
 {
 #ifdef MMAP
 	int             b0,b1,row0,col0,row1,col1,offset, i, j, blockAccumulator = 0, block;
 	char           *buffer;
 	void		*data;
 #endif
+        FILE           *getStream(GenericImage *ImagePtr);
 	char            *imagename;
 	if (!InImagePtr || !InImagePtr->openFlag || !InImagePtr->noElements || !InImagePtr->image)
 		return (0);
@@ -1548,11 +1326,7 @@ openImageMaskedCopy(ImagePtr, InImagePtr, MaskImage, maskValue, outFormat, env,s
 
 /* queries & sets image style/format */
 
-int
-queryImageStyle(ImagePtr, styleSet, env)
-	GenericImage   *ImagePtr;
-	int             styleSet;
-	char           *env;
+int queryImageStyle(GenericImage *ImagePtr, int styleSet, char *env)
 {
 	int             nstyles, n;
 	char           *str, strTmp[20];
@@ -1601,34 +1375,25 @@ queryImageStyle(ImagePtr, styleSet, env)
 }
 
 
-FILE           *
-getStreamH(ImagePtr)
-        GenericImage   *ImagePtr;
+FILE           *getStreamH(GenericImage *ImagePtr)
 {       
         return (ImagePtr->streamH);
 }
 
-FILE           *
-putStreamH(ImagePtr, stream)
-        GenericImage   *ImagePtr;
-        FILE           *stream;
+FILE           *putStreamH(GenericImage *ImagePtr, FILE *stream)
 {
+        FILE           *setStreamH(GenericImage *ImagePtr, FILE *stream);
         return (setStreamH(ImagePtr, stream));
 }
 
-FILE           *
-setStreamH(ImagePtr, stream)
-        GenericImage   *ImagePtr;
-        FILE           *stream;
+FILE           *setStreamH(GenericImage *ImagePtr, FILE *stream)
 {
         ImagePtr->streamH = stream;
         return (stream);
 }
 
 
-char           *
-getImageNameH(ImagePtr)
-        GenericImage   *ImagePtr;
+char           *getImageNameH(GenericImage *ImagePtr)
 {
         char *imageNameH = NULL;
         if (ImagePtr->imageNameH)
@@ -1648,42 +1413,32 @@ getImageNameH(ImagePtr)
         return ("");
 }
 
-FILE           *
-getStream(ImagePtr)
-	GenericImage   *ImagePtr;
+FILE           *getStream(GenericImage *ImagePtr)
 {
 	return (ImagePtr->stream);
 }
 
-FILE           *
-putStream(ImagePtr, stream)
-	GenericImage   *ImagePtr;
-	FILE           *stream;
+FILE           *putStream(GenericImage *ImagePtr, FILE *stream)
 {
+        FILE           *setStream(GenericImage *ImagePtr, FILE *stream);
 	return (setStream(ImagePtr, stream));
 }
 
-FILE           *
-setStream(ImagePtr, stream)
-	GenericImage   *ImagePtr;
-	FILE           *stream;
+FILE           *setStream(GenericImage *ImagePtr, FILE *stream)
 {
 	ImagePtr->stream = stream;
 	return (stream);
 }
 
 
-char           *
-getImageName(ImagePtr)
-	GenericImage   *ImagePtr;
+char           *getImageName(GenericImage *ImagePtr)
 {
 	if (ImagePtr->imageName)
 		return (ImagePtr->imageName);
 	return ("");
 }
 
-int
-setImageName(GenericImage *ImagePtr, char *name){
+int setImageName(GenericImage *ImagePtr, char *name){
   int len,isHips=FALSE;char *tail;
   len=strlen(name);
   /*len+=1024;*/
@@ -1710,9 +1465,7 @@ setImageName(GenericImage *ImagePtr, char *name){
   return (1);
 }
 
-int
-setImageNameH(GenericImage *ImagePtr, char *name){
-  int len;char *enviTidyImagename();
+int setImageNameH(GenericImage *ImagePtr, char *name){
 
   if ( ImagePtr->format == -(ENVIFORMAT-1)){
     ImagePtr->imageNameH=enviTidyImagename(name);
@@ -1721,11 +1474,7 @@ setImageNameH(GenericImage *ImagePtr, char *name){
 }
 
 /* this function resets the image to start at frame frame */
-GenericImage   *
-resetImageFrame(ImagePtr, outImagePtr, frame, nFrames)
-	GenericImage   *ImagePtr;
-	GenericImage   *outImagePtr;
-	int             frame, nFrames;
+GenericImage   *resetImageFrame(GenericImage *ImagePtr, GenericImage *outImagePtr, int frame, int nFrames)
 {
 	int             index, blankPixel = FALSE;
 	index = imageArrayIndex(ImagePtr, frame, 0, 0, &blankPixel);
@@ -1769,12 +1518,7 @@ resetImageFrame(ImagePtr, outImagePtr, frame, nFrames)
 }
 
 /* create an image from scratch */
-GenericImage   *
-setOutImageArray(name, nImages, nFrames, nRows, nCols, format, styleSet, env, mmap)
-	char           *name, *env;
-	int             nImages, nFrames, nRows, nCols;
-	int             format, styleSet, mmap;	/* set MMAP to -1 if want to
-						 * force no mmap */
+GenericImage   *setOutImageArray(char *name, int nImages, int nFrames, int nRows, int nCols, int format, int styleSet, char *env, int mmap)
 {
 	GenericImage   *out;
 	int             i;
@@ -1825,21 +1569,13 @@ setOutImageArray(name, nImages, nFrames, nRows, nCols, format, styleSet, env, mm
 	return (out);
 }
 
-GenericImage   *
-setOutImage(name, nFrames, nRows, nCols, format, styleSet, env, mmap)
-	char           *name, *env;
-	int             nFrames, nRows, nCols;
-	int             format, styleSet, mmap;
+GenericImage   *setOutImage(char *name, int nFrames, int nRows, int nCols, int format,int styleSet, char *env, int mmap)
 {
 	return (setOutImageArray(name, 1, nFrames, nRows, nCols, format, styleSet, env, mmap));
 }
 
 /* simple image create */
-GenericImage   *
-setImage(name, nFrames, nRows, nCols, format)
-	char           *name;
-	int             nFrames, nRows, nCols;
-	int             format;
+GenericImage   *setImage(char *name, int nFrames, int nRows, int nCols, int format)
 {
 	return (setOutImageArray(name, 1, nFrames, nRows, nCols, format, -ENVIFORMAT, NULL, 0));
 }

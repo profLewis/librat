@@ -1,13 +1,11 @@
+#include "sphere.h"
+#include "dem.h"
 #include "frat.h"
 #include "imagelib.h"
 
 int phx=-1,phy=-1,hx=-1,hy=-1,ox=-1,oy=-1;
-int copyToHdr();
-void	enter_dem(verbose,data,hd_Ptr,dem_filename,type)
-char *dem_filename;
-struct  header  *hd_Ptr;
-Data	*data;
-int	verbose,type;
+
+void	enter_dem(int verbose,Data *data,struct  header  *hd_Ptr,char *dem_filename,int type)
 {
         GenericImage *dem;
         dem=allocateImageArray(1,NULL);
@@ -46,12 +44,7 @@ int	verbose,type;
 	return;
 }
 
-void	get_candidate_point(data,candidate_Ptr,i,j,hd_Ptr,dem_attributes_Ptr)
-struct  header  *hd_Ptr;
-Dem_Attributes	*dem_attributes_Ptr;
-triplet		*candidate_Ptr;
-int		i,j;
-Data	*data;
+void	get_candidate_point(Data *data,triplet *candidate_Ptr,int i,int j,struct  header  *hd_Ptr,Dem_Attributes  *dem_attributes_Ptr)
 {
 	char	c_candidate=0;
 	double	f_candidate=0.0;
@@ -82,15 +75,10 @@ Data	*data;
 }
 
 
-void	get_dem_bbox(verbose,data,hd_Ptr,bbox_max,bbox_min,dem_attributes_Ptr,type)
-struct  header  *hd_Ptr;
-Dem_Attributes	*dem_attributes_Ptr;
-Data	*data;
-triplet	*bbox_max,*bbox_min;
-int	verbose,type;
+void	get_dem_bbox(int verbose,Data *data,struct  header  *hd_Ptr,triplet *bbox_max,triplet *bbox_min,Dem_Attributes  *dem_attributes_Ptr,int type)
 {
 	int	i,j;
-	triplet	candidate,vmin(),vmax();
+	triplet	candidate;
 
 /*
 **	calclate bbox
@@ -105,18 +93,9 @@ int	verbose,type;
 	return;
 }
 
-int	dem_read(bounds,dem,verbose,local_coords,line,data,hd,bbox_max,bbox_min,dem_attributes_Ptr)
-char	 *line;
-Dem	*dem;
-int	 verbose,local_coords;
-triplet	 *bbox_max,*bbox_min;
-Dem_Attributes	*dem_attributes_Ptr;
-double	*bounds;
-Data	*data;
-struct header	*hd;
+int	dem_read(double  *bounds,Dem *dem,int verbose,int local_coords,char *line,Data *data,struct header   *hd,triplet  *bbox_max,triplet  *bbox_min,Dem_Attributes  *dem_attributes_Ptr)
 {
 	char	*hold,temp[1000],filename[1000];
-	void *calloc();
 	int	filename_flag;
 	double	zexag=1.0;
         triplet _bbox_min,_bbox_max;
@@ -207,22 +186,13 @@ struct header	*hd;
 	return(1);
 }
 
-int	spherical_dem_read(bounds,verbose,line,data,hd,bbox_max,bbox_min,spherical_dem_Ptr,vertices)
-char	 *line;
-int	 verbose;
-triplet	 *bbox_max,*bbox_min;
-double	*bounds;
-Data	*data;
-struct header	*hd;
-Spherical_Dem *spherical_dem_Ptr;
-VeRtIcEs	*vertices;
+int	spherical_dem_read(double  *bounds,int verbose,char *line,Data *data,struct header   *hd,triplet  *bbox_max,triplet  *bbox_min,Spherical_Dem *spherical_dem_Ptr,VeRtIcEs *vertices)
 {
 	char	*hold,temp[1000],filename[1000];
 	int	v,block,vertex_in_block;
 	double	zexag=1.0;
 	triplet	*trip,vertex,r,bbox_max_orthographic,bbox_min_orthographic;
 	Dem_Attributes	dem_attributes;
-	void	vertex_to_block();
 
 	spherical_dem_Ptr->partial_spherical_data.spherical_cell_bounds_flag=0;
 	spherical_dem_Ptr->partial_spherical_data.extent.x=1.0/(2.0*M_PI);
@@ -307,22 +277,11 @@ VeRtIcEs	*vertices;
 **	all done as double
 */
 
-int	intersect_bbox_contents(tnear,tfar,normal_Ptr,hit_point,ray_length_Ptr,ray_Ptr,grid_Ptr,ggrid_Ptr,dem_Ptr,type_of_cell,uv)
-double	*ray_length_Ptr,*tnear,*tfar;
-Ray	*ray_Ptr;
-ipair	*grid_Ptr;
-Pair	*ggrid_Ptr;
-Dem	*dem_Ptr;
-int	type_of_cell;
-triplet	*hit_point;
-triplet	*normal_Ptr;
-double	*uv;
+int	intersect_bbox_contents(double *tnear,double *tfar,triplet *normal_Ptr,triplet *hit_point,double *ray_length_Ptr,Ray *ray_Ptr,ipair *grid_Ptr,pair *ggrid_Ptr,Dem *dem_Ptr,int type_of_cell,double *uv)
 {
 	triplet	T1[3],T2[3];
 	fFacet *facet;
 	double	localCoords[2][4],bounds[12],scale;
-	void	precompute_facet_features(),double_precompute_facet_features();
-	int	double_ray_to_plane(),double_point_in_triangle();
 	static Vertex_locals VextexLocal;
 
   if(grid_Ptr->x==ox && grid_Ptr->y==oy){
@@ -434,19 +393,12 @@ double	*uv;
 	return(0);
 }
 
-int	intersect_spherical_dem_cell_contents(ray_length_Ptr,normal_Ptr,ray_Ptr,hit_point,d)
-double	*ray_length_Ptr;
-Ray	*ray_Ptr;
-triplet	*normal_Ptr;
-triplet	*hit_point;
-triplet	*d;
+int	intersect_spherical_dem_cell_contents(double *ray_length_Ptr,triplet *normal_Ptr,Ray *ray_Ptr,triplet *hit_point,triplet *d)
 {
 	triplet	T1[3],T2[3],du,dv;
-/*	MATRIX3	M,M_1,matrix3_ip(),matrix3_inverse();*/
+/*	MATRIX3	M,M_1;*/
 	fFacet	facet;
-	double	uv[2],scale;double Random();
-	int	setup_simple_facet();
-	int	double_ray_to_plane(),double_point_in_triangle(); 
+	double	uv[2],scale;
 	unsigned int facet_type;
 
 	facet_type=(unsigned int)(Random()+0.5);
@@ -531,8 +483,7 @@ triplet	*d;
 	return(0);
 }
 
-int	is_even(number)
-int	number;
+int	is_even(int number)
 {
 	int	i;
 	i=number/2;
@@ -543,13 +494,9 @@ int	number;
 /*
 ** assumes alternate pattern to tesselation
 */
-int	type_of_cell(grid_Ptr,cols,direction)
-ipair	*grid_Ptr;
-int	cols;
-char	*direction;
+int	type_of_cell(ipair *grid_Ptr,int cols,char *direction)
 {
 	int	prev=0;
-	double 	Random();
 
 	if(direction){
 		prev= *(direction + grid_Ptr->y + (grid_Ptr->x)*cols);
@@ -568,18 +515,14 @@ char	*direction;
 	return(prev-1);
 }
 
-void	global2local_ray(global_ray_Ptr,local_ray_Ptr,dem_Ptr)
-Dem	*dem_Ptr;
-Ray	*global_ray_Ptr,*local_ray_Ptr;
+void	global2local_ray(Ray *global_ray_Ptr,Ray *local_ray_Ptr,Dem *dem_Ptr)
 {
 	local_ray_Ptr->origin=multiply_vector(vector_minus(global_ray_Ptr->origin,dem_Ptr->dem_attributes.offset),dem_Ptr->dem_attributes.inv_extent);
 	local_ray_Ptr->direction=normalise(multiply_vector(global_ray_Ptr->direction,dem_Ptr->dem_attributes.inv_extent));
 	return;
 }
 
-pair	global2local_2D(coord,dem_Ptr)
-Dem	*dem_Ptr;
-pair	coord;
+pair	global2local_2D(pair coord,Dem *dem_Ptr)
 {
 	pair	out;
 	out.x = (coord.x - dem_Ptr->dem_attributes.offset.x)*dem_Ptr->dem_attributes.inv_extent.x;
@@ -587,9 +530,7 @@ pair	coord;
 	return(out);
 }
 
-pair	local2global_2D(coord,dem_Ptr)
-Dem	*dem_Ptr;
-ipair	coord;
+pair	local2global_2D(ipair coord,Dem *dem_Ptr)
 {
 	pair	out;
 	out.x = ((double)coord.x *dem_Ptr->dem_attributes.extent.x) + dem_Ptr->dem_attributes.offset.x;
@@ -597,36 +538,26 @@ ipair	coord;
 	return(out);
 }
 
-Pair	double_global2local_2D(coord,dem_Ptr)
-Dem	*dem_Ptr;
-Pair	coord;
+pair	double_global2local_2D(pair coord,Dem *dem_Ptr)
 {
-	Pair	out;
+	pair	out;
 	out.x = (coord.x - dem_Ptr->dem_attributes.offset.x)*dem_Ptr->dem_attributes.inv_extent.x;
 	out.y = (coord.y - dem_Ptr->dem_attributes.offset.y)*dem_Ptr->dem_attributes.inv_extent.y;
 	return(out);
 }
 
-Pair	double_local2global_2D(coord,dem_Ptr)
-Dem	*dem_Ptr;
-ipair	coord;
+pair	double_local2global_2D(ipair coord,Dem *dem_Ptr)
 {
-	Pair	out;
+	pair	out;
 	out.x = ((double)coord.x *dem_Ptr->dem_attributes.extent.x) + dem_Ptr->dem_attributes.offset.x;
 	out.y = ((double)coord.y *dem_Ptr->dem_attributes.extent.y) + dem_Ptr->dem_attributes.offset.y;
 	return(out);
 }
 
-int	ray_within_local_bbox(tnear_Ptr,tfar_Ptr,ray_Ptr,grid_Ptr,ggrid_Ptr,dem_Ptr,ray_direction_code)
-double	*tfar_Ptr,*tnear_Ptr;
-Ray	*ray_Ptr;
-ipair	*grid_Ptr;
-Pair	*ggrid_Ptr;
-Dem	*dem_Ptr;
-int	*ray_direction_code;
+int	ray_within_local_bbox(double *tnear_Ptr,double *tfar_Ptr,Ray *ray_Ptr,ipair *grid_Ptr,pair *ggrid_Ptr,Dem *dem_Ptr,int *ray_direction_code)
 {
 	struct Bbox bbox;
-	int	isHit,double_ray_to_bbox();
+	int	isHit;
 	triplet	hit;
 	
 	bbox.min.x	=ggrid_Ptr->x;
@@ -648,19 +579,13 @@ int	*ray_direction_code;
 	return(1);
 }
 
-int	dem_intersect(bb,normal_Ptr,dem_Ptr,global_ray_Ptr,ray_length_Ptr,uv)
-     BigBag *bb;
-Dem		*dem_Ptr;
-Ray		*global_ray_Ptr;
-double		*ray_length_Ptr;
-triplet		*normal_Ptr;
-double		*uv;
+int	dem_intersect(RATobj *bb,triplet *normal_Ptr,Dem *dem_Ptr,Ray *global_ray_Ptr,double *ray_length_Ptr,double *uv)
 {
   int     isHit;
-  int	starty,ray_direction_code[2],intersect=0,double_ray_to_bbox();
+  int	starty,ray_direction_code[2],intersect=0;
   double	D,Dmax,lambda,norm,cx,cy,dx,dy,ox,oy,tnear,tfar,ray_length;
   ipair	igrid,iout_grid,grid,out_grid;
-  Pair	p_near,p_far,ggrid,gout_grid,double_global2local_2D(),double_local2global_2D();
+  pair	p_near,p_far,ggrid,gout_grid;
   Ray	ray;
   struct Bbox	bbox;
   triplet	hit_point;
@@ -752,10 +677,7 @@ double		*uv;
   return(intersect);
 }
 
-void	setup_grid(grid,ggrid,dem_Ptr)
-ipair	*grid;
-Pair	ggrid;
-Spherical_Dem	*dem_Ptr;
+void	setup_grid(ipair *grid,pair ggrid,Spherical_Dem *dem_Ptr)
 {
 	int	i;
 
@@ -778,10 +700,7 @@ Spherical_Dem	*dem_Ptr;
 	
 }
 
-double	get_grid_value(grid,data,hd)
-ipair	*grid;
-Data	*data;
-struct header *hd;
+double	get_grid_value(ipair *grid,Data *data,struct header *hd)
 {
 	double	f_candidate=0.0;
 	char	c_candidate=0;
@@ -798,10 +717,9 @@ struct header *hd;
 	return(f_candidate);
 }
 
-int	setup_simple_facet(scale_Ptr,facet_Ptr,du,dv,base)
-fFacet	*facet_Ptr;triplet	*du,*dv,*base;double	*scale_Ptr;
+int	setup_simple_facet(double *scale_Ptr,fFacet *facet_Ptr,triplet *du,triplet *dv,triplet *base)
 {
-	Pair Du,Dv;
+	pair Du,Dv;
 	double	tmp;
 
 	if(!(du->x==0.0 || dv->x == 0.0)){		/* dx unuseable */
@@ -884,23 +802,17 @@ fFacet	*facet_Ptr;triplet	*du,*dv,*base;double	*scale_Ptr;
 /*
 **	distance from origin to plane
 */
-	facet_Ptr->dw= -v_dot(*base,facet_Ptr->normal);
+	facet_Ptr->dw= -V_dot(*base,facet_Ptr->normal);
 
 	return(1);
 }
 
-int	spherical_cell_intersect(grid,dem_Ptr,ray,normal_Ptr,tmin_Ptr,next_direction_Ptr)
-ipair	*grid;
-Spherical_Dem	*dem_Ptr;
-Ray	*ray;
-triplet	*normal_Ptr;
-double	*tmin_Ptr;
-int	*next_direction_Ptr;
+int	spherical_cell_intersect(ipair *grid,Spherical_Dem *dem_Ptr,Ray *ray,triplet *normal_Ptr,double *tmin_Ptr,int *next_direction_Ptr)
 {
 	double	zmin,zmax,z_value[4],tmax,D,uv[2],scale;
-	Pair	ggrid;
+	pair	ggrid;
 	triplet	d[4],d_world[4],du,dv,t_hit_point;
-	int	test_contents,i,j,double_ray_to_plane(),double_point_in_triangle();
+	int	test_contents,i,j;
 	fFacet	facet[4];
 
 	zmin=BIG;
@@ -920,9 +832,9 @@ int	*next_direction_Ptr;
 		du=d_world[i];
 		if(i==3)j=0;else j=i+1;
 		dv=d_world[j];
-		facet[i].normal=normalise(Vector_cross(du,dv));
+		facet[i].normal=normalise(vector_cross(du,dv));
 		setup_simple_facet(&scale,&facet[i],&du,&dv,&(dem_Ptr->base_sphere.centre));
-		if(double_ray_to_plane(&D,&(facet[i].dw),&(facet[i].normal),&(ray->origin),&(ray->direction)) && D < ray->ray_length){
+		if(double_ray_to_plane(&D,&(facet[i].dw),&(facet[i].normal),ray) && D < ray->ray_length){
 			if(double_point_in_triangle(&scale,&t_hit_point,&(facet[i]),ray,D,&(uv[0]))){
 				*tmin_Ptr=MMIN(*tmin_Ptr,D);
 				tmax=MMAX(tmax,D);
@@ -936,12 +848,8 @@ int	*next_direction_Ptr;
 	return(0);
 }
 
-int getIntersectionLimits(hit_points,ray,dem_Ptr)
-Ray *ray;
-Spherical_Dem *dem_Ptr;
-triplet *hit_points;
+int getIntersectionLimits(triplet *hit_points,Ray *ray,Spherical_Dem *dem_Ptr)
 {
-	int	ray_in_sphere_data();
 	double	tnear,tfar,tvnear,tvfar;
 /*	intersect outer bounding spheres */
 
@@ -962,12 +870,7 @@ triplet *hit_points;
 	return(1);
 }
 
-void    getRowColNumbers(row,col,intersectionPoints,ray,demPtr)
-int             *row;
-int             *col;
-triplet         *intersectionPoints;
-Ray             *ray;
-Spherical_Dem    *demPtr;
+void    getRowColNumbers(int *row,int *col,triplet *intersectionPoints,Ray *ray,Spherical_Dem *demPtr)
 {
         triplet sph[2];
         double   *theta1,*theta2,*phi1,*phi2,frow1,frow2,fcol1,fcol2;
@@ -998,10 +901,7 @@ Spherical_Dem    *demPtr;
         return;
 }
 
-void	grid2Cartesian(d,r,c,dem_Ptr)
-triplet	*d;
-int	r,c;
-Spherical_Dem    *dem_Ptr;
+void	grid2Cartesian(triplet *d,int r,int c,Spherical_Dem *dem_Ptr)
 {
 	double	h,R,D,theta,phi;
 	int	Cc,Rr;
@@ -1022,10 +922,7 @@ Spherical_Dem    *dem_Ptr;
 	d->z= (dem_Ptr->base_sphere.centre.z) + R*sin(theta);
 }
 
-void	getCornerValues(d,r,c,movementR,movementC,dem_Ptr)
-triplet	*d;
-int	r,c,movementR,movementC;
-Spherical_Dem    *dem_Ptr;
+void	getCornerValues(triplet *d,int r,int c,int movementR,int movementC,Spherical_Dem *dem_Ptr)
 {
 	grid2Cartesian(&d[0],r,c,dem_Ptr);
 	grid2Cartesian(&d[1],r,c+movementC,dem_Ptr);
@@ -1035,13 +932,9 @@ Spherical_Dem    *dem_Ptr;
 	return;
 }
 
-int	spherical_dem_intersect(bb,normal_Ptr,dem_Ptr,ray)
-Spherical_Dem	*dem_Ptr;
-Ray		*ray;
-triplet		*normal_Ptr;
-BigBag *bb;
+int	spherical_dem_intersect(RATobj *bb,triplet *normal_Ptr,Spherical_Dem *dem_Ptr,Ray *ray)
 {
-	int	r,c,row[2],col[2],ray_in_sphere_data();
+	int	r,c,row[2],col[2];
 	double	ray_length;
 	triplet	hit_point,hit_points[2],d[4],normal;
         int     movementR,movementC,nRows,nCols,countR,countC;
@@ -1089,14 +982,7 @@ BigBag *bb;
 
 }
 
-int	ray_dem_intersect(bb,normal_Ptr,distance_Ptr,dem_Ptr,ray,type,uv)
-BigBag *bb;
-triplet	*normal_Ptr; 
-double	*distance_Ptr;
-void	*dem_Ptr;
-Ray	*ray;
-int	type;
-double	*uv;
+int	ray_dem_intersect(RATobj *bb,triplet *normal_Ptr,double *distance_Ptr,void *dem_Ptr,Ray *ray,int type,double *uv)
 {
 	Ray	dray;
 	int	hit;

@@ -1,10 +1,10 @@
 /*	
 **	Original Library Name	:
-**				Matrix.c ( ~stuart/lib/libMatrix.a )
+**				matrix.c ( ~stuart/lib/libmatrix.a )
 **	Library Name	:	matrix.c
 **
 **	Original Dependencies	:
-**				Matrix.h ( ~stuart/Matrix.h )
+**				matrix.h ( ~stuart/matrix.h )
 **	Dependencies	:	matrix.h
 **
 **	Original Date	:	15/6/1993
@@ -14,9 +14,9 @@
 **
 **	Copyright	:	The Remote Sensing Unit, Dept of Geography, Univ College London, 26 Bedford Way, London, WC1 0HP.
 **	
-**	Notes		:	The routines for LU_decomposition, LU_linear equation solving, Matrix_inversion and Matrix_determinant are
+**	Notes		:	The routines for LU_decomposition, LU_linear equation solving, matrix_inversion and matrix_determinant are
 **				adapted from the code in Numerical Recipies in C with additions for pointer manipulations ( faster ).
-**				additionally the matrix passed to the library functions Matrix_inversion and Matrix_determinant are not
+**				additionally the matrix passed to the library functions matrix_inversion and matrix_determinant are not
 **				over written as is the case in numerical recipies.
 **
 **	Bugs		:	Assumes all matrices are square and of the same dimensions ( i, j ) to each other.  Additionally assumes
@@ -28,17 +28,15 @@
 #include <math.h>
 #include <limits.h>
 #include "matrix.h"
+#include "allocate.h"
 #ifdef TESTER
 double input[1000],output[1000],t1[1000],vectorv[1000],parameters[1000];
 #endif
 /*#endif*/
-void	LU_decomposition( a, n, indx, d )
-int	n, *indx;
-double	*a,**d;
+void	LU_decomposition( double *a, int n, int *indx, double **d )
 	{
 	int	i, imax=0, j, k;
 	double	big, dum, sum, temp;
-	double	*vector();
         static double vv[1000];
 
 	**d = 1.0;
@@ -106,9 +104,7 @@ double	*a,**d;
 
 
 
-void	LU_solve( a, n, indx, b )
-double	*a, *b;
-int	n, *indx;
+void	LU_solve( double *a, int n, int *indx, double *b )
 	{
 	int	i, ii = -1, ip, j;
 	double	sum;
@@ -137,7 +133,7 @@ int	n, *indx;
 /*
 **	Comments		: 	Lewis, 26 June 1994
 **
-**	Function Name		:	Matrix_inversion
+**	Function Name		:	matrix_inversion
 **
 **	Purpose			: 	inversion of a n_length*n_length matrix
 **
@@ -158,20 +154,17 @@ int	n, *indx;
 */
 #define TOL 1e-20 
 
-void	Matrix_inversion( data_matrix, matrix_inverted, interchanges, n_length ,V)
-double	*data_matrix, *matrix_inverted, *interchanges,*V;
-int	n_length;
+void	matrix_inversion( double *data_matrix, double *matrix_inverted, double *interchanges, int n_length ,double *V)
 	{
 	double	determinant,*pm;
 	int	i, j;
-	void	Matrix_inversion();
         static int processing_vector[1000];
         static double vector_for_cols[1000];
 
-	pm = Matrix_allocate( n_length );
-	Matrix_copy( data_matrix, pm, n_length );
+	pm = matrix_allocate( n_length );
+	matrix_copy( data_matrix, pm, n_length );
 
-	Matrix_determinant(pm , &determinant, n_length );
+	matrix_determinant(pm , &determinant, n_length );
 	if(fabs(determinant)<TOL){
 	  /*fprintf(stderr,"det below tol: %f (%f)\n",determinant,TOL);*/
 		if(V){*V=0.0;return;}
@@ -187,9 +180,9 @@ int	n_length;
 				pm[i*n_length+j]=data_matrix[i*(n_length+1)+j];
 			}
 		}
-		Matrix_inversion( pm, matrix_inverted, interchanges, n_length ,V);
+		matrix_inversion( pm, matrix_inverted, interchanges, n_length, V);
 		/* copy the inverse matrix to pm */
-		Matrix_copy( matrix_inverted, pm, n_length );
+		matrix_copy( matrix_inverted, pm, n_length );
 		for(i=0;i<n_length;i++){
 			for(j=0;j<n_length;j++){
 				matrix_inverted[i*(n_length+1)+j]=pm[i*(n_length)+j];
@@ -204,7 +197,7 @@ int	n_length;
 	LU_decomposition( pm, n_length, processing_vector, &interchanges );
 
 #ifdef TEST
-	/*	fprintf(stdout,"LU Matrix (%d x %d)\n",n_length,n_length); */
+	/*	fprintf(stdout,"LU matrix (%d x %d)\n",n_length,n_length); */
 		for(i=0;i<n_length;i++){
 			for(j=0;j<n_length;j++)
 				fprintf(stdout,"%20.10lf ",*(pm + i*n_length + j));
@@ -226,7 +219,7 @@ int	n_length;
 /*
 **	Comments		: 	Lewis, 26 June 1994
 **
-**	Function Name		:	Matrix_determinant
+**	Function Name		:	matrix_determinant
 **
 **	Purpose			: 	determinant of a n_length*n_length matrix
 **
@@ -245,15 +238,13 @@ int	n_length;
 */
 
 
-void	Matrix_determinant( data_matrix, determinant, n_length )
-double	*data_matrix, *determinant;
-int	n_length;
+void	matrix_determinant( double *data_matrix, double *determinant, int n_length )
 	{
 	int	j;
         static double processing_matrix2[1000];
         static int processing_vector[1000];
 	
-	Matrix_copy( data_matrix, processing_matrix2, n_length );
+	matrix_copy( data_matrix, processing_matrix2, n_length );
 
 	LU_decomposition( processing_matrix2, n_length, processing_vector, &determinant );
 
@@ -274,7 +265,7 @@ double vDot(double *a,double *b,int n){
 /*
 **	Comments		: 	Lewis, 26 June 1994
 **
-**	Function Name		:	MatrixInvertTest
+**	Function Name		:	matrixInvertTest
 **
 **	Purpose			: 	Test Inversion of a n_length*n_length matrix
 **
@@ -285,9 +276,7 @@ double vDot(double *a,double *b,int n){
 */
 
 
-void	Vector_Vector_addition_to_Vector( vector_a, vector_b, return_vector, vector_size )
-double	*vector_a, *vector_b, *return_vector;
-int	vector_size;
+void	vector_vector_addition_to_vector( double *vector_a, double *vector_b, double *return_vector, int vector_size )
 	{
 	int	i;
 
@@ -301,9 +290,7 @@ int	vector_size;
 
 
 
-void	Vector_Vector_subtraction_to_Vector( vector_a, vector_b, return_vector, vector_size )
-double	*vector_a, *vector_b, *return_vector;
-int	vector_size;
+void	vector_vector_subtraction_to_vector( double *vector_a, double *vector_b, double *return_vector, int vector_size )
 	{
 	int	i;
 
@@ -317,9 +304,7 @@ int	vector_size;
 
 
 
-void	Vector_Vector_multiplication_to_Vector( vector_a, vector_b, return_vector, vector_size )
-double	*vector_a, *vector_b, *return_vector;
-int	vector_size;
+void	vector_vector_multiplication_to_vector( double *vector_a, double *vector_b, double *return_vector, int vector_size )
 	{
 	int	i;
 
@@ -333,9 +318,7 @@ int	vector_size;
 
 
 
-void	Vector_Vector_division_to_Vector( vector_a, vector_b, return_vector, vector_size )
-double	*vector_a, *vector_b, *return_vector;
-int	vector_size;
+void	vector_vector_division_to_vector( double *vector_a, double *vector_b, double *return_vector, int vector_size )
 	{
 	int	i;
 
@@ -349,9 +332,7 @@ int	vector_size;
 
 
 
-void	Vector_Vector_multiplication_to_Product( vector_a, vector_b, vector_product, vector_size )
-double	*vector_a, *vector_b, *vector_product;
-int	vector_size;
+void	vector_vector_multiplication_to_Product( double *vector_a, double *vector_b, double *vector_product, int vector_size )
 	{
 	int	i;
 
@@ -366,9 +347,7 @@ int	vector_size;
 
 
 
-void	Vector_Vector_transpose_multiplication_to_Matrix( vector_a, vector_b, return_matrix, vector_size )
-double	*vector_a, *vector_b, *return_matrix;
-int	vector_size;
+void	vector_vector_transpose_multiplication_to_matrix( double *vector_a, double *vector_b, double *return_matrix, int vector_size )
 	{
 	int	i, j;
 
@@ -386,9 +365,7 @@ int	vector_size;
 
 
 
-void	Vector_Matrix_multiplication_to_Vector( vector, matrix, return_vector, n_length )
-double	*vector, *matrix, *return_vector;
-int	n_length;
+void	vector_matrix_multiplication_to_vector( double *vector, double *matrix, double *return_vector, int n_length )
 	{
 	int	i, j;
 
@@ -411,9 +388,7 @@ int	n_length;
 
 
 
-void	Matrix_Vector_multiplication_to_Matrix( matrix, vector, return_matrix, n_length )
-double	*vector, *matrix, *return_matrix;
-int	n_length;
+void	matrix_vector_multiplication_to_matrix( double *matrix, double *vector, double *return_matrix, int n_length )
 	{
 	int	i, j;
 
@@ -431,9 +406,7 @@ int	n_length;
 
 
 
-void	Matrix_Matrix_multiplication_to_Matrix( m_multiply, m_multiplier, m_multiplied, n_length )
-double	*m_multiply, *m_multiplier, *m_multiplied;
-int	n_length;
+void	matrix_matrix_multiplication_to_matrix( double *m_multiply, double *m_multiplier, double *m_multiplied, int n_length )
 	{
 	int	i, j, x;
 
@@ -453,9 +426,7 @@ int	n_length;
 
 
 
-void	Matrix_Matrix_subtraction_to_Matrix( matrix_sutract_from, matrix_subtractor, matrix_subtracted, n_length )
-double	*matrix_sutract_from, *matrix_subtractor, *matrix_subtracted;
-int	n_length;
+void	matrix_matrix_subtraction_to_matrix( double *matrix_sutract_from, double *matrix_subtractor, double *matrix_subtracted, int n_length )
 	{
 	int	i;
 
@@ -469,9 +440,7 @@ int	n_length;
 
 
 
-void	Matrix_Matrix_addition_to_Matrix( matrix_addition_to, matrix_adder, matrix_added, n_length )
-double	*matrix_addition_to, *matrix_adder, *matrix_added;
-int	n_length;
+void	matrix_matrix_addition_to_matrix( double *matrix_addition_to, double *matrix_adder, double *matrix_added, int n_length )
 	{
 	int	i;
 
@@ -485,9 +454,7 @@ int	n_length;
 
 
 
-double	Matrix_trace( matrix, n_length )
-double	*matrix;
-int	n_length;
+double	matrix_trace( double *matrix, int n_length )
 	{
 	double	trace_sum = 0.0;
 	int	n;
@@ -504,9 +471,7 @@ int	n_length;
 
 
 
-void	Vector_copyM( from_vector, to_vector, n_length )
-double	*from_vector, *to_vector;
-int	n_length;
+void	vector_copyM( double *from_vector, double *to_vector, int n_length )
 	{
 	int	i;
 
@@ -520,9 +485,7 @@ int	n_length;
 
 
 
-void	Matrix_copy( from_matrix, to_matrix, n_length )
-double	*from_matrix,*to_matrix;
-int	n_length;
+void	matrix_copy( double *from_matrix, double *to_matrix, int n_length )
 	{
 	int	i;
 
@@ -536,10 +499,7 @@ int	n_length;
 
 
 
-void	Vector_reset( vector, n_length, value )
-double	*vector;
-int	n_length;
-double	value;
+void	vector_reset( double *vector, int n_length, double value )
 	{
 	int	n;
 
@@ -553,10 +513,7 @@ double	value;
 
 
 
-void	Matrix_reset( matrix, n_length, value )
-double	*matrix;
-int	n_length;
-double	value;
+void	matrix_reset( double *matrix, int n_length, double value )
 	{
 	int	n;
 
@@ -570,13 +527,12 @@ double	value;
 
 
 
-double	*Vector_allocate( vec_size )
-int	vec_size;
+double	*vector_allocate( int vec_size )
 	{
-	double	*vec;void *calloc();
+	double	*vec;
 
 	if( (vec = (double *) calloc( vec_size, sizeof(double))) == 0 )
-		error_message_matrix( "Vector_allocate : unable to allocate memmory for a vector" );
+		error_message_matrix( "vector_allocate : unable to allocate memmory for a vector" );
 	return( vec );
 }
 
@@ -587,8 +543,7 @@ int	vec_size;
 
 
 
-void	Vector_free( vector )
-double	*vector;
+void	vector_free( double *vector )
 	{
 
 
@@ -603,17 +558,16 @@ double	*vector;
 
 
 
-double	*Matrix_allocate( n_length )
-int	n_length;
+double	*matrix_allocate( int n_length )
 	{
-	double	*matrix;void *calloc();
+	double	*matrix;
 
 /*
 **	The matrix is considered as an one dimensional array of matrix_dimension^
 */
 
 	if( (matrix = (double *) calloc( n_length*n_length, sizeof(double))) == 0 )
-		error_message_matrix( "Matrix_allocate : unable to allocate memmory for a matrix" );
+		error_message_matrix( "matrix_allocate : unable to allocate memmory for a matrix" );
 	return( matrix );
 }
 
@@ -624,8 +578,7 @@ int	n_length;
 
 
 
-void	Matrix_free( matrix )
-double	*matrix;
+void	matrix_free( double *matrix )
 	{
 
 
@@ -639,11 +592,10 @@ double	*matrix;
 
 
 
-void	error_message_matrix( string )
-char	*string;
+void	error_message_matrix( char *string )
 	{
 #ifdef EXIT
-	fprintf(stderr,"\nMatrix Error: %s\n\n", string );
+	fprintf(stderr,"\nmatrix Error: %s\n\n", string );
 	exit( 1 );
 #else
 	return;

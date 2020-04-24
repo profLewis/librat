@@ -14,8 +14,6 @@
 #define BZP 1
 #define BZP_TRIANGLE 2
 
-#include "define_float.h"
-
 struct TURTLE {
 	triplet	location;
 	triplet	direction[3];

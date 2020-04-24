@@ -10,8 +10,7 @@
 #define M_PI_2 1.57079632679489661923
 #endif
 
-int	nearly(exponent,value)
-int	exponent;double	value;
+int	nearly(int exponent,double value)
 {
 	int	i;
 	for(i=0;i<exponent;i++)
@@ -20,16 +19,15 @@ int	exponent;double	value;
 	return(i);
 }
 
-void	test_program_ok()
+void	test_program_ok(void)
 {
-	matrix3	temp,matrix3_ip();static triplet v1 = {0, 1, 1},v2 = {0, 2, 1},v3 = {0, 3, 1};
+	matrix3	temp;static triplet v1 = {0, 1, 1},v2 = {0, 2, 1},v3 = {0, 3, 1};
 	temp=matrix3_ip(v1,v2,v3);
 	temp=matrix3_ip(v2,v1,v3);
 	temp=matrix3_ip(v3,v2,v1);
 }
 
-matrix3 matrix3_ip(v1,v2,v3)
-triplet v1,v2,v3;
+matrix3 matrix3_ip(triplet v1,triplet v2,triplet v3)
 {
 	matrix3 out;
 	out.data[0][0]=v1.x;
@@ -43,8 +41,7 @@ triplet v1,v2,v3;
 	out.data[2][2]=v3.z;
 	return(out);
 }
-triplet matrix3_mult(matrix,vector)
-matrix3 matrix;triplet vector;
+triplet matrix3_mult(matrix3 matrix,triplet vector)
 {
 	triplet out;
 	out.x = V_dot(vector_copy2(matrix.data[0][0],matrix.data[0][1],matrix.data[0][2]),vector);
@@ -53,8 +50,7 @@ matrix3 matrix;triplet vector;
 	return(out);
 }
 
-matrix3 matrix3_copy(input)
-matrix3 input; 
+matrix3 matrix3_copy(matrix3 input)
 {
 	matrix3 out;int	i,j;
 	for(i=0;i<3;i++)
@@ -63,8 +59,7 @@ matrix3 input;
 	return(out);
 }
 
-matrix3 matrix3_inverse(input)
-matrix3 input;
+matrix3 matrix3_inverse(matrix3 input)
 {
 	matrix3 out;int	i,j;double	scale_factor;
 	scale_factor=scale(input);
@@ -78,17 +73,16 @@ matrix3 input;
 	return(out);
 }
 
-double m3_inverse(input)
-matrix3 *input;
+double m3_inverse(matrix3 *input)
 {
-	matrix3 out;INT	i,j;double	scale_factor,Cofactors();
+	matrix3 out;int	i,j;double	scale_factor;
 	scale_factor=scale(*input);
 	if(scale_factor==0)
 		return(scale_factor);
 
 	for(i=0;i<3;i++)
 	for(j=0;j<3;j++){
-		out.data[j][i]=Cofactors(*input,i,j)/scale_factor;
+		out.data[j][i]=cofactors(*input,i,j)/scale_factor;
 	}
 	for(i=0;i<3;i++)
 	for(j=0;j<3;j++){
@@ -98,8 +92,7 @@ matrix3 *input;
 }
 
 
-matrix3 inverse3(input)
-matrix3 input;
+matrix3 inverse3(matrix3 input)
 {
 	matrix3 out;int	i,j;double	scale_factor;
 	scale_factor=scale(input);
@@ -111,8 +104,7 @@ matrix3 input;
 	return(out);
 }
 
-matrix3 transpose3(input)
-matrix3 input;
+matrix3 transpose3(matrix3 input)
 {
 	matrix3 out;int	i,j;
 	for(i=0;i<3;i++)
@@ -121,15 +113,13 @@ matrix3 input;
 	return(out);
 }
 
-int	matrix_sign(i)
-int	i;
+int	matrix_sign(int i)
 {
 	if(i==0||i==2)return(1);
 	return(-1);
 }
 
-double scale(input)
-matrix3 input;
+double scale(matrix3 input)
 {
 	double	out=0;int	column=0,i;
 	for(i=0;i<3;i++){
@@ -138,8 +128,7 @@ matrix3 input;
 	return(out);
 }
 
-int	boundck(input)
-int	input;
+int	boundck(int input)
 {
 	int	out;
 	while(input>2)input-=3;
@@ -149,24 +138,20 @@ int	input;
 }
 
 
-double	cofactors(input,row,column)
-matrix3 input;
-int	column,row;
+double	cofactors(matrix3 input,int row,int column)
 {
 	double	out;
 	out=	input.data[boundck(row+1)][boundck(column+1)]*input.data[boundck(row+2)][boundck(column+2)]- input.data[boundck(row+1)][boundck(column+2)]*input.data[boundck(row+2)][boundck(column+1)];
 	return(out);
 }
 
-int	vector_compare(precision,v1,v2)
-triplet	v1,v2;int	precision;
+int	vector_compare(int precision,triplet v1,triplet v2)
 {
 	if((nearly(precision,v1.x)==nearly(precision,v2.x))&&(nearly(precision,v1.y)==nearly(precision,v2.y))&&(nearly(precision,v1.z)==nearly(precision,v2.z)))return(1);
 	return(0);
 }
 
-triplet vector_plus(a,b)
-triplet	a,b;
+triplet vector_plus(triplet a,triplet b)
 {
 	triplet out;
 	out.x = (a.x)+(b.x);
@@ -175,8 +160,7 @@ triplet	a,b;
 	return(out);
 }
 
-triplet vector_minus(a,b)
-triplet	a,b;
+triplet vector_minus(triplet a,triplet b)
 {
 	triplet out;
 	out.x = (a.x)-(b.x);
@@ -185,8 +169,7 @@ triplet	a,b;
 	return(out);
 }
 
-triplet spherical_to_cartesian(spherical,mode)
-triplet	spherical;int	mode;
+triplet spherical_to_cartesian(triplet spherical,int mode)
 {
 /*
 **	r,theta,phi
@@ -210,8 +193,7 @@ triplet	spherical;int	mode;
 	return(out);
 }
 
-triplet cartesian_to_spherical(cartesian)
-triplet	cartesian;
+triplet cartesian_to_spherical(triplet cartesian)
 {
 	triplet	out,in;double	m;
 	out.x = V_mod(cartesian);			/* r */
@@ -235,8 +217,7 @@ triplet	cartesian;
 	return(out);
 }
 
-double	xy_angle(in)
-triplet	in;
+double	xy_angle(triplet in)
 { 
 	double	out;
 	out=atan(in.y/in.x);
@@ -245,8 +226,7 @@ triplet	in;
 	return(RTOD(out));
 }
 
-triplet	multiply_vector(a,b)
-triplet a,b;
+triplet	multiply_vector(triplet a,triplet b)
 {
 	triplet	out;
 	out.x = (a.x)*(b.x);	
@@ -255,8 +235,7 @@ triplet a,b;
 	return(out);	
 }
 
-triplet	V_factor(a,b)
-triplet a;double	b;
+triplet	V_factor(triplet a,double b)
 {
 	triplet	out;
 	out.x = (a.x)*b;	
@@ -265,8 +244,7 @@ triplet a;double	b;
 	return(out);	
 }
 
-triplet normalise(a)
-triplet a;
+triplet normalise(triplet a)
 {
 	triplet out;double	mod;
 	mod=V_mod(a);
@@ -275,14 +253,12 @@ triplet a;
 	return(out);
 }
 
-double	V_dot(a,b)
-triplet	a,b;
+double	V_dot(triplet a,triplet b)
 {
 	return((a.x)*(b.x)+(a.y)*(b.y)+(a.z)*(b.z));
 }
 
-triplet vector_cross(a,b)
-triplet	a,b;
+triplet vector_cross(triplet a,triplet b)
 {
 	triplet out;
 	out.x = (a.y)*(b.z)-(a.z)*(b.y);
@@ -291,8 +267,7 @@ triplet	a,b;
 	return(out);
 }
 
-double	V_mod(a)
-triplet	a;
+double	V_mod(triplet a)
 {
 	double	p,q,r,out;
 	p=(a.x)*(a.x);q=(a.y)*(a.y);r=(a.z)*(a.z);
@@ -300,8 +275,7 @@ triplet	a;
 	return(out);
 }
 
-triplet vector_copy(b)
-triplet	b;
+triplet vector_copy(triplet b)
 {
 	triplet a;
 	a.x = b.x;
@@ -310,8 +284,7 @@ triplet	b;
 	return(a);
 }
 
-triplet vector_copy2(c,d,e)
-double	c,d,e;
+triplet vector_copy2(double c,double d,double e)
 {
 	triplet a;
 	a.x = c;
@@ -323,8 +296,7 @@ double	c,d,e;
 /*
 **      rotate
 */
-triplet	rotate_vector(vect,angles)
-triplet   vect,angles;
+triplet	rotate_vector(triplet vect,triplet angles)
 {
 	double   sa,ca,phi,theta,psi;
 	triplet	out,hold;
@@ -346,8 +318,7 @@ triplet   vect,angles;
 	return(out);
 }
 
-triplet	rotate_about(in,u,theta) /* FVD p. 227 */
-triplet	in,u;double	theta;
+triplet	rotate_about(triplet in,triplet u,double theta) /* FVD p. 227 */
 {
 	triplet t[3],out;
 	double	cosTheta,sinTheta,ux2,uy2,uz2,a,b,c,d,e,f;
@@ -387,8 +358,7 @@ triplet	in,u;double	theta;
 }
 
 
-triplet	OLDrotate_about(in,axis,angle)
-triplet	in,axis;double	angle;
+triplet	OLDrotate_about(triplet in,triplet axis,double angle)
 {
 	triplet	t1,t2,t3,out,x_dash,y_dash_cap,x_dash_cap,a_cap;
 	double	phi,theta,r,a,cos_phi;

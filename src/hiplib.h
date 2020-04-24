@@ -5,6 +5,7 @@
 #define BLANK_EDGES 1
 #define WRAPAROUND 2
 #define FATAL_ACCESS 3
+#include "imagelib.h"
 
 #define MAXFRAMES 1280
 typedef struct{
@@ -26,26 +27,6 @@ typedef struct{
         char    *imageName;     /* name of image, if applicable */
                 hipsStats        stats;                /* image statistics */
 }hips;
-int         setImageDefaults();
-int     getDataSize();
-int     allocateImage();
-int                writeImage();
-int     readImage();
-int     imageArrayIndex();
-void     getPixel();
-int     putPixel();
-int                openImage();
-int     getImageFormat();
-GenericImage *getImageHeader();
-int        copyImageHeader();
-void       setImageFormat();
-void       setImageRows();
-void       setImageCols();
-void 	setImageFrames();
-GenericImage *allocateImageArray();
-int updateHipsHeader();
-int arrayIndexHips();
-int     isEnvi();
 #ifndef MAX
 #define MAX(a,b) ((a>b)?(a):(b))
 #endif
@@ -53,4 +34,10 @@ int     isEnvi();
 #define MIN(a,b) ((a<b)?(a):(b))
 #endif
 
+int updateHipsHeader(GenericImage *ImagePtr,int argc,char **argv);
+int writeHipsHeader(GenericImage *ImagePtr);
+int readHipsHeader(GenericImage *ImagePtr);
+int	arrayIndexHips(GenericImage *ImagePtr,int frame,int row,int col);
+int	checkHips(GenericImage *ImagePtr,char *env);
+int	isHips(GenericImage *ImagePtr,int check,char *env);
 #endif

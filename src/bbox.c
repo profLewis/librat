@@ -4,11 +4,8 @@
 **	sort bbox bounds aligned to axes
 */
 
-void	calculate_bbox_limits(bounds,bbox_Ptr)
-BBox	*bbox_Ptr;
-double	*bounds;
+void	calculate_bbox_limits(double *bounds,BBox *bbox_Ptr)
 {
-	triplet	vmax(),vmin();
 /*
 **	0 -> x.max
 **	1 -> y.max
@@ -50,14 +47,12 @@ double	*bounds;
 **	calculate cg of objects (obsolete)
 */
 
-triplet	calculate_sphere_cg(obj,i)
-Sphere *obj;int	i;
+triplet	calculate_sphere_cg(Sphere *obj,int i)
 {
 	return(obj[i].centre);
 }
 
-triplet	calculate_cylinder_cg(obj,i)
-Cylinder *obj;int	i;
+triplet	calculate_cylinder_cg(Cylinder *obj,int i)
 {
 	return(vector_plus(obj[i].origin,V_factor(obj[i].normal,obj[i].height)));
 }
@@ -66,13 +61,10 @@ Cylinder *obj;int	i;
 **
 */
 
-int	sort_in_link_list(slot,timer_Ptr,base_hit,bounds,data)
-Contents_order *base_hit[6],*data,*slot[6];
-double	*bounds;
-int	*timer_Ptr;
+int	sort_in_link_list(struct Sort_Hit *slot[6],int *timer_Ptr,struct Sort_Hit *base_hit[6],double *bounds,struct Sort_Hit *data)
 {
 	int	l;
-	Contents_order *current_hit,*prev_hit;
+	struct Sort_Hit *current_hit,*prev_hit;
 	
 /*
 **	setup bounds limits (max)
@@ -133,8 +125,7 @@ int	*timer_Ptr;
 ** ray length limits from ray_origin in direction ray_direction	**
 ** when intesecting bbox (return(0) if fail)			*/
 
-int	bbox_shuffle(tnear,tfar,min,max,origin,direction)
-double	min,max,origin,direction,*tnear,*tfar;
+int	bbox_shuffle(double *tnear,double *tfar,double min,double max,double origin,double direction)
 {
 	double	t1,t2;
 
@@ -156,8 +147,7 @@ double	min,max,origin,direction,*tnear,*tfar;
 	return(1);
 }
 
-int	bbox_infinite_shuffle(tnear,tfar,min,max,origin,direction,offset)
-double	min,max,origin,direction,*tnear,*tfar,offset;
+int	bbox_infinite_shuffle(double *tnear,double *tfar,double min,double max,double origin,double direction,double offset)
 {
 	double	t1,t2;
 
@@ -206,7 +196,7 @@ int intersectsOk(double d,struct Bbox *bbox,Ray *ray,int axis){
   return(0);
 }
 
-int intersectsOkd(double d,struct Bbox *bbox,D_Ray *ray,int axis){
+int intersectsOkd(double d,struct Bbox *bbox,Ray *ray,int axis){
 
   switch(axis){
   case 0:
@@ -226,10 +216,9 @@ int intersectsOkd(double d,struct Bbox *bbox,D_Ray *ray,int axis){
 }
 
 
-int	double_bbox_shuffle(tnear,tfar,min,max,origin,direction,bbox,ray,axis)
-     double	min,max,origin,direction,*tnear,*tfar;D_Ray *ray;struct Bbox *bbox;int axis;
+int	double_bbox_shuffle(double *tnear,double *tfar,double min,double max,double origin,double direction,struct Bbox *bbox,Ray *ray,int axis)
 {
-	double	t1,t2, fabs();
+	double	t1,t2;
 
 	if(fabs(direction) <= BOXTOL){
 		if((origin<min)||(origin>max))return(0);
@@ -261,8 +250,7 @@ int	double_bbox_shuffle(tnear,tfar,min,max,origin,direction,bbox,ray,axis)
 ** ray length limits from ray_origin in direction ray_direction	**
 ** when intesecting bbox (return(0) if fail)			*/
 
-int	far_bbox_shuffle(tnear,tfar,min,max,origin,direction)
-double	min,max,origin,direction,*tnear,*tfar;
+int	far_bbox_shuffle(double *tnear,double *tfar,double min,double max,double origin,double direction)
 {
 	double	t1,t2;
 
@@ -286,10 +274,7 @@ double	min,max,origin,direction,*tnear,*tfar;
 **	return 2 points of intersection with bbox
 */
 
-int	ray_to_bbox(tnear_Ptr,tfar_Ptr,bbox_Ptr,ray_Ptr)
-double	*tnear_Ptr,*tfar_Ptr;
-struct Bbox	*bbox_Ptr;
-Ray	*ray_Ptr;
+int	ray_to_bbox(double *tnear_Ptr,double *tfar_Ptr,struct Bbox     *bbox_Ptr,Ray *ray_Ptr)
 {
 	if(bbox_Ptr->min.x==BIG)return(0);
 	*tnear_Ptr= -BIG;
@@ -303,12 +288,7 @@ Ray	*ray_Ptr;
 	return(0);	
 }
 
-int	ray_to_infinite_bbox(flagbag,tnear_Ptr,tfar_Ptr,bbox_Ptr,ray_Ptr,offset)
-     triplet *offset;
-double	*tnear_Ptr,*tfar_Ptr;
-struct Bbox	*bbox_Ptr;
-Ray	*ray_Ptr;
-FlagBag *flagbag;
+int	ray_to_infinite_bbox(FlagBag *flagbag,double *tnear_Ptr,double *tfar_Ptr,struct Bbox     *bbox_Ptr,Ray *ray_Ptr,triplet *offset)
 {
   if(bbox_Ptr->min.x==BIG)return(0);
 
@@ -326,10 +306,7 @@ FlagBag *flagbag;
   return(0);	
 }
 
-int	double_ray_to_bbox(tnear_Ptr,tfar_Ptr,bbox_Ptr,ray_Ptr)
-double	*tnear_Ptr,*tfar_Ptr;
-struct Bbox	*bbox_Ptr;
-D_Ray	*ray_Ptr;
+int	double_ray_to_bbox(double  *tnear_Ptr,double  *tfar_Ptr,struct Bbox     *bbox_Ptr,Ray *ray_Ptr)
 {
 	if(bbox_Ptr->min.x==BIG)return(0);
 	*tnear_Ptr= -BIG;
@@ -349,11 +326,7 @@ D_Ray	*ray_Ptr;
 **	.........coded to which side(s) they hit
 */
 
-int	coded_ray_to_bbox(tnear_Ptr,tfar_Ptr,bbox_Ptr,ray_Ptr,near_code,far_code)
-double	*tnear_Ptr,*tfar_Ptr;
-struct Bbox	*bbox_Ptr;
-Ray	*ray_Ptr;
-int	*near_code,*far_code;
+int	coded_ray_to_bbox(double  *tnear_Ptr,double  *tfar_Ptr,struct Bbox     *bbox_Ptr,Ray *ray_Ptr,int     *near_code,int     *far_code)
 {
 /*
 **	codes: 
@@ -387,11 +360,7 @@ int	*near_code,*far_code;
 **	return far point of intersection with bbox
 */
 
-int	far_ray_to_bbox(tnear_Ptr,tfar_Ptr,bbox_min,bbox_max,ray_origin_Ptr,ray_direction_Ptr)
-double	*tnear_Ptr,*tfar_Ptr;
-triplet	*bbox_min, *bbox_max;
-triplet	*ray_origin_Ptr;
-triplet	*ray_direction_Ptr;
+int	far_ray_to_bbox(double  *tnear_Ptr,double  *tfar_Ptr,triplet *bbox_min,triplet *bbox_max,triplet *ray_origin_Ptr,triplet *ray_direction_Ptr)
 {
 	if(bbox_min->x==BIG)return(0);
 	*tfar_Ptr= BIG;

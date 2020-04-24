@@ -11,10 +11,8 @@
  **
  */
 
-triplet *t_allocate();
 
-triplet Vmin(old,new)
-	triplet	old,new;
+triplet Vmin(triplet old,triplet new)
 {
 	triplet	out;
 	out.x=MMIN(old.x,new.x);
@@ -23,8 +21,7 @@ triplet Vmin(old,new)
 	return(out);
 }
 
-triplet Vmax(old,new)
-	triplet	old,new;
+triplet Vmax(triplet old,triplet new)
 {
 	triplet	out;
 	out.x=MMAX(old.x,new.x);
@@ -33,8 +30,7 @@ triplet Vmax(old,new)
 	return(out);
 }
 
-triplet vmin(old,new)
-	triplet	old,new;
+triplet vmin(triplet old,triplet new)
 {
 	triplet	out;
 	out.x=MMIN(old.x,new.x);
@@ -43,8 +39,7 @@ triplet vmin(old,new)
 	return(out);
 }
 
-triplet vmax(old,new)
-	triplet	old,new;
+triplet vmax(triplet old,triplet new)
 {
 	triplet	out;
 	out.x=MMAX(old.x,new.x);
@@ -53,16 +48,14 @@ triplet vmax(old,new)
 	return(out);
 }
 
-void	vertex_to_block(block_Ptr,vertex_in_block_Ptr,vertex_number,blocksize)
-	int	*block_Ptr,*vertex_in_block_Ptr,vertex_number,blocksize;
+void	vertex_to_block(int *block_Ptr,int *vertex_in_block_Ptr,int vertex_number,int blocksize)
 {
 	*block_Ptr=(int)(vertex_number-1)/blocksize;
 	*vertex_in_block_Ptr = vertex_number%blocksize;
 	return;
 }
 
-int	initialise_wavefront_storage(blocksize,vertices)
-	int	blocksize;VeRtIcEs *vertices;
+int	initialise_wavefront_storage(int blocksize,VeRtIcEs *vertices)
 {
 	int	i;
 	vertices->blocksize=blocksize;
@@ -73,10 +66,9 @@ int	initialise_wavefront_storage(blocksize,vertices)
 	return(1);
 }
 
-void	set_up_local_basis_system(vertex,local_coords)
-	Vertex_locals	*local_coords;triplet	*vertex;
+void	set_up_local_basis_system(triplet   *vertex,Vertex_locals   *local_coords)
 {
-	matrix_2D	m,m1,inverse_2D();
+	matrix_2D	m,m1;
 	triplet		u,v;
 
 	u = vector_minus(vertex[1],vertex[0]);
@@ -94,13 +86,7 @@ void	set_up_local_basis_system(vertex,local_coords)
 /*
  **	read bzp info
  */
-int	blp_read(vertex,verbose,line,vertices,normals,locals,bbox_max,bbox_min,normal,local,facet_Ptr,vertexStore)
-	char	 *line;
-	triplet	 *vertex;
-	VeRtIcEs *vertices, *normals, *locals;
-	int	 verbose,normal,local,vertexStore;
-	triplet	 *bbox_max,*bbox_min;
-	BiLinearPatch	*facet_Ptr;
+int	blp_read(triplet  *vertex,int verbose,char *line,VeRtIcEs *vertices,VeRtIcEs *normals,VeRtIcEs *locals,triplet  *bbox_max,triplet  *bbox_min,int normal,int local,BiLinearPatch   *facet_Ptr,int vertexStore)
 {
 	char	*hold;
 	int	i,j,block,vertex_in_block;
@@ -241,13 +227,7 @@ int	blp_read(vertex,verbose,line,vertices,normals,locals,bbox_max,bbox_min,norma
 /*
  **	read fo info
  */
-int	fo_read(vertex,verbose,line,vertices,normals,locals,bbox_max,bbox_min,normal,local,facet_Ptr,vertexStore)
-	char	 *line;
-	triplet	 *vertex;
-	VeRtIcEs *vertices, *normals, *locals;
-	int	 verbose,normal,local,vertexStore;
-	triplet	 *bbox_max,*bbox_min;
-	fFacet	*facet_Ptr;
+int	fo_read(triplet  *vertex,int verbose,char *line,VeRtIcEs *vertices,VeRtIcEs *normals,VeRtIcEs *locals,triplet  *bbox_max,triplet  *bbox_min,int normal,int local,fFacet  *facet_Ptr,int vertexStore)
 {
 	char	*hold;
 	int	i,j,block,vertex_in_block;
@@ -385,13 +365,7 @@ int	fo_read(vertex,verbose,line,vertices,normals,locals,bbox_max,bbox_min,normal
 /*
  **	read sphere info
  */
-int	sph_read(bounds,sph,verbose,line,vertices,bbox_max,bbox_min,vertexStore)
-	double	*bounds;
-	Sphere	*sph;
-	char	 *line;
-	VeRtIcEs *vertices;
-	int	 verbose,vertexStore;
-	triplet	 *bbox_max,*bbox_min;
+int	sph_read(double  *bounds,Sphere  *sph,int verbose,char *line,VeRtIcEs *vertices,triplet  *bbox_max,triplet  *bbox_min,int vertexStore)
 {
 	char	*hold;
 	int	block,vertex_in_block;
@@ -399,12 +373,7 @@ int	sph_read(bounds,sph,verbose,line,vertices,bbox_max,bbox_min,vertexStore)
 	int	v;
 
 	hold=line;
-#ifdef DOUBLEDEF
 	if(sscanf(hold,"%d %lf",&v,&(sph->radius))!=2)error1("prat_wavefront_read:\terror in sph specification");
-#else
-	if(sscanf(hold,"%d %f",&v,&(sph->radius))!=2)error1("prat_wavefront_read:\terror in sph specification");
-#endif
-
 	if(sph->radius<=0.0)error1("prat_wavefront_read:\terror in sph specification:\n\tzero or -ve radius specified");
 
 	/*
@@ -448,13 +417,7 @@ int	sph_read(bounds,sph,verbose,line,vertices,bbox_max,bbox_min,vertexStore)
 /*
  **	read cylinder info
  */
-int	cyl_read(bounds,cyl,verbose,line,vertices,bbox_max,bbox_min,closed,vertexStore)
-	double	*bounds;
-	Cylinder *cyl;
-	char	 *line;
-	VeRtIcEs *vertices;
-	int	 verbose,closed,vertexStore;
-	triplet	 *bbox_max,*bbox_min;
+int	cyl_read(double *bounds,Cylinder *cyl,int verbose,char *line,VeRtIcEs *vertices,triplet  *bbox_max,triplet  *bbox_min,int closed,int vertexStore)
 {
 	char	*hold;
 	int	i,block,vertex_in_block;
@@ -465,11 +428,7 @@ int	cyl_read(bounds,cyl,verbose,line,vertices,bbox_max,bbox_min,closed,vertexSto
 	bboxmax=vector_copy2((double)(-BIG),(double)(-BIG),(double)(-BIG));
 	bboxmin=vector_copy2((double)BIG,(double)BIG,(double)BIG);
 	hold=line;
-#ifdef DOUBLEDEF
 	if(sscanf(hold,"%d %d %lf",&v[0],&v[1],&(radius))!=3)error1("prat_wavefront_read:\terror in cyl specification");
-#else
-	if(sscanf(hold,"%d %d %f",&v[0],&v[1],&(radius))!=3)error1("prat_wavefront_read:\terror in cyl specification");
-#endif
 
 	if(radius<=0.0)error1("prat_wavefront_read:\terror in cyl specification:\n\tzero or -ve radius specified");
 
@@ -543,13 +502,7 @@ int	cyl_read(bounds,cyl,verbose,line,vertices,bbox_max,bbox_min,closed,vertexSto
 /*
  **	read disk info
  */
-int	disk_read(bounds,disk,verbose,line,vertices,bbox_max,bbox_min,vertexStore)
-	double	*bounds;
-	Disk *disk;
-	char	 *line;
-	VeRtIcEs *vertices;
-	int	 verbose,vertexStore;
-	triplet	 *bbox_max,*bbox_min;
+int	disk_read(double *bounds,Disk *disk,int verbose,char *line,VeRtIcEs *vertices,triplet  *bbox_max,triplet  *bbox_min,int vertexStore)
 {
 	char	*hold;
 	int	i,block,vertex_in_block;
@@ -561,11 +514,7 @@ int	disk_read(bounds,disk,verbose,line,vertices,bbox_max,bbox_min,vertexStore)
 	bboxmax=vector_copy2((double)(-BIG),(double)(-BIG),(double)(-BIG));
 	bboxmin=vector_copy2((double)BIG,(double)BIG,(double)BIG);
 	hold=line;
-#ifdef DOUBLEDEF
 	if(sscanf(hold,"%d %d %lf",&v[0],&v[1],&(radius))!=3)error1("prat_wavefront_read:\terror in disk specification");
-#else
-	if(sscanf(hold,"%d %d %f",&v[0],&v[1],&(radius))!=3)error1("prat_wavefront_read:\terror in disk specification");
-#endif
 
 	if(radius<=0.0)error1("prat_wavefront_read:\terror in disk specification:\n\tzero or -ve radius specified");
 
@@ -614,13 +563,7 @@ int	disk_read(bounds,disk,verbose,line,vertices,bbox_max,bbox_min,vertexStore)
 /*
  **	read ellipse info
  */
-int	ellipse_read(bounds,ell,verbose,line,vertices,bbox_max,bbox_min,vertexStore)
-	double	*bounds;
-	Ellipse *ell;
-	char	 *line;
-	VeRtIcEs *vertices;
-	int	 verbose,vertexStore;
-	triplet	 *bbox_max,*bbox_min;
+int	ellipse_read(double *bounds,Ellipse *ell,int verbose,char *line,VeRtIcEs *vertices,triplet  *bbox_max,triplet  *bbox_min,int vertexStore)
 {
 	char	*hold;
 	int	i,block,vertex_in_block;
@@ -677,19 +620,13 @@ int	ellipse_read(bounds,ell,verbose,line,vertices,bbox_max,bbox_min,vertexStore)
 /*
  **      read spheroid info
  */
-int     spheroid_read(bounds,ell,verbose,line,vertices,bbox_max,bbox_min,vertexStore)
-	double  *bounds;
-	Spheroid *ell;
-	char     *line;
-	VeRtIcEs *vertices;
-	int      verbose,vertexStore;
-	triplet  *bbox_max,*bbox_min;
+int     spheroid_read(double *bounds,Spheroid *ell,int verbose,char *line,VeRtIcEs *vertices,triplet  *bbox_max,triplet  *bbox_min,int vertexStore)
 {
 	char    *hold;
 	int     i,j,block,vertex_in_block;
 	triplet bboxmax,bboxmin,*trip,V[4],xx,yy;
 	int     v[2];
-	double p=1.6075,semilen,F;
+	double p=1.6075,semilen;
 
 	bboxmax=vector_copy2((double)(-BIG),(double)(-BIG),(double)(-BIG));
 	bboxmin=vector_copy2((double)BIG,(double)BIG,(double)BIG);
@@ -814,10 +751,8 @@ void	transform_bbox2(double scale,double *m,triplet *translate,triplet *bboxmin,
 	   it should be 1./cbrt(det(m))
 	   [I think]
 	 */
-	double det;
-	void Matrix_determinant();
 
-	/*Matrix_determinant(m,&det,3);
+	/*matrix_determinant(m,&det,3);
 	  if ( det == 0.0){
 	  fprintf(stderr,"zero sized matrix iencountered in transform_bbox2 ... check your matrix definitions.");
 	  det = 1.0;
@@ -846,7 +781,7 @@ void	transform_bbox2(double scale,double *m,triplet *translate,triplet *bboxmin,
 }
 
 
-void	transform_bbox(Matrix4 m,triplet *bboxmin,triplet *bboxmax)
+void	transform_bbox(matrix4 m,triplet *bboxmin,triplet *bboxmax)
 {
 	triplet	outmin,outmax;
 	triplet	corners[8];
@@ -864,8 +799,8 @@ void	transform_bbox(Matrix4 m,triplet *bboxmin,triplet *bboxmax)
 	outmin=vector_copy2((double)BIG,(double)BIG,(double)BIG);
 	outmax=vector_copy2((double)(-BIG),(double)(-BIG),(double)(-BIG));
 	for(i=0;i<8;i++){
-		outmin = vmin( outmin, multiply_matrix4_vector3(m,&corners[i]));
-		outmax = vmax( outmax, multiply_matrix4_vector3(m,&corners[i]));
+		outmin = vmin( outmin, old_multiply_matrix4_vector3(m,corners[i]));
+		outmax = vmax( outmax, old_multiply_matrix4_vector3(m,corners[i]));
 	}
 	*bboxmax=outmax;
 	*bboxmin=outmin;
@@ -895,7 +830,6 @@ void matrixMult(double *out,double *a,double *b){
 }
 
 double *setXRotation(double *matrix,double rotation){
-	double   *d_allocate();
 	double m[9],m0[9],c,s;
 	int i;
 	if(!matrix){matrix=d_allocate(9);for(i=0;i<9;i+=4)matrix[i]=1.;}
@@ -916,7 +850,6 @@ double *setXRotation(double *matrix,double rotation){
 
 
 double *setYRotation(double *matrix,double rotation){
-	double   *d_allocate();
 	double m[9],m0[9],c,s;
 	int i;
 	if(!matrix){matrix=d_allocate(9);for(i=0;i<9;i+=4)matrix[i]=1.;}
@@ -937,7 +870,6 @@ double *setYRotation(double *matrix,double rotation){
 
 
 double *setZRotation(double *matrix,double rotation){
-	double   *d_allocate();
 	double m[9],m0[9],c,s;
 	int i;
 	if(!matrix){matrix=d_allocate(9);for(i=0;i<9;i+=4)matrix[i]=1.;}
@@ -959,13 +891,7 @@ double *setZRotation(double *matrix,double rotation){
 /*
  **	read clone info
  */
-int	clone_read(bounds,clone,verbose,line,group_Ptr,bbox_Ptr,transformed_bbox_Ptr)
-	double	*bounds;
-	Clones 	*clone;
-	char	*line;
-	Group	*group_Ptr;
-	int	verbose;
-	BBox	*bbox_Ptr,*transformed_bbox_Ptr;
+int	clone_read(double *bounds,Clones  *clone,int verbose,char *line,Group *group_Ptr,BBox *bbox_Ptr,BBox *transformed_bbox_Ptr)
 {
 	char	*hold,a[1000],b[1000],c[1000],srotation[1000];
 	int	i,j,found_group=0,dontFinish;
@@ -1023,20 +949,20 @@ int	clone_read(bounds,clone,verbose,line,group_Ptr,bbox_Ptr,transformed_bbox_Ptr
 			{
 				char s[10][100];
 				int i;
-				double thisMatrix[9],m0[9],value;
+				double thismatrix[9],m0[9],value;
 				if(!(sscanf(hold,"%s %s %s %s %s %s %s %s %s %s",a,s[0],s[1],s[2],s[3],s[4],s[5],s[6],s[7],s[8])==10))error1("prat_wavefront_read:\terror in clone specification after Rz specification");
 				hold = strchr(hold,a[0])+strlen(a);
 				clone->z_rotation_flag=1;
 				for(i=0;i<9;i++){
 					value=atof(s[i]);
-					thisMatrix[i]=value;
+					thismatrix[i]=value;
 				}
 				/* set up matrix if it doesnt exist */
 				if(!matrix){matrix=d_allocate(9);for(i=0;i<9;i+=4)matrix[i]=1.;}
 				/* copy matrix to m0 */
 				matrixCopy(matrix,m0);
-				/* multiply thisMatrix by m0 into matrix */
-				matrixMult(matrix,thisMatrix,m0);
+				/* multiply thismatrix by m0 into matrix */
+				matrixMult(matrix,thismatrix,m0);
 				for(i=0;i<9;i++){
 					hold = strchr(hold,s[i][0])+strlen(s[i]);
 				}
@@ -1054,7 +980,7 @@ int	clone_read(bounds,clone,verbose,line,group_Ptr,bbox_Ptr,transformed_bbox_Ptr
 	}
 	/* get rid of prec blanks */
 	j=0;
-	for(i=0;i<strlen(hold);i++)if(hold[i]==' ')j++;else break;
+	for(i=0;i<(int)strlen(hold);i++)if(hold[i]==' ')j++;else break;
 	hold=&hold[j];
 	if(matrix)clone->matrix=matrix;
 
@@ -1100,12 +1026,7 @@ int	clone_read(bounds,clone,verbose,line,group_Ptr,bbox_Ptr,transformed_bbox_Ptr
 /*
  **	read arbitrarily-inclined plane info
  */
-int	plane_read(normal_coords,dw,verbose,line,vertices,vertexStore)
-	char	 *line;
-	triplet	 *normal_coords;
-	double	 *dw;
-	VeRtIcEs *vertices;
-	int	 verbose,vertexStore;
+int	plane_read(triplet  *normal_coords,double *dw,int verbose,char *line,VeRtIcEs *vertices,int vertexStore)
 {
 	char	*hold;
 	int	block,vertex_in_block;
@@ -1143,17 +1064,10 @@ int	plane_read(normal_coords,dw,verbose,line,vertices,vertexStore)
  **
  */
 
-int	mtllib_read(bb,verbose,line,material_list_Ptr,material_names,material_table)
-	BigBag *bb;
-	char	 *line;
-	int	 verbose;
-	Material_List	*material_list_Ptr;
-	char	**material_names;
-	Material_table	*material_table;
+int	mtllib_read(RATobj *bb,int verbose,char *line,Material_List *material_list_Ptr,char **material_names,Material_table *material_table)
 {
 	static char	*filename=NULL;
 	static int timer=0;
-	void	read_material_definition_file();
 
 	timer++;
 	if(timer==1)filename=c_allocate(1024);
@@ -1179,12 +1093,7 @@ int	mtllib_read(bb,verbose,line,material_list_Ptr,material_names,material_table)
  **
  */
 
-Material_table	*current_material_read(verbose,line,material_names,materialList,material_table)
-	char	 *line;
-	int	 verbose;
-	char	**material_names;
-	Material_table	*material_table;
-	Material_List	*materialList;
+Material_table	*current_material_read(int verbose,char *line,char **material_names,Material_List *materialList,Material_table *material_table)
 {
 	Material_table	*current_mtl=NULL;
 	char	material_name[200];
@@ -1235,16 +1144,16 @@ Material_table	*current_material_read(verbose,line,material_names,materialList,m
  **	load transformation matrices
  */
 
-int	load_transformation_matrix(line,bbox_Ptr,m_inv_reverse_Ptr,m_inverse_fwd_Ptr)
-	char	*line;
-	BBox	*bbox_Ptr;
-	Matrix4	*m_inv_reverse_Ptr, *m_inverse_fwd_Ptr;
+int	load_transformation_matrix(char *line,BBox *bbox_Ptr,matrix4 *m_inv_reverse_Ptr,matrix4 *m_inverse_fwd_Ptr)
 {
 	char	*hold,transformation_keyword[100];
-	Matrix4	matrix;
+	matrix4	matrix;
 	double	scale,theta;
 	triplet	fix_point,translation,axis,d_scale;
-
+        int i,j;
+        for(i=0;i<4;i++)for(j=0;j<4;j++)matrix.data[i][j]=0.;
+        for(i=0;i<4;i++)matrix.data[i][i]=1.;
+        
 	hold=line;
 	if( sscanf(hold,"%s",transformation_keyword)!=1)error1("prat_wavefront_read:\terror in transformation definition");
 
@@ -1258,15 +1167,10 @@ int	load_transformation_matrix(line,bbox_Ptr,m_inv_reverse_Ptr,m_inverse_fwd_Ptr
 
 	hold=strchr(hold,transformation_keyword[0])+strlen(transformation_keyword);
 	if(strcmp(transformation_keyword,"scale")==0){
-#ifdef DOUBLEDEF
 		if(sscanf(hold,"%lf",&scale)!=1)error1("prat_wavefront_read:\terror in scale transformation definition");
-#else
-		if(sscanf(hold,"%f",&scale)!=1)error1("prat_wavefront_read:\terror in scale transformation definition");
-#endif
 		matrix = load_scaling_matrix4(scale);
 	}else if(strcmp(transformation_keyword,"transformation_matrix")==0){
 		matrix = load_identity_matrix4();
-#ifdef DOUBLEDEF
 		if(sscanf(hold,"%lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf",&matrix.data[0][0],&matrix.data[1][0],&matrix.data[2][0],&matrix.data[0][1],&matrix.data[1][1],&matrix.data[2][1],&matrix.data[0][2],&matrix.data[1][2],&matrix.data[2][2],&matrix.data[0][3],&matrix.data[1][3],&matrix.data[2][3])!=12)error1("prat_wavefront_read:\terror in transformation_matrix definition");
 	}else if(strcmp(transformation_keyword,"scale_differential")==0){
 		if(sscanf(hold,"%lf %lf %lf",&fix_point.x,&fix_point.y,&fix_point.z)!=3)error1("prat_wavefront_read:\terror in scale_differential transformation definition");
@@ -1299,40 +1203,6 @@ int	load_transformation_matrix(line,bbox_Ptr,m_inv_reverse_Ptr,m_inverse_fwd_Ptr
 		matrix = load_y_axis_rotation_fix_point_matrix4(theta,fix_point);
 	}else if(strcmp(transformation_keyword,"rotate_about_z_axis_fix_point")==0){
 		if(sscanf(hold,"%lf %lf %lf %lf",&theta,&fix_point.x,&fix_point.y,&fix_point.z)!=4)error1("prat_wavefront_read:\terror in rotate_about_z_axis_fix_point transformation definition");
-#else
-		if(sscanf(hold,"%f %f %f %f %f %f %f %f %f %f %f %f",&matrix.data[0][0],&matrix.data[1][0],&matrix.data[2][0],&matrix.data[0][1],&matrix.data[1][1],&matrix.data[2][1],&matrix.data[0][2],&matrix.data[1][2],&matrix.data[2][2],&matrix.data[0][3],&matrix.data[1][3],&matrix.data[2][3])!=12)error1("prat_wavefront_read:\terror in transformation_matrix definition");
-	}else if(strcmp(transformation_keyword,"scale_differential")==0){
-		if(sscanf(hold,"%f %f %f",&fix_point.x,&fix_point.y,&fix_point.z)!=3)error1("prat_wavefront_read:\terror in scale_differential transformation definition");
-		matrix = load_differential_scaling_matrix4(fix_point);
-	}else if(strcmp(transformation_keyword,"translate")==0){
-		if(sscanf(hold,"%f %f %f",&translation.x,&translation.y,&translation.z)!=3)error1("prat_wavefront_read:\terror in translation transformation definition");
-		matrix = load_translation_matrix4(translation);
-	}else if(strcmp(transformation_keyword,"rotate_about_x_axis")==0){
-		if(sscanf(hold,"%f",&theta)!=1)error1("prat_wavefront_read:\terror in rotate_about_x_axis transformation definition");
-		matrix = load_x_axis_rotation_matrix4(theta);
-	}else if(strcmp(transformation_keyword,"rotate_about_y_axis")==0){
-		if(sscanf(hold,"%f",&theta)!=1)error1("prat_wavefront_read:\terror in rotate_about_y_axis transformation definition");
-		matrix = load_y_axis_rotation_matrix4(theta);
-	}else if(strcmp(transformation_keyword,"rotate_about_z_axis")==0){
-		if(sscanf(hold,"%f",&theta)!=1)error1("prat_wavefront_read:\terror in rotate_about_z_axis transformation definition");
-		matrix = load_z_axis_rotation_matrix4(theta);
-	}else if(strcmp(transformation_keyword,"rotate_about_arbitrary_axis")==0){
-		if(sscanf(hold,"%f %f %f %f %f %f %f",&axis.x,&axis.y,&axis.z,&theta,&fix_point.x,&fix_point.y,&fix_point.z)!=7)error1("prat_wavefront_read:\terror in rotate_about_arbitrary_axis transformation definition");
-	}else if(strcmp(transformation_keyword,"scale_fix_point")==0){
-		if(sscanf(hold,"%f %f %f %f",&scale,&fix_point.x,&fix_point.y,&fix_point.z)!=4)error1("prat_wavefront_read:\terror in scale_fix_point transformation definition");
-		matrix = load_scaling_fix_point_matrix4(scale,fix_point);
-	}else if(strcmp(transformation_keyword,"scale_differential_fix_point")==0){
-		if(sscanf(hold,"%f %f %f %f %f %f",&d_scale.x,&d_scale.y,&d_scale.z,&fix_point.x,&fix_point.y,&fix_point.z)!=6)error1("prat_wavefront_read:\terror in scale_differential_fix_point transformation definition");
-		matrix = load_differential_scaling_fix_point_matrix4(d_scale,fix_point);
-	}else if(strcmp(transformation_keyword,"rotate_about_x_axis_fix_point")==0){
-		if(sscanf(hold,"%f %f %f %f",&theta,&fix_point.x,&fix_point.y,&fix_point.z)!=4)error1("prat_wavefront_read:\terror in rotate_about_x_axis_fix_point transformation definition");
-		matrix = load_x_axis_rotation_fix_point_matrix4(theta,fix_point);
-	}else if(strcmp(transformation_keyword,"rotate_about_y_axis_fix_point")==0){
-		if(sscanf(hold,"%f %f %f %f",&theta,&fix_point.x,&fix_point.y,&fix_point.z)!=4)error1("prat_wavefront_read:\terror in rotate_about_y_axis_fix_point transformation definition");
-		matrix = load_y_axis_rotation_fix_point_matrix4(theta,fix_point);
-	}else if(strcmp(transformation_keyword,"rotate_about_z_axis_fix_point")==0){
-		if(sscanf(hold,"%f %f %f %f",&theta,&fix_point.x,&fix_point.y,&fix_point.z)!=4)error1("prat_wavefront_read:\terror in rotate_about_z_axis_fix_point transformation definition");
-#endif
 		matrix = load_z_axis_rotation_fix_point_matrix4(theta,fix_point);
 	}
 
@@ -1353,19 +1223,12 @@ int	load_transformation_matrix(line,bbox_Ptr,m_inv_reverse_Ptr,m_inverse_fwd_Ptr
 /*
  **	read vertex info
  */
-int	vertex_read(line,vertices,normals,locals,normal,local,vertexStore)
-	char	 *line;
-	VeRtIcEs *vertices,*normals, *locals;
-	int	 normal,local,vertexStore;
+int	vertex_read(char *line,VeRtIcEs *vertices,VeRtIcEs *normals,VeRtIcEs *locals,int normal,int local,int vertexStore)
 {	
 	triplet	*trip,vertex;
 	int	block,vertex_in_block,vertexNumber;
 
-#ifdef DOUBLEDEF
 	if(sscanf(line,"%lf %lf %lf",&vertex.x,&vertex.y,&vertex.z)!=3)error1("error in vertex specification");
-#else
-	if(sscanf(line,"%f %f %f",&vertex.x,&vertex.y,&vertex.z)!=3)error1("error in vertex specification");
-#endif
 	if(vertexStore){
 		vertexNumber=(vertices->no_of_vertices)%vertexStore+1;
 	}else{
@@ -1404,14 +1267,11 @@ int	vertex_read(line,vertices,normals,locals,normal,local,vertexStore)
 /*
  **	read vertex normal info
  */
-int	normal_read(line,vertices,normals,normal,vertexStore)
-	char	 *line;
-	VeRtIcEs *vertices,*normals;
-	int	 normal,vertexStore;
+int	normal_read(char *line,VeRtIcEs *vertices,VeRtIcEs *normals,int normal,int vertexStore)
 {	
 	char	*hold,tmp[100];
 	triplet	*trip,vertex;
-	int	block,vertex_in_block,vertex_no,atoi(),vertexNumber;
+	int	block,vertex_in_block,vertex_no,vertexNumber;
 
 	if(!normal)return(0);
 
@@ -1419,11 +1279,7 @@ int	normal_read(line,vertices,normals,normal,vertexStore)
 	/*
 	 **	read vertex pointer and normal info
 	 */	
-#ifdef DOUBLEDEF
 	if(sscanf(hold,"%s %lf %lf %lf",tmp,&vertex.x,&vertex.y,&vertex.z)!=4)error1("error in vertex normal specification");
-#else
-	if(sscanf(hold,"%s %f %f %f",tmp,&vertex.x,&vertex.y,&vertex.z)!=4)error1("error in vertex normal specification");
-#endif
 	vertex_no=atoi(tmp);
 
 
@@ -1448,14 +1304,11 @@ int	normal_read(line,vertices,normals,normal,vertexStore)
 /*
  **	read vertex normal info
  */
-int	local_coord_read(line,vertices,locals,local,vertexStore)
-	char	 *line;
-	VeRtIcEs *vertices,*locals;
-	int	 local,vertexStore;
+int	local_coord_read(char *line,VeRtIcEs *vertices,VeRtIcEs *locals,int local,int vertexStore)
 {	
 	char	*hold,tmp[100];
 	triplet	*trip,vertex;
-	int	block,vertex_in_block,vertex_no,atoi(),vertexNumber;
+	int	block,vertex_in_block,vertex_no,vertexNumber;
 
 	if(!local)return(0);
 
@@ -1463,11 +1316,7 @@ int	local_coord_read(line,vertices,locals,local,vertexStore)
 	/*
 	 **	read vertex pointer and local info
 	 */	
-#ifdef DOUBLEDEF
 	if(sscanf(hold,"%s %lf %lf",tmp,&vertex.x,&vertex.y)!=3)error1("error in vertex local_coordinate specification");
-#else
-	if(sscanf(hold,"%s %f %f",tmp,&vertex.x,&vertex.y)!=3)error1("error in vertex local_coordinate specification");
-#endif
 	vertex_no=atoi(tmp);
 
 	/* relative */
@@ -1488,8 +1337,7 @@ int	local_coord_read(line,vertices,locals,local,vertexStore)
 	return(1);
 }
 
-void	add_total_box_contents(total_box_contents_Ptr,contents_Ptr)
-	Contents	*total_box_contents_Ptr,*contents_Ptr;
+void	add_total_box_contents(Contents *total_box_contents_Ptr,Contents *contents_Ptr)
 {
 	contents_Ptr->no_of_clones += total_box_contents_Ptr->no_of_clones;
 	contents_Ptr->no_of_triangles += total_box_contents_Ptr->no_of_triangles;
@@ -1503,8 +1351,7 @@ void	add_total_box_contents(total_box_contents_Ptr,contents_Ptr)
 }
 
 
-int	type_of_element(option)
-	char	*option;
+int	type_of_element(char *option)
 {
 	if(strcmp(option,SPHER)==0)return(SPHER_RET);
 	if(strcmp(option,OPEN_BBOX)==0)return(OPEN_BBOX_RET);
@@ -1536,8 +1383,7 @@ int	type_of_element(option)
 }
 
 
-Dem	*find_dem(bbox_Ptr)
-	BBox	*bbox_Ptr;
+Dem	*find_dem(BBox *bbox_Ptr)
 {
 	Dem	*current_dem,*prev_dem;
 	int	first_time=1;
@@ -1561,8 +1407,7 @@ Dem	*find_dem(bbox_Ptr)
 	}
 }
 
-Spherical_Dem	*find_spherical_dem(bbox_Ptr)
-	BBox	*bbox_Ptr;
+Spherical_Dem	*find_spherical_dem(BBox *bbox_Ptr)
 {
 	Spherical_Dem	*current_dem,*prev_dem;
 	int	first_time=1;
@@ -1586,8 +1431,7 @@ Spherical_Dem	*find_spherical_dem(bbox_Ptr)
 	}
 }
 
-Cylinder	*find_cylinder(bbox_Ptr)
-	BBox	*bbox_Ptr;
+Cylinder	*find_cylinder(BBox *bbox_Ptr)
 {
 	Cylinder	*current_cylinder,*prev_cylinder;
 	int	first_time=1;
@@ -1611,8 +1455,7 @@ Cylinder	*find_cylinder(bbox_Ptr)
 	}
 }
 
-Spheroid *find_spheroid(bbox_Ptr)
-	BBox    *bbox_Ptr;
+Spheroid *find_spheroid(BBox *bbox_Ptr)
 {
 	Spheroid *current_spheroid,*prev_spheroid;
 	int     first_time=1;
@@ -1636,8 +1479,7 @@ Spheroid *find_spheroid(bbox_Ptr)
 	}
 }
 
-Ellipse	*find_ellipse(bbox_Ptr)
-	BBox	*bbox_Ptr;
+Ellipse	*find_ellipse(BBox *bbox_Ptr)
 {
 	Ellipse	*current_ellipse,*prev_ellipse;
 	int	first_time=1;
@@ -1661,8 +1503,7 @@ Ellipse	*find_ellipse(bbox_Ptr)
 	}
 }
 
-fFacet	*find_facet(bbox_Ptr)
-	BBox	*bbox_Ptr;
+fFacet	*find_facet(BBox *bbox_Ptr)
 {
 	fFacet	*current_triangle,*prev_triangle;
 	int	first_time=1;
@@ -1712,8 +1553,7 @@ fFacet	*delete_facet(BBox *bbox_Ptr,fFacet *fo){
 	return(fo);
 }
 
-BiLinearPatch	*find_blp(bbox_Ptr)
-	BBox	*bbox_Ptr;
+BiLinearPatch	*find_blp(BBox *bbox_Ptr)
 {
 	BiLinearPatch	*current_blp,*prev_blp;
 	int	first_time=1;
@@ -1737,8 +1577,7 @@ BiLinearPatch	*find_blp(bbox_Ptr)
 	}
 }
 
-Plane	*find_plane(bbox_Ptr)
-	BBox	*bbox_Ptr;
+Plane	*find_plane(BBox *bbox_Ptr)
 {
 	Plane	*current_plane,*prev_plane;
 	int	first_time=1;
@@ -1762,8 +1601,7 @@ Plane	*find_plane(bbox_Ptr)
 	}
 }
 
-Sphere	*find_sphere(bbox_Ptr)
-	BBox	*bbox_Ptr;
+Sphere	*find_sphere(BBox *bbox_Ptr)
 {
 	Sphere	*current_sphere,*prev_sphere;
 	int	first_time=1;
@@ -1787,8 +1625,7 @@ Sphere	*find_sphere(bbox_Ptr)
 	}
 }
 
-Disk	*find_disk(bbox_Ptr)
-	BBox	*bbox_Ptr;
+Disk	*find_disk(BBox *bbox_Ptr)
 {
 	Disk	*current_disk,*prev_disk;
 	int	first_time=1;
@@ -1812,8 +1649,7 @@ Disk	*find_disk(bbox_Ptr)
 	}
 }
 
-Clones	*find_clone(bbox_Ptr)
-	BBox	*bbox_Ptr;
+Clones	*find_clone(BBox *bbox_Ptr)
 {
 	Clones	*current_clone,*prev_clone;
 	int	first_time=1;
@@ -1837,15 +1673,12 @@ Clones	*find_clone(bbox_Ptr)
 	}
 }
 
-int	find_current_hit(out,timer_Ptr,base_hit_Ptr)
-	Contents_order	*base_hit_Ptr[6];
-	int		*timer_Ptr;
-	Contents_order	*out[6];
+int	find_current_hit(struct Sort_Hit *out[6],int *timer_Ptr,struct Sort_Hit *base_hit_Ptr[6])
 {
 	int	i;
 
 	for(i=0;i<6;i++){
-		if(!(out[i]=(Contents_order *)calloc(1+100,sizeof(Contents_order))))error1("find_current_hit:\tmemory allocation error");
+		if(!(out[i]=(struct Sort_Hit *)calloc(1+100,sizeof(struct Sort_Hit ))))error1("find_current_hit:\tmemory allocation error");
 		if(*timer_Ptr==0)base_hit_Ptr[i]=out[i];
 
 	}
@@ -1853,28 +1686,22 @@ int	find_current_hit(out,timer_Ptr,base_hit_Ptr)
 	return(1);
 }
 
-#ifdef MATCHK
 
-void	check_material(current_mtl)
-	Material_table	*current_mtl;
+void	check_material(Material_table *current_mtl)
 {
 	if(current_mtl->no_of_materials > 256)
 		error1("mtllib:\terror in facet material definition");
 	return;
 }
 
-#endif
 
 /* function to approximate contents of a bbox */
-int approximateContents(bbox_Ptr,angleToler,distanceTol,sizeTol,deleted)
-	BBox	*bbox_Ptr;
-	double  angleToler,distanceTol,sizeTol;
-	void **deleted;
+int approximateContents(BBox *bbox_Ptr,double angleToler,double distanceTol,double sizeTol,void **deleted)
 {
 	int i,j,k,l,minNumber,retval=0;
 	Cylinder *cylinders[2],*prevCylinder;
-	triplet normalise(),p[4],vector_plus(),V_factor(),vector_minus();
-	double angleTol,V_mod(),V_dot(),d[4],minDistance,minAngle;
+	triplet p[4];
+	double angleTol,d[4],minDistance,minAngle;
 	BBox *bbox[2],*prevBBox;
 	struct Clone *clones[2];
 	fFacet *triangles[2];
@@ -1888,9 +1715,8 @@ int approximateContents(bbox_Ptr,angleToler,distanceTol,sizeTol,deleted)
 	Plane *planes[2];
 	BiLinearPatch *blps[2];
 	int sum,timer=2,found;
-	Contents_order *current_hit[6],*hit,*prevHit;
+	struct Sort_Hit *current_hit[6],*hit,*prevHit;
 	double	bounds[6];
-	int  sort_in_link_list();
 	/* see if any bboxes are empty */
 	*deleted=NULL;
 	prevBBox=NULL;
@@ -2677,7 +2503,7 @@ int approximateContents(bbox_Ptr,angleToler,distanceTol,sizeTol,deleted)
 	return(retval);
 }
 
-void loadObjectInfo(BigBag *bb,char *materialName,int objectType,double size){
+void loadObjectInfo(RATobj *bb,char *materialName,int objectType,double size){
 	int i,whichOne=-1;
 	if(!materialName)return;
 	/* check to see if already loaded */
@@ -2708,7 +2534,7 @@ void loadObjectInfo(BigBag *bb,char *materialName,int objectType,double size){
 	}
 	return;
 }
-char *getMaterialName(BigBag *bb,int type,void *object){
+char *getMaterialName(RATobj *bb,int type,void *object){
 	char *name=NULL;
 	int matNo=-1;
 
@@ -2753,7 +2579,7 @@ char *getMaterialName(BigBag *bb,int type,void *object){
 }
 
 
-double getObjectSize(BigBag *bb,int type,void *object){
+double getObjectSize(RATobj *bb,int type,void *object){
 	double size=0.0;
 
 	switch(type){
@@ -2793,7 +2619,7 @@ double getObjectSize(BigBag *bb,int type,void *object){
 	return(size);
 }
 
-void loadObjectSizeType(BigBag *bb,Contents_order *hit){
+void loadObjectSizeType(RATobj *bb,struct Sort_Hit *hit){
 	double size;
 	char *materialName;
 	int objectType;
@@ -2806,27 +2632,11 @@ void loadObjectSizeType(BigBag *bb,Contents_order *hit){
 	return;	
 }
 
-int	parse_prat_wavefront_data(bb,verbose,top_root_bbox_Ptr,bbox_Ptr,fp,level,group_Ptr,current_mtl,vertices,normals,locals,normal,local_coords,m_inv_reverse_prev,m_inverse_fwd_prev,material_names,material_list_Ptr,material_table,vertexStore,angleTol,distanceTol,sizeTol)
-	BigBag *bb;
-	BBox	*bbox_Ptr;
-	BBox	*top_root_bbox_Ptr;
-	FILE	*fp;
-	int	verbose;
-	int	*level,vertexStore;
-	Group	*group_Ptr;
-	VeRtIcEs	*vertices;
-	VeRtIcEs	*normals,*locals;
-	Material_table	*current_mtl;
-	Matrix4		*m_inv_reverse_prev,*m_inverse_fwd_prev;
-	int		normal,local_coords;
-	Material_List	*material_list_Ptr;
-	char	**material_names;
-	Material_table	*material_table;
-	double angleTol,distanceTol,sizeTol;
+int	parse_prat_wavefront_data(RATobj *bb,int verbose,BBox *top_root_bbox_Ptr,BBox *bbox_Ptr,FILE *fp,int *level,Group *group_Ptr,Material_table *current_mtl,VeRtIcEs *vertices,VeRtIcEs *normals,VeRtIcEs *locals,int normal,int local_coords,matrix4 *m_inv_reverse_prev,matrix4 *m_inverse_fwd_prev,char **material_names,Material_List *material_list_Ptr,Material_table *material_table,int vertexStore,double angleTol,double distanceTol,double sizeTol)
 {	
 	char dum1[10],dum2[10],dum3[10],dum4[10],material[1000];
 	int	l,retval,approx,define_flag=0,len,timer=0,bbox_closed=0,hit_check;
-	Matrix4	m_inv_reverse, m_inverse_fwd;
+	matrix4	m_inv_reverse, m_inverse_fwd;
 	triplet	bmax,bmin;
 	BBox	*current_bbox,transformed_bbox,*prev_bbox;
 	double	bounds[6];
@@ -2843,9 +2653,7 @@ int	parse_prat_wavefront_data(bb,verbose,top_root_bbox_Ptr,bbox_Ptr,fp,level,gro
 	Spheroid *spheroid;
 	Spherical_Dem	*spherical_dem;
 	Plane	*plane_Ptr;
-	Contents_order	*current_hit[6],hit,*hitter,*prevHitter;
-	void	calculate_bbox_limits(),dem_read(),spherical_dem_read();
-	int  sort_in_link_list(),precompute_facet_features();
+	struct Sort_Hit *current_hit[6],hit,*hitter,*prevHitter;
 	void *deleted;
 
 	m_inv_reverse = *m_inv_reverse_prev;
@@ -3001,9 +2809,7 @@ int	parse_prat_wavefront_data(bb,verbose,top_root_bbox_Ptr,bbox_Ptr,fp,level,gro
 						break;
 					case TRIANGLE_RET:
 						fo= find_facet(bbox_Ptr);
-#ifdef MATCHK
 						check_material(current_mtl);
-#endif
 						fo->material= current_mtl;
 						fo_read(tri,verbose,liner,vertices,normals,locals,&bbox_Ptr->max,&bbox_Ptr->min,normal,local_coords,fo,vertexStore);
 						if(precompute_facet_features(bounds,tri,fo)==1){
@@ -3015,9 +2821,7 @@ int	parse_prat_wavefront_data(bb,verbose,top_root_bbox_Ptr,bbox_Ptr,fp,level,gro
 						break;
 					case BILINEARPATCH_RET:
 						blp = find_blp(bbox_Ptr);
-#ifdef MATCHK
 						check_material(current_mtl);
-#endif
 						blp->material= current_mtl;
 						/*blp_read(tri,verbose,liner,vertices,normals,locals,&bbox_Ptr->max,&bbox_Ptr->min,normal,local_coords,blp);
 						precompute_facet_features(bounds,tri,fo); ... TODO ... for blp */

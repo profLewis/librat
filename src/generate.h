@@ -9,25 +9,25 @@
 
 typedef struct Parameter {
 	char	*filename;
-	INT	n;
-	INT	angle;
-	INT	scale;
+	int	n;
+	int	angle;
+	int	scale;
 }Parameter;
 typedef struct {
 	char	*lCon;
-	INT	lConLen;
+	int	lConLen;
 	char	*pred;
-	INT	predLen;
+	int	predLen;
 	char	*rCon;
-	INT	rConLen;
+	int	rConLen;
 	char	*succ;
-	INT	succLen;
+	int	succLen;
 }Production;
 /* note this has changed from Pair which is now a vector2 definition */
 typedef struct {
-	FLOAT	x,y;
-	INT	colour;
-}GOEL_PAIR;
+	float	x,y;
+	int	colour;
+}GOEL_pair;
 
 
 #endif /* _GENERATE_H */

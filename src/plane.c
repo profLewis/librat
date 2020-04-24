@@ -12,14 +12,9 @@
 **
 */
 
-int	intersect_plane(flagbag,plane_Ptr,ray_origin_Ptr,ray_direction_Ptr,objectlist_Ptr)
-triplet	*ray_origin_Ptr, *ray_direction_Ptr;
-Plane	*plane_Ptr;
-ObjectList *objectlist_Ptr;
-FlagBag	*flagbag;
+int	intersect_plane(FlagBag *flagbag,Plane *plane_Ptr,triplet *ray_origin_Ptr,triplet *ray_direction_Ptr,ObjectList *objectlist_Ptr)
 {
 	double	D;
-	int	ray_to_plane();
 
 	if(ray_to_plane(&D,&(plane_Ptr->dw),&(plane_Ptr->normal),ray_origin_Ptr,ray_direction_Ptr)){
 		if(D<objectlist_Ptr->RayLength){
@@ -41,9 +36,7 @@ FlagBag	*flagbag;
 **
 */
 
-int	where_hit_plane(hit_Ptr,ray_length_Ptr,ray_origin_Ptr,ray_direction_Ptr)
-triplet *hit_Ptr,*ray_origin_Ptr,*ray_direction_Ptr;
-double	*ray_length_Ptr;
+int	where_hit_plane(triplet *hit_Ptr,double *ray_length_Ptr,triplet *ray_origin_Ptr,triplet *ray_direction_Ptr)
 {
 	*hit_Ptr=vector_plus(*ray_origin_Ptr,V_factor(*ray_direction_Ptr,*ray_length_Ptr));
 	return(1);

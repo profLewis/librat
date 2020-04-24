@@ -12,14 +12,11 @@
 **	glassner p.36
 */
 
-int	ray_on_infinite_cylinder(D_Ptr,cylinder_Ptr,ray,p1_Ptr,p2_Ptr,D)
-double	*D_Ptr,*p1_Ptr,*p2_Ptr,*D;
-Ray	*ray;
-Cylinder	*cylinder_Ptr;
+int	ray_on_infinite_cylinder(double *D_Ptr,Cylinder *cylinder_Ptr,Ray *ray,double *p1_Ptr,double *p2_Ptr,double *D)
 {
 	double	a,b,c,q,t,len[2],r[2];
 	triplet	A,P,E,F,G;
-	int r1,r2,ray_on_disk();
+	int r1,r2;
 
 	*D_Ptr=0.;
 	if(cylinder_Ptr->ends){
@@ -75,13 +72,10 @@ Cylinder	*cylinder_Ptr;
 
 }
 
-int	ray_on_finite_cylinder(cylinder_Ptr,D_Ptr,p1_Ptr,p2_Ptr,D,ray)
-double	*D_Ptr,*p1_Ptr,*p2_Ptr,*D;
-Cylinder	*cylinder_Ptr;
-Ray *ray;
+int	ray_on_finite_cylinder(Cylinder *cylinder_Ptr,double *D_Ptr,double *p1_Ptr,double *p2_Ptr,double *D,Ray *ray)
 {
 	double	h,len[2],r[2],Dmax,Dstore[4],Hstore[4];
-	int i,hitEnd= -1,r1,r2,nValid=0,ray_on_disk();
+	int i,hitEnd= -1,r1,r2,nValid=0;
 	
 	if(cylinder_Ptr->ends){
 /* cylinder with bounds */
@@ -160,14 +154,10 @@ Ray *ray;
 }
 	
 	
-int	vray_on_finite_cylinder(bb,D_Ptr,lengthToTravel,cylinder_Ptr,ray,p1_Ptr,p2_Ptr,D)
-     BigBag *bb;
-double	*D_Ptr,*p1_Ptr,*p2_Ptr,*D,*lengthToTravel;
-Cylinder	*cylinder_Ptr;
-Ray *ray;
+int	vray_on_finite_cylinder(RATobj *bb,double *D_Ptr,double *lengthToTravel,Cylinder *cylinder_Ptr,Ray *ray,double *p1_Ptr,double *p2_Ptr,double *D)
 {
 	double	h[4],DD[2],len[2],r[2];
-	int	isOk,ok[4],i,ray_on_disk();
+	int	isOk,ok[4],i;
 
 	
 	h[0]=h[1]=h[2]=h[3]=-1;

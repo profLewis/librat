@@ -14,6 +14,9 @@
 #ifndef _R250_H_
 #define _R250_H_ 1.2
 
+int seed_randomise(int i);
+double Random(void);
+
 #ifdef __cplusplus
 extern "C" {
 #endif

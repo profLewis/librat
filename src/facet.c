@@ -10,9 +10,7 @@
 **	calculate axis-aligned facet limits
 */
 
-void	calculate_facet_limits(bounds,vertices)
-double	*bounds;
-triplet	*vertices;
+void	calculate_facet_limits(double *bounds,triplet *vertices)
 {
 	int	i;
 
@@ -31,9 +29,7 @@ triplet	*vertices;
 	}
 }
 
-void	double_calculate_facet_limits(bounds,vertices)
-double	*bounds;
-triplet	*vertices;
+void	double_calculate_facet_limits(double *bounds,triplet *vertices)
 {
 	int	i;
 
@@ -59,14 +55,11 @@ triplet	*vertices;
 **
 */
 
-int	precompute_facet_features(bounds,tri,facet_Ptr)
-fFacet	*facet_Ptr;
-double	*bounds;
-triplet	*tri;
+int	precompute_facet_features(double *bounds,triplet *tri,fFacet *facet_Ptr)
 {
-	triplet	n,normal,du,dv,vector_minus(),vector_cross(),Tri[3],V_factor();
+	triplet	n,normal,du,dv,Tri[3];
 	pair Du,Dv;
-	double	tmp,mod_normal,nx,ny,nz,v_mod();
+	double	tmp,mod_normal,nx,ny,nz;
 	int	i;
 
 /*
@@ -101,7 +94,7 @@ triplet	*tri;
 **	store facet normal
 */
 
-	if((mod_normal=v_mod(normal))==0.0){
+	if((mod_normal=V_mod(normal))==0.0){
 		fprintf(stderr,"facet:\tzero-sized facet input\n");
 		return(0);
 	}
@@ -207,15 +200,11 @@ triplet	*tri;
 	return(1);
 }
 
-int	double_precompute_facet_features(scale_Ptr,bounds,Tri,facet_Ptr,isDem)
-fFacet	*facet_Ptr;
-double	*bounds,*scale_Ptr;
-triplet	*Tri;
-int isDem;
+int	double_precompute_facet_features(double *scale_Ptr,double *bounds,triplet *Tri,fFacet *facet_Ptr,int isDem)
 {
-	triplet	n,normal,du,dv,vector_minus(),vector_cross(),V_factor();
+	triplet	n,normal,du,dv;
 	pair Du,Dv;
-	double	tmp,mod_normal,nx,ny,nz,v_mod();
+	double	tmp,mod_normal,nx,ny,nz;
 
 /*
 **	store axis-aligned limits
@@ -242,7 +231,7 @@ int isDem;
 **	store facet normal
 */
 
-	if((mod_normal=v_mod(normal))==0.0){
+	if((mod_normal=V_mod(normal))==0.0){
 	  fprintf(stderr,"facet:\tzero-sized facet input\n");
 	  return(0);
 	}
@@ -352,7 +341,7 @@ int isDem;
 /*
 **	distance from origin to plane
 */
-	facet_Ptr->dw= -v_dot(Tri[0],facet_Ptr->normal);
+	facet_Ptr->dw= -V_dot(Tri[0],facet_Ptr->normal);
 
 	return(1);
 }
@@ -363,16 +352,13 @@ int isDem;
 **	point on plane
 */
 
-int	ray_to_plane(D_Ptr,dw_Ptr,normal_Ptr,ray)
-double	*D_Ptr, *dw_Ptr;
-triplet	*normal_Ptr;
-Ray	*ray;
+int	ray_to_plane(double *D_Ptr,double *dw_Ptr,triplet *normal_Ptr,triplet *origin,triplet *direction)
 {
 	double	a,b;
 
-	a=V_dot( ray->direction , *normal_Ptr );
+	a=V_dot( *direction , *normal_Ptr );
 	if(a==0.0)return(0);	/* ray parallel to plane */
-	b=V_dot(ray->origin,*normal_Ptr)+ *dw_Ptr;
+	b=V_dot(*origin,*normal_Ptr)+ *dw_Ptr;
 	if(b==0.0)return(0);	/* ray on plane */
 	
 	*D_Ptr= -b/a;
@@ -384,16 +370,13 @@ Ray	*ray;
 **	point on plane
 */
 
-int	double_ray_to_plane(D_Ptr,dw_Ptr,normal_Ptr,ray)
-double	*D_Ptr, *dw_Ptr;
-triplet	*normal_Ptr;
-D_Ray	*ray;
+int	double_ray_to_plane(double *D_Ptr,double *dw_Ptr,triplet *normal_Ptr,Ray *ray)
 {
 	double	a,b;
 
-	a=v_dot( ray->direction , *normal_Ptr );
+	a=V_dot( ray->direction , *normal_Ptr );
 	if(a==0.0)return(0);	/* ray parallel to plane */
-	b=v_dot(ray->origin,*normal_Ptr)+ *dw_Ptr;
+	b=V_dot(ray->origin,*normal_Ptr)+ *dw_Ptr;
 	if(b==0.0)return(0);	/* ray on plane */
 	
 	*D_Ptr= -b/a;
@@ -411,11 +394,7 @@ D_Ray	*ray;
 **	point in triangle test
 */
 
-int	point_in_triangle(p_Ptr,facet_Ptr,ray,ray_length,uv)
-fFacet	*facet_Ptr;
-triplet	*p_Ptr;
-double	ray_length,*uv;
-Ray	*ray;
+int	point_in_triangle(triplet *p_Ptr,fFacet *facet_Ptr,Ray *ray,double ray_length,double *uv)
 {
 	pair	v;
 	
@@ -463,11 +442,7 @@ Ray	*ray;
 **	point in triangle test
 */
 
-int	double_point_in_triangle(scale_Ptr,p_Ptr,facet_Ptr,ray,ray_length,uv)
-fFacet	*facet_Ptr;
-triplet	*p_Ptr;
-double	ray_length,*uv,*scale_Ptr;
-D_Ray	*ray;
+int	double_point_in_triangle(double *scale_Ptr,triplet *p_Ptr,fFacet *facet_Ptr,Ray *ray,double ray_length,double *uv)
 {
 	pair	v;
 	

@@ -1,8 +1,12 @@
 #include "rat.h"
+#include "fratP.h"
 #include <stdlib.h>
+#include "filelib.h"
 #include "files.h"
-FILE *openFile();
+#include "useful.h"
+#ifndef CLOSE
 #define CLOSE -1
+#endif
 
 /* #define CALLOC(a,b) calloc((size_t)MAX(100,a),(size_t)b) */
 #define CALLOC(a,b) calloc((size_t)a,(size_t)b)
@@ -34,9 +38,6 @@ void pl(){
   for(i=0;i<levels;i++)fprintf(stderr," ");
 }
 
-void freeBBoxContents();
-void viewObject();
-void viewBBoxContents();
 /* start of view */
 
 void printHistogram(RATdistribution *d,char *name,char *histogramType,int type,char *material,double numberdensity,double *min,double *max){
@@ -71,7 +72,7 @@ void printHistogram(RATdistribution *d,char *name,char *histogramType,int type,c
   for(i=0;i<d->nSamples;i++){
     fprintf(d->fp,"%lf %lf\n",d->min+(i+0.5)*d->step,d->data[i]/(double)sum);
   }
-  d->fp=openFile(d->name,CLOSE,d->fp);
+  d->fp=openFile(d->name,CLOSE,(char *)d->fp);
   return;
 }
 
@@ -147,20 +148,20 @@ void RATprintObjects(RATobj *ratObj){
 	fp_fwrite_header(obj->datafp,hd);
 	/* get offset */
 	fwrite(obj->nd,sizeof(float),obj->nsamps[0]*obj->nsamps[1]*obj->nsamps[2],obj->datafp);
-        obj->datafp=openFile(obj->datafilename,CLOSE,obj->datafp);
+        obj->datafp=openFile(obj->datafilename,CLOSE,(char *)obj->datafp);
 	/* and an envi header just for good luck */
        }
      }      
     }
   }
 }
-void viewClone();
+void viewClone(RATobj *ratObj,struct Clone *c,int *f,double start,double span);
 void viewClone(RATobj *ratObj,struct Clone *c,int *f,double start,double span){
   int i,j;
   double translation[3],matrix[16];
-  double Matrix[16],IMatrix[16],thisTrans[16];
+  double thisTrans[16];
   if(!c)return;
-  for(i=0;i<16;i++)thisTrans[i]=ratObj->Matrix[i];
+  for(i=0;i<16;i++)thisTrans[i]=ratObj->matrix[i];
   while(c){
     if(f && f[1]){
       translation[0]=c->translation.x;
@@ -170,26 +171,26 @@ void viewClone(RATobj *ratObj,struct Clone *c,int *f,double start,double span){
         /* copy the matrix over */
         for(i=0;i<9;i++)matrix[i]=c->matrix[i];
         /* invert */
-        /*Matrix_inversion(imatrix,matrix,interchanges,3,&det);*/
+        /*matrix_inversion(imatrix,matrix,interchanges,3,&det);*/
       }else for(i=0;i<3;i++)for(j=0;j<3;j++)matrix[i*3+j]=(i == j ? 1 : 0);
-      for(i=0;i<3;i++)for(j=0;j<3;j++)Matrix[i*4+j]=matrix[i*3+j];
-      for(i=0;i<3;i++)Matrix[i*4+3]=translation[i];
-      for(i=0;i<3;i++)Matrix[3*4+i]=0.;
-      Matrix[15]=1.;
-      for(i=0;i<16;i++){ratObj->Matrix[i]=0.;}
-      Matrix_Matrix_multiplication_to_Matrix(Matrix,thisTrans,ratObj->Matrix,4);
+      for(i=0;i<3;i++)for(j=0;j<3;j++)matrix[i*4+j]=matrix[i*3+j];
+      for(i=0;i<3;i++)matrix[i*4+3]=translation[i];
+      for(i=0;i<3;i++)matrix[3*4+i]=0.;
+      matrix[15]=1.;
+      for(i=0;i<16;i++){ratObj->matrix[i]=0.;}
+      matrix_matrix_multiplication_to_matrix(matrix,thisTrans,ratObj->matrix,4);
       counter++;
     }
-    /* apply ratObj->Matrix to all contents */
+    /* apply ratObj->matrix to all contents */
     viewBBoxContents(ratObj,c->bbox,f,start,span);
-    /* reset to IMatrix */
+    /* reset to Imatrix */
     if(f && f[1]){levels--;}
     c = c->next_clone;
   }
-  for(i=0;i<16;i++)ratObj->Matrix[i]=thisTrans[i];
+  for(i=0;i<16;i++)ratObj->matrix[i]=thisTrans[i];
 }
 
-void *viewBLP();
+void *viewBLP(RATobj *ratObj,struct BiLinearPatch_struct *n,int *f);
 void *viewBLP(RATobj *ratObj,struct BiLinearPatch_struct *n,int *f){
   int i=0,j,v1[] = {0,1,2},v2[] = {2,3,0},*v,d1[3],d2[3];
   int material=0,objectType;
@@ -238,7 +239,7 @@ void *viewBLP(RATobj *ratObj,struct BiLinearPatch_struct *n,int *f){
   return((void *)(n->next_BiLinearPatch));
 }
 
-void *viewPlane();
+void *viewPlane(RATobj *ratObj,struct Plane_struct *n,int *f);
 void *viewPlane(RATobj *ratObj,struct Plane_struct *n,int *f){
   if(!n)return(NULL);  
   if(f && f[1]){
@@ -272,7 +273,7 @@ void *viewPlane(RATobj *ratObj,struct Plane_struct *n,int *f){
   return((void *)n->next_plane);
 }
 
-void *viewSphericalDem();
+void *viewSphericalDem(RATobj *ratObj,struct Spherical_Dem_struct *n,int *f);
 void *viewSphericalDem(RATobj *ratObj,struct Spherical_Dem_struct *n,int *f){
   if(!n)return(NULL);  
   if(f && f[1]){
@@ -281,7 +282,7 @@ void *viewSphericalDem(RATobj *ratObj,struct Spherical_Dem_struct *n,int *f){
   return((void *)n->next_dem);
 }
 
-void *viewDem();
+void *viewDem(RATobj *ratObj,struct Dem_struct *n,int *f);
 void *viewDem(RATobj *ratObj,struct Dem_struct *n,int *f){
   if(!n)return(NULL); 
   if(f && f[1]){
@@ -289,7 +290,7 @@ void *viewDem(RATobj *ratObj,struct Dem_struct *n,int *f){
   }
   return((void *)n->next_dem);
 }
-void *viewDisk();
+void *viewDisk(RATobj *ratObj,struct Disk_struct *n,int *f);
 void *viewDisk(RATobj *ratObj,struct Disk_struct *n,int *f){
   int material=0,objectType;
   double location[3],size,normal[3];
@@ -315,20 +316,22 @@ void *viewDisk(RATobj *ratObj,struct Disk_struct *n,int *f){
   return((void *)n->next_disk);
 }
 
-void *viewTriangle(),loadWFObject();
-void *viewEllipse();
+void *viewtriangle(RATobj *ratObj,struct Facet_struct *n,int *f);
+void loadWFObject(RATobj *ratObj,int material,int objectType,double *location,triplet *v,Vertex_normals *vertex_normals,Vertex_locals *local_coords,double *norm);
+void *viewEllipse(RATobj *ratObj,struct Ellipse_struct *n,int *f);
+
 void *viewEllipse(RATobj *ratObj,struct Ellipse_struct *n,int *f){
   int i,j,material=0,objectType;
   double location[3],size,normal[3];
   double location_[3],size_,normal_[3];
   static double *tesselate=NULL;
   static int nLevels=3;
-  static int nTriangles=0;
+  static int ntriangles=0;
   static struct Facet_struct *facet=NULL;
 
   if(tesselate==0){
     /* unit sphere tesselated */
-    tesselate=sphereTesselate(nLevels,&nTriangles);
+    tesselate=sphereTesselate(nLevels,&ntriangles);
     facet=(struct Facet_struct *)v_allocate(1,sizeof(struct Facet_struct));
   }
 
@@ -355,7 +358,7 @@ void *viewEllipse(RATobj *ratObj,struct Ellipse_struct *n,int *f){
      *         */
      /* tesselate */
      /* convert to triangles */
-     for(i=0;i<nTriangles;i++){
+     for(i=0;i<ntriangles;i++){
       for(j=0;j<3;j++){
        facet->v[j].x=location[0] + n->dimensions.x * tesselate[i*9 + j*3 + 0];
        facet->v[j].y=location[1] + n->dimensions.y * tesselate[i*9 + j*3 + 1];
@@ -372,23 +375,22 @@ void *viewEllipse(RATobj *ratObj,struct Ellipse_struct *n,int *f){
   return((void *)n->next_ellipse);
 }
 
-void *viewCylinder();
+void *viewCylinder(RATobj *ratObj,struct Cylinder_struct *n,int *f);
 void *viewCylinder(RATobj *ratObj,struct Cylinder_struct *n,int *f){
-  int tmpCounter,i,j,D=10;
+  int tmpCounter,i,j;
   int material=0,objectType;
-  double radius,location[3],size,normal[3],*cylinderTesselate();
+  double radius,normal[3];
   double location_[3],size_,normal_[3];
   static double *tesselate=NULL;
   static int nLevels=3;
-  static int nTriangles=0;
+  static int ntriangles=0;
   static struct Facet_struct *facet=NULL;
   static triplet norm,zaxis,yaxis;
-  triplet rotate_about();
   double theta,phi;
 
   if(tesselate==0){
     /* unit cylinder tesselated */
-    tesselate=cylinderTesselate(nLevels,&nTriangles);
+    tesselate=cylinderTesselate(nLevels,&ntriangles);
     facet=(struct Facet_struct *)v_allocate(1,sizeof(struct Facet_struct));
     zaxis.x=zaxis.y=zaxis.z=yaxis.x=yaxis.y=yaxis.z=0.;
     zaxis.z=yaxis.y=1.0;
@@ -417,7 +419,7 @@ void *viewCylinder(RATobj *ratObj,struct Cylinder_struct *n,int *f){
     normal[1]=n->normal.y;
     normal[2]=n->normal.z;
     /* tesselate */
-    for(i=0;i<nTriangles;i++){
+    for(i=0;i<ntriangles;i++){
       for(j=0;j<3;j++){
        facet->v[j].x= n->origin.x + radius * tesselate[i*9 + j*3 + 0];
        facet->v[j].y= n->origin.y  + radius * tesselate[i*9 + j*3 + 1];
@@ -437,19 +439,19 @@ void *viewCylinder(RATobj *ratObj,struct Cylinder_struct *n,int *f){
 }
 
 
-void *viewSphere();
+void *viewSphere(RATobj *ratObj,struct Sphere_struct *n,int *f);
 void *viewSphere(RATobj *ratObj,struct Sphere_struct *n,int *f){
   int material=0,objectType,i,j;
   double location[3],size,normal[3];
   double location_[3],size_,normal_[3];
   static double *tesselate=NULL;
   static int nLevels=3;
-  static int nTriangles=0;
+  static int ntriangles=0;
   static struct Facet_struct *facet=NULL;
 
   if(tesselate==0){
     /* unit sphere tesselated */
-    tesselate=sphereTesselate(nLevels,&nTriangles);
+    tesselate=sphereTesselate(nLevels,&ntriangles);
     facet=(struct Facet_struct *)v_allocate(1,sizeof(struct Facet_struct));
   }
   if(!n)return(NULL);  
@@ -467,7 +469,7 @@ void *viewSphere(RATobj *ratObj,struct Sphere_struct *n,int *f){
     *      *     ** or >1 else 
     *           *         */
     /* convert to triangles */
-    for(i=0;i<nTriangles;i++){
+    for(i=0;i<ntriangles;i++){
       for(j=0;j<3;j++){
        facet->v[j].x=location[0] + n->radius * tesselate[i*9 + j*3 + 0];
        facet->v[j].y=location[1] + n->radius * tesselate[i*9 + j*3 + 1];
@@ -484,7 +486,7 @@ void *viewSphere(RATobj *ratObj,struct Sphere_struct *n,int *f){
   return((void *)n->next_sphere);
 }
 
-void *viewBezier();
+void *viewBezier(RATobj *ratObj,struct Bezier4_struct *n,int *f);
 void *viewBezier(RATobj *ratObj,struct Bezier4_struct *n,int *f){
   if(!n)return(NULL);  
   if(f && f[1]){ 
@@ -509,10 +511,9 @@ double facetNormal(double *normal,struct Facet_struct *n){
   return(size);
 }
 
-void *viewTriangle(RATobj *ratObj,struct Facet_struct *n,int *f){
+void *viewtriangle(RATobj *ratObj,struct Facet_struct *n,int *f){
   int material=0,objectType;
   double location[3],size,normal[3];
-  static FILE *fp=NULL;
   if(!n)return(NULL); 
   if(f){
     if(n->material)
@@ -537,7 +538,7 @@ void *viewTriangle(RATobj *ratObj,struct Facet_struct *n,int *f){
     if(size){
       if(f[1])loadObject(ratObj,material,objectType,location,size,normal,f[1]);
       else{
-        loadWFObject(ratObj,material,objectType,location,&n->v,n->vertex_normals,n->local_coords,normal);
+        loadWFObject(ratObj,material,objectType,location,(triplet *)&n->v,n->vertex_normals,n->local_coords,normal);
       }
     }
     counter++;
@@ -547,7 +548,7 @@ void *viewTriangle(RATobj *ratObj,struct Facet_struct *n,int *f){
 
 /* start of free() */
 
-void freeClone();
+void freeClone(struct Clone *c,int *f);
 void freeClone(struct Clone *c,int *f){
   int i,j;
   if(!c)return;
@@ -581,7 +582,7 @@ void freeClone(struct Clone *c,int *f){
   if(f[0])c->next_clone=NULL;
 }
 
-void freeBLP();
+void freeBLP(struct BiLinearPatch_struct *n,int *f);
 void freeBLP(struct BiLinearPatch_struct *n,int *f){
   int i=0;
   if(!n)return;
@@ -600,7 +601,7 @@ void freeBLP(struct BiLinearPatch_struct *n,int *f){
   } 
 }
 
-void freePlane();
+void freePlane(struct Plane_struct *n,int *f);
 void freePlane(struct Plane_struct *n,int *f){
   if(!n)return;  
   if(f && f[1]){
@@ -616,7 +617,7 @@ void freePlane(struct Plane_struct *n,int *f){
   }
 }
 
-void freeSphericalDem();
+void freeSphericalDem(struct Spherical_Dem_struct *n,int *f);
 void freeSphericalDem(struct Spherical_Dem_struct *n,int *f){
   if(!n)return;  
   if(f && f[1]){
@@ -638,7 +639,7 @@ void freeSphericalDem(struct Spherical_Dem_struct *n,int *f){
   }
 }
 
-void freeDem();
+void freeDem(struct Dem_struct *n,int *f);
 void freeDem(struct Dem_struct *n,int *f){
   if(!n)return; 
   if(f && f[1]){
@@ -662,7 +663,7 @@ void freeDem(struct Dem_struct *n,int *f){
   }
 }
 
-void freeDisk();
+void freeDisk(struct Disk_struct *n,int *f);
 void freeDisk(struct Disk_struct *n,int *f){
   if(!n)return; 
   if(f && f[1]){
@@ -676,7 +677,7 @@ void freeDisk(struct Disk_struct *n,int *f){
   }
 }
 
-void freeEllipse();
+void freeEllipse(struct Ellipse_struct *n,int *f);
 void freeEllipse(struct Ellipse_struct *n,int *f){
   if(!n)return;  
   if(f && f[1]){
@@ -690,7 +691,7 @@ void freeEllipse(struct Ellipse_struct *n,int *f){
   }
 }
 
-void freeCylinder();
+void freeCylinder(struct Cylinder_struct *n,int *f);
 void freeCylinder(struct Cylinder_struct *n,int *f){
   int tmpCounter;
   if(!n)return;  
@@ -717,7 +718,7 @@ void freeCylinder(struct Cylinder_struct *n,int *f){
   }
 }
 
-void freeSphere();
+void freeSphere(struct Sphere_struct *n,int *f);
 void freeSphere(struct Sphere_struct *n,int *f){
   if(!n)return;  
   if(f && f[1]){
@@ -731,7 +732,7 @@ void freeSphere(struct Sphere_struct *n,int *f){
   }
 }
 
-void freeBezier();
+void freeBezier(struct Bezier4_struct *n,int *f);
 void freeBezier(struct Bezier4_struct *n,int *f){
   if(!n)return;  
   if(f && f[1]){
@@ -745,16 +746,16 @@ void freeBezier(struct Bezier4_struct *n,int *f){
   }
 }
 
-void freeTriangle();
-void freeTriangle(struct Facet_struct *n,int *f){
+void freetriangle(struct Facet_struct *n,int *f);
+void freetriangle(struct Facet_struct *n,int *f){
   int i=0;
   if(!n)return; 
   if(f && f[1]){
-    pl();fprintf(stderr,"%16s %d vertices: [%f %f %f] [%f %f %f] [%f %f %f] normal: [%f %f %f]\n","Triangle",counter,n->v[i].x,n->v[i].y,n->v[i].z, n->v[i+1].x,n->v[i+1].y,n->v[i+1].z,n->v[i+2].x,n->v[i+2].y,n->v[i+2].z, n->normal.x,n->normal.y,n->normal.z);
+    pl();fprintf(stderr,"%16s %d vertices: [%f %f %f] [%f %f %f] [%f %f %f] normal: [%f %f %f]\n","triangle",counter,n->v[i].x,n->v[i].y,n->v[i].z, n->v[i+1].x,n->v[i+1].y,n->v[i+1].z,n->v[i+2].x,n->v[i+2].y,n->v[i+2].z, n->normal.x,n->normal.y,n->normal.z);
     i += 3;
     counter++;
   } 
-  freeTriangle(n->next_facet,f);
+  freetriangle(n->next_facet,f);
   if(f[0]){
     n->material=NULL;
     free(n);
@@ -872,9 +873,9 @@ void freeBBoxContents(BBox *bb,int *f){
   }
   if(b->ttriangle){
     if(f && f[1]){
-      counter=0;pl();fprintf(stderr," %16s %3d\n","Triangles:",b->no_of_triangles);
+      counter=0;pl();fprintf(stderr," %16s %3d\n","triangles:",b->no_of_triangles);
     }
-    freeTriangle(b->ttriangle,f);
+    freetriangle(b->ttriangle,f);
     if(f[0]){
       b->ttriangle=NULL;
       b->no_of_triangles=0;
@@ -919,13 +920,13 @@ void freeBBoxContents(BBox *bb,int *f){
 
 void viewBBoxContents(RATobj *ratObj,BBox *bb,int *f,double start,double span){
   struct Content *b;
-  int verbose=1,nBoxes=0,boxCount=0,count=0;
+  int verbose=1,nBoxes=0,boxCount=0;
   double totalProportion;
   void *next=NULL;
   if(!bb){
     return;
   }
-  if(0 &&verbose)fprintf(stderr,"{");
+  /*if(0 &&verbose)fprintf(stderr,"{");*/
   nBoxes=1;
   next = (void *)bb->next_bbox;
   while(next){nBoxes++; next = (void *)bb->next_bbox;}
@@ -1031,7 +1032,7 @@ void viewBBoxContents(RATobj *ratObj,BBox *bb,int *f,double start,double span){
         }
         next=(void *)b->ttriangle;
         while(next){
-          next=viewTriangle(ratObj,next,f);
+          next=viewtriangle(ratObj,next,f);
         }
       }
       if(b->clone){
@@ -1044,7 +1045,7 @@ void viewBBoxContents(RATobj *ratObj,BBox *bb,int *f,double start,double span){
         if(f && f[1]){
 	  counter=0;
         }
-        if(0 && verbose)fprintf(stderr,".");
+        /*if(0 && verbose)fprintf(stderr,".");*/
         viewBBoxContents(ratObj,b->bbox,f,start-totalProportion,totalProportion);
       }
     }
@@ -1056,7 +1057,6 @@ void viewBBoxContents(RATobj *ratObj,BBox *bb,int *f,double start,double span){
 
 void viewObject(RATobj *ratObj,int *f){
   BBox *top_root_bbox_Ptr;
-  static FILE *fp=NULL;
 
   top_root_bbox_Ptr=ratObj->bbox;
   viewBBoxContents(ratObj,top_root_bbox_Ptr,f,0.0,100.0);
@@ -1326,7 +1326,7 @@ void loadIntoHistogram(double v,RATdistribution *d,double wt){
 void loadWFObject(RATobj *ratObj,int material,int objectType,double *location,triplet *v,Vertex_normals *vertex_normals,Vertex_locals *local_coords,double *norm){
   RATobject *ThisObj=NULL;
   int nobj=-1,i,j,k;
-  double local[3][2],normal[3],V[4],Vout[4],vDot(),RMatrix[9];
+  double local[3][2],normal[3],V[4],Vout[4],Rmatrix[9];
   static int *count=NULL,*_count=NULL;
   static FILE **fp=NULL,**_fp=NULL;
   static char **filename=NULL,**_filename=NULL;
@@ -1385,7 +1385,7 @@ void loadWFObject(RATobj *ratObj,int material,int objectType,double *location,tr
   V[1]=location[1];
   V[2]=location[2];
   V[3]=1.0;
-  Vector_Matrix_multiplication_to_Vector(V,ratObj->Matrix,Vout,4);
+  vector_matrix_multiplication_to_vector(V,ratObj->matrix,Vout,4);
   for(i=0;i<3;i++)location[i]=Vout[i];
   for(i=0;i<3;i++){
     if ( location[i] < ratObj->ratObj->min[i] || location[i] > ratObj->ratObj->max[i] )return;
@@ -1398,7 +1398,7 @@ void loadWFObject(RATobj *ratObj,int material,int objectType,double *location,tr
     V[2]=v[j].z;
     V[3]=1.0;
     /* location rotation */
-    Vector_Matrix_multiplication_to_Vector(V,ratObj->Matrix,Vout,4);
+    vector_matrix_multiplication_to_vector(V,ratObj->matrix,Vout,4);
     for(i=0;i<3;i++)location[i]=Vout[i];
     fprintf(fp[nobj],"v %lf %lf %lf\n",location[0],location[1],location[2]); 
     /* normal */
@@ -1407,10 +1407,10 @@ void loadWFObject(RATobj *ratObj,int material,int objectType,double *location,tr
       V[1]=vertex_normals[j].vertex_normal.y;
       V[2]=vertex_normals[j].vertex_normal.z;
       for(i=0;i<3;i++){
-        for(k=0;k<3;k++)RMatrix[i*3+k]=ratObj->Matrix[i*4+k];
+        for(k=0;k<3;k++)Rmatrix[i*3+k]=ratObj->matrix[i*4+k];
       }
       V[3]=0.0;
-      Vector_Matrix_multiplication_to_Vector(V,RMatrix,Vout,3);
+      vector_matrix_multiplication_to_vector(V,Rmatrix,Vout,3);
       for(i=0;i<3;i++)normal[i]=Vout[i];
     }else if(j==0){
       V[0]=norm[0];
@@ -1418,9 +1418,9 @@ void loadWFObject(RATobj *ratObj,int material,int objectType,double *location,tr
       V[2]=norm[2];
       V[3]=0.0;
       for(i=0;i<3;i++){
-        for(k=0;k<3;k++)RMatrix[i*3+k]=ratObj->Matrix[i*4+k];
+        for(k=0;k<3;k++)Rmatrix[i*3+k]=ratObj->matrix[i*4+k];
       }
-      Vector_Matrix_multiplication_to_Vector(V,RMatrix,Vout,3);
+      vector_matrix_multiplication_to_vector(V,Rmatrix,Vout,3);
       for(i=0;i<3;i++)normal[i]=Vout[i];
     }
     fprintf(fp[nobj],"vn %lf %lf %lf\n",normal[0],normal[1],normal[2]);
@@ -1441,7 +1441,7 @@ void loadWFObject(RATobj *ratObj,int material,int objectType,double *location,tr
 int loadObject(RATobj *ratObj,int material,int objectType,double *location,double size,double *normal,int pass){
   RATobject *ThisObj=NULL;
   int nobj=-1,i,j,cell[3];
-  double nlen,V[4],Vout[4],cost,angle,vDot(),RMatrix[9];
+  double nlen,V[4],Vout[4],cost,angle,Rmatrix[9];
   static double up[] = {0.,0.,1.};
 
   /* normalise normal */
@@ -1452,7 +1452,7 @@ int loadObject(RATobj *ratObj,int material,int objectType,double *location,doubl
   /* location rotation */
   for(i=0;i<3;i++)V[i]=location[i]; 
   V[3]=1.0;
-  Vector_Matrix_multiplication_to_Vector(V,ratObj->Matrix,Vout,4);
+  vector_matrix_multiplication_to_vector(V,ratObj->matrix,Vout,4);
   for(i=0;i<3;i++)location[i]=Vout[i];
 /* temporary */
 /* fprintf(stderr,"%lf %lf %lf\n",Vout[0],Vout[1],Vout[2]); */
@@ -1472,10 +1472,10 @@ int loadObject(RATobj *ratObj,int material,int objectType,double *location,doubl
   
   for(i=0;i<3;i++){
     V[i]=normal[i];
-    for(j=0;j<3;j++)RMatrix[i*3+j]=ratObj->Matrix[i*4+j];
+    for(j=0;j<3;j++)Rmatrix[i*3+j]=ratObj->matrix[i*4+j];
   }
   V[3]=0.0;
-  Vector_Matrix_multiplication_to_Vector(V,RMatrix,Vout,3);
+  vector_matrix_multiplication_to_vector(V,Rmatrix,Vout,3);
   for(i=0;i<3;i++)normal[i]=Vout[i];
   
   cost = vDot(normal,up,3);
@@ -1529,7 +1529,7 @@ RATobject *RATgetObjects(RATobj *ratObj,int whichOne,double *min,double *max,int
   levels=0;
   if(RATisWavefrontFile(ratObj)){
     /* clear rotation/translation matrix */
-    for(i=0;i<4;i++)for(j=0;j<4;j++)ratObj->Matrix[i*4+j] = (i == j ? 1 : 0); 
+    for(i=0;i<4;i++)for(j=0;j<4;j++)ratObj->matrix[i*4+j] = (i == j ? 1 : 0); 
     allocateRatObject(ratObj,1,0,min,max,nsamples,nHistogramSamples,filenames);
     /* the the histogram limits on first pass */
     viewObject(ratObj,f);
@@ -1560,7 +1560,7 @@ int RATreadWavefrontFile(RATobj *ratObj){
 #ifdef DEBUG
   fprintf(stderr,"opening wavefront file");
 #endif
-  fp=openFile(ratObj->wavebandbag->wavefront_file,CLOSE,fp);
+  fp=openFile(ratObj->wavebandbag->wavefront_file,CLOSE,(char *)fp);
   if(ratObj->flagbag->verbose){
     fprintf(stderr,"%s: input file %s specified\n",ratObj->globalArgv[0],ratObj->wavebandbag->wavefront_file);
   }
@@ -1611,9 +1611,8 @@ int RATgetNWavebands(RATobj *ratObj,double *wavebands){
 
 void RATsetNWavebands(RATobj *ratObj,int n,double *minwavelength,double *bandwidth){
   int i,k;
-  double *rsr0,*rsr1,Random(),lambda;
+  double *rsr0,*rsr1,lambda;
   double          lambda_min, lambda_width;
-  void *v_allocate();
   ratObj->flagbag->fixed_wavelength=1;
   if(!minwavelength){
     fprintf(stderr,"%s: error in call to RATsetNWavebands(RATobj *ratObj,int n,double  *wavebands)\nminwavelength==NULL\n",ratObj->globalArgv[0]);
@@ -1905,8 +1904,7 @@ RATmaterials *RATgetMaterials(RATobj *ratObj,int *nMat){
 }
 
 RATtree *RATgetRatTree(RATobj *ratObj){
-  RATtree *allocateRatTree();
-
+  RATtree * allocateRatTree(int nRTD,int nBands,int infiniteSun);
   if(ratObj->ratTree==NULL){
     ratObj->ratTree=allocateRatTree(ratObj->flagbag->max_ray_depth+1,ratObj->wavebandbag->sensor_wavebands->no_of_wavebands,(ratObj->flagbag->sunlocation != NULL ? 1 : 0));
   }
@@ -2050,8 +2048,10 @@ RATtree * allocateRatTree(int nRTD,int nBands,int infiniteSun){
 }
 
 
+Ray     renders(int hitCamera,RATobj *bb,HitPoint *hitPoint,int *tree_depth_Ptr,Ray *ipray,MaterialBag *materialbag,IlluminationBag *illumination,WavebandBag *wavebandbag,ObjectList *objectlist_Ptr,BBox *bbox_Ptr,FlagBag *flagbag,Material_table *material_table_Ptr);
+
 int RATtraceRay(RATobj *ratObj,double *from,double *direction,double *illuminationPosition){
-  Ray ray,renders();
+  Ray ray;
   int rtd;
   static int nRTD=0;
   static HitPoint *hitPoint=NULL;
@@ -2114,7 +2114,7 @@ int RATtraceRay(RATobj *ratObj,double *from,double *direction,double *illuminati
     for(j=0;j<nRTD+1;j++){
       hitPoint[j].nSuns=ratObj->nSuns;
       hitPoint[j].hitSun=(int *)v_allocate(ratObj->nSuns,sizeof(int));
-      hitPoint[j].sunVector=(triplet *)v_allocate(ratObj->nSuns,sizeof(triplet));
+      hitPoint[j].sunvector=(triplet *)v_allocate(ratObj->nSuns,sizeof(triplet));
       hitPoint[j].sunInteractionType=(int *)v_allocate(ratObj->nSuns,sizeof(int));      
       hitPoint[j].lambertian=(double *)v_allocate(ratObj->nSuns,sizeof(double));
       hitPoint[j].distanceBackToViewer=(double *)v_allocate(ratObj->nSuns,sizeof(double));
@@ -2167,7 +2167,7 @@ int RATtraceRay(RATobj *ratObj,double *from,double *direction,double *illuminati
     } 
     if(hitPoint[rtd].hitSky==1 || hitPoint[rtd].hitSky== -1)
       break;
-    hitPoint[rtd].fromVectorLength = V_mod(vector_minus(hitPoint[rtd].fromLocation,hitPoint[rtd].location));
+    hitPoint[rtd].fromvectorLength = V_mod(vector_minus(hitPoint[rtd].fromLocation,hitPoint[rtd].location));
     ray.ray_length=1e20;ray.lengthOfRaySoFar=0.;ray.rayLengthThroughObject=-1.;
   }
   gatherPixelStatsForRay(ratObj,norm,&ratObj->globalPixelStats,nRTD,hitPoint,ratObj->materialbag,ratObj->illumination,ratObj->wavebandbag,&objectlist,ratObj->bbox,ratObj->flagbag,&material);
@@ -2183,9 +2183,7 @@ int RATtraceRay(RATobj *ratObj,double *from,double *direction,double *illuminati
  *	group name storage area
  */
 
-void	initialise_group_storage(group_Ptr,no_of_groups,max_len)
-     Group	*group_Ptr;
-     int	no_of_groups,max_len;
+void	initialise_group_storage(Group *group_Ptr,int no_of_groups,int max_len)
 {
   int	i;
   
@@ -2203,9 +2201,7 @@ void	initialise_group_storage(group_Ptr,no_of_groups,max_len)
  *	storage area
  */
 
-int	initialise_contents_storage(contents,no_of_bboxes,no_of_triangles,no_of_beziers,no_of_spheres,no_of_cylinders,no_of_clones,no_of_dems)
-     Contents	*contents;
-     int	no_of_bboxes,no_of_triangles,no_of_beziers,no_of_spheres,no_of_cylinders,no_of_clones,no_of_dems;
+int	initialise_contents_storage(Contents *contents,int no_of_bboxes,int no_of_triangles,int no_of_beziers,int no_of_spheres,int no_of_cylinders,int no_of_clones,int no_of_dems)
 {
   if(no_of_bboxes!=0)if((contents->bbox 	= (BBox *)CALLOC(no_of_bboxes,sizeof(BBox)))==0)
     error1("librat: error in contents box memory storage 1");
@@ -2225,7 +2221,7 @@ int	initialise_contents_storage(contents,no_of_bboxes,no_of_triangles,no_of_bezi
   return(1);
 }
 
-int setMaterialUseage(BigBag *bb,FlagBag *flagbag,MaterialBag *materialbag,char *name)
+int setMaterialUseage(RATobj *bb,FlagBag *flagbag,MaterialBag *materialbag,char *name)
 {
   if(!(materialbag->material_list->useage=(MaterialUseage *)CALLOC(1,sizeof(MaterialUseage)))){
     fprintf(stderr,"error in core allocation\n");
@@ -2305,7 +2301,7 @@ int sortIllumination(int *no_of_sun_wavelength_samples,FlagBag *flagbag,Illumina
       }
       if(illumination->sky_flag) /*  error check */
         if(*no_of_sun_wavelength_samples != illumination->sky_data_Ptr->hd.num_frame)error1("parser:\tinconsistent no of wavelength samples between -skymap data and -direct data\n\t\t(the number of wavelength samples in the direct illumination file must equal the number of frames in the skymap data)");
-      fp=openFile((illumination->direct_file),CLOSE,fp);
+      fp=openFile((illumination->direct_file),CLOSE,(char *)fp);
     }
   }
   return(1);
@@ -2323,9 +2319,10 @@ int sortIllumination(int *no_of_sun_wavelength_samples,FlagBag *flagbag,Illumina
 ** or getenv("PRAT_MAX_MATERIALS") which are now redundant
 */
 
+int getMaxMaterials(char *objName,int verbose);
 int getMaxMaterials(char *objName,int verbose){
   int count = 0;
-  int type_of_element(),getMaxMaterials();
+  int type_of_element(char *option);
   FILE *fp,*fp2;
   char    *liner,line[SHORT_STRING_LENGTH],option[SHORT_STRING_LENGTH];
   char    buf[SHORT_STRING_LENGTH],dum[SHORT_STRING_LENGTH];
@@ -2334,7 +2331,7 @@ int getMaxMaterials(char *objName,int verbose){
 
 
   if(verbose)fprintf(stderr,"testing object file for material library %s\n",objName);
-  if(!(fp=openFile(objName,TRUE,"MATLIB"))){
+  if(!(fp=openFile(objName,TRUE,"ARARAT_OBJECT"))){
     error2("Error opening object file for material library",objName);
     exit(1);
   }
@@ -2361,26 +2358,26 @@ int getMaxMaterials(char *objName,int verbose){
             /* get a line, check there is a string to read & check it doesnt start with hash */
             while(fgets(buf,SHORT_STRING_LENGTH,fp2) != NULL )if(sscanf(buf,"%s",dum) && dum[0]!=35)
               count++;
-            fp2=openFile(liner,CLOSE,fp2);
+            fp2=openFile(liner,CLOSE,(char *)fp2);
           }
         break;
       }
     }
   }
-  fp=openFile(objName,CLOSE,fp);
+  fp=openFile(objName,CLOSE,(char *)fp);
   if(verbose)fprintf(stderr,"Found up to %d materials in %s and preceding files\n",count+getNdefaultMaterials(),objName);
   return count;
 }
 
 
 RATobj *RATinit(int argc,char **argv){
-  BigBag *bb=NULL;
+  RATobj *bb=NULL;
   int _MAX_SUNS=0;
   char *tmp;
   /*
   ** p.lewis@ucl.ac.uk 12 May 2012
   */
-  int getNdefaultMaterials(),atoi();
+  int getNdefaultMaterials(void);
   int i=0;
   /* end */
   if((tmp=getenv("MAX_SUNS")) != NULL){
@@ -2389,7 +2386,7 @@ RATobj *RATinit(int argc,char **argv){
 
   _MAX_SUNS=MAX(1,_MAX_SUNS);
 
-  if(!(bb=globalRATObj=(BigBag *)CALLOC(1,sizeof(BigBag)))){
+  if(!(bb=globalRATObj=(RATobj *)CALLOC(1,sizeof(RATobj)))){
     fprintf(stderr,"error in core allocation\n");
     exit(1);
   }
@@ -2588,7 +2585,7 @@ int RATparser(RATobj *bb,int argc,char **argv,void *info,int *ii,int jj){
 	strcpy(wavebandbag->sensor_filenames[(wavebandbag->sensor_wavebands->no_of_wavebands)],argv[++i]);
         /* just try it out for size */
         if((fp=openFile(wavebandbag->sensor_filenames[(wavebandbag->sensor_wavebands->no_of_wavebands)],TRUE,"RSRLIB"))){
-          fp=openFile((wavebandbag->sensor_filenames[(wavebandbag->sensor_wavebands->no_of_wavebands)]),CLOSE,fp);
+          fp=openFile((wavebandbag->sensor_filenames[(wavebandbag->sensor_wavebands->no_of_wavebands)]),CLOSE,(char *)fp);
 	  (wavebandbag->sensor_wavebands->no_of_wavebands)++;
         }
       }
@@ -2606,7 +2603,7 @@ int RATparser(RATobj *bb,int argc,char **argv,void *info,int *ii,int jj){
       sscan_double(argv,argc,&i,FATAL,&(flagbag->sunlocation[2]));
       found=1;
     }else if(strcmp(argvi,"s")==0){
-      flagbag->rowsandcols=(int *)i_allocate(2,sizeof(int));
+      flagbag->rowsandcols=(int *)v_allocate(2,sizeof(int));
       sscan_int(argv,argc,&i,(int)FATAL,&(flagbag->rowsandcols[0]));
       sscan_int(argv,argc,&i,(int)FATAL,&(flagbag->rowsandcols[1]));
       found = 1;
@@ -2635,8 +2632,6 @@ int RATparser(RATobj *bb,int argc,char **argv,void *info,int *ii,int jj){
     break;
   case 'h':				/* -help */
     RATprintOptions(bb);exit(0);
-    found=1;   
-    break;
   case 'v':				/* verbose */
     flagbag->verbose=1;
     j=1+i;
@@ -2667,7 +2662,7 @@ int	RATparse(RATobj *bb,int argc,char **argv,void *info){
   int	i,no_of_sun_wavelength_samples=0;
   char	err[100],sky_imagemap[1000],**Ptr,*p;
   int	found=0,istart;
-  void dummy_read_spectral_file();
+  void dummy_read_spectral_file(Sensor_Wavebands *sensor_wavebands);
  
   RATstart(bb); 
   flagbag=bb->flagbag;
@@ -2806,7 +2801,7 @@ int	RATparse(RATobj *bb,int argc,char **argv,void *info){
     error2("librat:\terror opening librat wavefront format object file",wavebandbag->wavefront_file);
     exit(1);
   }
-  fp=openFile(wavebandbag->wavefront_file,CLOSE,fp);
+  fp=openFile(wavebandbag->wavefront_file,CLOSE,(char *)fp);
 
 #ifdef DEBUG
   fprintf(stderr,"setting vertex store ...\n");
@@ -2859,9 +2854,7 @@ int	RATparse(RATobj *bb,int argc,char **argv,void *info){
   return(1);
 }
 
-void	initialise_reflectance_storage(samples,no_of_wavebands)
-     Samples	*samples;
-     int	no_of_wavebands;
+void	initialise_reflectance_storage(Samples *samples,int no_of_wavebands)
 {
   samples->no_of_time_bins = MAX(samples->no_of_time_bins,1);
   if((samples->result=(double *)CALLOC(no_of_wavebands*samples->no_of_time_bins,sizeof(double)))==0)error1("initialise_reflectance_storage:\terror allocating memory");
@@ -2873,7 +2866,7 @@ void	initialise_reflectance_storage(samples,no_of_wavebands)
  *	initialise data flags
  */
 
-void	initialise_flagbag(BigBag *bb)
+void	initialise_flagbag(RATobj *bb)
 {
   static PixelVarianceLimits	*pixel_variance=NULL;
   static Restart *restart=NULL;
@@ -2915,7 +2908,7 @@ void	initialise_flagbag(BigBag *bb)
  *	initialise skybag
  */
 
-void	initialise_skybag(BigBag *bb){
+void	initialise_skybag(RATobj *bb){
   static     Image_characteristics *sky_data=NULL;
   static char *direct_file=NULL;
   static triplet *solar=NULL;
@@ -2946,7 +2939,7 @@ void	initialise_skybag(BigBag *bb){
  *	initialise waveband bag
  */
 
-void	initialise_wavebandbag(BigBag *bb){
+void	initialise_wavebandbag(RATobj *bb){
   static double *lambda_min=NULL,*lambda_width=NULL;
   static char **sensor_filenames=NULL,**rsr_filename=NULL;
   static char *wavefront_file=NULL;
@@ -2981,11 +2974,7 @@ void	initialise_wavebandbag(BigBag *bb){
   return;
 }
 
-void	initialise_materialbag(materialbag,material_table,material_list,samples)
-     MaterialBag *materialbag;
-     Material_table	*material_table;
-     Material_List	*material_list;
-     Samples		*samples;
+void	initialise_materialbag(MaterialBag *materialbag,Material_table *material_table,Material_List *material_list,Samples *samples)
 {
   material_list->useage=NULL;
   materialbag->materials= material_table;
@@ -2995,9 +2984,7 @@ void	initialise_materialbag(materialbag,material_table,material_list,samples)
   return;
 }
 
-void	initialise_image_characteristics(image_characteristics,op_image_file)
-     Image_characteristics	*image_characteristics;
-     char			*op_image_file;
+void	initialise_image_characteristics(Image_characteristics *image_characteristics,char *op_image_file)
 {
   image_characteristics->imagename=op_image_file;
   
@@ -3005,13 +2992,13 @@ void	initialise_image_characteristics(image_characteristics,op_image_file)
 }
 
 void RATstart(RATobj *bb){
-  int atoi(),i;
+  int i;
   /*
    *	various initialisations
    */  
-  initialise_flagbag((BigBag *)bb);
-  initialise_skybag((BigBag *)bb);
-  initialise_wavebandbag((BigBag *)bb);
+  initialise_flagbag((RATobj *)bb);
+  initialise_skybag((RATobj *)bb);
+  initialise_wavebandbag((RATobj *)bb);
   
   bb->mmap_flag=1;
   
@@ -3079,7 +3066,7 @@ void RATreadObject(RATobj *bb){
 #ifdef DEBUG
   fprintf(stderr,"reading default materials\n");
 #endif
-  read_default_materials((BigBag *)bb,flagbag->data_verbose,materialbag->material_list,materialbag->materials,bb->material_name);
+  read_default_materials((RATobj *)bb,flagbag->data_verbose,materialbag->material_list,materialbag->materials,bb->material_name);
 
   bb->timer=bb->level=0;
   
@@ -3089,7 +3076,7 @@ void RATreadObject(RATobj *bb){
 #ifdef DEBUG
   fprintf(stderr,"reading wavefront parse_prat_wavefront_data()\n");
 #endif
-  parse_prat_wavefront_data((BigBag *)bb,flagbag->data_verbose,bb->bbox,bb->bbox,fp,&bb->level,&bb->group,&bb->current_mtl,&bb->vertices,&bb->normals,&bb->locals,flagbag->normal,flagbag->local,&bb->m_inv_reverse,&bb->m_inverse_fwd,
+  parse_prat_wavefront_data((RATobj *)bb,flagbag->data_verbose,bb->bbox,bb->bbox,fp,&bb->level,&bb->group,bb->current_mtl,&bb->vertices,&bb->normals,&bb->locals,flagbag->normal,flagbag->local,&bb->m_inv_reverse,&bb->m_inverse_fwd,
 bb->material_name,materialbag->material_list,materialbag->materials,flagbag->vertexStore,flagbag->angleTol,flagbag->distanceTol,flagbag->sizeTol); 
   /*
    *	initialise reflectance data storage
@@ -3097,6 +3084,6 @@ bb->material_name,materialbag->material_list,materialbag->materials,flagbag->ver
   initialise_reflectance_storage(materialbag->samples,wavebandbag->sensor_wavebands->no_of_wavebands);
   
   if(materialbag->samples->binStep)bb->lidar=TRUE;else bb->lidar=FALSE;
-  fp=openFile(wavebandbag->wavefront_file,CLOSE,fp);
+  fp=openFile(wavebandbag->wavefront_file,CLOSE,(char *)fp);
   return;
 }

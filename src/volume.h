@@ -7,7 +7,7 @@
 typedef struct{
   double	uL;
   double 	l;	/* leaf linear dimension */
-  triplet (*lad)();	/* normal vector */
+  triplet (*lad)(void *);	/* normal vector */
   int	material;
   
   /* tmp storage */

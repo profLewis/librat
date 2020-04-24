@@ -2,9 +2,8 @@
 #include "hipl_format.h"
 #include "imagelib.h"
 #include "filelib.h"
-void update_header(),fp_fwrite_header(),fp_fread_header();
-int copyFromHdr();
 #include <stdlib.h>
+#include "libhipl.h"
 
 #define MAX_SIZE 2048
 
@@ -13,12 +12,9 @@ int copyFromHdr();
 **	i.e. store info. on current process in image header
 **	if this type of storage is supported
 */
-int updateHipsHeader(ImagePtr,argc,argv)
-int     argc;
-char    **argv;
-GenericImage    *ImagePtr;
+int updateHipsHeader(GenericImage *ImagePtr,int argc,char **argv)
 {
-	struct header	hd;void *calloc(),exit();
+	struct header	hd;
 /*
 **      update header information with current command-line
 */
@@ -46,8 +42,7 @@ GenericImage    *ImagePtr;
 	return(1);
 }
 
-int writeHipsHeader(ImagePtr)
-GenericImage    *ImagePtr;
+int writeHipsHeader(GenericImage *ImagePtr)
 {
 	struct header	hd;
 	static char tmp[] = "";
@@ -77,8 +72,7 @@ GenericImage    *ImagePtr;
 /*
 **     read image header
 */
-int readHipsHeader(ImagePtr)
-GenericImage    *ImagePtr;
+int readHipsHeader(GenericImage *ImagePtr)
 {
 	struct header hd;
 
@@ -100,9 +94,7 @@ GenericImage    *ImagePtr;
 	return(1);
 }
 
-int	arrayIndexHips(ImagePtr,frame,row,col)
-GenericImage    *ImagePtr;
-int		frame,row,col;
+int	arrayIndexHips(GenericImage *ImagePtr,int frame,int row,int col)
 {
 	
 /* straightforward BSQ access (no BIL mode) */
@@ -118,9 +110,7 @@ int		frame,row,col;
 /*
 **	check to see if file is hips format
 */
-int	checkHips(ImagePtr,env)
-GenericImage    *ImagePtr;
-char		*env;
+int	checkHips(GenericImage *ImagePtr,char *env)
 {
 	int	i,openFlag;
 	char	*extension,*name,c;
@@ -142,7 +132,7 @@ char		*env;
 */
 	if(!(stream=getStream(ImagePtr))){
 		setImageName(ImagePtr,"-");
-		getStream(ImagePtr,stdin);
+		getStream(ImagePtr);
 	}
 	openFlag=ImagePtr->openFlag;
 
@@ -155,7 +145,7 @@ char		*env;
 			}
 		}
 	}else{
-		for(i=0;i<strlen(HEAD);i++){
+		for(i=0;i<(int)strlen(HEAD);i++){
 			if((char)fgetc(stream)!=HEAD[i]){
 				rewind(stream);
 				if(!openFlag)fclose(stream);
@@ -174,10 +164,7 @@ char		*env;
 **	set HIPS header functions into generic image format
 */
 /* return TRUE if detected image is Hips format or if !check */
-int	isHips(ImagePtr,check,env)
-GenericImage    *ImagePtr;
-int		check;
-char		*env;
+int	isHips(GenericImage *ImagePtr,int check,char *env)
 {
 	int	i,retval=TRUE;
 	if(check)retval=checkHips(ImagePtr,env);

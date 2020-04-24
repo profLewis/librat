@@ -6,7 +6,8 @@
  *  Copyright 2007 UCL. All rights reserved.
  *
  */
-
+#ifndef RATFRONT_H
+#define RATFRONT_H
 #define ORTHOGRAPHIC 1
 #define PERSPECTIVE 0
 #define DIFFUSE 2 
@@ -33,13 +34,6 @@ static inline unsigned long long bswap_64(unsigned long long x) {
   return (((unsigned long long)bswap_32(x&0xffffffffull))<<32) | (bswap_32(x>>32));
 }
 #endif
-
-
-#ifndef RAT_MAIN
-const int ___i = 1;
-#endif
-#define is_bigendian() ( (*(char*)&___i) == 0 )
-#define convertDouble(x) (is_bigendian() ? x : (sizeof(double) == 8 ? bswap_32(x) : (sizeof(double) == 16 ?  bswap_64(x) : -1)))
 
 
 struct RATorderStore{
@@ -205,4 +199,6 @@ RATdevice  *RATreadACameraFile(char *file,RATobj *rat,RATdevice *ratCamera);
 void RAToutputCameraDriverData(RATdevice *illumination,int nSuns);
 void RAToutputCameraResults(RATobj *ratObj,RATdevice *illumination,int nSuns);
 void RAToutputIntegral(RATobj *ratObj,RATdevice *camera);
+double **RATgetOrderAddress(int *index,int order,int *code,int m,int nbands,RATorder *RATorder);
+#endif
 

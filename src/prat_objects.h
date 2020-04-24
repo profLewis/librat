@@ -14,7 +14,10 @@
 /* coded by Lewis, dept P&S UCL, Gower St. London. Wed Jun 12 1991 */
 #ifndef _PRAT_OBJECTS_
 #define _PRAT_OBJECTS_
-#include	"materials.h"
+
+#include        "materials.h"
+#include "hips.h"
+
 /*
 **	Plane struct
 */
@@ -57,7 +60,7 @@ typedef struct{
 
 struct D_Facet_struct{
 	char	orientation;
-	Pair	base;
+	pair	base;
 	double	store[4];
 	double	dw;
 	triplet	normal;
@@ -244,12 +247,6 @@ typedef struct {
 	double  rayLengthThroughObject;
 }Ray;
 
-typedef struct {
-	triplet	origin;
-	triplet	direction;
-	double	ray_length;
-}D_Ray;
-
 /*
 **	Bezier4 struct
 */
@@ -343,12 +340,12 @@ struct Bbox{
 	triplet		max;
 	triplet		min;
 	struct Content	contents;
-	Contents_order	*hit[7];
+	struct Sort_Hit *hit[7];
 	char		transform_flag;
 	char		define_flag;
-	Matrix4 	m;
-	Matrix4  	m_inverse;
-	Matrix4 	m_inverse_transpose;
+	matrix4 	m;
+	matrix4  	m_inverse;
+	matrix4 	m_inverse_transpose;
 	struct Bbox	*next_bbox;	
 };
 
@@ -434,9 +431,9 @@ typedef struct{
   triplet	normal;
   
   double	matrix[9]; /* rotation matrix for clones */
-  Matrix4 m;
+  matrix4 m;
   
-  fFacet	*TriangleObj;
+  fFacet	*triangleObj;
   Cylinder *CylinderObj;
   Ellipse *EllipseObj;
   Disk *DiskObj;
@@ -489,15 +486,15 @@ typedef struct {
 	triplet localNormal;    /* local normal vector */
 
 	triplet fromLocation;
-	triplet fromVector;     /* previous direction */
-	triplet toVector;	/* next direction */
-	double fromVectorLength; /* distance from previous to here */
+	triplet fromvector;     /* previous direction */
+	triplet tovector;	/* next direction */
+	double fromvectorLength; /* distance from previous to here */
 	int interactionType;     /* REFLECTANCE / TRANSMITTANCE / -1 */
 
 	/* direct */
         int nSuns;
 	int *hitSun;
-	triplet *sunVector;
+	triplet *sunvector;
 	int *sunInteractionType;
 	double *lambertian;
 
@@ -506,7 +503,7 @@ typedef struct {
 
 	/* diffuse */
 	int hitSky;
-	triplet skyVector;	
+	triplet skyvector;	
 
 	Material_table *material; /* material of object hit */
 	int materialIndex; 

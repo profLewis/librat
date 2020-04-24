@@ -3,6 +3,7 @@
 /* you need to include this file */
 #include "rat.h"
 #include "ratFront.h"  
+#include "imagelib.h"
 #include "image_formats.h"
 
 char *interactionType(int i){
@@ -29,12 +30,11 @@ char *interactionType(int i){
 void doStuff(RATobj *ratObj,void *info){
 	int nSuns=1,flag,i,j,k,usedNumber=-1,nsamples[3];
 	char *thisname=NULL,yesno,nl;
-	double from[3],*solar=NULL,view[3],direction[3],min[3],max[3],bbox[6];
-	double *sunVector=NULL,*wavelength=NULL,*bandwidth=NULL;
+	double from[3],*solar=NULL,direction[3],min[3],max[3];
+	double *sunvector=NULL,*wavelength=NULL,*bandwidth=NULL;
 	int nBands=0,nMaterials;
 	RATtree *ratTree=NULL;
 	RATmaterials *ratMat=NULL;
-	void *nullstr=NULL;
 	int nHistogramSamples,ok;
 	char filename[1024];
 	
@@ -70,9 +70,9 @@ void doStuff(RATobj *ratObj,void *info){
 			case 2:
 				/* print sun */
 				nSuns=RATgetNsuns(ratObj);
-				sunVector=RATgetSun(ratObj);
+				sunvector=RATgetSun(ratObj);
 				for(i=0;i<nSuns;i++){
-					fprintf(stdout,"Sun vector %d: %lf %lf %lf\n",i+1,sunVector[i*3+0],sunVector[i*3+1],sunVector[i*3+2]);
+					fprintf(stdout,"Sun vector %d: %lf %lf %lf\n",i+1,sunvector[i*3+0],sunvector[i*3+1],sunvector[i*3+2]);
 				}
 					break;
 			case 3:
@@ -378,7 +378,7 @@ void doStuff(RATobj *ratObj,void *info){
                                                 double **fdata=NULL,bininfo[2];
                                                 RATorder *orders=NULL;
  						int nLidarBins=0;
-                                                double ****radiance,***direct,***diffuse;
+                                                double ****radiance;
 
                                                 fscanf(stdin,"%s %s %s",ordersfileroot,spectralfile,outputfile);
                                                 fdata=RATreadSpectra(spectralfile);
@@ -432,7 +432,7 @@ void RATuserPrintOptions(RATobj *ratObj){
 
 int RATuserParse(RATobj *ratObj,int thisarg,int argc,char **argv,void *info){
 	int numberOfArguments=-1,i;
-	double solar[3],atof();
+	double solar[3];
 	
 	if(!(strcmp(argv[thisarg],"-Useless"))){
 		fprintf(stderr,"\n\t...this option is useless\n\tand does nothing other than print this\n\n");

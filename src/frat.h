@@ -7,7 +7,7 @@
 #ifndef Power_Macintosh
 #include <limits.h>
 #else
-#define MAXDOUBLE 1e20
+#define MAXdouble 1e20
 #endif
 
 #include "prat.h"
@@ -16,8 +16,6 @@
 #define TRANSPARENT 10
 #endif
 #include <unistd.h>
-typedef BigBag RATobj;
-double Random();
 
 #ifdef DEBUGGER_
 #include <mcheck.h>
@@ -32,24 +30,9 @@ extern RATobj *globalRATObj;
 #endif
 /*########################*/
 
-
-extern	void	write_hips_image(),reset_local_z_to_local_max_height(),read_default_materials();
-int get_mmap_flag(),read_camera_description();
-char 	*getenv();
-Matrix4		load_identity_matrix4();
-void	useage();
-triplet	sort_contents_of_bbox();
-void	*calloc(),init_header(),update_header();
-int mmap_read_hips_image();
-void get_skymap_wavelengths(),read_spectral_file(),update_desc(),scan_image();
-int	initialise_wavefront_storage(),parse_prat_wavefront_data(),mmap_write_hips_image_no_free(),sscan_int(),sscan_double(),atoi();
-void pload_identity_matrix4();
-FILE *openFileForRead();
-void freeObject(RATobj *ratObj,int *f);
-
 #endif
 
-
+#include "prat_wavefront_read.h"
 
 
 

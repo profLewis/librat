@@ -10,10 +10,7 @@
 **	point on disk
 */
 
-int	ray_on_disk(D_Ptr,disk_Ptr,ray,r)
-double	*D_Ptr,*r;
-Ray	*ray;
-Disk	*disk_Ptr;
+int	ray_on_disk(double *D_Ptr,Disk *disk_Ptr,Ray *ray,double *r)
 {
 	double	a,b,r2;
 	triplet	A,R;

@@ -12,10 +12,7 @@
 ** 
 */ 
 
-int get_skymap_wavelengths(lambda,hd,lambda_min,lambda_width) 
-struct header *hd; 
-double *lambda_min,*lambda_width; 
-int lambda; 
+int get_skymap_wavelengths(int lambda,struct header *hd,double *lambda_min,double *lambda_width) 
 { 
 char *str,string[100],*ptr,found=0; 
 int quit=0; 
@@ -32,11 +29,7 @@ while(!quit){
 	if( sscanf(ptr,"%s",string) == 1 ){ 
 		if( strcmp(string,"-lambda") == 0 ){ 
 			quit=1;ptr+=7; 
-#ifdef DOUBLEDEF 
 			if( sscanf(ptr,"%lf %lf %lf",lambda_min,&dum,lambda_width) == 3)found=1; 
-#else 
-			if( sscanf(ptr,"%f %f %f",lambda_min,&dum,lambda_width) == 3)found=1; 
-#endif 
 		} 
 		str++;
 	}else quit=1; 
@@ -45,23 +38,17 @@ if(!found&&!lambda)error1("get_skymap_wavelengths:\tskymap format error.\n\t\t\t
 return(1); 
 } 
 
-int hit_sky(sky_black,sun_Ptr,output_Ptr,ray_direction_Ptr) 
-triplet *ray_direction_Ptr,*sun_Ptr; 
-double *output_Ptr; 
-int sky_black; 
+int hit_sky(int sky_black,triplet *sun_Ptr,double *output_Ptr,triplet *ray_direction_Ptr) 
 { 
 if(sky_black){ 
 *output_Ptr=0.0; 
 return(0); 
 } 
-*output_Ptr=cos(acos(MAX(-1.0,MIN(1.0,V_dot(sun_Ptr,*ray_direction_Ptr))/2.0))); 
+*output_Ptr=cos(acos(MAX(-1.0,MIN(1.0,V_dot(*sun_Ptr,*ray_direction_Ptr))/2.0))); 
 return(1); 
 } 
 
-void pre_calculate_sun_parameters(sun_Ptr,theta_sun,phi_gap,theta_gap,sky_data_Ptr) 
-Image_characteristics *sky_data_Ptr; 
-triplet *sun_Ptr; 
-double *theta_sun,*phi_gap,*theta_gap; 
+void pre_calculate_sun_parameters(triplet *sun_Ptr,double *theta_sun,double *phi_gap,double *theta_gap,Image_characteristics *sky_data_Ptr) 
 { 
 double d; 
 if(!sky_data_Ptr){
@@ -87,11 +74,7 @@ return;
 ** sky image 
 */ 
 
-double intersect_sky(frame,sun_Ptr,sky_data_Ptr,ray_direction_Ptr,phi_gap,theta_sun,theta_gap) 
-Image_characteristics *sky_data_Ptr; 
-triplet *ray_direction_Ptr, *sun_Ptr; 
-double *phi_gap,*theta_sun,*theta_gap; 
-int frame; 
+double intersect_sky(int frame,triplet *sun_Ptr,Image_characteristics *sky_data_Ptr,triplet *ray_direction_Ptr,double *phi_gap,double *theta_sun,double *theta_gap) 
 { 
 double dr,dc,a,b,out=0.0,outt[4],theta,phi,d_ray; /* phi -> zenith */ 
 int size[4],r0,r1,c0,c1,i; 

@@ -23,6 +23,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
+#include "allocate.h"
 
 typedef struct {
     double  x, y, z;
@@ -35,7 +36,7 @@ typedef struct {
 
 typedef struct {
     int       npoly;	/* # of triangles in object */
-    sphere_triangle *poly;	/* Triangles */
+    sphere_triangle *poly;	/* triangles */
 } sphere_object;
 
 /*  Six equidistant points lying on the unit sphere */
@@ -66,22 +67,15 @@ sphere_object sphere_oct = {
 };
 
 /* Forward declarations */
-sphere_point *sphere_normalize();
-sphere_point *sphere_midpoint();
-double *sphere_print_object();
-void sphere_print_triangle();
-void sphere_pphigs_header();
-void sphere_pphigs_trailer();
-
-
+sphere_point *sphere_normalize(sphere_point *p);
+sphere_point *sphere_midpoint(sphere_point *a, sphere_point *b);
+double *sphere_print_object(sphere_object *obj, int *n);
 
 double *sphereTesselate(int maxlevel,int *n){
   sphere_triangle *oldt = NULL, *newt = NULL;
   sphere_point a, b, c;
   sphere_object *old=NULL, *new=NULL;
-  int     ccwflag = 0, i, level;		/* Current subdivision level */
-  double *out=NULL;
-  void *v_allocate();
+  int     i, level;		/* Current subdivision level */
   static double *triangles=NULL;
   static int npoint=0;
   static sphere_object *objs=NULL;
@@ -202,8 +196,7 @@ double *sphereTesselate(int maxlevel,int *n){
 }
 
 /* Normalize a point p */
-sphere_point *sphere_normalize(p)
-sphere_point *p;
+sphere_point *sphere_normalize(sphere_point *p)
 {
     static sphere_point r;
     double mag;
@@ -219,7 +212,6 @@ sphere_point *p;
     return &r;
 }
 
-sphere_point *sphere_midpoint();
 /* Return the midpoint on the line between two points */
 sphere_point *sphere_midpoint(sphere_point *a, sphere_point *b){
     static sphere_point r;
@@ -234,7 +226,6 @@ sphere_point *sphere_midpoint(sphere_point *a, sphere_point *b){
 /* Write out all triangles in an object */
 double *sphere_print_object(sphere_object *obj, int *n)
 {
-    void *v_allocate();
     int i;
     static double *triangles=NULL;
     static int npoint=0;

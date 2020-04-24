@@ -1,4 +1,64 @@
 #define MAX_BBOX_LIST 128
+#include "prat_objects.h"
+
+#ifndef BAGS_H
+#define BAGS_H
+
+/*
+**
+**       camera structs
+**
+*/
+
+typedef struct {
+        double  zoom;
+        double  aperture;       /* f_stop */
+        double  focal_length;
+        pair    format; /* format size */
+        double  roll_angle;     /* degrees */
+        triplet camera_position;
+        triplet look_at;
+        int     frame;
+        int     camera_type;
+        double rowextent;
+        double colextent;
+        double col_fwhm;
+        double row_fwhm;
+}Camera_ip;
+
+
+typedef struct {
+        triplet u;              /* focal plane x-direction */
+        triplet v;              /* focal plane x-direction */
+        pair    format;         /* format size */
+        double  focal_length;
+        triplet ppoint;         /* principal point */
+        triplet paxis;          /* principal axis */
+        double  aperture;
+        triplet focal_point;    /* focal point */
+        double  pixel_fov_factor; /* pixel fov / 2PI */
+        double  magnification_factor;
+        triplet watch_point;
+        double  U;              /* object-lens distance */
+        double  V;              /* film-lens distance */
+        double  aperture_fov_factor;
+        double sigma_row;
+        double sigma_col;
+        int     camera_type;
+/* for a spherical camera, this is the ratio of the no of columns in the **
+** final row to the sine of the angle represented at the midpoint of that**
+** row - used in calculating the current no of samples required per row  */
+        double  spherical_reduction;
+}Camera_op;
+
+typedef struct {
+        int     restart;
+        int     from;
+        int     to;
+        int     from_sample;
+        int     to_sample;
+        int recover;
+}Restart;
 
 typedef struct {
 	Image_characteristics *sky_data_Ptr;
@@ -91,6 +151,46 @@ typedef struct {
 	char           *wavefront_file;
 	double         *lambda;
 }               WavebandBag;
+
+#include "volume.h"
+
+typedef struct{
+        double  *diffuse_reflectance;
+        double  *diffuse_transmittance;
+        double  proportion;
+        int     diffuse_reflectance_flag;
+        int     diffuse_transmittance_flag;
+}Standard_Reflectance_Model;
+
+/*
+**      gives info on 'useage' of each material
+**      defined in geometric object
+*/
+
+typedef struct{
+        char    **materials;
+        char    **names;
+        int     no_of_materials;
+        char    *filename;
+        FILE    *fp;
+}MaterialUseage;
+
+
+typedef struct {
+  int                                   no_of_samples;
+  double *wavelength;
+  Standard_Reflectance_Model    srm;
+  Volume                                                volume;
+}Standard_Material_List;
+
+
+typedef struct {
+  Standard_Material_List        *material;
+  int                   no_of_materials;
+  MaterialUseage                *useage;
+}Material_List;
+
+
 
 typedef struct {
 	Material_table *materials;
@@ -186,6 +286,7 @@ typedef struct {
   FILE *datafp;
 }RATobject;
 
+
 typedef struct {
   IlluminationBag *skybag;
   IlluminationBag *illumination;
@@ -196,7 +297,7 @@ typedef struct {
   Material_table *material_table;
   int PRAT_MAX_MATERIALS;
   Material_table *current_mtl;
-  Matrix4 m_inv_reverse,m_inverse_fwd;
+  matrix4 m_inv_reverse,m_inverse_fwd;
   int max_number_of_groups;
   Material_List	material_list;
   Samples samples;
@@ -251,8 +352,8 @@ typedef struct {
   int nstore;
   void **store;
   /* a matrix we use for some calculations */
-  double Matrix[16];
-} BigBag;
+  double matrix[16];
+} RATobj;
 
 typedef struct {
 	double          lambertian;
@@ -263,4 +364,4 @@ typedef struct {
 	triplet        *look, *normal, *illumination, *plane_normal;
 }               CurrentReflectanceBag;
 
-
+#endif

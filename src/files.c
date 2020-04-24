@@ -1,39 +1,29 @@
 #include "prat.h"
 #include "filelib.h"
 
-FILE	*openFileForRead(filename,env,fatal)
-char	**filename,*env;
-int	fatal;
+FILE	*openFileForRead(char **filename,char *env,int fatal)
 {
 	return(openFile(*filename,TRUE,env));
 }
 
-FILE    *open_file_for_read(filename)
-char    *filename;
+FILE    *open_file_for_read(char *filename)
 {       
-        char *envVar,environment[2000],*getenv();
         char env[2000];
-        int fatal = 0;
 
         strcpy(env,"BPMS_FILES");
         return(openFile(filename,TRUE,env));
 }
 
-FILE	*openFileForWrite(filename,env,fatal)
-char	**filename,*env;
-int	fatal;
+FILE	*openFileForWrite(char **filename,char *env,int fatal)
 {
   	return(openFile(*filename,FALSE,env));
 }
 
-#define CLOSE -1
 
-int	get_no_of_columns_in_file(verbose,filename,rows)
-char	*filename;
-int	verbose,*rows;
+int	get_no_of_columns_in_file(int verbose,char *filename,int *rows)
 {
 	int	i[2],no_of_columns=0,no_of_columns_check=0;
-	FILE	*fp,*openFile();
+	FILE	*fp;
 	char	*Dummy,dummy[3000],dum[100];
 
 	i[0]=0;
@@ -65,7 +55,7 @@ int	verbose,*rows;
 		fprintf(stderr,"%d lines   read in file %s\n",i[0],filename);
 		fprintf(stderr,"%d columns read in file %s\n",no_of_columns,filename);
 	}
-        fp=openFile(filename,CLOSE,fp);
+        fp=openFile(filename,CLOSE,(char *)fp);
 	i[1]=no_of_columns;
 	return(i[1]);
 }

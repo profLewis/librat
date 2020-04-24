@@ -23,26 +23,26 @@
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
+#include "prat.h"
 
-typedef struct {
-    double  x, y, z;
-} cyl_point;
+double *cylinderTesselate(int maxlevel,int *n){
+  cyl_triangle *oldt = NULL, *newt = NULL;
+  cyl_point a, b, c;
+  cyl_object *old=NULL, *new=NULL;
+  int     ccwflag = 0, i, level;		/* Current subdivision level */
+  double *out=NULL;
+  static double *triangles=NULL;
+  static int npoint=0;
+  static cyl_object *objs=NULL;
+  static int _maxlevel=0;
 
-typedef struct {
-    cyl_point     pt[3];	/* Vertices of triangle */
-    double    area;	/* Unused; might be used for adaptive subdivision */
-} cyl_triangle;
-
-typedef struct {
-    int       npoly;	/* # of triangles in object */
-    cyl_triangle *poly;	/* Triangles */
-} cyl_object;
+  int npol = 8;
 
 /*  Eight equidistant points lying on the unit sphere */
-#define BXPLUS {  1,  0,  0 }	/*  X */
-#define BXMIN  { -1,  0,  0 }	/* -X */
-#define BYPLUS {  0,  1,  0 }	/*  Y */
-#define BYMIN  {  0, -1,  0 }	/* -Y */
+#define BXPLUS {  1,  0,  0 }   /*  X */
+#define BXMIN  { -1,  0,  0 }   /* -X */
+#define BYPLUS {  0,  1,  0 }   /*  Y */
+#define BYMIN  {  0, -1,  0 }   /* -Y */
 #define TXPLUS {  1,  0,  1 }   /*  X */
 #define TXMIN  { -1,  0,  1 }   /* -X */
 #define TYPLUS {  0,  1,  1 }   /*  Y */
@@ -67,29 +67,6 @@ cyl_object cyl_oct = {
     &cyl_octahedron[0]
 };
 
-/* Forward declarations */
-cyl_point *cyl_normalize();
-cyl_point *cyl_midpoint();
-double *cyl_print_object();
-void cyl_print_triangle();
-void cyl_pphigs_header();
-void cyl_pphigs_trailer();
-
-
-
-double *cylinderTesselate(int maxlevel,int *n){
-  cyl_triangle *oldt = NULL, *newt = NULL;
-  cyl_point a, b, c;
-  cyl_object *old=NULL, *new=NULL;
-  int     ccwflag = 0, i, level;		/* Current subdivision level */
-  double *out=NULL;
-  void *v_allocate();
-  static double *triangles=NULL;
-  static int npoint=0;
-  static cyl_object *objs=NULL;
-  static int _maxlevel=0;
-
-  int npol = 8;
 
   if(maxlevel > _maxlevel || objs == NULL){
     if(objs){
@@ -204,8 +181,7 @@ double *cylinderTesselate(int maxlevel,int *n){
 }
 
 /* Normalize a point p */
-cyl_point *cyl_normalize(p)
-cyl_point *p;
+cyl_point *cyl_normalize(cyl_point *p)
 {
     static cyl_point r;
     double mag;
@@ -221,7 +197,6 @@ cyl_point *p;
     return &r;
 }
 
-cyl_point *cyl_midpoint();
 /* Return the midpoint on the line between two points */
 cyl_point *cyl_midpoint(cyl_point *a, cyl_point *b){
     static cyl_point r;
@@ -236,7 +211,6 @@ cyl_point *cyl_midpoint(cyl_point *a, cyl_point *b){
 /* Write out all triangles in an object */
 double *cyl_print_object(cyl_object *obj, int *n)
 {
-    void *v_allocate();
     int i;
     static double *triangles=NULL;
     static int npoint=0;

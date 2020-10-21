@@ -15,7 +15,7 @@ else
 fi
 cd ${THERE}
 THERE=$(pwd)
-export PYTHONPATH="$THERE:$PYTHONPATH"
+export PYTHONPATH="$THERE:$BPMS/lib/python:$PYTHONPATH"
 _BPMS=`python -c "from RATsetup import *;print(os.environ['BPMS'])"`
 export BPMS=${BPMS-$_BPMS}
 

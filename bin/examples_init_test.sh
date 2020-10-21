@@ -2,7 +2,7 @@
 #
 # defaults
 #
-export BPMS=${BPMS-/Users/plewis/librat}
+export BPMS=${BPMS-/Users/plewis/Documents/GitHub/librat}
 export BPMSROOT=${BPMSROOT-$BPMSROOT}
 lib=${lib-$BPMS/src}
 bin=${bin-$BPMS/src}

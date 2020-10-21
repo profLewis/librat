@@ -14,7 +14,7 @@ else
   export THERE=$BPMS/bin
 fi
 cd ${THERE}
-
+THERE=$(pwd)
 export PYTHONPATH="$THERE:$PYTHONPATH"
 _BPMS=`python -c "from RATsetup import *;print(os.environ['BPMS'])"`
 export BPMS=${BPMS-$_BPMS}
@@ -72,6 +72,12 @@ export ARARAT_OBJECT="$ARARAT_OBJECT"
 export BPMS_FILES="$BPMS_FILES"
 export DIRECT_ILLUMINATION="$DIRECT_ILLUMINATION"
 export SKY_ILLUMINATION="$SKY_ILLUMINATION"
+
+if [ -z "PYTHONPATH" ] ; then
+  export PYTHONPATH="${PYTHONPATH}"
+else
+  export PYTHONPATH="${PYTHONPATH}:${d}PYTHONPATH"
+fi
 
 EOF
 

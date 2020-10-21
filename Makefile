@@ -14,6 +14,10 @@ src/makefile:
 clean:	src/makefile
 	@cd src;$(MAKE) clean
 
+
+env:	src/makefile
+	@cd src;$(MAKE) env
+
 python:
 	@cd src;$(MAKE) python
 

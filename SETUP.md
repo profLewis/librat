@@ -10,7 +10,7 @@
 
 To set the library up on your computer, you need to configure and compile the code. As explained in more detail below, this involves typing:
 
-    ./configure; make clean all test install
+    ./configure; make clean all test install env
     
 at the shell prompt. Press the `<return>` key to execute the commands. The semicolon `;` allows us to put multiple commands on the same line. We could otherwise type them on seperate lines. 
 
@@ -73,5 +73,12 @@ You will have generated files in
 * [`bin/${ARCH}`](bin/x86_64) : executable -- `RATstart`
 * [`lib/${ARCH}`](lib/x86_64) : shared object library -- `libratlib.so`
 
-Notice that these links ⛓ (`bin/x86_64`, `lib/x86_64`)  don't exist on the github repository: they are user-generated!
+Notice that these links ⛓ (`bin/x86_64`, `lib/x86_64`)  don't necessarily exist on the github repository: they are user-generated
+
+Finally, `make env` runs the script [`bin/RATsetup.sh`](bin/RATsetup.sh) and sets appropriate default values for all required BPMS environment variables. These are set in:
+
+* [`~/.bpms_profile`](~/.bpms_profile) : environment
+
+which is sourced from your shell initialisation script (e.g. `~/.bashrc` or `~/.zshrc`).
+
 

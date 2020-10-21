@@ -4,16 +4,22 @@
 #
 # if BPMS set
 
+HERE=$(pwd)
+ARCH=$(uname -m)
+
 if [ -z "$BPMS" ]
 then
-  export HERE=$(dirname $0)
+  export THERE=$(dirname $0)
 else
-  export HERE=$BPMS/bin
+  export THERE=$BPMS/bin
 fi
+cd ${THERE}
 
-export PYTHONPATH="$HERE:$PYTHONPATH"
+export PYTHONPATH="$THERE:$PYTHONPATH"
 _BPMS=`python -c "from RATsetup import *;print(os.environ['BPMS'])"`
 export BPMS=${BPMS-$_BPMS}
+
+#echo "BPMS: $BPMS"
 
 _MATLIB=`python -c 'from RATsetup import *;print(os.environ["MATLIB"])'`
 _RSRLIB=`python -c "from RATsetup import *;print(os.environ['RSRLIB'])"`
@@ -40,3 +46,44 @@ export DYLD_LIBRARY_PATH=`python -c "from RATsetup import *;print(os.environ['_D
 if [ "$TEST" == 1 ]; then
   echo 0 | RATstart test.obj
 fi
+
+d=\$
+cat << EOF > ~/.bpms_profile
+
+export BPMS="$BPMS"
+export PATH="${PATH}:${BPMS}/bin:${BPMS}/bin/${ARCH}:${d}PATH"
+if [ -z "$LD_LIBRARY_PATH" ] ; then
+  export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}"
+else
+  export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${d}LD_LIBRARY_PATH"
+fi
+if [ -z "DYLD_LIBRARY_PATH" ] ; then
+  export DYLD_LIBRARY_PATH="${DYLD_LIBRARY_PATH}"
+else
+  export DYLD_LIBRARY_PATH="${DYLD_LIBRARY_PATH}:${d}DYLD_LIBRARY_PATH"
+fi
+
+export TEST="$TEST"
+export TEMP="$TEMP"
+
+export MATLIB="$MATLIB"
+export RSRLIB="$RSRLIB"
+export ARARAT_OBJECT="$ARARAT_OBJECT"
+export BPMS_FILES="$BPMS_FILES"
+export DIRECT_ILLUMINATION="$DIRECT_ILLUMINATION"
+export SKY_ILLUMINATION="$SKY_ILLUMINATION"
+
+EOF
+
+if [ -z "$SHELL" ] ; then
+  SHELL=/bin/bash
+fi
+profile=~/.$(echo $SHELL| awk -F/ '{print $NF}')rc
+touch $profile
+grep -v < $profile bpms_profile > $TEMP/$$
+mv $TEMP/$$ $profile 
+echo "source ~/.bpms_profile" >> $profile
+
+
+
+cd "${HERE}"

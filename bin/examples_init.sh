@@ -4,7 +4,7 @@
 #
 export ARCH=$(uname -m)
 export BPMS=${BPMS-/Users/plewis/Documents/GitHub/librat}
-export BPMSROOT=${BPMSROOT-$BPMS}
+export BPMSROOT=${BPMSROOT-$BPMS/obj}
 lib=${lib-$BPMS/lib/$ARCH}
 bin=${bin-$BPMS/bin/$ARCH}
 VERBOSE=${VERBOSE-0}

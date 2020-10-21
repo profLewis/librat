@@ -1,6 +1,7 @@
 # Prerequisites
 *.d
 *.swp
+*.pyc
 # my stuff
 config.out
 start

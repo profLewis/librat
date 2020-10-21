@@ -1,4 +1,5 @@
 import sys,os
+import platform
 
 class BPMSENV():
 
@@ -7,6 +8,8 @@ class BPMSENV():
      get BPMS root (librat) from
      this directory name
     '''
+    arch = platform.machine()
+
     if BPMS is '':
       if 'BPMS' not in os.environ:
         BPMS='librat'.join(os.getcwd().split('librat')[:-1])+'librat'
@@ -18,11 +21,13 @@ class BPMSENV():
     #  relative to BPMS
     SRC=os.sep.join([BPMS,'src'])
     BIN=os.sep.join([BPMS,'bin'])
-    LIB=os.sep.join([BPMS,'src'])
+    LIB=os.sep.join([BPMS,'lib'])
+    BINARCH=os.sep.join([BPMS,'bin',arch])
+    LIBARCH=os.sep.join([BPMS,'lib',arch])
     OBJ=os.sep.join([BPMS,'obj'])
     LIB_PYTHON=os.sep.join([BPMS,'lib','python'])
     # paths
-    BINS = [SRC,BIN,LIB_PYTHON]
+    BINS = [SRC,BIN,BINARCH,LIB_PYTHON]
     for bin in BINS:
       sys.path.insert(0,bin)
       os.environ['PATH'] = ':'.join([bin,os.environ['PATH']])
@@ -32,15 +37,15 @@ class BPMSENV():
     # things up
     # _LD_LIBRARY_PATH
     if 'LD_LIBRARY_PATH' in os.environ:
-        os.environ['_LD_LIBRARY_PATH'] = ':'.join([LIB,os.getenv("LD_LIBRARY_PATH")])
+        os.environ['_LD_LIBRARY_PATH'] = ':'.join([LIB,LIBARCH,os.getenv("LD_LIBRARY_PATH")])
     else:
-        os.environ['_LD_LIBRARY_PATH'] = LIB
+        os.environ['_LD_LIBRARY_PATH'] = ':'.join([LIB,LIBARCH])
 
     # _DYLD_LIBRARY_PATH
     if 'DYLD_LIBRARY_PATH' in os.environ:
-        os.environ['_DYLD_LIBRARY_PATH'] = ':'.join([LIB,os.getenv("DYLD_LIBRARY_PATH")])
+        os.environ['_DYLD_LIBRARY_PATH'] = ':'.join([LIB,LIBARCH,os.getenv("DYLD_LIBRARY_PATH")])
     else:
-        os.environ['_DYLD_LIBRARY_PATH'] = LIB
+        os.environ['_DYLD_LIBRARY_PATH'] = ':'.join([LIB,LIBARCH])
 
     # set env variables
     os.environ['MATLIB'] = OBJ

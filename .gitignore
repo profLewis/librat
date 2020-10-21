@@ -1,6 +1,6 @@
 # Prerequisites
 *.d
-
+*.swp
 # my stuff
 config.out
 start

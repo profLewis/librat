@@ -106,7 +106,7 @@ Thanks
 
 To set the library up on your computer, you need to configure and compile the code. As explained in more detail below, this involves typing:
 
-    ./configure; make clean all test
+    ./configure; make clean all test install
     
 at the shell prompt. Press the `<return>` key to execute the commands. The semicolon `;` allows us to put multiple commands on the same line. We could otherwise type them on seperate lines. 
 

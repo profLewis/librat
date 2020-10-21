@@ -90,6 +90,12 @@ grep -v < $profile bpms_profile > $TEMP/$$
 mv $TEMP/$$ $profile 
 echo "source ~/.bpms_profile" >> $profile
 
+# and bash as we will use that
+profile=~/.bashrc
+touch $profile
+grep -v < $profile bpms_profile > $TEMP/$$
+mv $TEMP/$$ $profile
+echo "source ~/.bpms_profile" >> $profile
 
 
 cd "${HERE}"

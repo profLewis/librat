@@ -36,5 +36,5 @@ if (($exit_code == 0)); then
     echo "RATstart found ok"
   fi
 else
-  cd /Users/plewis/Documents/GitHub/librat; make clean all 
+  cd /Users/plewis/Documents/GitHub/librat; make clean all test install 
 fi
